@@ -1,0 +1,30 @@
+{
+  "description": "Insert a collapsible panel of Markdown content with a title.",
+  "body": [
+    "{{< details title=\"[[title]]\" open=[[should-be-open]] >}}",
+    "[[&selection]]",
+    "{{< /details >}}"
+  ],
+  "fields": [
+    {
+      "name": "title",
+      "title": "Title",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "selection",
+      "title": "Body",
+      "type": "string",
+      "default": "FM_SELECTED_TEXT"
+    },
+    {
+      "name": "should-be-open",
+      "title": "Whether the details should be open when the page loads.",
+      "type": "choice",
+      "choices": ["true", "false"],
+      "default": "false"
+    }
+  ]
+}

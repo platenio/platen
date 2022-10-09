@@ -1,0 +1,55 @@
+{
+  "description": "Add a set of markdown content with two different tabs.",
+  "body": [
+    "{{< tabs \"[[id]]\" >}}",
+    "",
+    "{{< tab \"[[&first-tab-name]]\" >}}",
+    "",
+    "[[&first-tab-content]]",
+    "",
+    "{{< /tab >}}",
+    "",
+    "{{< tab \"[[&second-tab-name]]\" >}}",
+    "",
+    "[[&second-tab-content]]",
+    "",
+    "{{< /tab >}}",
+    "",
+    "{{< /tabs >}}"
+  ],
+  "fields": [
+    {
+      "name": "id",
+      "title": "ID: Every group of tabs needs a unique ID.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "first-tab-name",
+      "title": "First Tab Name",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "first-tab-content",
+      "title": "First Tab Content",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "second-tab-name",
+      "title": "Second Tab Name",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "second-tab-content",
+      "title": "Second Tab Content",
+      "type": "string",
+      "default": ""
+    }
+  ]
+}

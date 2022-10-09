@@ -1,0 +1,68 @@
+{
+  "name": "docs",
+  "$schema": "https://beta.frontmatter.codes/config/taxonomy.contenttypes.schema.json",
+  "pageBundle": false,
+  "fields": [
+    {
+      "title": "Title",
+      "name": "title",
+      "type": "string",
+      "single": true
+    },
+    {
+      "title": "Link Title - used when in a list",
+      "name": "linktitle",
+      "type": "string",
+      "single": true
+    },
+    {
+      "title": "Summary - displayed when paginated or in a list and as page description",
+      "name": "summary",
+      "type": "string"
+    },
+    {
+      "title": "Weight - determines order for pages; lower weight first",
+      "name": "weight",
+      "type": "number"
+    },
+    {
+      "title": "Publishing date",
+      "name": "date",
+      "type": "datetime",
+      "default": "{{now}}",
+      "isPublishDate": true
+    },
+    {
+      "title": "Content preview",
+      "name": "preview",
+      "type": "image"
+    },
+    {
+      "title": "Is in draft",
+      "name": "draft",
+      "type": "draft"
+    },
+    {
+      "title": "Display Table of Contents",
+      "name": "bookToC",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "title": "Hide from site menu",
+      "name": "bookHidden",
+      "type": "boolean"
+    },
+    {
+      "title": "Exclude from site search",
+      "name": "bookSearchExclude",
+      "type": "boolean"
+    },
+    {
+      "title": "type",
+      "name": "type",
+      "type": "string",
+      "hidden": true
+    }
+  ]
+}

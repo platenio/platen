@@ -1,0 +1,9 @@
+{
+  "$schema": "https://beta.frontmatter.codes/config/data.files.schema.json",
+  "fileType": "yaml",
+  "file": "[[workspace]]/config/_default/params.yaml",
+  "id": "hugo.config.params",
+  "title": "Hugo Config: Params",
+  "singleEntry": true,
+  "type": "hugo.params"
+}

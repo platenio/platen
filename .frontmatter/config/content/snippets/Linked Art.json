@@ -1,0 +1,34 @@
+{
+  "description": "",
+  "body": "{{< art src=\\\"[[&src]]\\\" alt=\\\"[[&alt]]\\\" class=\\\"[[classes]]\\\" content_warning=\\\"[[&content_warning]]\\\" />}}",
+  "fields": [
+    {
+      "name": "src",
+      "title": "Source URL for the image",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "alt",
+      "title": "Alt text for the art.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "content_warning",
+      "title": "Content Warning: List any CWs appropriate for the art.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "classes",
+      "title": "Class List: Specify any classes to add to the block in a space separated list.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    }
+  ]
+}

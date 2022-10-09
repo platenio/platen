@@ -1,0 +1,34 @@
+{
+  "description": "Add an embedded widget to a project on itch.io",
+  "body": "{{< itchio id=\"[[id]]\" square=\"[[square]]\"  linkback=\"[[linkback]]\" dark=\"[[dark]]\" />}}",
+  "fields": [
+    {
+      "name": "id",
+      "title": "ID: Specify the ID for the project's embeddable iframe",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "square",
+      "title": "Should display as a square instead of a rectangle",
+      "type": "choice",
+      "choices": ["true", "false"],
+      "default": "false"
+    },
+    {
+      "name": "linkback",
+      "title": "linkback",
+      "type": "choice",
+      "choices": ["true", "false"],
+      "default": "false"
+    },
+    {
+      "name": "dark",
+      "title": "dark",
+      "type": "choice",
+      "choices": ["true", "false"],
+      "default": "false"
+    }
+  ]
+}

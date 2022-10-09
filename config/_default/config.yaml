@@ -1,0 +1,44 @@
+# Update to your own settings for URL/title
+baseURL: https://platen.io/
+title: Platen
+
+module:
+  replacements: >-
+    github.com/platenio/hugo-platen -> C:\code\platen\modules\hugo-platen,
+    github.com/alex-shpak/hugo-book -> C:\code\platen\platen.io\modules\base
+  imports:
+    - path: github.com/platenio/hugo-platen
+    - path: github.com/alex-shpak/hugo-book
+
+disablePathToLower: true
+enableGitInfo: true
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+    parser:
+      attribute:
+        block: true
+  tableOfContents:
+    startLevel: 1
+    endLevel: 4
+
+languages:
+  en:
+    languageName: English
+    contentDir: content
+    weight: 1
+
+menu:
+  after:
+    - name: Hugo
+      url: https://gohugo.io/
+      weight: 10
+    - name: Hugo Book
+      url: https://github.com/alex-shpak/hugo-book
+      weight: 20
+  before:
+    - name: Posts
+      url: /posts
+      weight: 10

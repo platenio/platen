@@ -1,0 +1,25 @@
+{
+  "description": "Convert source code text into syntax-highlighted HTML.",
+  "body": [
+    "{{< highlight [[language]] >}}",
+    "[[&selection]]",
+    "{{< /highlight >}}"
+  ],
+  "fields": [
+    {
+      "name": "language",
+      "title": "Language",
+      "description": "Specify the name of the language to highlight the code block as.",
+      "type": "string",
+      "single": true,
+      "required": true,
+      "default": ""
+    },
+    {
+      "name": "selection",
+      "title": "Source Code",
+      "type": "string",
+      "default": "FM_SELECTED_TEXT"
+    }
+  ]
+}

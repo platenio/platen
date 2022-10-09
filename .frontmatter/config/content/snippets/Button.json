@@ -1,0 +1,34 @@
+{
+  "description": "Add a button linking to another page or external site.",
+  "body": "{{< button [[ref-type]]=\"[[&url]]\" class=\"[[classes]]\" >}}[[text]]{{< /button >}}",
+  "fields": [
+    {
+      "name": "text",
+      "title": "Button Text: This displays on the button itself.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "url",
+      "title": "Button Url: Specify the URL this button should lead to.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "ref-type",
+      "title": "Link Reference Type: Choose relref if the link is site relative, href if external.",
+      "type": "choice",
+      "choices": ["relref", "href"],
+      "default": "relref"
+    },
+    {
+      "name": "classes",
+      "title": "CSS Classes: Specify a space separated list of classes.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "description": "Add a chart or diagram using mermaid.js syntax",
+  "body": [
+    "{{< mermaid class=\"[[classes]]\" >}}",
+    "[[&selection]]",
+    "{{< /mermaid >}}"
+  ],
+  "fields": [
+    {
+      "name": "classes",
+      "title": "Class List: Specify any classes to add to the block in a space separated list.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "selection",
+      "title": "Definition",
+      "type": "string",
+      "default": "FM_SELECTED_TEXT"
+    }
+  ]
+}

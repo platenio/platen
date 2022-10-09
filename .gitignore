@@ -1,0 +1,11 @@
+/resources/_gen
+/.hugo_build.lock
+/public
+
+# Ignore the upstream styles but not our local ones
+!.vscode/styles/
+.vscode/styles/*
+!.vscode/styles/Vocab/
+!.vscode/styles/Flagrant/
+!.vscode/styles/Jared/
+!.vscode/styles/Contractions/

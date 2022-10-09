@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "davidanson.vscode-markdownlint",
+    "eliostruyf.vscode-front-matter-beta",
+    "errata-ai.vale-server",
+    "marvhen.reflow-markdown",
+    "nhoizey.gremlins",
+    "usernamehw.errorlens",
+    "wmaurer.change-case"
+  ]
+}

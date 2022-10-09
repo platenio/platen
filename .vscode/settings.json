@@ -1,0 +1,28 @@
+{
+  // Use consistent tab sizes
+  "editor.tabSize": 2,
+  // Ensure lines do not exceed 100 characters; code lines should not exceed 80.
+  "editor.rulers": [76, 80, 96, 100],
+  "reflowMarkdown.preferredLineLength": 100,
+  // Define and use local schemas for data files:
+  "yaml.schemas": {
+    "data/schemas/hugo/config/base.yaml": "config.yaml",
+    "data/schemas/hugo/config/params/book.yaml": "config/**/params.yaml",
+    "data/schemas/hugo/config/params/sharing.yaml": "config/**/params.yaml",
+    "data/schemas/hugo/config/params/toroidal.yaml": "config/**/params.Toroidal.yaml"
+  },
+  // Use Vale to lint prose. Change alert level to "suggestion" for first draft.
+  "vale.core.useCLI": true,
+  "vale.valeCLI.minAlertLevel": "warning",
+  // hide noisy files/folders
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "resources/": true,
+    ".hugo_build.lock": true
+  }
+}

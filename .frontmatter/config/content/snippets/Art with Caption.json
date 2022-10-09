@@ -1,0 +1,18 @@
+{
+  "description": "Add art as a figure with a caption and an optional content warning.",
+  "body": [
+    "{{< art src=\"[[&mediaUrl]]\" alt=\"[[&alt]]\" class=\"[[classes]]\" content_warning=\"[[&content_warning]]\" >}}",
+    "[[&caption]]",
+    "{{< /art >}}"
+  ],
+  "isMediaSnippet": true,
+  "fields": [
+    {
+      "name": "classes",
+      "title": "Class List: Specify any classes to add to the block in a space separated list.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    }
+  ]
+}

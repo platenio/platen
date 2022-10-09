@@ -1,0 +1,6 @@
+{
+  "title": "Resources",
+  "$schema": "https://beta.frontmatter.codes/config/content.pagefolders.schema.json",
+  "path": "[[workspace]]/content/docs/resources",
+  "previewPath": "docs/resources"
+}

@@ -1,0 +1,31 @@
+{
+  "description": "Embed a YouTube video.",
+  "body": "{{< vimeo id=\"[[id]]\" autoplay=\"[[autoplay]]\" title=\"[[title]]\" />}}",
+  "fields": [
+    {
+      "name": "id",
+      "title": "YouTube video ID",
+      "description": "Specify the unique ID of the video.",
+      "type": "string",
+      "single": true,
+      "required": true
+    },
+    {
+      "name": "title",
+      "title": "Video Title",
+      "description": "Specify a title for the iframe the video is embedded in. This helps with accessibility.",
+      "type": "string",
+      "single": true,
+      "required": true
+    },
+    {
+      "name": "autoplay",
+      "title": "Autoplay",
+      "description": "Specify whether the video should autoplay.",
+      "type": "choice",
+      "choices": ["true", "false"],
+      "default": "false",
+      "required": false
+    }
+  ]
+}

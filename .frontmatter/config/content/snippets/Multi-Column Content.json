@@ -1,0 +1,28 @@
+{
+  "description": "Add markdown separated into two or more columns, evenly spaced.",
+  "body": [
+    "{{< columns >}}",
+    "",
+    "[[&first-column-text]]",
+    "",
+    "<--->",
+    "",
+    "[[&remaining-columns-text]]",
+    "",
+    "{{< /columns >}}"
+  ],
+  "fields": [
+    {
+      "name": "first-column-text",
+      "title": "First Column Text:\n\nWrite any valid Markdown, including additional shortcodes/snippets.",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "remaining-columns-text",
+      "title": "Remaining Text: As with the first column text, add any additional markdown.\n\nTo add another column, specify a blank line before and after this text:\n<--->\nThe text following the column notation will be in a new column.",
+      "type": "string",
+      "default": ""
+    }
+  ]
+}

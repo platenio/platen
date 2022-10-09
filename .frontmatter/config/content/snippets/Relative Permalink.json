@@ -1,0 +1,14 @@
+{
+  "description": "Insert a site-relative permalink to another page.",
+  "body": "{{< relref \"[[path]]\" />}}",
+  "fields": [
+    {
+      "name": "path",
+      "title": "Relative Page Path",
+      "description": "Specify the relative path to another page from this one.",
+      "type": "string",
+      "single": true,
+      "required": true
+    }
+  ]
+}

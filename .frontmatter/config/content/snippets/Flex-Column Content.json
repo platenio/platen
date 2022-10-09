@@ -1,0 +1,42 @@
+{
+  "description": "Add markdown separated into two or more columns, with configurable sizing.",
+  "body": [
+    "{{< flexcolumns ratio=\"[[&ratio]]\" flattenInMobileView=\"[[flattenInMobileView]]\" >}}",
+    "",
+    "[[&first-column-text]]",
+    "",
+    "<--->",
+    "",
+    "[[&remaining-columns-text]]",
+    "",
+    "{{< /flexcolumns >}}"
+  ],
+  "fields": [
+    {
+      "name": "ratio",
+      "title": "Specify a ratio for the columns, like '1:3' or '3:5:3'. The ratio must match the number of columns used.",
+      "type": "string",
+      "single": true,
+      "default": "1:1"
+    },
+    {
+      "name": "first-column-text",
+      "title": "First Column Text:\n\nWrite any valid Markdown, including additional shortcodes/snippets.",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "remaining-columns-text",
+      "title": "Remaining Text: As with the first column text, add any additional markdown.\n\nTo add another column, specify a blank line before and after this text:\n<--->\nThe text following the column notation will be in a new column.",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "flattenInMobileView",
+      "title": "Should be flattened to single stacked column in mobile view",
+      "type": "choice",
+      "choices": ["true", "false"],
+      "default": "true"
+    }
+  ]
+}

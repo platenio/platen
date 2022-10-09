@@ -1,0 +1,22 @@
+{
+  "description": "Embed a GitHub gist.",
+  "body": "{{< gist [[username]] [[id]] />}}",
+  "fields": [
+    {
+      "name": "username",
+      "title": "Username",
+      "description": "Specify the username the gist is stored under.",
+      "type": "string",
+      "single": true,
+      "required": true
+    },
+    {
+      "name": "id",
+      "title": "Gist ID",
+      "description": "Specify the unique ID of the gist.",
+      "type": "string",
+      "single": true,
+      "required": true
+    }
+  ]
+}
