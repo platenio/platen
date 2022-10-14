@@ -1,0 +1,7 @@
+{{- range $name, $value := . -}}
+  {{ if $value.Enabled }}
+    {{- with $value.Style.Name }}
+      @import "shortcodes/{{ . }}";
+    {{ end }}
+  {{ end }}
+{{- end }}

@@ -1,0 +1,15 @@
+[
+{{- $pages := where .Site.Pages "Kind" "in" (slice "page" "section") -}}
+{{- $pages = where $pages "Params.Platen.ExcludeFromSearch" "!=" true -}}
+{{- $pages = where $pages "Content" "not in" (slice nil "") -}}
+
+{{ range $index, $page := $pages }}
+{{ if gt $index 0}},{{end}} {
+    "id": {{ $index }},
+    "href": "{{ $page.RelPermalink }}",
+    "title": {{ (partial "platen/title" $page) | jsonify }},
+    "section": {{ (partial "platen/title" $page.Parent) | jsonify }},
+    "content": {{ $page.Plain | jsonify }}
+}
+{{- end -}}
+]

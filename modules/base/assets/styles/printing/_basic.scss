@@ -1,0 +1,17 @@
+@media print {
+  .platen-menu,
+  .platen-footer,
+  .platen-toc {
+    display: none;
+  }
+
+  .platen-header,
+  .platen-header aside {
+    display: block;
+  }
+
+  main {
+    // Fix for https://bugzilla.mozilla.org/show_bug.cgi?id=939897
+    display: block !important;
+  }
+}

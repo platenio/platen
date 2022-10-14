@@ -1,0 +1,19 @@
+<nav>
+{{ partial "platen/brand" . }}
+{{ partial "platen/search" . }}
+{{ if .Site.IsMultiLingual }}
+  {{ partial "platen/languages" . }}
+{{ end }}
+
+{{ partial "platen/inject/menu-before" . }}
+{{ partial "platen/menu-hugo" .Site.Menus.before }}
+{{ partial "platen/menu-filetree" . }}
+{{ partial "platen/menu-hugo" .Site.Menus.after }}
+{{ partial "platen/inject/menu-after" . }}
+</nav>
+
+<!-- Restore menu position as soon as possible to avoid flickering -->
+{{ $script := resources.Get "scripts/platen/menu-reset.js" | resources.Minify }}
+{{ with $script.Content }}
+  <script>{{ . | safeJS }}</script>
+{{ end }}

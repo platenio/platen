@@ -1,0 +1,64 @@
+.platen-menu {
+  flex: 0 0 $menu-width;
+  font-size: $font-size-14;
+
+  .platen-menu-content {
+    width: $menu-width;
+    padding: $padding-16;
+    background: var(--body-background);
+
+    @include fixed;
+  }
+
+  a,
+  label {
+    color: inherit;
+    cursor: pointer;
+    word-wrap: break-word;
+  }
+
+  a.active {
+    color: var(--color-link);
+  }
+
+  input.toggle + label + ul {
+    display: none;
+  }
+
+  input.toggle:checked + label + ul {
+    display: block;
+  }
+
+  input.toggle + label::after {
+    content: "▸";
+  }
+
+  input.toggle:checked + label::after {
+    content: "▾";
+  }
+}
+
+// for RTL support
+body[dir="rtl"] .platen-menu {
+  input.toggle + label::after {
+    content: "◂";
+  }
+
+  input.toggle:checked + label::after {
+    content: "▾";
+  }
+}
+
+.platen-section-flat {
+  margin: $padding-16 * 2 0;
+
+  > a,
+  > span,
+  > label {
+    font-weight: bolder;
+  }
+
+  > ul {
+    padding-inline-start: 0;
+  }
+}

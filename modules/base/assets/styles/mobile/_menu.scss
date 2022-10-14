@@ -1,0 +1,47 @@
+@media screen and (max-width: $mobile-breakpoint) {
+  #menu-control {
+    display: inline;
+  }
+
+  .platen-menu {
+    visibility: hidden;
+    margin-inline-start: -$menu-width;
+    font-size: $font-size-base;
+    z-index: 1;
+  }
+
+  #menu-control:focus ~ main label[for="menu-control"] {
+    @include outline;
+  }
+
+  #menu-control:checked ~ main {
+    .platen-menu {
+      visibility: initial;
+    }
+
+    .platen-menu .platen-menu-content {
+      transform: translateX($menu-width);
+      box-shadow: 0 0 $padding-8 rgba(0, 0, 0, 0.1);
+    }
+
+    .platen-page {
+      opacity: 0.25;
+    }
+
+    .platen-menu-overlay {
+      display: block;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  // for RTL support
+  body[dir="rtl"] #menu-control:checked ~ main {
+    .platen-menu .platen-menu-content {
+      transform: translateX(-$menu-width);
+    }
+  }
+}

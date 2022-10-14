@@ -1,0 +1,42 @@
+{{- if .IsNamedParams -}}
+{{- $.Scratch.Set "src"  (.Get "src") -}}
+{{- $.Scratch.Set "alt" (.Get "alt") -}}
+{{- $.Scratch.Set "class"  (.Get "class") -}}
+{{- $.Scratch.Set "content_warning"  (.Get "content_warning") -}}
+{{- else -}}
+{{- $.Scratch.Set "src"  (.Get 0) -}}
+{{- $.Scratch.Set "alt" (.Get 1) -}}
+{{- $.Scratch.Set "class"  (.Get 2) -}}
+{{- $.Scratch.Set "content_warning"  (.Get 3) -}}
+{{- end -}}
+
+{{- $src             := $.Scratch.Get "src" -}}
+{{- $alt             := $.Scratch.Get "alt" | default nil -}}
+{{- $class           := $.Scratch.Get "class" | default "full" -}}
+{{- $content_warning := $.Scratch.Get "content_warning" | default false -}}
+{{- $caption         := .Inner | default nil -}}
+
+{{- if eq $alt nil -}}
+{{- if $.Site.Params.warnOnMissingAltText -}}
+{{- warnf (printf "Missing alt text for '%v'" $src) -}}
+{{- else -}}
+{{- errorf (printf "Missing alt text for '%v'" $src) -}}
+{{- end -}}
+{{- end -}}
+
+{{ if $content_warning }}
+<figure class="art {{ $class }}{{ if $content_warning }} content_warning{{ end }}">
+  <img src="{{ $src }}" alt="{{ $alt }}" class="content_warning">
+  {{- if ne $caption nil -}}
+  <figcaption>{{ $caption | markdownify }}</figcaption>
+  <button class="content_warning">{{ $content_warning }}</button>
+  {{- end -}}
+</figure>
+{{ else }}
+<figure class="art {{ $class }}">
+  <img src="{{ $src }}" alt="{{ $alt }}">
+  {{- if ne $caption nil -}}
+  <figcaption>{{ $caption | markdownify }}</figcaption>
+  {{- end -}}
+</figure>
+{{ end }}

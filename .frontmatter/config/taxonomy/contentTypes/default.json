@@ -10,18 +10,21 @@
       "single": true
     },
     {
-      "title": "Link Title - used when in a list",
+      "title": "Link Title",
+      "description": "Used as the title for this page when included in a list, like the section shortcode.",
       "name": "linktitle",
       "type": "string",
       "single": true
     },
     {
-      "title": "Summary - displayed when paginated or in a list and as page description",
+      "title": "Summary",
+      "description": "Displayed when paginated or in a list and as page description",
       "name": "summary",
       "type": "string"
     },
     {
-      "title": "Weight - determines order for pages; lower weight first",
+      "title": "Weight",
+      "description": "Determines order for pages; lower weight first",
       "name": "weight",
       "type": "number"
     },
@@ -43,25 +46,58 @@
       "type": "draft"
     },
     {
-      "title": "Display Table of Contents",
-      "name": "bookToC",
-      "type": "boolean",
-      "default": true
+      "title": "Platen",
+      "description": "These options override site-wide settings for this page. Don't specify a value if you want to inherit the site defaults.",
+      "type": "fields",
+      "name": "Platen",
+      "fields": [
+        {
+          "title": "Show Table of Contents",
+          "name": "ShowToC",
+          "type": "boolean"
+        },
+        {
+          "title": "Enable comments",
+          "name": "EnableComments",
+          "type": "boolean"
+        },
+        {
+          "title": "Exclude from site search",
+          "name": "ShowToC",
+          "type": "boolean"
+        },
+        {
+          "title": "Menu options",
+          "name": "Menu",
+          "type": "fields",
+          "fields": [
+            {
+              "title": "Flatten section in site menu",
+              "description": "Applicable to section pages (_index.md) only. Causes this section to display as a flat list without indenting.",
+              "name": "FlattenSection",
+              "type": "boolean"
+            },
+            {
+              "title": "Collapse section in site menu",
+              "description": "Applicable to section pages (_index.md) only. Causes this section to display as a collapsible entry. When collapsed, child pages are hidden.",
+              "name": "CollapseSection",
+              "type": "boolean"
+            },
+            {
+              "title": "Hide from site menu",
+              "description": "Applicable to any page.",
+              "name": "Hide",
+              "type": "boolean"
+            }
+          ]
+        }
+      ]
     },
     {
-      "title": "Hide from site menu",
-      "name": "bookHidden",
-      "type": "boolean"
-    },
-    {
-      "title": "Exclude from site search",
-      "name": "bookSearchExclude",
-      "type": "boolean"
-    },
-    {
-      "title": "Display children as a flat list in the site menu",
-      "name": "bookFlatSection",
-      "type": "boolean"
+      "title": "type",
+      "name": "type",
+      "type": "string",
+      "hidden": true
     }
   ]
 }

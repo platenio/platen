@@ -1,0 +1,9 @@
+.platen-menu-content,
+.platen-toc-content,
+.platen-page,
+.platen-header aside,
+.markdown {
+  transition: 0.2s ease-in-out;
+  transition-property: transform, margin, opacity, visibility;
+  will-change: transform, margin, opacity;
+}

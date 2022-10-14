@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="{{ default .Site.Language.Lang .Site.LanguageCode  }}" dir="{{ default "ltr" .Site.Language.LanguageDirection }}">
+<head>
+  {{ partial "platen/html-head" . }}
+  {{ partial "platen/inject/head" . }}
+</head>
+<body dir="{{ default "ltr" .Site.Language.LanguageDirection }}">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="platen-menu">
+      <div class="platen-menu-content">
+        {{ template "menu" . }} <!-- Left menu Content -->
+      </div>
+    </aside>
+
+    <div class="platen-page">
+      <header class="platen-header">
+        {{ template "header" . }} <!-- Mobile layout header -->
+      </header>
+
+      {{ partial "platen/inject/content-before" . }}
+      {{ template "main" . }} <!-- Page Content -->
+      {{ partial "platen/inject/content-after" . }}
+
+      <footer class="platen-footer">
+        {{ template "footer" . }} <!-- Footer under page content -->
+        {{ partial "platen/inject/footer" . }}
+      </footer>
+
+      {{ template "comments" . }} <!-- Comments block -->
+
+      <label for="menu-control" class="hidden platen-menu-overlay"></label>
+    </div>
+    {{ if default true (default .Site.Params.Platen.Display.ShowToC .Params.Platen.ShowToC) }}
+    <aside class="platen-toc">
+      <div class="platen-toc-content">
+        {{ template "toc" . }} <!-- Table of Contents -->
+      </div>
+    </aside>
+    {{ end }}
+  </main>
+
+  {{ partial "platen/inject/body" . }}
+</body>
+</html>
+
+{{ define "menu" }}
+  {{ partial "platen/menu" . }}
+{{ end }}
+
+{{ define "header" }}
+  {{ partial "platen/header" . }}
+
+  {{ if default true (default .Site.Params.Platen.ToC .Params.Platen.ToC) }}
+  <aside class="hidden clearfix">
+    {{ template "toc" . }}
+  </aside>
+  {{ end }}
+{{ end }}
+
+{{ define "footer" }}
+  {{ partial "platen/footer" . }}
+{{ end }}
+
+{{ define "comments" }}
+  {{ if and .Content (default false (default .Site.Params.Platen.Features.Comments.Enabled .Params.Platen.EnableComments)) }}
+  <div class="platen-comments">
+    {{- partial "platen/comments" . -}}
+  </div>
+  {{ end }}
+{{ end }}
+
+{{ define "main" }}
+  <article class="markdown">
+    {{- .Content -}}
+  </article>
+{{ end }}
+
+{{ define "toc" }}
+  {{ partial "platen/toc" . }}
+{{ end }}

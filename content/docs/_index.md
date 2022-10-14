@@ -1,7 +1,6 @@
 ---
-title: Documentation
+title: "{{ .Name | humanize | title }}"
 summary: Documentation for Platen
-bookFlatSection: false
 weight: 10
 ---
 

@@ -1,0 +1,7 @@
+@media screen and (min-width: $container-max-width) {
+  .platen-page,
+  .platen-menu .platen-menu-content,
+  .platen-toc .platen-toc-content {
+    padding: $padding-16 * 2 $padding-16;
+  }
+}

@@ -1,0 +1,13 @@
+.platen-header {
+  display: none;
+  margin-bottom: $padding-16;
+
+  label {
+    line-height: 0;
+  }
+
+  img.platen-icon {
+    height: 1.5em;
+    width: 1.5em;
+  }
+}

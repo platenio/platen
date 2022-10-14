@@ -1,0 +1,96 @@
+{
+  "name": "Post",
+  "$schema": "https://beta.frontmatter.codes/config/taxonomy.contenttypes.schema.json",
+  "pageBundle": false,
+  "previewPath": "posts",
+  "fields": [
+    {
+      "title": "Author's Name",
+      "name": "author",
+      "type": "string",
+      "single": true
+    },
+    {
+      "title": "Title",
+      "name": "title",
+      "type": "string",
+      "single": true
+    },
+    {
+      "title": "Link Title",
+      "description": "Used as the title for this page when included in a list, like the section shortcode.",
+      "name": "linktitle",
+      "type": "string",
+      "single": true
+    },
+    {
+      "title": "Summary",
+      "description": "Displayed when paginated or in a list and as page description",
+      "name": "summary",
+      "type": "string"
+    },
+    {
+      "title": "Weight",
+      "description": "Determines order for pages; lower weight first",
+      "name": "weight",
+      "type": "number"
+    },
+    {
+      "title": "Publishing date",
+      "name": "date",
+      "type": "datetime",
+      "default": "{{now}}",
+      "isPublishDate": true
+    },
+    {
+      "title": "Content preview",
+      "name": "preview",
+      "type": "image"
+    },
+    {
+      "title": "Is in draft",
+      "name": "draft",
+      "type": "draft"
+    },
+    {
+      "title": "Platen",
+      "description": "These options override site-wide settings for this page. Don't specify a value if you want to inherit the site defaults.",
+      "type": "fields",
+      "name": "Platen",
+      "fields": [
+        {
+          "title": "Show Table of Contents",
+          "name": "ShowToC",
+          "type": "boolean"
+        },
+        {
+          "title": "Enable comments",
+          "name": "EnableComments",
+          "type": "boolean"
+        },
+        {
+          "title": "Exclude from site search",
+          "name": "ShowToC",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "title": "Tags",
+      "name": "tags",
+      "type": "tags"
+    },
+    {
+      "title": "Categories",
+      "name": "categories",
+      "type": "categories"
+    },
+    {
+      "title": "type",
+      "name": "type",
+      "type": "string",
+      "default": "Post",
+      "hidden": true
+    }
+  ]
+}

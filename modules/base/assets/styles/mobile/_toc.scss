@@ -1,0 +1,19 @@
+@media screen and (max-width: $mobile-breakpoint) {
+  #toc-control {
+    display: inline;
+  }
+
+  .platen-toc {
+    display: none;
+  }
+
+  #toc-control:focus ~ main label[for="toc-control"] {
+    @include outline;
+  }
+
+  #toc-control:checked ~ main {
+    .platen-header aside {
+      display: block;
+    }
+  }
+}

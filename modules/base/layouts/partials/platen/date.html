@@ -1,0 +1,6 @@
+{{/*
+  Returns formatted date.
+  Usage: partial "platen/date" (dict "Date" .Date "Format" .Site.Params.Display.DateFormat)
+*/}}
+{{- $format := default "January 2, 2006" .Format -}}
+{{- return (.Date.Format $format) -}}

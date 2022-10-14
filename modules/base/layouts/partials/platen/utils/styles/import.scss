@@ -1,0 +1,8 @@
+{{ $stylesMap  := .StylesMap }}
+{{ $rootFolder := .RootFolder  }}
+{{- range $name, $settings := $stylesMap -}}
+  {{ if $settings.Enabled }}
+    {{- $mungedName := default (lower $name) $settings.Name }}
+    @import "{{ $rootFolder }}/{{ $mungedName }}";
+  {{ end }}
+{{- end -}}

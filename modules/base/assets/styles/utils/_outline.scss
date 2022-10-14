@@ -1,0 +1,5 @@
+@mixin outline {
+  outline-style: auto;
+  outline-color: currentColor;
+  outline-color: -webkit-focus-ring-color;
+}

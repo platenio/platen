@@ -4,11 +4,9 @@ title: Platen
 
 module:
   replacements: >-
-    github.com/platenio/hugo-platen -> C:\code\platen\modules\hugo-platen,
-    github.com/alex-shpak/hugo-book -> C:\code\platen\platen.io\modules\base
+    github.com/platenio/platen/modules/base -> C:\code\platen\platen.io\modules\base
   imports:
-    - path: github.com/platenio/hugo-platen
-    - path: github.com/alex-shpak/hugo-book
+    - path: github.com/platenio/platen/modules/base
 
 disablePathToLower: true
 enableGitInfo: true

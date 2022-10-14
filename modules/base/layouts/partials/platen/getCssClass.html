@@ -1,0 +1,59 @@
+{{/*
+    Returns the list of classes, space separated, to inject into the body tag of a page.
+    
+    In particular, the behavior for a page being rendered depends its location:
+    1. If it is a top-level file (e.g. 'content/foo.md'), it will:
+       a. return "foo" if the file's frontmatter does not have the cssClass parameter set
+       b. return the value of the cssClass parameter if set in the file's frontmatter
+       c. return "" if the top-level file is also the homepage (i.e. 'content/_index.md')
+    2. If it is the index of a section (e.g. 'content/foo/_index.md'), it will:
+       a. return "foo" if the file's frontmatter does not have the cssClass parameter set
+       b. return the value of the cssClass parameter if set in the file's frontmatter
+    3. If it is a non-index leaf of a section (e.g. 'content/foo/bar.md'), it will:
+       a. return the cssClass injection value for its parent section (as described in 2)
+          if the leaf's frontmatter does not have the cssClass parameter set
+       b. return the cssClass injection value for its parent section (as described in 2)
+          with its own cssClass parameter value if set in the frontmatter of the leaf's file
+    4. For arbitrarily nested files (e.g 'content/foo/bar/baz/qux.mf'), it will:
+       a. return the CSS classes for each parent section as outlined in 3; assuming
+          none of the ancestor sections for `qux.md` nor `qux.md` itself have the cssClass
+          parameter set, the return value would be "foo bar baz"
+*/}}
+{{- $injectedClass :=  "" -}}
+{{- $currentParams := .Params -}}
+{{/* This implementation only works on content files, not other generated pages, like taxonomy */}}
+{{- with .File -}}
+    {{- $filePath := path.Clean .Path -}}
+    {{- $parentPath := path.Dir $filePath -}}
+    {{- $parts := split $filePath "/" -}}
+    {{- $isTopLevelFile := eq (len $parts) 1 -}}
+    {{- range $index, $section := $parts -}}
+        {{- if (in $section ".md") -}} {{/* Process the leaf file */}}
+            {{- if (ne $section "_index.md") -}}
+                {{- if $isTopLevelFile -}}
+                    {{- with $currentParams.cssClass -}}
+                        {{- $injectedClass = printf "%s %s" $injectedClass . -}}
+                    {{- else -}}
+                        {{- $injectedClass = printf "%s %s" $injectedClass (replace $section ".md" "") -}}
+                    {{- end -}}
+                {{- else -}} {{/* Only inject ancestor section classes unless the page specifies one */}}
+                    {{- with $currentParams.cssClass -}}
+                        {{- $injectedClass = printf "%s %s" $injectedClass . -}}
+                    {{- end -}}
+                {{- end -}}
+            {{- end -}}
+        {{- else -}} {{/* Process an ancestor section */}}
+            {{- $segment := printf "/%s" (delimit $parts "/" $index) -}}
+            {{- with $.Site.GetPage $segment -}} {{/* The section has an _index.md */}}
+                {{- with .Params.cssClass -}}
+                    {{- $injectedClass = printf "%s %s" $injectedClass . -}}
+                {{- else -}}
+                    {{- $injectedClass = printf "%s %s" $injectedClass $section -}}
+                {{- end -}}
+            {{- else -}} {{/* The section does not have an _index.md */}}
+                {{- $injectedClass = printf "%s %s" $injectedClass $section -}}
+            {{- end -}}
+        {{- end -}}
+    {{ end }}
+{{ end }}
+{{- return (trim $injectedClass " ") -}}

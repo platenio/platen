@@ -1,0 +1,9 @@
+.markdown-inner {
+  // Util class to remove extra margin in nested markdown content
+  > :first-child {
+    margin-top: 0;
+  }
+  > :last-child {
+    margin-bottom: 0;
+  }
+}

@@ -3,6 +3,8 @@ title: detail
 summary: >-
   Documentation on the `detail` shortcode, which adds a details and summary HTML tag to a Markdown
   page for semantically collapsible content.
+Platen:
+  ShowToC: true
 ---
 
 The `detail` shortcode makes it possible for you to add an accessible and semantically accurate
@@ -39,11 +41,11 @@ Markdown
 #### Markdown Input { #example-positional-parameter-markdown-input }
 
 ```go
-{{%/* detail "info" "Example 1" */%}}
+{{%/* details "info" "Example 1" */%}}
 This text is rendered in a `detail` tag with a `summary` tag. The body text is
 formatted as Markdown. If you inspect the rendered element on the page, it has
 `info` added to its class attribute.
-{{%/* /detail */%}}
+{{%/* /details */%}}
 ```
 
 #### HTML Output { #example-positional-parameter-html-output }
@@ -59,21 +61,21 @@ formatted as Markdown. If you inspect the rendered element on the page, it has
 
 #### Rendered Shortcode { #example-positional-parameter-rendered-shortcode }
 
-{{% detail "info" "Example 1" %}}
+{{% details "info" "Example 1" %}}
 This text is rendered in a `detail` tag with a `summary` tag. The body text is
 formatted as Markdown. If you inspect the rendered element on the page, it has
 `info` added to its class attribute.
-{{% /detail %}}
+{{% /details %}}
 
 ### 2. Named Parameter Example
 
 #### Markdown Input { #example-named-parameter-markdown-input }
 
 ```go
-{{%/* detail title="Example 2" */%}}
+{{%/* details title="Example 2" */%}}
 This text is rendered in a `detail` tag with a `summary` tag. The body text is
 formatted as Markdown.
-{{%/* /detail */%}}
+{{%/* /details */%}}
 ```
 
 #### HTML Output { #example-named-parameter-html-output }
@@ -88,10 +90,10 @@ formatted as Markdown.
 
 #### Rendered Shortcode { #example-named-parameter-rendered-shortcode }
 
-{{% detail title="Example 2" %}}
+{{% details title="Example 2" %}}
 This text is rendered in a `detail` tag with a `summary` tag. The body text is
 formatted as Markdown.
-{{% /detail %}}
+{{% /details %}}
 
 ## Parameters
 

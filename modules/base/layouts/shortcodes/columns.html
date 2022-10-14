@@ -1,0 +1,53 @@
+{{- /*
+    This shortcode can be used to turn markdown content into columns with a
+    flexible ratio.
+    It has two optional parameters, `ratio` and `flattenForMobile`. They can
+    be specified by name or position. For example, these two shortcodes have the
+    same functionality:
+      {{< columns ratio="3:7" flattenForMobile=false >}}
+      {{< columns "3:7" false >}}
+    Note that to specify `flattenForMobile` but not `ratio` without using
+    named parameters, you **must** specify the ratio as an empty string:
+      {{< columns "" false >}}
+    
+    The `ratio` parameter should be specified as a string of integers separated
+    by colons (`:`), such as `1:2:1` or `1:1:3:1`. If `ratio` is not specified
+    (or is set to an empty string, `""`), the columns are evenly distributed.
+    For more information on flexible columns, see the docs on MDN:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow
+    
+    If `flattenForMobile` is specified as `true`, the `flatten-in-mobile`
+    class is added to the container for the columns. This causes the columns to
+    collapse into a vertical stack when in mobile view to help make them more
+    readable on smaller screens. If `flattenForMobile` is not specified,
+    the columns will still display horizontally, even on smaller screens.
+*/ -}}
+{{- $ratio  := default "" (cond .IsNamedParams (.Get "ratio") (.Get 0)) -}}
+{{- $flattenForMobile  := (cond .IsNamedParams (.Get "flattenForMobile") (ne nil (.Get 1))) }}
+{{- $mobileClassSuffix := cond $flattenForMobile " flatten-in-mobile" "" -}}
+
+{{- with $ratio -}}
+  {{- if strings.Contains $ratio ":" -}}
+    {{- $ratio = split . ":" -}}
+  {{- else -}}
+    {{- $ratio = "" -}}
+  {{- end -}}
+{{- end -}}
+
+<div class="platen-columns flex flex-wrap{{ $mobileClassSuffix }}">
+{{- if $ratio -}}
+  {{- range $i, $val := split .Inner "<--->" -}}
+    {{- if gt (len $ratio) $i}}
+      <div style="flex-grow:{{ index $ratio $i }};" class="flex-even markdown-inner">
+        {{- $val | $.Page.RenderString -}}
+      </div>
+    {{- end -}}
+  {{- end -}}
+{{- else -}}
+  {{- range split .Inner "<--->" -}}
+  <div class="flex-even markdown-inner">
+    {{- . | $.Page.RenderString -}}
+  </div>
+  {{- end -}}
+{{- end -}}
+</div>

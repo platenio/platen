@@ -1,0 +1,22 @@
+aside nav ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  li {
+    margin: 1em 0;
+    position: relative;
+  }
+
+  a {
+    display: block;
+  }
+
+  a:hover {
+    opacity: 0.5;
+  }
+
+  ul {
+    padding-inline-start: $padding-16;
+  }
+}

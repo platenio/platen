@@ -7,9 +7,8 @@
   // Define and use local schemas for data files:
   "yaml.schemas": {
     "data/schemas/hugo/config/base.yaml": "config.yaml",
-    "data/schemas/hugo/config/params/book.yaml": "config/**/params.yaml",
-    "data/schemas/hugo/config/params/sharing.yaml": "config/**/params.yaml",
-    "data/schemas/hugo/config/params/toroidal.yaml": "config/**/params.Toroidal.yaml"
+    "data/schemas/hugo/config/params/platen.yaml": "config/**/params.yaml"
+    // "data/schemas/hugo/config/params/sharing.yaml": "config/**/params.yaml",
   },
   // Use Vale to lint prose. Change alert level to "suggestion" for first draft.
   "vale.core.useCLI": true,
@@ -24,5 +23,6 @@
     "**/Thumbs.db": true,
     "resources/": true,
     ".hugo_build.lock": true
-  }
+  },
+  "files.eol": "\n"
 }

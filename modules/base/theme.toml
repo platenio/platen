@@ -1,0 +1,18 @@
+name = "platen"
+license = "MIT"
+licenselink = "https://github.com/platenio/platen/blob/main/modules/base/LICENSE"
+description = "Platen base theme for Hugo: build websites for digital tabletop games"
+homepage = "https://github.com/platenio/platen"
+demosite = "https://platen.io"
+tags = [ "books", "games" ]
+features = [ "search", "pwa" ]
+min_version = "0.104.0"
+
+[author]
+    name = "Platen Cooperative"
+    homepage = "https://platen.io"
+
+[original]
+    name = "hugo-book"
+    homepage = "https://hugo-book-demo.netlify.app"
+    repo = "https://github.com/alex-shpak/hugo-book"

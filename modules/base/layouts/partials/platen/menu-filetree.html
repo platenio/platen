@@ -1,0 +1,45 @@
+{{ $platenSection := default "*" .Site.Params.Platen.Display.MenuRootSection  }}
+{{ if eq $platenSection "*" }}
+  {{ $platenSection = "/" }}{{/* Backward compatibility */}}
+{{ end }}
+
+{{ with .Site.GetPage $platenSection }}
+  {{ template "platen-section-children" (dict "Section" . "CurrentPage" $) }}
+{{ end }}
+
+{{ define "platen-section-children" }}{{/* (dict "Section" .Section "CurrentPage" .CurrentPage) */}}
+  <ul>
+    {{ range (where .Section.Pages "Params.Platen.Menu.Hide" "ne" true) }}
+      {{ if .IsSection }}
+        <li {{- if .Params.Platen.Menu.FlattenSection }} class="platen-section-flat" {{ end -}}>
+          {{ template "platen-page-link" (dict "Page" . "CurrentPage" $.CurrentPage) }}
+          {{ template "platen-section-children" (dict "Section" . "CurrentPage" $.CurrentPage) }}
+        </li>
+      {{ else if and .IsPage .Content }}
+        <li>
+          {{ template "platen-page-link" (dict "Page" . "CurrentPage" $.CurrentPage) }}
+        </li>
+      {{ end }}
+    {{ end }}
+  </ul>
+{{ end }}
+
+{{ define "platen-page-link" }}{{/* (dict "Page" .Page "CurrentPage" .CurrentPage) */}}
+  {{ $current := eq .CurrentPage .Page }}
+  {{ $ancestor := .Page.IsAncestor .CurrentPage }}
+
+  {{ if .Page.Params.Platen.Menu.CollapseSection }}
+    <input type="checkbox" id="section-{{ md5 .Page }}" class="toggle" {{ if or $current $ancestor }}checked{{ end }} />
+    <label for="section-{{ md5 .Page }}" class="flex justify-between">
+      <a {{ if .Page.Content }}href="{{ .Page.Permalink }}"{{ else }}role="button"{{ end }} class="{{ if $current }}active{{ end }}">
+        {{- partial "platen/title" .Page -}}
+      </a>
+    </label>
+  {{ else if .Page.Content }}
+    <a href="{{ .Page.Permalink }}" class="{{ if $current }} active{{ end }}">
+      {{- partial "platen/title" .Page -}}
+    </a>
+  {{ else }}
+    <span>{{- partial "platen/title" .Page -}}</span>
+  {{ end }}
+{{ end }}

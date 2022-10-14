@@ -1,9 +1,0 @@
-{
-  "$schema": "https://beta.frontmatter.codes/config/data.files.schema.json",
-  "fileType": "yaml",
-  "file": "[[workspace]]/config/_default/params.Toroidal.yaml",
-  "id": "hugo.config.params.toroidal",
-  "title": "Hugo Config: Toroidal",
-  "singleEntry": true,
-  "type": "hugo.params.toroidal"
-}

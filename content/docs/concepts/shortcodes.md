@@ -5,7 +5,7 @@ bookFlatSection: false
 weight: 10
 ---
 
-Platen relies on Hugo's [shortcodes][01] feature to help you go beyond simple Markdown when
+Platen relies on Hugo's [shortcodes][01] feature to help you go beyond basic Markdown when
 authoring the digital editions of your books. Without shortcodes, you are limited to static
 elements, like headers, paragraphs, lists, and tables. With shortcodes, you can embed iframes,
 create forms, make your tables interactive, and more---without having to hand-write HTML in your
@@ -94,9 +94,9 @@ Hugo itself provides several shortcodes:
 
 ## Creating shortcodes
 
-You can also [create your own shortcodes][10] if the ones Hugo and Platen provide don't meet all of
-your needs. If you find yourself wishing a shortcode existed though, you can always [reach out][11]
-or [file an issue][12] and we'll be happy to see if we can help.
+You can also [create your own shortcodes][10] if the ones Hugo and Platen provide don't meet your
+needs. If you find yourself wishing a shortcode existed though, you can always [reach out][11] or
+[file an issue][12] and we'll be happy to see if we can help.
 
 <!-- Link References -->
 [01]: https://gohugo.io/content-management/shortcodes/
@@ -109,5 +109,5 @@ or [file an issue][12] and we'll be happy to see if we can help.
 [08]: https://gohugo.io/content-management/shortcodes/#vimeo
 [09]: https://gohugo.io/content-management/shortcodes/#youtube
 [10]: https://gohugo.io/templates/shortcode-templates/
-[11]: {{% ref "/contact.md" %}}
+[11]: /contact.md
 [12]: https://github.com/platenio/hugo-platen/issues

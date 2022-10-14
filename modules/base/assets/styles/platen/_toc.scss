@@ -1,0 +1,20 @@
+.platen-toc {
+  flex: 0 0 $toc-width;
+  font-size: $font-size-12;
+
+  .platen-toc-content {
+    width: $toc-width;
+    padding: $padding-16;
+
+    @include fixed;
+  }
+
+  img {
+    height: 1em;
+    width: 1em;
+  }
+
+  nav > ul > li:first-child {
+    margin-top: 0;
+  }
+}

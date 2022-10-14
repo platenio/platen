@@ -1,0 +1,32 @@
+.markdown {
+  code {
+    padding: 0 $padding-4;
+    background: var(--gray-200);
+    border-radius: $border-radius;
+    font-size: 0.875em;
+  }
+
+  pre {
+    padding: $padding-16;
+    background: var(--gray-100);
+    border-radius: $border-radius;
+    overflow-x: auto;
+
+    code {
+      padding: 0;
+      background: none;
+    }
+  }
+
+  // Special case for highlighted code with line numbers
+  .highlight table tr {
+    td:nth-child(1) pre {
+      margin: 0;
+      padding-inline-end: 0;
+    }
+    td:nth-child(2) pre {
+      margin: 0;
+      padding-inline-start: 0;
+    }
+  }
+}

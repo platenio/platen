@@ -1,0 +1,14 @@
+{{ $name := .Name }}
+{{ $value := .Value }}
+{{ $prefix := cond (eq true .IsCSS) "--" "$" }}
+{{ $default := cond (eq true .IsDefault) " !default" "" }}
+
+{{ if reflect.IsMap $value }}
+  {{ $prefix }}{{ $name }}: (
+  {{ range $k, $v := $value }}
+    {{ $k }}: {{ safeHTML $v }},
+  {{ end }}
+  ){{ $default }};
+{{ else }}
+  {{ $prefix }}{{ $name }}: {{ safeHTML $value }}{{ $default }};
+{{ end }}

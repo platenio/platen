@@ -1,0 +1,13 @@
+<div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="{{ "svg/menu.svg" | relURL }}" class="platen-icon" alt="Menu" />
+  </label>
+
+  <strong>{{ partial "platen/title" . }}</strong>
+
+  <label for="toc-control">
+    {{ if default true (default .Site.Params.Platen.Display.ShowToC .Params.Platen.ShowToC) }}
+    <img src="{{ "svg/toc.svg" | relURL }}" class="platen-icon" alt="Table of
+    Contents" /> {{ end }}
+  </label>
+</div>

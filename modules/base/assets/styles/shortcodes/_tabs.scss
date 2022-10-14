@@ -1,0 +1,37 @@
+.markdown .platen-tabs {
+  margin-top: $padding-16;
+  margin-bottom: $padding-16;
+
+  border: $padding-1 solid var(--gray-200);
+  border-radius: $border-radius;
+
+  overflow: hidden;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  label {
+    display: inline-block;
+    padding: $padding-8 $padding-16;
+    border-bottom: $padding-1 transparent;
+    cursor: pointer;
+  }
+
+  .platen-tabs-content {
+    order: 999; //Move content blocks to the end
+    width: 100%;
+    border-top: $padding-1 solid var(--gray-100);
+    padding: $padding-16;
+    display: none;
+  }
+
+  input[type="radio"]:checked + label {
+    border-bottom: $padding-1 solid var(--color-link);
+  }
+  input[type="radio"]:checked + label + .platen-tabs-content {
+    display: block;
+  }
+  input[type="radio"]:focus + label {
+    @include outline;
+  }
+}

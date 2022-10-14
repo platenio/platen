@@ -1,0 +1,30 @@
+{{ $fontStyles := .Styles }}
+{{ $weightedFontStyles := slice }}
+{{ $unweightedFontStyles := slice }}
+{{ range $fontStyles }}
+  {{ if (and (reflect.IsMap .) (isset . "Weight")) }}
+    {{ $weightedFontStyles = $weightedFontStyles | append .}}
+  {{ else if reflect.IsMap . }}
+    {{ $unweightedFontStyles = $unweightedFontStyles | append .ImportName }}
+  {{ else }}
+    {{ $unweightedFontStyles = $unweightedFontStyles | append . }}
+  {{ end }}
+{{ end }}
+
+{{ range $font := sort (where $weightedFontStyles "Weight" "ne" nil) "Weight" }}
+  @import "fonts/{{ $font.ImportName }}";
+{{ end }}
+
+{{ range $font := sort $unweightedFontStyles }}
+  @import "fonts/{{ $font }}";
+{{ end }}
+
+{{ range $name, $settings := .Settings }}
+  {{- $selector := default (lower $name) $settings.Selector }}
+  {{ $selector }} {
+    {{ with $settings.Family }}font-family: {{ safeHTML . }};{{ end }}
+    {{ range $settings.Mixins }}
+      @include {{ . }};
+    {{ end }}
+  }
+{{ end }}

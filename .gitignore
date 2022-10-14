@@ -6,6 +6,4 @@
 !.vscode/styles/
 .vscode/styles/*
 !.vscode/styles/Vocab/
-!.vscode/styles/Flagrant/
-!.vscode/styles/Jared/
-!.vscode/styles/Contractions/
+!.vscode/styles/Platen/

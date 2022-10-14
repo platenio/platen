@@ -1,0 +1,9 @@
+ul.pagination {
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+
+  .page-item a {
+    padding: $padding-16;
+  }
+}

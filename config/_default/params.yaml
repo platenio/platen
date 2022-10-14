@@ -1,16 +1,27 @@
 description: A toolkit for interactive digital books.
 images:
   - /images/logo.svg
-BookTheme: auto
-BookSection: /
-BookCommitPath: commit
-BookEditPath: edit/main
-BookToC: true
-BookLogo: /images/logo.svg
-BookRepo: "https://github.com/FlagrantGarden/site"
-BookDateFormat: "January 2, 2006"
-BookSearch: true
-BookComments: false
-BookPortableLinks: true
-BookServiceWorker: true
-BookTranslatedOnly: false
+Platen:
+  Theme:
+    Mode: auto # BookTheme
+  Display:
+    ShowToC: true # BookToC
+    DateFormat: "January 2, 2006" #BookDateFormat
+    MenuRootSection: / # BookSection
+    Logo:
+      URL: /images/logo.svg # BookLogo
+  Features:
+    Search: # BookSearch
+      Enabled: true
+    Comments: # BookComments
+      Enabled: true
+    PWA: # BookServiceWorker
+      Enabled: true
+    PortableLinks: # BookPortableLinks
+      Enabled: true
+  Repository:
+    URL: "https://github.com/FlagrantGarden/site" # BookRepo
+    CommitPath: commit # BookCommitPath
+    EditPath: edit/main # BookEditPath
+  Multilingual: # BookTranslatedOnly
+    TranslatedOnly: false
