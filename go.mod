@@ -1,4 +1,4 @@
-module github.com/platenio/platen.io
+module github.com/platenio/platen
 
 go 1.19
 
