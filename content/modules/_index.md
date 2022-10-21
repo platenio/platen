@@ -4,7 +4,7 @@ summary: Documentation for Platen modules to what your site can do.
 weight: 30
 Platen:
   Menu:
-    CollapseSection: true
+    FlattenSection: true
 ---
 
 Platen is built with a collection of [Hugo modules][01] to make authoring your digital books easier

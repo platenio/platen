@@ -1,9 +1,10 @@
 ---
 title: Shortcodes
 summary: Documentation on the shortcodes provided by Platen.
-weight: 10
-bookFlatSection: false
-bookCollapseSection: true
+weight: 30
+Platen:
+  Menu:
+    CollapseSection: true
 ---
 
 This section documents the available shortcodes that Platen provides. For more information on
@@ -13,4 +14,4 @@ the specific documentation for each shortcode.
 {{< section >}}
 
 <!-- Link References -->
-[01]: {{% ref "/docs/concepts/shortcodes.md" %}}
+[01]: {{% ref "/using/concepts/shortcodes.md" %}}

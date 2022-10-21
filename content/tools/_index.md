@@ -6,4 +6,3 @@ Platen:
   Menu:
     CollapseSection: true
 ---
-

@@ -1,12 +1,28 @@
 # Update to your own settings for URL/title
 baseURL: https://platen.io/
 title: Platen
+themesDir: ../modules
+contentDir: ../content
+dataDir: ../data
 
 module:
   replacements: >-
-    github.com/platenio/platen/modules/base -> C:\code\platen\platen.io\modules\base
+    github.com/platenio/platen/modules/base -> base
   imports:
     - path: github.com/platenio/platen/modules/base
+      mounts:
+        - source: archetypes
+          target: archetypes
+        - source: assets
+          target: assets
+        - source: docs
+          target: content/modules/platen
+        - source: i18n
+          target: i18n
+        - source: layouts
+          target: layouts
+        - source: static
+          target: static
 
 disablePathToLower: true
 enableGitInfo: true
@@ -25,11 +41,14 @@ markup:
 languages:
   en:
     languageName: English
-    contentDir: content
+    contentDir: ../content
     weight: 1
 
 menu:
   after:
+    - name: Contact
+      url: /contact
+      weight: 5
     - name: Hugo
       url: https://gohugo.io/
       weight: 10
