@@ -20,7 +20,7 @@ Platen:
     PortableLinks: # BookPortableLinks
       Enabled: true
   Repository:
-    URL: "https://github.com/FlagrantGarden/site" # BookRepo
+    URL: "https://github.com/platenio/platen" # BookRepo
     CommitPath: commit # BookCommitPath
     EditPath: edit/main # BookEditPath
   Multilingual: # BookTranslatedOnly

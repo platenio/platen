@@ -1,7 +1,10 @@
 ---
-title: "{{ .Name | humanize | title }}"
-summary: Documentation for Platen
-weight: 10
+title: Getting Started
+summary: Get started authoring digital books with Platen
+weight: 1
+Platen:
+  Menu:
+    CollapseSection: true
 ---
 
 These pages include documentation for Platen itself and the various modules and tools that we

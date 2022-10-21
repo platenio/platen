@@ -24,5 +24,6 @@
     "resources/": true,
     ".hugo_build.lock": true
   },
-  "files.eol": "\n"
+  "files.eol": "\n",
+  "markdown.extension.orderedList.marker": "one"
 }

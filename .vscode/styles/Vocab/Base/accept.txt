@@ -1,3 +1,7 @@
 [sS]hortcodes?
 [hH]ugo
 Shpak
+[wW]inget
+EPUBs?
+PDFs?
+[dD]istros?
