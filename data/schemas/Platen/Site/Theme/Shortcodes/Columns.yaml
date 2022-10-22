@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Theme/Shortcodes/Columns.schema.yaml
+title: Columns
+description: Defines the settings for the columns shortcode
+schematize:
+  details: |
+    Defines the map of settings for the theme's `columns` shortcode. The existing value is a
+    map that includes whether or not to enable the shortcode and the style definition for it.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all properties in your own configuration file. Only specify the values you want
+    to add or replace.
+type: object
+properties:
+  Enabled:
+    title: Enable the shortcode
+    description: Whether or not to enable the columns shortcode.
+    schematize:
+      details: |
+        Specifies whether or not to enable the `columns` shortcode. Defaults to `true`.
+    type: boolean
+    default: true
+  Style:
+    title: SCSS Style Module
+    description: Defines default styling for columns created by the shortcode.
+    schematize:
+      weight: 100
+      skipSchemaRender: true
+      details: |
+        Defines default styling for buttons created by the shortcode.
+
+        When you use the columns shortcode, the following SCSS is applied to the content:
+
+        ```scss
+        .markdown .platen-columns {
+          margin-left: -$padding-large;
+          margin-right: -$padding-large;
+
+          > div {
+            margin: $padding-large 0;
+            min-width: $body-min-width / 2;
+            padding: 0 $padding-large;
+          }
+
+          &.flatten-in-mobile {
+            flex-direction: column;
+
+            @media (min-width:56rem) {
+                flex-direction: row;
+            }
+          }
+        }
+        ```
+
+        The content is placed in a div with the `platen-columns`, `flex`, `flex-wrap`, and (if the
+        `flattenForMobile` parameter is used) the `flatten-in-mobile` classes.
+
+        Each column's content is then placed in another div with the `flex-even` and
+        `markdown-inner` classes.
+
+        This style sets the outer container's horizontal margins to the negative
+        value of [sref:`Theme.Variables.BasicSCSS.padding-large`].
+
+        It sets each column to have a vertical margin and horizontal padding to
+        [sref:`Theme.Variables.BasicSCSS.padding-large`] and sets the minimum width to half the
+        value of [sref:`Theme.Variables.BasicSCSS.body-min-width`].
+
+        If the `flattenForMobile` parameter is set to `true`, it sets the default
+        [sref:`flex-direction`] to column and switches it to row in mobile view.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/shortcodes/_columns.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [sref:`flex-direction`]: mdn.css:flex-direction
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`Theme.Variables.BasicSCSS.body-min-width`]: Platen.Site.Theme.Variables.BasicSCSS.body-min-width
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+    type: object
+    default:
+      Name: columns
+    required:
+      - Name
+    properties:
+      Name:
+        title: Style Module Name
+        description: The name of the SCSS style module without the leading `_`.
+        enum: columns

@@ -1,0 +1,315 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Theme/Styles/Mobile.schema.yaml
+title: Mobile Style Modules
+description: Defines the map of mobile-specific SCSS style modules for the theme.
+schematize:
+  details: |
+    Defines the map of mobile-specific SCSS style modules for the theme. The existing value is a map
+    of styles that are loaded first for the theme and set defaults for the presentation.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all styles in your own configuration file. Only specify the values you want
+    to add or replace.
+type: object
+properties:
+  Header:
+    title: Header Style Module
+    description: Defines the style for the page header in mobile view.
+    schematize:
+      weight: 1
+      skipSchemaRender: true
+      details: |
+        Defines the style for the page header in mobile view. By default, the only setting for this
+        property is [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        @media screen and (max-width: $mobile-breakpoint) {
+          .platen-header {
+            display: block;
+          }
+        }
+        ```
+
+        This applies to the page header, setting its display to `block` instead of `hidden` in
+        mobile view.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/mobile/_header.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+    type: object
+  Menu:
+    title: Menu Style Module
+    description: Defines the style for the site menu in mobile view.
+    schematize:
+      weight: 2
+      skipSchemaRender: true
+      details: |
+        Defines the style for the site menu in mobile view. By default, the only setting for this
+        property is [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        @media screen and (max-width: $mobile-breakpoint) {
+          #menu-control {
+            display: inline;
+          }
+
+          .platen-menu {
+            visibility: hidden;
+            margin-inline-start: -$menu-width;
+            font-size: $font-size-base;
+            z-index: 1;
+          }
+
+          #menu-control:focus ~ main label[for="menu-control"] {
+            @include outline;
+          }
+
+          #menu-control:checked ~ main {
+            .platen-menu {
+              visibility: initial;
+            }
+
+            .platen-menu .platen-menu-content {
+              transform: translateX($menu-width);
+              box-shadow: 0 0 $padding-medium rgba(0, 0, 0, 0.1);
+            }
+
+            .platen-page {
+              opacity: 0.25;
+            }
+
+            .platen-menu-overlay {
+              display: block;
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              left: 0;
+              right: 0;
+            }
+          }
+
+          // for RTL support
+          body[dir="rtl"] #menu-control:checked ~ main {
+            .platen-menu .platen-menu-content {
+              transform: translateX(-$menu-width);
+            }
+          }
+        }
+        ```
+
+        This applies to the site menu in mobile view, overriding the styles defined in
+        [sref:`Theme.Styles.Platen.Menu`].
+
+        #### Menu Container
+
+        ```scss
+        .platen-menu {
+          visibility: hidden;
+          margin-inline-start: -$menu-width;
+          font-size: $font-size-base;
+          z-index: 1;
+        }
+        ```
+
+        This hides the menu by default in mobile view, allowing it to be displayed when toggled.
+
+        #### Menu Control
+
+        ```scss
+        #menu-control {
+          display: inline;
+        }
+        ```
+
+        This ensures the menu control element (the logo) is displayed instead of hidden.
+
+        ```scss
+        #menu-control:focus ~ main label[for="menu-control"] {
+          @include outline;
+        }
+        ```
+
+        This adds an outline to the control when focused, as with a keyboard.
+
+        #### Menu Display
+
+        ```scss
+        #menu-control:checked ~ main {
+          .platen-menu {
+            visibility: initial;
+          }
+
+          .platen-menu .platen-menu-content {
+            transform: translateX($menu-width);
+            box-shadow: 0 0 $padding-medium rgba(0, 0, 0, 0.1);
+          }
+
+          .platen-page {
+            opacity: 0.25;
+          }
+
+          .platen-menu-overlay {
+            display: block;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+          }
+        }
+        ```
+
+        This applies only when the toggle is checked to display the site menu. It returns the menu
+        container to its normal visibility, transforming the menu's width from `0` to the value
+        defined in [sref:`Theme.Variables.BasicSCSS.menu-width`], and adds a slight shadow to it.
+        This causes it to slide out over the content.
+
+        While the menu is open, it sets the opacity of the page content to 25% and ensures that
+        clicking off the menu closes it.
+
+        #### Right to Left Overrides
+
+        ```scss
+        body[dir="rtl"] #menu-control:checked ~ main {
+          .platen-menu .platen-menu-content {
+            transform: translateX(-$menu-width);
+          }
+        }
+        ```
+
+        This ensures that when the language mode is right-to-left the menu slides out from the
+        right side of the screen instead of the left.
+
+        #### Overwriting
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/mobile/_menu.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Styles.Platen.Menu`]: Platen.Site.Theme.Styles.Platen.Menu
+        [sref:`Theme.Variables.BasicSCSS.menu-width`]: Platen.Site.Theme.Variables.BasicSCSS.menu-width
+    type: object
+  ToC:
+    title: Table of Contents Style Module
+    description: Defines the style for the table of contents in mobile view
+    schematize:
+      weight: 3
+      skipSchemaRender: true
+      details: |
+        Defines the style for the table of contents in mobile view. By default, the only setting for
+        this property is [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        @media screen and (max-width: $mobile-breakpoint) {
+          #toc-control {
+            display: inline;
+          }
+
+          .platen-toc {
+            display: none;
+          }
+
+          #toc-control:focus ~ main label[for="toc-control"] {
+            @include outline;
+          }
+
+          #toc-control:checked ~ main {
+            .platen-header aside {
+              display: block;
+            }
+          }
+        }
+        ```
+
+        This applies to the table of contents in mobile view, overriding the styles defined in
+        [sref:`Theme.Styles.Platen.Toc`].
+
+        #### ToC Container
+
+        ```scss
+        .platen-toc {
+          display: none;
+        }
+        ```
+
+        This hides the table of contents by default in mobile view.
+
+        #### ToC Control
+
+        ```scss
+        #toc-control {
+          display: inline;
+        }
+        ```
+
+        This ensures the ToC control element (the logo) is displayed instead of hidden.
+
+        ```scss
+        #toc-control:focus ~ main label[for="toc-control"] {
+          @include outline;
+        }
+        ```
+
+        This adds an outline to the control when focused, as with a keyboard.
+
+        #### ToC Display
+
+        ```scss
+        #toc-control:checked ~ main {
+          .platen-header aside {
+            display: block;
+          }
+        }
+        ```
+
+        This applies only when the toggle is checked to display the table of contents. It displays
+        the ToC at the top of the page as a `block` element before the content.
+
+        #### Overwriting
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/mobile/_toc.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Styles.Platen.Toc`]: Platen.Site.Theme.Styles.Platen.Toc
+    type: object
+patternProperties:
+  ".":
+    $ref: ./Defined.yaml
+    schematize:
+      href: pattern-any

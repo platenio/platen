@@ -1,0 +1,55 @@
+{{/*
+  Writes the properties section for an object with a heading followed by the documentation for each
+  defined property. The properties are first sorted by weight (if specified in the authored schema
+  with the `schematize.weight` key) and then alphabetically. This ensures a deterministic ordering
+  of the properties in the documentation.
+
+  This partial uses the parameters from the object's own documentation partial. The parameters are
+  expected to include:
+
+  - `property` - Mandatory. The objects's schema data
+  - `page`     - Mandatory. The hugo Page object for the webpage the documentation is being written
+    on, for resolving references.
+  - `_level` - Optional. The current hierarchy level of the page. Used for determining what heading
+    level to write. If unspecified, it's assumed that this is a top-level object, documenting a full
+    schema.
+  - `_id` - Optional. The ID this property belongs to. If specified, used as the prefix for this
+    object's properties. This value should be null for a top-level object and set for any nested
+    objects, like properties of a top-level object.
+*/}}
+{{- $params := . -}}
+{{- $level := $params._level -}}
+{{- $prefix := $params._id -}}
+{{- $data := $params.property -}}
+
+{{ with $data.patternProperties }}
+  {{ partial "schematize/utils/headings/arbitrary" (dict "level" $level "title" "Pattern Properties") }}
+
+  {{ $sortedProperties := dict -}}
+  {{- range $name, $info := $data.patternProperties -}}
+    {{- $weight := default 0 $info.schematize.weight -}}
+    {{- $id := $prefix -}}
+    {{- with $info.schematize.href -}}
+      {{- $id = printf "%s%s" $id . -}}
+    {{- else -}}
+      {{- if $info.title -}}
+        {{- $id = printf "%s%s" $id (. | lower | urlize) -}}
+      {{- else -}}
+        {{-
+          errorf "%s '%s'; %s. Reference: %#v"
+                 "No title or href specified for pattern property"
+                 $name
+                 "must specify schematize.href or a title for pattern properties"
+                 $data
+        -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $property := merge $info (dict "_id" $id "_weight" $weight "_pattern" $name) -}}
+    {{- $sortedProperties = merge $sortedProperties (dict $name $property) -}}
+  {{- end -}}
+
+  {{- range $info := sort $sortedProperties "_weight" "asc" -}}
+    {{- $property := merge $info (dict "_level" $level) -}}
+    {{ partial "schematize/utils/typePicker" (dict "property" $property "page" $params.page) }}
+  {{ end }}
+{{ end }}

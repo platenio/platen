@@ -1,0 +1,65 @@
+{{/*
+  Munge the descriptions in a JSON schema to include the raw URL to the docs page after newlines;
+  this enables a user of a schema-aware editor to hover on the key and click the URL to go straight
+  to the documentation without the schema author having to add this info to every property.
+
+  The prefix and postfix logic allows for nested properties; sub-properties are prefixed with the
+  key of their parent and an underscore. To get this working in the schema, the author needs to add
+  the `schematize.hrefPrefix` value on the property that has subproperties; that value cascades to
+  the subproperties in this implementation.
+*/}}
+{{- $params     := . -}}
+{{- $schemaData := $params.schemaData -}}
+{{- $docsURL    := $params.docsURL -}}
+{{- $postfix    := default "" $params.postfix -}}
+{{- $prefix     := default "" $params.hrefPrefix }}
+
+{{- with $schemaData.schematize.hrefPrefix -}}
+  {{- with $prefix -}}
+    {{/* Keep from double-applying a prefix from schematize medatata */}}
+    {{- if ne $prefix . -}}
+      {{- $prefix = printf "%s_%s" $prefix . -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $prefix = . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with $prefix -}}
+  {{- with $postfix -}}
+    {{/* Keep from double-applying a prefix from schematize medatata */}}
+    {{- if ne $prefix $postfix -}}
+      {{- $postfix = printf "%s_%s" $prefix $postfix -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $postfix = $prefix -}}
+  {{- end -}}
+{{- end -}}
+
+{{- range $key, $value := $schemaData -}}
+  {{- if eq "description" $key -}}
+    {{- with $postfix -}}
+      {{- $postfix = printf "#%s" $postfix -}}
+    {{- end -}}
+    {{- $description := printf "%s\n\n%s%s" $schemaData.description $docsURL $postfix -}}
+    {{- $schemaData = merge $schemaData (dict "description" $description) -}}
+  {{- else if reflect.IsMap $value -}}
+    {{- $recursiveParams := dict "schemaData" $value "docsURL" $docsURL "postfix" $key "hrefPrefix" $prefix -}}
+    {{- $munged := partial "schematize/utils/schema/munge/description" $recursiveParams -}}
+    {{- $schemaData = merge $schemaData (dict $key $munged) -}}
+  {{- else if reflect.IsSlice $value -}}
+    {{- $munged := slice -}}
+    {{- range $item := $value -}}
+      {{- if reflect.IsMap $item -}}
+      {{- $recursiveParams := dict "schemaData" $item "docsURL" $docsURL -}}
+      {{- $mungedItem := partial "schematize/utils/schema/munge/description" $recursiveParams -}}
+      {{- $munged = $munged | append $mungedItem -}}
+      {{- else -}}
+        {{- $munged = $munged | append $item -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $schemaData = merge $schemaData (dict $key $munged) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $schemaData -}}

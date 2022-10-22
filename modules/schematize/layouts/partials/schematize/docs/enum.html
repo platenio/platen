@@ -1,0 +1,20 @@
+{{/*
+  Documents a enum property or object, writing Markdown for the item.
+
+  The parameters are expected to include:
+
+  - `property` - Mandatory. The enum's schema data
+  - `page`     - Mandatory. The hugo Page object for the webpage the documentation is being written
+    on, for resolving references.
+  - `_level` - Optional. The current hierarchy level of the page. Used for determining what heading
+    level to write.
+  - `_id` - Optional. The ID this property belongs to.
+*/}}
+{{- $params := . -}}
+{{- $property := $params.property -}}
+
+{{ partial "schematize/utils/headings/property" $params }}
+
+{{ partial "schematize/utils/summary" $params }}
+
+{{ partial "schematize/utils/metadata/render" $params }}

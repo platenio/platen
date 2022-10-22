@@ -1,4 +1,17 @@
-<h{{ .Level }} id="{{ .Anchor | safeURL }}">
-  {{ .Text | safeHTML }}
-  <a class="anchor" href="#{{ .Anchor | safeURL }}">#</a>
-</h{{ .Level }}>
+{{- $params := . -}}
+
+{{- $linkText := "" -}}
+
+{{- range $renderer := .Page.Site.Params.Platen.Markup.HeadingRenderers -}}
+  {{- if and $renderer.Enabled (eq "" $linkText) -}}
+    {{- with $renderer.Partial -}}
+      {{- $linkText = partial . $params }}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with $linkText -}}
+  {{- safeHTML $linkText -}}
+{{- else -}}
+  {{- partial "platen/markup/renderers/headings/default" $params -}}
+{{- end -}}

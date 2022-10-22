@@ -1,0 +1,27 @@
+{{/*
+  This partial returns the nav list for a member of a webring. It expects to
+  receive an instance of scratch with the params already set; the only logic
+  this performs is to arrange and format the information. All retrieval must
+  be done first.
+*/}}
+{{- $schema_path := "" -}}
+{{- with .Get 0 -}}
+  {{- $schema_path = . -}}
+{{- else -}}
+  {{- $schema_path = $.Page.Params.Schematize -}}
+{{- end -}}
+{{- $id := index (split $schema_path "." | last 1) 0 -}}
+{{- $schemaData := .Site.Data.schemas }}
+{{- range $level := split $schema_path "." -}}
+  {{- $schemaData = index $schemaData $level -}}
+{{- end -}}
+{{- $schemaData = merge $schemaData (dict "_id" $id) -}}
+{{- if eq $schemaData.type "object" -}}
+  {{ partial "schematize/docs/object" (dict "property" $schemaData "page" .Page) }}
+{{- else if eq $schemaData.type "array" -}}
+  {{- $property := merge $schemaData (dict "_level" 0) -}}
+  {{ partial "schematize/docs/array" (dict "property" $property "page" .Page) }}
+{{- else -}}
+{{- warnf "Unhandled base schema type %s: %#v" $schemaData.type $schemaData -}}
+<h1>{{ $schemaData }}</h1>
+{{- end -}}

@@ -1,0 +1,199 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Theme/Shortcodes/Tabs.schema.yaml
+title: Tabs
+description: Defines the settings for the tabs shortcode
+schematize:
+  details: |
+    Defines the map of settings for the theme's `tabs` shortcode. The existing value is a
+    map that includes whether or not to enable the shortcode and the style definition for it.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all properties in your own configuration file. Only specify the values you want
+    to add or replace.
+type: object
+properties:
+  Enabled:
+    title: Enable the shortcode
+    description: Whether or not to enable the tabs shortcode.
+    schematize:
+      details: |
+        Specifies whether or not to enable the `tabs` shortcode. Defaults to `true`.
+    type: boolean
+    default: true
+  Style:
+    title: SCSS Style Module
+    description: Defines default styling for tabs created by the shortcode.
+    schematize:
+      weight: 100
+      skipSchemaRender: true
+      details: |
+        Defines default styling for tabs created by the shortcode.
+
+        When you use the button shortcode, the following SCSS is applied to the button:
+
+        ```scss
+        .markdown .platen-tabs {
+          margin-top: $padding-large;
+          margin-bottom: $padding-large;
+
+          border: $padding-minimal solid var(--gray-200);
+          border-radius: $border-radius;
+
+          overflow: hidden;
+
+          display: flex;
+          flex-wrap: wrap;
+
+          label {
+            display: inline-block;
+            padding: $padding-medium $padding-large;
+            border-bottom: $padding-minimal transparent;
+            cursor: pointer;
+          }
+
+          .platen-tabs-content {
+            order: 999; //Move content blocks to the end
+            width: 100%;
+            border-top: $padding-minimal solid var(--gray-100);
+            padding: $padding-large;
+            display: none;
+          }
+
+          input[type="radio"]:checked + label {
+            border-bottom: $padding-minimal solid var(--color-link);
+          }
+          input[type="radio"]:checked + label + .platen-tabs-content {
+            display: block;
+          }
+          input[type="radio"]:focus + label {
+            @include outline;
+          }
+        }
+        ```
+
+        When you use the tabs shortcode, the content is placed in a `div` container with the
+        `platen-tabs` class. Each tab uses a [radio input] with its [label] used as the selectable
+        tab. Each tab's content is placed in a div with the `platen-tabs-content` and
+        `markdown-inner` classes.
+
+        #### Tab Container
+
+        ```scss
+        margin-top: $padding-large;
+        margin-bottom: $padding-large;
+
+        border: $padding-minimal solid var(--gray-200);
+        border-radius: $border-radius;
+
+        overflow: hidden;
+
+        display: flex;
+        flex-wrap: wrap;
+        ```
+
+        The container is uses [sref:`Theme.Variables.BasicSCSS.padding-large`] to set the vertical
+        margins. It adds a solid border with the width set to
+        [sref:`Theme.Variables.BasicSCSS.padding-minimal`], the border radius to
+        [sref:`Theme.Variables.LightCSS.color-link`], and the color to
+        [sref:`Theme.Variables.LightCSS.gray-200`] or [sref:`Theme.Variables.LightCSS.gray-200`]
+        depending on the value of the [sref:`Theme.Config.Mode`] setting.
+
+        Is sets the [sref:`overflow`] attribute to hidden, which keeps any content that doesn't fit
+        the container from displaying.
+
+        It uses [sref:flex box] to display the tabs and their labels and uses [sref:`flex-wrap`].
+
+        #### Tab Labels
+
+        ```scss
+        label {
+          display: inline-block;
+          padding: $padding-medium $padding-large;
+          border-bottom: $padding-minimal transparent;
+          cursor: pointer;
+        }
+        input[type="radio"]:checked + label {
+          border-bottom: $padding-minimal solid var(--color-link);
+        }
+        input[type="radio"]:focus + label {
+          @include outline;
+        }
+        ```
+
+        The labels are added as inline blocks, allowing them to display side-by-side. They're use
+        the value of [sref:`Theme.Variables.BasicSCSS.padding-medium`] for the vertical padding
+        and [sref:`Theme.Variables.BasicSCSS.padding-large`] for the horizontal padding.
+
+        They get a transparent bottom border with the width set to [sref:`Theme.Variables.BasicSCSS.padding-minimal`]
+        and have their cursor always display as a normal pointer.
+
+        When the input for a label is checked, the label's border color switches from being
+        transparent to the value of [sref:`Theme.Variables.LightCSS.color-link`] or [sref:`Theme.Variables.LightCSS.color-link`]
+        depending on the [sref:`Theme.Config.Mode`].
+
+        When the input for a label is focused, the label uses the [sref:`Theme.Styles.Utils.Outline`]
+        mixin to add a full box outline to the label.
+
+        #### Tab Content
+
+        ```scss
+        .platen-tabs-content {
+          order: 999; //Move content blocks to the end
+          width: 100%;
+          border-top: $padding-minimal solid var(--gray-100);
+          padding: $padding-large;
+          display: none;
+        }
+
+        input[type="radio"]:checked + label + .platen-tabs-content {
+          display: block;
+        }
+        ```
+
+        The tabs are all set to have an [sref:`order`] of 999, putting them together at the end of the
+        flex box. They're set to have a width of 100% of their container and given a solid top
+        border with a width of [sref:`Theme.Variables.BasicSCSS.padding-minimal`] and their color set to
+        either [sref:`Theme.Variables.LightCSS.gray-200`] or [sref:`Theme.Variables.DarkCSS.gray-200`]
+        depending on the [sref:`Theme.Config.Mode`]. Their padding is set to [sref:`Theme.Variables.BasicSCSS.padding-large`].
+
+        Finally, their display is set to `none` so they're hidden until selected. When a tab is
+        selected, the display is changed `block`, making it visible.
+
+        #### Overriding
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/shortcodes/_button.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`flex-wrap`]: mdn.css:flex-wrap
+        [sref:`order`]: mdn.css:order
+        [sref:`overflow`]: mdn.css:overflow
+        [sref:`Theme.Config.Mode`]: Platen.Site.Theme.Config.Mode
+        [sref:`Theme.Styles.Utils.Outline`]: Platen.Site.Theme.Styles.Utils.Outline
+        [sref:`Theme.Variables.BasicSCSS.border-radius`]: Platen.Site.Theme.Variables.BasicSCSS.border-radius
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`Theme.Variables.BasicSCSS.padding-medium`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`Theme.Variables.BasicSCSS.padding-minimal`]: Platen.Site.Theme.Variables.BasicSCSS.padding-minimal
+        [sref:`Theme.Variables.DarkCSS.gray-200`]: Platen.Site.Theme.Variables.DarkCSS.gray-200
+        [sref:`Theme.Variables.DarkCSS.link-color`]: Platen.Site.Theme.Variables.DarkCSS.link-color
+        [sref:`Theme.Variables.LightCSS.gray-200`]: Platen.Site.Theme.Variables.LightCSS.gray-200
+        [sref:`Theme.Variables.LightCSS.link-color`]: Platen.Site.Theme.Variables.LightCSS.link-color
+        [sref:flex box]: mdn.css:CSS_Flexible_Box_Layout
+    type: object
+    default:
+      Name: button
+    required:
+      - Name
+    properties:
+      Name:
+        title: Style Module Name
+        description: The name of the SCSS style module without the leading `_`.
+        enum: button

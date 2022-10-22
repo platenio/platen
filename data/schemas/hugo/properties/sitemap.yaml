@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/sitemap.yaml
+schematize:
+  noMungeDescription: true
+title: Sitemap Options
+description: |-
+  The sitemap options
+  https://gohugo.io/templates/sitemap-template/#configure-sitemapxml
+type: object
+default:
+  changefreq: monthly
+  filename: sitemap.xml
+  priority: 0.5
+properties:
+  changefreq:
+    description: |2-
+
+      https://gohugo.io/templates/sitemap-template/#configure-sitemapxml
+    type: string
+    default: monthly
+  filename:
+    description: |2-
+
+      https://gohugo.io/templates/sitemap-template/#configure-sitemapxml
+    type: string
+    default: sitemap.xml
+  priority:
+    description: |2-
+
+      https://gohugo.io/templates/sitemap-template/#configure-sitemapxml
+    type: number
+    default: 0.5
+    minimum: 0
+    maximum: 1
+additionalProperties: false

@@ -1,0 +1,51 @@
+{{/*
+  This partial returns the link reference to a specified schematize header
+*/}}
+{{- $params        := . -}}
+{{- $fullReference := $params.fullReference -}}
+{{- $reference     := $params.reference -}}
+{{- $suffix        := $params.suffix -}}
+
+{{- $href := "" -}}
+
+{{- if eq "" $reference -}}
+  {{- errorf "Missing mandatory schematize reference for specified sref %#v" $params -}}
+{{- else -}}
+  {{- $schematizePages := where site.Pages "Params.Schematize" "!=" nil -}}
+
+  {{- range $page := $schematizePages -}}
+    {{- if eq $page.Params.Schematize $reference -}}
+      {{- $href = $page.Permalink }}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if eq "" $href -}}
+    {{- $thisSuffix := index (split $reference "." | last 1) 0 -}}
+    {{- with $suffix -}}
+      {{- $suffix = delimit (slice $thisSuffix $suffix) "." -}}
+    {{- else -}}
+      {{- $suffix = $thisSuffix -}}
+    {{- end -}}
+
+    {{- $parentReference := "" -}}
+    {{- $segments := split $reference "." -}}
+    {{- if eq "" $segments -}}
+      {{- errorf "Unable to find schematize reference for %s; is it documented?" $fullReference -}}
+    {{- end -}}
+
+    {{- $parentReference = strings.TrimSuffix (printf ".%s" $thisSuffix) $reference -}}
+    {{- $recursiveParams := dict "reference" $parentReference "suffix" $suffix -}}
+    {{- with $fullReference -}}
+      {{- $recursiveParams = merge $recursiveParams (dict "fullReference" $fullReference) -}}
+    {{- else -}}
+      {{- $recursiveParams = merge $recursiveParams (dict "fullReference" $reference) -}}
+    {{- end -}}
+    {{- $href = partial "schematize/sref/schematize" $recursiveParams -}}
+  {{- else -}}
+    {{- with $suffix -}}
+      {{- $href = printf "%s#%s" $href (lower $suffix | urlize) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $href -}}

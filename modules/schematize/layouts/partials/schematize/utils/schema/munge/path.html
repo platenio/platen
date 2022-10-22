@@ -1,0 +1,56 @@
+{{/*
+  Munge discovered paths to schemas. This allows a schema author to write their yaml schemas for
+  relative references to the other files but publish fully qualified JSON schemas.
+
+  This partial is designed to accomodate munging paths when the input string represents a single
+  value or a full JSON blob.
+*/}}
+{{- $context := . -}}
+{{- $params  := . -}}
+{{- $return  := "" -}}
+
+{{- if reflect.IsMap $context -}}
+  {{- $params = $context -}}
+{{- else -}}
+  {{/* If given a string only, convert it to a parameter-like map */}}
+  {{- $params = (dict "value" $context) -}}
+{{- end -}}
+
+{{/* Using `with` here allows us to combine a null/empty check for the value */}}
+{{- with index $params "value" -}}
+  {{- $value := . -}}
+  {{/* For slices, iterate over each string and munge them in turn. */}}
+  {{- if reflect.IsSlice $value -}}
+    {{- $return = slice -}}
+    {{- range $value -}}
+      {{- $munged := replaceRE "\\.schema\\.yaml" "/schema.json" . -}}
+      {{- if eq true (index $params "mungeReferences") -}}
+        {{- $munged = replaceRE "\\.yaml" "" $munged }}
+        {{- $munged = ref $params.page (dict "path" $munged "outputFormat" "schematize") -}}
+      {{- end -}}
+      {{- $return = $return | append $munged -}}
+    {{- end  -}}
+  {{- else -}}
+    {{/* This is likely a big JSON Blob*/}}
+    {{- $munged := replaceRE "\\.schema\\.yaml" "/schema.json" $value -}}
+    {{- if eq true (index $params "mungeReferences") -}}
+      {{/* This reference munging implementation only works on JSON blobs. */}}
+      {{- $temp_munged := replaceRE "\\.yaml" "" $munged -}}
+      {{- $refPattern := "\\\"\\$ref\\\":\\s+\\\".+\\.yaml\\\"" -}}
+      {{- $references := findRE $refPattern $munged -}}
+      {{- range $references -}}
+        {{- $current := . -}}
+        {{- $target := strings.TrimPrefix "\"$ref\": \"" $current -}}
+        {{- $target = strings.TrimSuffix ".yaml\"" $target -}}
+        {{- $mungedRef := ref $params.page (dict "path" $target "outputFormat" "schematize") -}}
+        {{- $mungedRef = replace $current (printf "%s.yaml" $target) $mungedRef }}
+        {{- $munged = replace $munged $current $mungedRef -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $return = $munged -}} }}
+  {{- end -}}
+{{- else -}}
+  {{- errorf "schema/munge/path called but no value specified" -}}
+{{- end -}}
+
+{{- return $return -}}

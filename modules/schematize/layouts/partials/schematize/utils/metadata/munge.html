@@ -1,0 +1,133 @@
+{{/*
+  Returns a munged map of metadata for writing as a dictionary list. This partial inspects an object
+  or property, parsing the known valid keys and humanizing them for writing into the metadata
+  definition list through the metadata/render partial.
+
+  In this implementation, the humanized names are not translateable.
+*/}}
+
+{{- $params := . -}}
+
+{{- $property := $params.property -}}
+{{/* Initialize the metadata map */}}
+{{- $metadata := dict -}}
+
+{{- with $property.type -}} {{/* Applies to: any */}}
+  {{- $metadata = merge $metadata (dict "Type" . ) -}}
+{{- end -}}
+
+{{- with (index $property "$id") -}} {{/* Applies to: any */}}
+  {{- $idLink := printf "[%s](%s)" . . | markdownify -}}
+  {{- $metadata = merge $metadata (dict "ID" $idLink) -}}
+{{- end -}}
+
+{{- with $property.oneOf -}} {{/* Applies to: any */}}
+  {{- $oneOf := slice -}}
+  {{- range $option := . -}}
+    {{- $recursiveParameters := dict "property" $option "page" $params.page -}}
+    {{- $munged := partial "schematize/utils/metadata/munge" $recursiveParameters -}}
+    {{- $oneOf = $oneOf | append $munged -}}
+  {{- end -}}
+  {{- $metadata = merge $metadata (dict "Must be one of" $oneOf ) -}}
+{{- end -}}
+
+{{- with $property.enum -}} {{/* Applies to: string, enum, anyOf, oneOf */}}
+  {{- $metadata = merge $metadata (dict "Enums" .) -}}
+{{- end -}}
+
+{{- with $property.multipleOf -}} {{/* Applies to: numeric */}}
+  {{- $metadata = merge $metadata (dict "Must be multiple of" .) -}}
+{{- end -}}
+
+{{- with $property.minimum -}} {{/* Applies to: array, numeric */}}
+  {{- $key := cond (eq $property.type "numeric") "Must be ≥" "Item count must be ≥" -}}
+  {{- $metadata = merge $metadata (dict $key .) -}}
+{{- end -}}
+
+{{- with $property.exclusiveMinimum -}} {{/* Applies to: array, numeric */}}
+  {{- $key := cond (eq $property.type "numeric") "Must be >" "Item count must be >" -}}
+  {{- $metadata = merge $metadata (dict $key .) -}}
+{{- end -}}
+
+{{- with $property.maximum -}} {{/* Applies to: array, numeric */}}
+  {{- $key := cond (eq $property.type "numeric") "Must be ≤" "Item count must be ≤" -}}
+  {{- $metadata = merge $metadata (dict $key .) -}}
+{{- end -}}
+
+{{- with $property.exclusiveMaximum -}} {{/* Applies to: array, numeric */}}
+  {{- $key := cond (eq $property.type "numeric") "Must be <" "Item count must be <" -}}
+  {{- $metadata = merge $metadata (dict $key .) -}}
+{{- end }}
+
+{{- with $property.minLength -}} {{/* Applies to: string */}}
+  {{- $metadata = merge $metadata (dict "Minimum Length" .) -}}
+{{- end -}}
+
+{{- with $property.maxLength -}} {{/* Applies to: string */}}
+  {{- $metadata = merge $metadata (dict "Maximum Length" .) -}}
+{{- end -}}
+
+{{- with $property.pattern -}} {{/* Applies to: string */}}
+  {{- $value := printf "`%s`" . | markdownify -}}
+  {{- $metadata = merge $metadata (dict "Required regex pattern" $value) -}}
+{{- end -}}
+
+{{- with $property.format -}} {{/* Applies to: string */}}
+  {{- $metadata = merge $metadata (dict "Required Format" .) -}}
+{{- end -}}
+
+{{- with (index $property "$ref") -}} {{/* Applies to: reference */}}
+  {{/* Retrieve the data for the authored reference; only works for local references. */}}
+  {{- $refData := partial "schematize/utils/references/resolve/data" $params -}}
+  {{/* Retrieve the URL to the schema on the site. */}}
+  {{- $resolutionParams := dict "page" $params.page "ref" . "target" "schema" -}}
+  {{- $schemaRef := partial "schematize/utils/references/resolve/path" $resolutionParams -}}
+  {{/* Retrieve the URL to the docs for the schem. */}}
+  {{- $resolutionParams = merge $resolutionParams (dict "target" "schema") -}}
+  {{- $pageRef   := partial "schematize/utils/references/resolve/path" $resolutionParams -}}
+  {{/* Build the summary by combining the details for the reference with a link to the docs */}}
+  {{- $summary := default $refData.description $refData.schematize.details -}}
+  {{- $moreInfo := printf "For more information, see [%s](%s)." $refData.title $pageRef -}}
+  {{- $summary = printf "\n%s\n\n%s\n" $summary $moreInfo}}
+  {{/* Keys in the metadata dictionary list are markdownified, so ensure it links to the schema */}}
+  {{- $key := printf "%s ([Schema](%s))" $refData.title $schemaRef -}}
+  {{- $metadata = merge $metadata (dict $key $summary) -}}
+{{- end -}}
+
+{{- if eq "array" $property.type -}} {{/* Applies to: arrays */}}
+  {{- $withPrefixItems := isset $property "prefixItems" -}}
+  {{- $withItems := isset $property "items" -}}
+  {{- if and $withPrefixItems $withItems -}}
+    {{- $prefix  := "Array property" -}}
+    {{- $postfix := "defines both `prefixItems` & `items`. Did you mean to use `oneOf` instead?" -}}
+    {{- errorf "%s (%#v) %s" $prefix $property $postfix -}}
+  {{- else if $withPrefixItems -}}
+    {{- $tuples := slice -}}
+    {{- range $option := . -}}
+      {{- $recursiveParameters := dict "property" $option "page" $params.page -}}
+      {{- $munged := partial "schematize/utils/metadata/munge" $recursiveParameters -}}
+      {{- $tuples = $tuples | append $munged -}}
+    {{- end -}}
+    {{- $metadata = merge $metadata (dict "Valid tuples" $tuples ) -}}
+  {{- else if $withItems -}}
+    {{- $items := $property.items -}}
+    {{- if isset $items "oneOf" -}}
+      {{- $items = $items.oneOf -}}
+    {{- else if isset $items "anyOf" -}}
+      {{- $items = $items.anyOf -}}
+    {{- end -}}
+    {{- if reflect.IsSlice $items -}}
+      {{- range $items -}}
+        {{- $recursiveParameters := dict "property" . "page" $params.page -}}
+        {{- $item := partial "schematize/utils/metadata/munge" $recursiveParameters -}}
+        {{- $metadata = merge $metadata (dict "Valid items" $item) -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $recursiveParameters := dict "property" $items "page" $params.page -}}
+      {{- $item := partial "schematize/utils/metadata/munge" $recursiveParameters -}}
+      {{- $metadata = merge $metadata (dict "Valid items" $item) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $metadata -}}

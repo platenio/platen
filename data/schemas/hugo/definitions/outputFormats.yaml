@@ -1,0 +1,119 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/definitions/outputFormats.yaml
+title: Output Formats
+schematize:
+  noMungeDescription: true
+type: object
+patternProperties:
+  ".":
+    title: output format options
+    description: |-
+      The output format options
+      https://gohugo.io/templates/output-formats/#configure-output-formats
+    type: object
+    properties:
+      name:
+        description: |-
+          The identifier
+          https://gohugo.io/templates/output-formats/#configure-output-formats
+        type: string
+        minLength: 1
+      mediaType:
+        description: |-
+          The media type
+          https://gohugo.io/templates/output-formats/#configure-output-formats
+        type: string
+        enum:
+          - application/javascript
+          - application/json
+          - application/manifest+json
+          - application/octet-stream
+          - application/pdf
+          - application/rss+xml
+          - application/toml
+          - application/typescript
+          - application/xml
+          - application/yaml
+          - font/otf
+          - font/ttf
+          - image/bmp
+          - image/gif
+          - image/jpeg
+          - image/png
+          - image/svg+xml
+          - image/webp
+          - text/calendar
+          - text/css
+          - text/csv
+          - text/html
+          - text/jsx
+          - text/plain
+          - text/tsx
+          - text/x-sass
+          - text/x-scss
+          - video/3gpp
+          - video/mp4
+          - video/mpeg
+          - video/ogg
+          - video/webm
+          - video/x-msvideo
+      path:
+        description: |-
+          The path
+          https://gohugo.io/templates/output-formats/#configure-output-formats
+        type: string
+        minLength: 1
+      baseName:
+        description: |-
+          The base filename for the list filenames
+          https://gohugo.io/templates/output-formats/#configure-output-formats
+        type: string
+        default: index
+      rel:
+        description: |2-
+
+          https://gohugo.io/templates/output-formats/#configure-output-formats
+        type: string
+        default: alternate
+      protocol:
+        description: |-
+          The replacement for `http://` or `https://` in `baseURL`
+          https://gohugo.io/templates/output-formats/#configure-output-formats
+        type: string
+      isPlainText:
+        description: |-
+          Enable/disable Go's plain text templates parser for the templates
+          https://gohugo.io/templates/output-formats/#configure-output-formats
+        type: boolean
+        default: false
+      isHTML:
+        description: |2-
+
+          https://gohugo.io/templates/output-formats/#configure-output-formats
+        type: boolean
+        default: false
+      noUgly:
+        description: |-
+          Enable/disable adding file extensions to urls
+          https://gohugo.io/templates/output-formats/#configure-output-formats
+        type: boolean
+        default: false
+      notAlternative:
+        description: |-
+          Include/exclude this format in an AlternativeOutputFormats format listing
+          https://gohugo.io/templates/output-formats/#configure-output-formats
+        type: boolean
+        default: false
+      permalinkable:
+        description: |-
+          Enable/disable .Permalink and .RelPermalink return the rendering output format
+          https://gohugo.io/templates/output-formats/#configure-output-formats
+        type: boolean
+        default: false
+      weight:
+        description: |-
+          The weight
+          https://gohugo.io/templates/output-formats/#configure-output-formats
+        type: integer
+    additionalProperties: false

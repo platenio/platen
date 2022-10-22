@@ -1,0 +1,232 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/minify.yaml
+title: Minify Options
+schematize:
+  noMungeDescription: true
+description: |2-
+  Configures minify options.
+  https://gohugo.io/getting-started/configuration/#configure-minify
+type: object
+default:
+  disableCSS: false
+  disableHTML: false
+  disableJS: false
+  disableJSON: false
+  disableSVG: false
+  disableXML: false
+  minifyOutput: false
+  tdewolff:
+    css:
+      keepCSS2: true
+      precision: 0
+    html:
+      keepComments: false
+      keepConditionalComments: true
+      keepDefaultAttrVals: true
+      keepDocumentTags: true
+      keepEndTags: true
+      keepQuotes: false
+      keepWhitespace: false
+    js:
+      keepVarNames: false
+      noNullishOperator: false
+      precision: 0
+    json:
+      keepNumbers: false
+      precision: 0
+    svg:
+      precision: 0
+    xml:
+      keepWhitespace: false
+properties:
+  disableCSS:
+    description: |2-
+
+      https://gohugo.io/getting-started/configuration/#configure-minify
+    type: boolean
+    default: false
+  disableHTML:
+    description: |2-
+
+      https://gohugo.io/getting-started/configuration/#configure-minify
+    type: boolean
+    default: false
+  disableJS:
+    description: |2-
+
+      https://gohugo.io/getting-started/configuration/#configure-minify
+    type: boolean
+    default: false
+  disableJSON:
+    description: |2-
+
+      https://gohugo.io/getting-started/configuration/#configure-minify
+    type: boolean
+    default: false
+  disableSVG:
+    description: |2-
+
+      https://gohugo.io/getting-started/configuration/#configure-minify
+    type: boolean
+    default: false
+  disableXML:
+    description: |2-
+
+      https://gohugo.io/getting-started/configuration/#configure-minify
+    type: boolean
+    default: false
+  minifyOutput:
+    description: |2-
+
+      https://gohugo.io/getting-started/configuration/#configure-minify
+    type: boolean
+    default: false
+  tdewolff:
+    description: |2-
+
+      https://gohugo.io/getting-started/configuration/#configure-minify
+    type: object
+    properties:
+      css:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration/#configure-minify
+        type: object
+        properties:
+          keepCSS2:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: true
+          precision:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: integer
+            default: 0
+            minimum: 2
+        additionalProperties: false
+      html:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration/#configure-minify
+        type: object
+        properties:
+          keepComments:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: false
+          keepConditionalComments:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: true
+          keepDefaultAttrVals:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: true
+          keepDocumentTags:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: true
+          keepEndTags:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: true
+          keepQuotes:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: false
+          keepWhitespace:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: false
+        additionalProperties: false
+      js:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration/#configure-minify
+        type: object
+        properties:
+          keepVarNames:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: false
+          noNullishOperator:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: false
+          precision:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: integer
+            default: 0
+        additionalProperties: false
+      json:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration/#configure-minify
+        type: object
+        properties:
+          keepNumbers:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: false
+          precision:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: 0
+        additionalProperties: false
+      svg:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration/#configure-minify
+        type: object
+        properties:
+          precision:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: integer
+            default: 0
+            minimum: 0
+        additionalProperties: false
+      xml:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration/#configure-minify
+        type: object
+        properties:
+          keepWhitespace:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration/#configure-minify
+            type: boolean
+            default: false
+        additionalProperties: false
+    additionalProperties: false
+additionalProperties: false

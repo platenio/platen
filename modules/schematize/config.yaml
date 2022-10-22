@@ -1,0 +1,24 @@
+module:
+  hugoVersion:
+    extended: true
+    min: 0.104.0
+
+outputFormats:
+  Schematize:
+    mediaType: application/json
+    baseName: schema
+    isPlainText: true
+
+params:
+  Platen:
+    Theme:
+      Shortcodes:
+        Schematize:
+          Enabled: true
+          Style:
+            Name: schematize
+    Markup:
+      LinkRenderers:
+        Schematize:
+          Enabled: true
+          Partial: schematize/sref/markup/renderers/links.html

@@ -3,12 +3,12 @@
 
 // Webkit
 ::-webkit-scrollbar {
-  width: $padding-8;
+  width: $padding-medium;
 }
 
 ::-webkit-scrollbar-thumb {
   background: transparent;
-  border-radius: $padding-8;
+  border-radius: $padding-medium;
 }
 
 :hover::-webkit-scrollbar-thumb {

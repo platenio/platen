@@ -1,0 +1,42 @@
+{{/*
+  Entrypoint for rendering an object or property's metadata for documentation. This works from the
+  same parameters used in the docs partials to minimize concerns about what to pass where.
+
+  It writes the metadata as a definition list with the humanized key as the term and the value as
+  the definition. If the value is an array, it add a definition for each item. If the value is a
+  map, it adds a definition list as the definition and continues to recurse.
+
+  Each term and its definitions are wrapped in a container div. The definitions for a term are also
+  wrapped in a container div. This enables using flex-box to control the flow.
+
+  By default, the definition list is placed in a details element so it's collapsible. The details
+  element is open by default with the summary `Metadata`.
+*/}}
+{{- $params            := . -}}
+{{- $property          := $params.property -}}
+{{/*
+  If the schema author uses the schematize key in the source schema, they can control the behavior
+  of the metadata rendering:
+
+  - schematize.metadata.summary - used for the summary element in details if specified.
+  - schematize.metadata.collapseDetailsElement - ensures the details element is collapsed on load.
+  - schematize.metadata.noDetailsElement - Writes the definition list without the details wrapper.
+*/}}
+{{- $schematize        := $property.schematize -}}
+{{- $detailsSummary    := default "Metadata" $schematize.metadata.summary -}}
+{{- $metadata          := partial "schematize/utils/metadata/munge" $params -}}
+
+{{- $detailsOpen := "open" -}}
+{{- with $schematize.metadata.collapseDetailsElement -}}
+  {{- $detailsOpen = cond . "" "open" -}}
+{{- end -}}
+
+{{ if $schematize.metadata.noDetailsElement }}
+  {{- partial "schematize/utils/metadata/render/list" $metadata }}
+{{ else }}
+<details class="schematize-metadata" {{ $detailsOpen }}>
+  <summary>{{ $detailsSummary }}</summary>
+
+  {{- partial "schematize/utils/metadata/render/list" $metadata }}
+</details>
+{{ end }}

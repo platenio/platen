@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Config.schema.yaml
+title: Site Configuration
+description: Settings and options for a Platen site
+schematize:
+  details: |
+    Platen has several configuration options and settings you can use to customize your site. All of
+    these options are overridable and provide a default setup so that things work out of the box
+    with as little work as possible.
+type: object
+properties:
+  Theme:
+    $ref: ./Theme/Config.yaml
+    schematize:
+      weight: 1
+  Display:
+    $ref: ./Display.yaml
+    schematize:
+      weight: 2
+  Features:
+    $ref: ./Features.yaml
+    schematize:
+      weight: 2
+  Repository:
+    $ref: ./Repository.yaml
+    schematize:
+      weight: 2
+  Multilingual:
+    $ref: ./Multilingual.yaml
+    schematize:
+      weight: 2
+  Markup:
+    $ref: ./Markup/Config.yaml
+    schematize:
+      weight: 2

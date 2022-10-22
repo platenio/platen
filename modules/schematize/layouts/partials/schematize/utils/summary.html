@@ -1,0 +1,11 @@
+{{/*
+  Write the summary for a property, using the description if the schematize details aren't provided.
+*/}}
+
+{{ $params := . }}
+{{ $property := $params.property }}
+{{ $summary := default $property.description $property.schematize.details }}
+
+{{ with $summary }}
+{{ $summary | $params.page.RenderString }}
+{{ end }}

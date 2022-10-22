@@ -1,0 +1,183 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/definitions/cascade.yaml
+title: Cascade Options
+schematize:
+  noMungeDescription: true
+type: object
+properties:
+  aliases:
+    description: |-
+      The aliases
+      https://gohugo.io/content-management/front-matter#predefined
+    $ref: ./uniqueStringArray.yaml
+  audio:
+    description: |-
+      The audio
+      https://gohugo.io/content-management/front-matter#predefined
+    $ref: ./uniqueStringArray.yaml
+  date:
+    description: |-
+      The datetime
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+    minLength: 1
+  description:
+    description: |-
+      The description
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+  draft:
+    description: |-
+      Specify that the content is (not) the draft
+      https://gohugo.io/content-management/front-matter#predefined
+    type: boolean
+  expiryDate:
+    description: |-
+      The expire date
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+    minLength: 1
+  headless:
+    description: |-
+      Specify that the content is (not) the headless bundle
+      https://gohugo.io/content-management/front-matter#predefined
+    type: boolean
+  images:
+    description: |-
+      The images
+      https://gohugo.io/content-management/front-matter#predefined
+    $ref: ./uniqueStringArray.yaml
+  isCJKLanguage:
+    description: |-
+      Specify that the page language is (not) the CJK language
+      https://gohugo.io/content-management/front-matter#predefined
+    type: boolean
+  keywords:
+    description: |-
+      The keywords
+      https://gohugo.io/content-management/front-matter#predefined
+    $ref: ./uniqueStringArray.yaml
+  layout:
+    description: |-
+      The layout
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+    minLength: 1
+  lastmod:
+    description: |-
+      The last modification time
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+    minLength: 1
+  linkTitle:
+    description: |-
+      The link title
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+    minLength: 1
+  markup:
+    description: |2-
+
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+    enum:
+      - rst
+      - md
+  outputs:
+    title: output format options
+    description: |-
+      The output format options
+      https://gohugo.io/content-management/front-matter#predefined
+    $ref: ./outputFormats.yaml
+  publishDate:
+    description: |-
+      The publish date
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+    minLength: 1
+  resources:
+    title: resource options
+    description: |-
+      The resource options
+      https://gohugo.io/content-management/front-matter#predefined
+    type: object
+    properties:
+      name:
+        description: |-
+          The value for `Name`
+          https://gohugo.io/content-management/page-resources/#page-resources-metadata
+        type: string
+        minLength: 1
+        examples:
+          - ":counter"
+      title:
+        description: |-
+          The value for `Title`
+          https://gohugo.io/content-management/page-resources/#page-resources-metadata
+        type: string
+        minLength: 1
+        examples:
+          - ":counter"
+      params:
+        title: param options
+        description: |-
+          The param options
+          https://gohugo.io/content-management/page-resources/#page-resources-metadata
+        type: object
+        patternProperties:
+          ".":
+            description: |-
+              The param
+              https://gohugo.io/content-management/page-resources/#page-resources-metadata
+    additionalProperties: false
+  series:
+    description: |-
+      The series
+      https://gohugo.io/content-management/front-matter#predefined
+    $ref: ./uniqueStringArray.yaml
+  slug:
+    description: |-
+      The slug
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+    minLength: 1
+  summary:
+    description: |-
+      The summary
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+    minLength: 1
+  title:
+    description: |-
+      The title
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+    minLength: 1
+  type:
+    description: |-
+      The type
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+    minLength: 1
+  url:
+    description: |-
+      The url
+      https://gohugo.io/content-management/front-matter#predefined
+    type: string
+    minLength: 1
+  videos:
+    description: |-
+      The videos
+      https://gohugo.io/content-management/front-matter#predefined
+    $ref: ./uniqueStringArray.yaml
+  weight:
+    description: |-
+      The weight
+      https://gohugo.io/content-management/front-matter#predefined
+    type: integer
+patternProperties:
+  "^(?!aliases|audio|date|description|draft|expiryDate|headless|images|isCJKLanguage|keywords|layout|lastmod|linkTitle|markup|outputs|publishDate|resources|series|slug|summary|title|type|url|videos|weight)$":
+    description: |-
+      The front matter default
+      https://gohugo.io/content-management/front-matter#front-matter-cascade

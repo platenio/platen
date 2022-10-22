@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/post.schema.yaml
+title: Post Front Matter
+schematize:
+  noMungeDescription: true
+type: object
+anyOf:
+  - $ref: ./hugo/page.yaml
+properties:
+  Platen:
+    $ref: ./Platen/Content/Post.yaml

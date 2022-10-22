@@ -1,0 +1,52 @@
+{{- $params := . -}}
+{{- $prefix := "sref:" -}}
+{{- $linkText := "" -}}
+
+{{/*
+  Given the page has Schematize: Platen.Content.Post
+
+  [sref:`Foo.Bar`](Platen.Site.Themes.Foo.Bar) => [`Foo.Bar`](/Schemas/Platen/Site/Themes/Foo#bar)
+  [sref:`color`](mdn.css:color) => [`color`] => [`color](https://mozilla.dev/web/css/color)
+  [sref: `Baz`](Baz) => [`Baz`](/Schemas/Platen/Content/Post#baz)
+*/}}
+{{- if hasPrefix $params.Text $prefix -}}
+  {{- $destinationInfo  := split $params.Destination ":" -}}
+  {{- $reference := "" -}}
+  {{- $refTarget := "schematize" -}}
+  {{- if eq 1 (len $destinationInfo) -}}
+    {{- $reference = index $destinationInfo 0 -}}
+  {{- else if eq 2 (len $destinationInfo) -}}
+    {{- $refTarget = index $destinationInfo 0 -}}
+    {{- $reference = index $destinationInfo 1 -}}
+  {{- else -}}
+    {{- with $params.Page.Params.Schematize -}}
+      {{- $reference = . -}}
+    {{- else -}}
+      {{- errorf "No schematize target or path found for sref link" -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $href := "" -}}
+  {{- if eq "schematize" $refTarget -}}
+    {{- $hrefParams := dict "reference" $reference -}}
+    {{- $href = partial "schematize/sref/schematize" $hrefParams -}}
+  {{- else -}}
+    {{- $hrefParams := dict "reference" $reference "target" $refTarget -}}
+    {{- $href = partial "schematize/sref/external" $hrefParams -}}
+  {{- end -}}
+
+  {{- with $href -}}
+    {{- $text  := strings.TrimPrefix $prefix $params.Text -}}
+    {{- $class := print `class="schematize-sref"`}}
+    {{- $href  := printf `href="%s"` ($href | safeURL) -}}
+    {{- $title := "" -}}
+    {{- with $params.Title -}}
+      {{- $title = printf ` title="%s"` . -}}
+    {{- end -}}
+    {{- $linkText = printf "<a %s %s%s>%s</a>" $class $href $title $text -}}
+  {{- else -}}
+    {{- errorf "couldn't resolve href for %s (%s)" $reference $refTarget -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $linkText -}}

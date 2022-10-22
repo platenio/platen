@@ -1,0 +1,121 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/imaging.yaml
+schematize:
+  noMungeDescription: true
+title: Image Processing Options
+description: |-
+  The image processing options
+  https://gohugo.io/getting-started/configuration/#imaging
+type: object
+default:
+  resampleFilter: box
+  quality: 75
+  hint: photo
+  anchor: smart
+  bgColor: "#ffffff"
+  exif:
+    includeFields: ""
+    excludeFields: ""
+    disableDate: false
+    disableLatLong: false
+properties:
+  resampleFilter:
+    description: |-
+      The default resample filter
+      https://gohugo.io/content-management/image-processing/#image-processing-config
+    type: string
+    default: box
+    enum:
+      - nearestNeighbor
+      - box
+      - linear
+      - hermite
+      - mitchellNetravali
+      - catmullRom
+      - bSpline
+      - gaussian
+      - lanczos
+      - hann
+      - hamming
+      - blackman
+      - bartlett
+      - welch
+      - cosine
+  quality:
+    description: |-
+      The default quality
+      https://gohugo.io/content-management/image-processing/#image-processing-config
+    type: integer
+    default: 75
+    minimum: 0
+    maximum: 100
+  hint:
+    description: |-
+      The default hint about what type of image
+      https://gohugo.io/content-management/image-processing/#image-processing-config
+    type: string
+    default: photo
+    enum:
+      - picture
+      - photo
+      - drawing
+      - icon
+      - text
+  anchor:
+    description: |-
+      The anchor used when cropping pictures with either .Fill or .Crop
+      https://gohugo.io/content-management/image-processing/#image-processing-config
+    type: string
+    default: smart
+    enum:
+      - smart
+      - center
+      - topLeft
+      - top
+      - topRight
+      - left
+      - right
+      - bottomLeft
+      - bottom
+      - bottomRight
+  bgColor:
+    description: |-
+      The default background color
+      https://gohugo.io/content-management/image-processing/#image-processing-config
+    type: string
+    default: "#ffffff"
+    pattern: "^#(\\d|[ABCDEFabcdef]){6}$"
+  exif:
+    title: Exif options
+    description: |-
+      Exif options
+      https://gohugo.io/content-management/image-processing/#image-processing-config
+    type: object
+    properties:
+      includeFields:
+        description: |-
+          The regexp matching the included fields
+          https://gohugo.io/content-management/image-processing/#image-processing-config
+        type: string
+        default: ""
+      excludeFields:
+        description: |-
+          The regexp matching the excluded fields
+          https://gohugo.io/content-management/image-processing/#image-processing-config
+        type: string
+        default: ""
+      disableDate:
+        description: |-
+          Enable/disable extracting the 'photo taken' date/time into .Date
+          https://gohugo.io/content-management/image-processing/#image-processing-config
+        type: boolean
+        default: false
+      disableLatLong:
+        description: |-
+          Enable/disable extracting the 'photo taken where' into .Long and .Lat
+          https://gohugo.io/content-management/image-processing/#image-processing-config
+        type: boolean
+        default: false
+    additionalProperties: false
+additionalProperties: false

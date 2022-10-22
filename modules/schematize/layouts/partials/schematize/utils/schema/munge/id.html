@@ -1,0 +1,13 @@
+{{/*
+  Munge the ID of a JSON schema to the appropriate URL - useful for docs rendering to build the link
+  to the schema from the docs page.
+*/}}
+{{- $params := . -}}
+{{- $property := $params.property -}}
+{{- if isset $property "$id" -}}
+  {{- $id := index $property "$id" -}}
+  {{- $munged := replaceRE "\\.schema\\.yaml" "/schema.json" $id | absURL -}}
+  {{- $property = merge $property (dict "$id" $munged) -}}
+{{- end -}}
+
+{{- return $property -}}

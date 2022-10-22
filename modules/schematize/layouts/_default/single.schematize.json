@@ -1,0 +1,3 @@
+{{ define "response" -}}
+{{ partial "schematize/item.schematize.json" . -}}
+{{- end -}}

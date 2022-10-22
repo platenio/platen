@@ -1,0 +1,10 @@
+{{/*
+  Entrypoint for writing the definition of a metadata item. Maps and scalars are handled
+  by different partials.
+*/}}
+{{- $definition := . -}}
+{{- if reflect.IsMap $definition -}}
+  {{- partial "schematize/utils/metadata/render/definition/map" $definition -}}
+{{- else -}}
+  {{- partial "schematize/utils/metadata/render/definition/scalar" $definition -}}
+{{- end -}}

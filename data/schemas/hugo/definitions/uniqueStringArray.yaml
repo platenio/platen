@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/definitions/uniqueStringArray.yaml
+title: Unique String Array
+schematize:
+  noMungeDescription: true
+type: array
+uniqueItems: true
+items:
+  type: string
+  minLength: 1

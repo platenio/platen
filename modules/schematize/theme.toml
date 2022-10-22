@@ -1,0 +1,13 @@
+name = "PlatenSchematize"
+license = "MIT"
+licenselink = "https://github.com/platenio/platen/blob/main/modules/schematize/LICENSE"
+description = "Platen Schema theme for Hugo: Document and publish schemas"
+homepage = "https://github.com/platenio/platen"
+demosite = "https://platen.io"
+tags = [ "books", "games", "schemas", "JSON Schema", "YAML Schema", "docs" ]
+features = [ "Schema" ]
+min_version = "0.104.0"
+
+[author]
+    name = "Platen Cooperative"
+    homepage = "https://platen.io"

@@ -1,0 +1,38 @@
+{{/*
+  Writes the required properties section for an object with a heading followed by an unordered list
+  of each property linking to the documentation for that property. The unordered list has the
+  `schematize-required-properties-list` class.
+
+  This partial uses the parameters from the object's own documentation partial. The parameters are
+  expected to include:
+
+  - `property` - Mandatory. The objects's schema data
+  - `page`     - Mandatory. The hugo Page object for the webpage the documentation is being written
+    on, for resolving references.
+  - `_level` - Optional. The current hierarchy level of the page. Used for determining what heading
+    level to write. If unspecified, it's assumed that this is a top-level object, documenting a full
+    schema.
+  - `_id` - Optional. The ID this property belongs to. If specified, used as the prefix for this
+    object's properties. This value should be null for a top-level object and set for any nested
+    objects, like properties of a top-level object.
+*/}}
+{{- $params := . -}}
+{{- $data := $params.property -}}
+{{- $level := $params._level -}}
+{{- $prefix := default "" $params._id -}}
+
+{{ with $data.required }}
+
+  {{- partial "schematize/utils/headings/arbitrary" 
+    (dict "level" $level "title" "Required Properties")
+  }}
+
+  {{- range . }}
+    {{- $title := (index $data.properties .).title -}}
+    {{- $link  := printf "%s#%s%s" $params.page.Permalink $prefix (. | lower | urlize ) -}}
+    {{- $text := printf "\n- [%s](%s)" $title $link -}}
+    {{ $text }}
+  {{- end -}}
+  {{- print "\n{.schematize-required-properties-list}" }}
+
+{{ end }}

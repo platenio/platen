@@ -1,11 +1,11 @@
 .platen-search {
   position: relative;
-  margin: $padding-16 0;
+  margin: $padding-large 0;
   border-bottom: 1px solid transparent;
 
   input {
     width: 100%;
-    padding: $padding-8;
+    padding: $padding-medium;
 
     border: 0;
     border-radius: $border-radius;
@@ -21,13 +21,13 @@
   .platen-search-spinner {
     position: absolute;
     top: 0;
-    margin: $padding-8;
-    margin-inline-start: calc(100% - #{$padding-16 + $padding-8});
+    margin: $padding-medium;
+    margin-inline-start: calc(100% - #{$padding-large + $padding-medium});
 
-    width: $padding-16;
-    height: $padding-16;
+    width: $padding-large;
+    height: $padding-large;
 
-    border: $padding-1 solid transparent;
+    border: $padding-minimal solid transparent;
     border-top-color: var(--body-font-color);
     border-radius: 50%;
 

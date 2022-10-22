@@ -1,8 +1,7 @@
-resources/_gen
-.hugo_build.lock
-site/resources/_gen
-site/.hugo_build.lock
+**/resources/_gen
+**/.hugo_build.lock
 site/public
+modules/*/public
 
 # Ignore the upstream styles but not our local ones
 !.vscode/styles/

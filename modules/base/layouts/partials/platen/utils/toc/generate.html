@@ -1,0 +1,121 @@
+{{- $pageContent := .Content -}}
+{{/* Parse settings for minimum and maximum heading levels to include in ToC */}}
+{{- $minLevel := default 2 $.Site.Params.Platen.Display.TableOfContents.MinimumLevel -}}
+{{- $minLevel  = default $minLevel .Params.Platen.TableOfContents.MinimumLevel -}}
+{{- $maxLevel := default 4 $.Site.Params.Platen.Display.TableOfContents.MaximumLevel -}}
+{{- $maxLevel  = default $maxLevel .Params.Platen.TableOfContents.MaximumLevel -}}
+{{/* Build Regex to find includable headings. */}}
+{{- $headerFullPattern := printf "<h[%v-%v].*?>(.|\n)+?</h[%v-%v]>"
+                      $minLevel $maxLevel $minLevel $maxLevel
+-}}
+{{- $headerTextPattern := printf "<h[%v-%v].*?>((.|\n)+?)</h[%v-%v]>"
+                      $minLevel $maxLevel $minLevel $maxLevel
+-}}
+
+{{/* Build Regex to find heading levels. */}}
+{{- $levelPattern := printf "[%v-%v]" $minLevel $maxLevel -}}
+
+{{/* Parse settings to determine if the items should be in ordered or unordered lists */}}
+{{- $listType := "ul" -}}
+{{- with $.Site.Params.Platen.Display.TableOfContents.OrderedList -}}
+  {{- $listType = cond . "ol" "ul" -}}
+{{- end -}}
+{{- with .Params.Platen.TableOfContents.OrderedList -}}
+  {{- $listType = cond . "ol" "ul" -}}
+{{- end -}}
+{{/* Create open and closing list tags for convenience */}}
+{{- $openList  := printf "<%s>" $listType | safeHTML -}}
+{{- $closeList := printf "</%s>" $listType | safeHTML -}}
+
+{{/* Find all headings in the rendered content */}}
+{{- $headers := findRE $headerFullPattern $pageContent -}}
+{{- $has_headers := ge (len $headers) 1 -}}
+{{- if $has_headers -}}
+
+{{- $largest := 6 -}}
+{{- range $headers -}}
+  {{- $headerLevel := index (findRE $levelPattern . 1) 0 -}}
+  {{- $headerLevel := len (seq $headerLevel) -}}
+  {{- if lt $headerLevel $largest -}}
+    {{- $largest = $headerLevel -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $firstHeaderLevel := len (seq (index (findRE $levelPattern (index $headers 0) 1) 0)) -}}
+
+{{- $.Scratch.Set "bareul" slice -}}
+<nav id="TableOfContents">
+{{ $openList }}
+  {{- range seq (sub $firstHeaderLevel $largest) -}}
+    {{ $openList }}
+    {{- $.Scratch.Add "bareul" (sub (add $largest .) 1) -}}
+  {{- end -}}
+  {{- range $index, $header := $headers -}}
+    {{- $headerLevel := index (findRE $levelPattern . 1) 0 -}}
+    {{- $headerLevel := len (seq $headerLevel) -}}
+
+    {{/* get id="xyz" */}}
+    {{- $id := index (findRE "(id=\"(.*?)\")" $header 9) 0 -}}
+
+    {{/* strip id="" to leave xyz (no way to get regex capturing groups in hugo :( */}}
+    {{- $cleanedID := replace (replace $id "id=\"" "") "\"" "" -}}
+
+    {{/* Get header text, stripped of anchor and leading/trailing whitespace */}}
+    {{- $header := replaceRE $headerTextPattern "$1" $header -}}
+    {{- $header := replaceRE "<a class=\"anchor\".*</a>" "" $header -}}
+    {{- $header := replaceRE "\n" "" $header -}}
+    {{- $header := trim $header " " -}}
+
+    {{- if ne $index 0 -}}
+      {{- $prevHeader := index $headers (sub $index 1) -}}
+      {{- $prevHeaderLevel := index (findRE $levelPattern $prevHeader 1) 0 | int -}}
+        {{/* Handle nested lists based on level */}}
+        {{- if gt $headerLevel $prevHeaderLevel -}}
+          {{- range seq $prevHeaderLevel (sub $headerLevel 1) -}}
+            {{ $openList }}
+            {{/* the first should not be recorded */}}
+            {{- if ne $prevHeaderLevel . -}}
+              {{- $.Scratch.Add "bareul" . -}}
+            {{- end -}}
+          {{- end -}}
+        {{- else -}}{{/* Item is at the same level as or lower than previous header */}}
+          </li>
+          {{- if lt $headerLevel $prevHeaderLevel -}}
+            {{- range seq (sub $prevHeaderLevel 1) -1 $headerLevel -}}
+              {{- if in ($.Scratch.Get "bareul") . -}}
+                {{ $closeList }}
+                {{/* manually do pop item */}}
+                {{- $tmp := $.Scratch.Get "bareul" -}}
+                {{- $.Scratch.Delete "bareul" -}}
+                {{- $.Scratch.Set "bareul" slice}}
+                {{- range seq (sub (len $tmp) 1) -}}
+                  {{- $.Scratch.Add "bareul" (index $tmp (sub . 1)) -}}
+                {{- end -}}
+              {{- else -}}
+                {{ $closeList }}</li>
+              {{- end -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+        <li>
+          <a href="#{{- $cleanedID  -}}">{{- $header | safeHTML -}}</a>
+    {{- else -}}
+    <li>
+      <a href="#{{- $cleanedID -}}">{{- $header | safeHTML -}}</a>
+    {{- end -}}
+  {{- end -}}
+
+  {{ $firstHeaderLevel := $largest }}
+  {{- $lastHeader := index $headers (sub (len $headers) 1) -}}
+  {{- $lastHeaderLevel := int (index (findRE $levelPattern $lastHeader 1) 0) -}}
+  </li>
+  {{- range seq (sub $lastHeaderLevel $firstHeaderLevel) -}}
+    {{- if in ($.Scratch.Get "bareul") (add . $firstHeaderLevel) -}}
+      {{ $closeList }}
+    {{- else -}}
+      {{ $closeList }}</li>
+    {{- end -}}
+  {{- end -}}
+{{ $closeList }}
+</nav>
+{{- end -}}

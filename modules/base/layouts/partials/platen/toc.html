@@ -1,3 +1,16 @@
+{{- $useBuiltInToC := default false $.Site.Params.Platen.Display.TableOfContents.UseBuiltIn -}}
+{{- with .Params.Platen.TableOfContents -}}
+  {{- if isset . "UseBuiltIn" -}}
+    {{- $useBuiltInToC = .Params.Platen.TableOfContents.UseBuiltIn -}}
+  {{- end -}}
+{{- end -}}
+
 {{ partial "platen/inject/toc-before" . }}
-{{ .TableOfContents }}
+
+{{ if $useBuiltInToC -}}
+  {{ .TableOfContents }}
+{{ else -}}
+  {{ partial "platen/utils/toc/generate" . }}
+{{ end }}
+
 {{ partial "platen/inject/toc-after" . }}
