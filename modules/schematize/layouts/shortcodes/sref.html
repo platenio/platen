@@ -1,0 +1,68 @@
+{{/*
+  This partial adds a link to another schema data entry on the site.
+*/}}
+{{- $params := .Params -}}
+
+{{- $reference := cond (.IsNamedParams) (.Get "reference") (.Get 0) -}}
+{{- $refTarget := "schematize" -}}
+{{- with (.Get "target") -}}
+  {{- $refTarget = . -}}
+{{- else -}}
+  {{- $target := .Get 1 -}}
+  {{- if not (in (slice "urlOnly" "noSuffix") $target) -}}
+    {{- $refTarget = default $refTarget $target -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $addSuffix := not (in .Params "noSuffix") -}}
+{{- $urlOnly    := in .Params "urlOnly" -}}
+
+{{- $linkText := printf "<code>%s</code>" $reference -}}
+{{- with .Inner -}}
+  {{- $linkText = markdownify . -}}
+{{- end -}}
+
+{{- if and (ne "schematize" $refTarget) $addSuffix -}}
+  {{- $srefSuffix := "" -}}
+  {{- with site.Params.Schematize.ReferenceMap -}}
+    {{- $indices := split (printf "%s.srefSuffix" $refTarget) "." -}}
+    {{- $srefSettings := . -}}
+    {{- range $index := $indices -}}
+      {{- if isset $srefSettings "srefSuffix" -}}
+        {{- $srefSuffix = index $srefSettings "srefSuffix" -}}
+      {{- end -}}
+      {{- if isset $srefSettings $index -}}
+        {{- if eq "srefSuffix" $index -}}
+          {{- $srefSuffix = index $srefSettings $index -}}
+        {{- else -}}
+          {{- $srefSettings = index $srefSettings $index -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $linkText = printf "%s %s" $linkText $srefSuffix -}}
+    {{- $linkText = trim $linkText " " -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with $reference -}}
+  {{- $href := "" -}}
+  {{- if eq "schematize" $refTarget -}}
+    {{- $hrefParams := dict "reference" $reference -}}
+    {{- $href = partial "schematize/sref/schematize" $hrefParams -}}
+  {{- else -}}
+    {{- $hrefParams := dict "reference" $reference "target" $refTarget -}}
+    {{- $href = partial "schematize/sref/external" $hrefParams -}}
+  {{- end -}}
+
+  {{- with $href -}}
+    {{- if $urlOnly -}}
+      {{- $href | safeHTML -}}
+    {{- else -}}
+      {{- printf "<a class=\"schematize-sref\" href=\"%s\">%s</a>" $href $linkText | safeHTML -}}
+    {{- end -}}
+  {{- else -}}
+    {{- errorf "couldn't resolve href for %s (%s)" $reference $refTarget -}}
+  {{- end -}}
+{{- else -}}
+  {{- errorf "No reference specified for sref; this value is mandatory. " -}}
+{{- end -}}

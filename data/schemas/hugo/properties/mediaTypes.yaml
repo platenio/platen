@@ -1,0 +1,458 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/mediaTypes.yaml
+schematize:
+  noMungeDescription: true
+title: Media Type's Options
+description: |-
+  The media type's options
+  https://gohugo.io/templates/output-formats/#media-types
+type: object
+properties:
+  application/javascript:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - js
+      - jsm
+      - mjs
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - js
+        - jsm
+        - mjs
+  application/json:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - json
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - json
+  application/manifest+json:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - webmanifest
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - webmanifest
+  application/octet-stream:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default: []
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+  application/pdf:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - pdf
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - pdf
+  application/rss+xml:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - xml
+      - rss
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - xml
+        - rss
+  application/toml:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - toml
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - toml
+  application/typescript:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - ts
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - ts
+  application/xml:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - xml
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - xml
+  application/yaml:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - yaml
+      - yml
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - yaml
+        - yml
+  font/otf:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - otf
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - otf
+  font/ttf:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - ttf
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - ttf
+  image/bmp:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - bmp
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - bmp
+  image/gif:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - gif
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - gif
+  image/jpeg:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - jpg
+      - jpeg
+      - gpe
+      - jif
+      - jfif
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - jpg
+        - jpeg
+        - gpe
+        - jif
+        - jfif
+  image/png:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - png
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - png
+  image/svg+xml:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - svg
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - svg
+  image/webp:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - webp
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - webp
+  text/calendar:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - ics
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - ics
+  text/css:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - css
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - css
+  text/csv:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - csv
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - csv
+  text/html:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - html
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - html
+  text/jsx:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - jsx
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - jsx
+  text/plain:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - txt
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - txt
+  text/tsx:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - tsx
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - tsx
+  text/x-sass:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - sass
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - sass
+  text/x-scss:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - scss
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - scss
+  video/3gpp:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - 3gpp
+      - 3gp
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - 3gpp
+        - 3gp
+  video/mp4:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - mp4
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - mp4
+  video/mpeg:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - mpg
+      - mpeg
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - mpg
+        - mpeg
+  video/ogg:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - ogv
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - ogv
+  video/webm:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - webm
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - webm
+  video/x-msvideo:
+    description: |2-
+
+      https://gohugo.io/templates/output-formats/#media-types
+    type: array
+    default:
+      - avi
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      examples:
+        - avi
+additionalProperties: false

@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Multilingual.schema.yaml
+title: Multilingual Settings
+description: Settings for multilingual sites
+schematize:
+  details: |
+    Platen and Hugo are designed to support multilingual sites out-of-the-box. These settings are
+    combined with [Hugo's][hugo-multilingual].
+
+    [hugo-multilingual]: https://gohugo.io/content-management/multilingual/
+type: object
+properties:
+  TranslatedOnly:
+    title: Translated Only
+    description: Specifies whether the site is only a translation of another project or site.
+    schematize:
+      weight: 1
+      details: |
+        Specifies whether the site is only a translation of another project or site. When this value
+        is set to true, the translations menu picker isn't rendered.
+
+        This setting is intended for use with Hugo's [multilingual multihost configuration].
+
+        The default value is `false`.
+
+        [multilingual multihost configuration]: https://gohugo.io/content-management/multilingual/#configure-multilingual-multihost
+    type: boolean
+    default: false

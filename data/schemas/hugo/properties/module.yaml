@@ -1,0 +1,138 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/module.yaml
+title: Module
+description: |-
+  The module options
+  https://gohugo.io/hugo-modules/configuration/
+type: object
+schematize:
+  noMungeDescription: true
+default:
+  noProxy: none
+  noVendor: ""
+  private: "*.*"
+  proxy: direct
+  replacements: ""
+  workspace: ""
+properties:
+  noVendor:
+    description: |-
+      The glob pattern matching the paths to skip when vendoring
+      https://gohugo.io/hugo-modules/configuration/#module-config-top-level
+    type: string
+    default: ""
+  vendorClosest:
+    description: |-
+      Enable/disable picking the vendored module closest to the module using it
+      https://gohugo.io/hugo-modules/configuration/#module-config-top-level
+    type: boolean
+    default: "true"
+  proxy:
+    description: |-
+      The proxy server to download the remote modules
+      https://gohugo.io/hugo-modules/configuration/#module-config-top-level
+    type: string
+    default: direct
+  noProxy:
+    description: |-
+      The glob list of the matching paths that should not use the proxy configured above
+      https://gohugo.io/hugo-modules/configuration/#module-config-top-level
+    type: string
+    default: none
+    examples:
+      - "*.ext"
+      - "*.ext1,*.ext2"
+    pattern: "^[^,]+(,[^,]+)*$"
+  private:
+    description: |-
+      The glob list of the matching paths that should be treated as private
+      https://gohugo.io/hugo-modules/configuration/#module-config-top-level
+    type: string
+    default: "*.*"
+    examples:
+      - "*.ext"
+      - "*.ext1,*.ext2"
+    pattern: "^[^,]+(,[^,]+)*$"
+  replacements:
+    description: |-
+      The list of the module path to directory replacement mapping
+      https://gohugo.io/hugo-modules/configuration/#module-config-top-level
+    type: string
+    default: ""
+    examples:
+      - path/to/input_directory -> path/to/output_directory
+      - path/to/input_directory1 -> path/to/output_directory1,path/to/input_directory2
+        -> path/to/output_directory2
+    pattern: "^[^,]+ -> [^,]+(,[^,]+ -> [^,]+)*$"
+  hugoVersion:
+    title: version
+    description: |-
+      The version
+      https://gohugo.io/hugo-modules/configuration/#module-config-hugoversion
+    type: object
+    properties:
+      min:
+        description: |-
+          The minimum required version
+          https://gohugo.io/hugo-modules/configuration/#module-config-hugoversion
+        $ref: ../definitions/hugoVersion.yaml
+      max:
+        description: |-
+          The maximum required version
+          https://gohugo.io/hugo-modules/configuration/#module-config-hugoversion
+        $ref: ../definitions/hugoVersion.yaml
+      extended:
+        description: |-
+          Enable/disable requiring the extended version
+          https://gohugo.io/hugo-modules/configuration/#module-config-hugoversion
+        type: boolean
+    additionalProperties: false
+  imports:
+    title: import options
+    description: |-
+      The import options
+      https://gohugo.io/hugo-modules/configuration/#module-config-imports
+    type: array
+    items:
+      type: object
+      required:
+        - path
+      properties:
+        path:
+          description: |-
+            The path
+            https://gohugo.io/hugo-modules/configuration/#module-config-imports
+          type: string
+          minLength: 1
+        ignoreConfig:
+          description: |-
+            Use/ignore the configuration file
+            https://gohugo.io/hugo-modules/configuration/#module-config-imports
+          type: boolean
+        ignoreImports:
+          description: |-
+            Use/ignore the imports
+            https://gohugo.io/hugo-modules/configuration/#module-config-imports
+          type: boolean
+        disable:
+          description: |-
+            Enable/disable the module
+            https://gohugo.io/hugo-modules/configuration/#module-config-imports
+          type: boolean
+        mounts:
+          $ref: ../definitions/module/mounts.yaml
+        noMounts:
+          description: |-
+            Enable/disable the folder mounting
+            https://gohugo.io/hugo-modules/configuration/#module-config-imports
+          type: boolean
+        noVendor:
+          description: |-
+            Enable/disable vendoring this import
+            https://gohugo.io/hugo-modules/configuration/#module-config-imports
+          type: boolean
+      additionalProperties: false
+  mounts:
+    $ref: ../definitions/module/mounts.yaml
+additionalProperties: false

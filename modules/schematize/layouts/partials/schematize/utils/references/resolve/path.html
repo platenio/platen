@@ -1,0 +1,39 @@
+{{/*
+  Resolve the reference to another schema. This implementation only supports local references.
+  It may behave strangely for external references.
+*/}}
+{{- $params := . -}}
+{{- $munged := $params.ref -}}
+{{- $outputFormat := cond (eq "schema" $params.target) "Schematize" "HTML" -}}
+{{- $params := merge $params (dict "outputFormat" $outputFormat) -}}
+
+{{- if findRE "\\{" $params.ref -}}
+{{- else -}}
+  {{- $munged = replaceRE "\\.schema\\.yaml" "" $params.ref -}}
+  {{- $munged = ref $params.page (dict "path" $munged "outputFormat" $params.outputFormat) -}}
+{{- end -}}
+
+{{- return $munged -}}
+
+{{- define "schematize-resolve-reference-from-json" -}}
+  {{- $params := . -}}
+  {{- $current := $params.ref -}}
+  {{- $munged := replaceRE "\\.schema\\.yaml" "" $current -}}
+  {{- $target := strings.Trim "\"$ref\": \"" $params.ref -}}
+  {{- $target = strings.TrimSuffix ".yaml\"" $target -}}
+  {{- $mungedRef := ref $params.page (dict "path" $target "outputFormat" "schematize") -}}
+  {{- $mungedRef = replace $current (printf "%s.yaml" $target) $mungedRef }}
+  {{- return (replace $munged $current $mungedRef) -}}
+{{- end -}}
+
+{{- define "schematize-resolve-reference-from-id" -}}
+  {{- $params := . -}}
+  {{- $munged := replaceRE "\\.schema\\.yaml" "" $params.ref -}}
+  {{- $munged = ref $params.page (dict "path" $munged "outputFormat" $params.outputFormat) -}}
+  {{- return $munged -}}
+{{- end -}}
+
+{{- define "schematize-resolve-reference-to-schema" -}}
+{{- end -}}
+{{- define "schematize-resolve-reference-to-page" -}}
+{{- end -}}

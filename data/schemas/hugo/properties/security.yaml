@@ -1,0 +1,131 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/security.yaml
+schematize:
+  noMungeDescription: true
+title: Security Options
+description: |-
+  The security options
+  https://gohugo.io/about/security-model/#security-policy
+type: object
+default:
+  enableInlineShortcodes: false
+  exec:
+    allow:
+      - "^dart-sass-embedded$"
+      - "^go$"
+      - "^npx$"
+      - "^postcss$"
+    osEnv:
+      - "(?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM)$"
+  funcs:
+    getenv:
+      - "^HUGO_"
+  http:
+    methods:
+      - "(?i)GET|POST"
+    urls:
+      - ".*"
+properties:
+  enableInlineShortcodes:
+    description: |2-
+
+      https://gohugo.io/about/security-model/#security-policy
+    type: boolean
+    default: false
+  exec:
+    description: |2-
+
+      https://gohugo.io/about/security-model/#security-policy
+    type: object
+    default:
+      allow:
+        - "^dart-sass-embedded$"
+        - "^go$"
+        - "^npx$"
+        - "^postcss$"
+      osEnv:
+        - "(?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM)$"
+    properties:
+      allow:
+        description: |2-
+
+          https://gohugo.io/about/security-model/#security-policy
+        type: array
+        default:
+          - "^dart-sass-embedded$"
+          - "^go$"
+          - "^npx$"
+          - "^postcss$"
+        uniqueItems: true
+        items:
+          type: string
+          minLength: 1
+      osEnv:
+        description: |2-
+
+          https://gohugo.io/about/security-model/#security-policy
+        type: array
+        default:
+          - "(?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM)$"
+        uniqueItems: true
+        items:
+          type: string
+          minLength: 1
+      additionalProperties: false
+  funcs:
+    description: |2-
+
+      https://gohugo.io/about/security-model/#security-policy
+    type: object
+    default:
+      getenv:
+        - "^HUGO_"
+    properties:
+      getenv:
+        description: |2-
+
+          https://gohugo.io/about/security-model/#security-policy
+        type: array
+        default:
+          - "^HUGO_"
+        uniqueItems: true
+        items:
+          type: string
+          minLength: 1
+    additionalProperties: false
+  http:
+    description: |2-
+
+      https://gohugo.io/about/security-model/#security-policy
+    type: object
+    default:
+      methods:
+        - "(?i)GET|POST"
+      urls:
+        - ".*"
+    properties:
+      methods:
+        description: |2-
+
+          https://gohugo.io/about/security-model/#security-policy
+        type: array
+        default:
+          - "(?i)GET|POST"
+        uniqueItems: true
+        items:
+          type: string
+          minLength: 1
+      urls:
+        description: |2-
+
+          https://gohugo.io/about/security-model/#security-policy
+        type: array
+        default:
+          - ".*"
+        uniqueItems: true
+        items:
+          type: string
+          minLength: 1
+      additionalProperties: false
+  additionalProperties: false

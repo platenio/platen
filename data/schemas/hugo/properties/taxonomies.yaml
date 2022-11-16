@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/taxonomies.yaml
+schematize:
+  noMungeDescription: true
+title: Taxonomy Options
+description: |-
+  The taxonomy options
+  https://gohugo.io/content-management/taxonomies#configure-taxonomies
+type: object
+default:
+  category: categories
+  tag: tags
+properties:
+  tag:
+    description: |-
+      The default taxonomy
+      https://gohugo.io/content-management/taxonomies#configure-taxonomies
+    type: string
+    default: tags
+    minLength: 1
+  category:
+    description: |-
+      The default taxonomy
+      https://gohugo.io/content-management/taxonomies#configure-taxonomies
+    type: string
+    default: categories
+    minLength: 1
+patternProperties:
+  "^(?!tag|category)$":
+    description: |-
+      The custom taxonomy
+      https://gohugo.io/content-management/taxonomies#configure-taxonomies
+    type: string
+    minLength: 1

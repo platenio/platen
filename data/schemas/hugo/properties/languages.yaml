@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/languages.yaml
+schematize:
+  noMungeDescription: true
+title: Language Options
+description: |-
+  The language options
+  https://gohugo.io/content-management/multilingual/#configure-languages
+type: object
+default: {}
+patternProperties:
+  ".":
+    description: The language options
+    type: object

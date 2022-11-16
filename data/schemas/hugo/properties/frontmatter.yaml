@@ -1,0 +1,83 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/frontmatter.yaml
+schematize:
+  noMungeDescription: true
+title: Front Matter Options
+description: |-
+  The front matter options
+  https://gohugo.io/getting-started/configuration/#configure-front-matter
+type: object
+default:
+  date:
+    - date
+    - publishDate
+    - lastmod
+  expiryDate:
+    - expiryDate
+  lastmod:
+    - ":git"
+    - lastmod
+    - date
+    - publishDate
+  publishDate:
+    - publishDate
+    - date
+properties:
+  date:
+    description: |2-
+
+      https://gohugo.io/getting-started/configuration/#configure-front-matter
+    type: array
+    uniqueItems: true
+    items:
+      type: string
+      enum:
+        - date
+        - publishDate
+        - lastmod
+        - ":default"
+        - ":filename"
+        - ":git"
+        - modified
+        - pubdate
+  expiryDate:
+    description: |2-
+
+      https://gohugo.io/getting-started/configuration/#configure-front-matter
+    type: array
+    uniqueItems: true
+    items:
+      type: string
+      enum:
+        - expiryDate
+        - unpublishdate
+  lastmod:
+    description: |2-
+
+      https://gohugo.io/getting-started/configuration/#configure-front-matter
+    type: array
+    uniqueItems: true
+    items:
+      type: string
+      enum:
+        - ":git"
+        - lastmod
+        - date
+        - publishDate
+        - ":fileModTime"
+        - modified
+        - pubdate
+  publishDate:
+    description: |2-
+
+      https://gohugo.io/getting-started/configuration/#configure-front-matter
+    type: array
+    uniqueItems: true
+    items:
+      type: string
+      enum:
+        - publishDate
+        - date
+        - pubdate
+additionalProperties: false

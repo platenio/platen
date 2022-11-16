@@ -1,0 +1,78 @@
+{{/*
+  Documents a JSON schema for an object, writing Markdown and HTML to be rendered on the page.
+
+  Object documentation includes a heading, summary, the object's metadata, the object's schema
+  definition, required properties, and recursively documents the object's properties.
+
+  The parameters are expected to include:
+
+  - `property` - Mandatory. The objects's schema data
+  - `page`     - Mandatory. The hugo Page object for the webpage the documentation is being written
+    on, for resolving references.
+  - `_level` - Optional. The current hierarchy level of the page. Used for determining what heading
+    level to write. If unspecified, it's assumed that this is a top-level object, documenting a full
+    schema.
+  - `_id` - Optional. The ID this property belongs to. If specified, used as the prefix for this
+    object's properties. This value should be null for a top-level object and set for any nested
+    objects, like properties of a top-level object.
+*/}}
+{{- $params := .}}
+{{- $schemaData := $params.property -}}
+{{/* Need to determine if this is a top-level object so we can appropriately open the section. */}}
+{{- $base_level := default 0 $schemaData._level -}}
+{{/* The current_level is used for everything except the initial heading. */}}
+{{- $current_level := add $base_level 1 -}}
+{{- $property_prefix := "" -}}
+
+{{- $schemaData = partial "schematize/utils/schema/munge/id" $params -}}
+{{- $params = merge $params (dict "property" $schemaData) -}}
+
+{{ $openSectionHTML := ""}}
+{{- if eq $base_level 0 -}}
+  {{/*
+    Top-level objects are placed in a section with the schematize class and no ID, because their
+    H1 is the appropriate anchor.
+  */}}
+  {{- $openSectionHTML = "<section class=\"schematize\">" -}}
+{{- else -}}
+  {{/*
+    Nested objects are placed in a section with their ID set to `_id`. This also defines the prefix
+    for this object's own properties.
+  */}}
+  {{- $property_prefix = printf "%s." $schemaData._id -}}
+  {{- $openSectionHTML = printf "<section id=\"%s\">" $schemaData._id }}
+{{- end -}}
+
+{{ $openSectionHTML | safeHTML }}
+
+{{/*
+  Arguably, these param definitions could be simplified since they're currently all the same.
+  However, we're leaving it with this minor duplication for clarity and to support future iterations
+  where these partials may require other parameters.
+*/}}
+
+{{- $headerParams := merge $params (dict "_level" $current_level) -}}
+{{ partial "schematize/docs/object/header" $headerParams }}
+
+{{ $schemaRenderingParams := merge $params (dict "_level" $current_level) }}
+{{ partial "schematize/utils/schema/render" $schemaRenderingParams }}
+
+{{- $examplesParams := merge $params (dict "_level" $current_level) -}}
+{{ partial "schematize/docs/object/examples" $examplesParams }}
+
+{{/*
+  Now that we're moving into properties, increment the current level by one to ensure the page
+  hierarchy is correct.
+*/}}
+{{ $current_level = add $current_level 1 }}
+
+{{- $requiredPropertyParams := merge $params (dict "_level" $current_level "_id" $property_prefix) -}}
+{{ partial "schematize/docs/object/requiredProperties" $requiredPropertyParams }}
+
+{{- $propertyParams := merge $params (dict "_level" $current_level "_id" $property_prefix) -}}
+{{ partial "schematize/docs/object/properties" $propertyParams }}
+
+{{- $propertyParams := merge $params (dict "_level" $current_level "_id" $property_prefix) -}}
+{{ partial "schematize/docs/object/patternProperties" $propertyParams }}
+
+</section>

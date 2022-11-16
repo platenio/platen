@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/module.schema.yaml
+title: Hugo Module Configuration
+schematize:
+  noMungeDescription: true
+type: object
+anyOf:
+  - $ref: ./hugo/properties/module.yaml
+properties:
+  imports:
+    type: array
+    items:
+      type: object
+      properties:
+        path:
+          description: |-
+            The path.
+            https://gohugo.io/hugo-modules/configuration/#module-config-imports
+          enum:
+            - github.com/platenio/platen/modules/base
+            - github.com/platenio/platen/modules/schematize

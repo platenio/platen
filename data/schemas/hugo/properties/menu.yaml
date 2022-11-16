@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/menu.yaml
+title: Media Menu Options
+schematize:
+  noMungeDescription: true
+description: |-
+  The menu options
+  https://gohugo.io/content-management/menus/#add-non-content-entries-to-a-menu
+type: object
+patternProperties:
+  ".":
+    description: |-
+      The menu
+      https://gohugo.io/content-management/menus/#add-non-content-entries-to-a-menu
+    type: array
+    items:
+      type: object
+      properties:
+        identifier:
+          description: |2-
+
+            https://gohugo.io/content-management/menus/#add-non-content-entries-to-a-menu
+          type: string
+          minLength: 1
+        name:
+          description: |2-
+
+            https://gohugo.io/content-management/menus/#add-non-content-entries-to-a-menu
+          type: string
+          minLength: 1
+        pre:
+          description: |2-
+
+            https://gohugo.io/content-management/menus/#add-non-content-entries-to-a-menu
+          type: string
+        url:
+          description: |2-
+
+            https://gohugo.io/content-management/menus/#add-non-content-entries-to-a-menu
+          type: string
+        weight:
+          description: |2-
+
+            https://gohugo.io/content-management/menus/#add-non-content-entries-to-a-menu
+          type: integer
+      additionalProperties: false

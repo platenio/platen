@@ -1,0 +1,53 @@
+{{/*
+  Writes the metadata definition list, iterating over a map of munged metadata.
+
+  The definition list always has the class `schematize-metadata`.
+
+  It wraps a term and its definitions in a div with the class `schematize-metadata-term-group`.
+  
+  When the definition for a term is a slice, it wraps the definitions in a div with the class
+  `schematize-metadata-definition-group`.
+
+  It always writes the ID, if any, first. Then the Type, if any. Then the remaining metadata in
+  alphabetical order.
+*/}}
+{{- $params := . }}
+{{- $termGroup := "\n<div class=\"schematize-metadata-term-group\">\n" -}}
+{{- $definitionGroup := "\n<div class=\"schematize-metadata-definition-group\">\n" -}}
+{{- $closeDiv := "\n</div>\n" -}}
+{{- $keysToSkip := slice "ID" "Type" "schematize" -}}
+
+<dl class="schematize-metadata">
+
+{{- with $params.ID -}}
+  {{- $termGroup | safeHTML -}}
+  {{- partial "schematize/utils/metadata/render/term" "ID" -}}
+  {{- partial "schematize/utils/metadata/render/definition" . -}}
+  {{- $closeDiv | safeHTML -}}
+{{- end -}}
+
+{{- with $params.Type -}}
+  {{- $termGroup | safeHTML -}}
+  {{- partial "schematize/utils/metadata/render/term" "Type" -}}
+  {{- partial "schematize/utils/metadata/render/definition" . -}}
+  {{- $closeDiv | safeHTML -}}
+{{- end -}}
+
+{{ range $term, $definition := . }}
+  {{- if not (in $keysToSkip $term) -}}
+    {{- $termGroup | safeHTML -}}
+    {{- partial "schematize/utils/metadata/render/term" $term -}}
+    {{- if not (reflect.IsSlice $definition) }}
+      {{- partial "schematize/utils/metadata/render/definition" $definition }}
+    {{- else -}}
+      {{- $definitionGroup | safeHTML -}}
+      {{- range $definition -}}
+        {{- partial "schematize/utils/metadata/render/definition" . }}
+      {{- end -}}
+      {{- $closeDiv | safeHTML -}}
+    {{- end -}}
+    {{- $closeDiv  | safeHTML -}}
+  {{- end -}}
+{{- end }}
+
+</dl>

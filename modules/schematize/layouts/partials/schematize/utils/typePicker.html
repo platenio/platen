@@ -1,0 +1,34 @@
+{{/*
+  The type picker tries to match the schema data to the correct type so it can write the docs for
+  it. Some data requires special handling.
+*/}}
+
+{{- $params := .}}
+{{- $property := $params.property -}}
+{{- $type := default "" $property.type -}}
+{{- if eq $type "object" -}}
+  {{- partial "schematize/docs/object" $params -}}
+{{- else if eq $type "string" -}}
+  {{- partial "schematize/docs/string" $params -}}
+{{- else if or (eq $type "integer") (eq $type "number") -}}
+  {{- partial "schematize/docs/numeric" $params -}}
+{{- else if eq $type "null" -}}
+  {{- partial "schematize/docs/null" $params -}}
+{{- else if eq $type "boolean" -}}
+  {{- partial "schematize/docs/boolean" $params -}}
+{{- else if eq $type "array" -}}
+  {{- partial "schematize/docs/array" $params -}}
+{{- else if isset $property "oneOf" -}}
+  {{- partial "schematize/docs/oneOf" $params -}}
+{{- else if isset $property "enum" -}}
+  {{- partial "schematize/docs/enum" $params -}}
+{{- else if isset $property "$ref" -}}
+  {{- $refData := partial "schematize/utils/references/resolve/data" $params -}}
+  {{- $refData = merge $refData (dict "_id" $property._id) -}}
+  {{- $options := dict "property" $refData "page" $params.page -}}
+  {{- partial "schematize/docs/ref" $options -}}
+{{- else if isset $property "patternProperties" -}}
+  {{- warnf "Pattern property! %#v" $property -}}
+{{- else -}}
+  {{ errorf "Unhandled data type! %#v" $property }}
+{{- end -}}

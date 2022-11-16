@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/sitemap.yaml
+schematize:
+  noMungeDescription: true
+title: Build Options
+description: |-
+  The build options
+  https://gohugo.io/getting-started/configuration/#configure-build
+type: object
+properties:
+  useResourceCacheWhen:
+    description: |-
+      The time when to use the cached resources in `/resources/_gen` for `PostCSS` and `ToCSS`
+      https://gohugo.io/getting-started/configuration/#configure-build
+    type: string
+    default: fallback
+    enum:
+      - never
+      - always
+      - fallback
+  writeStats:
+    description: |-
+      Enable/disable `hugo_stats.json` writing to the root project directory
+      https://gohugo.io/getting-started/configuration/#configure-build
+    type: boolean
+    default: false
+  noJSConfigInAssets:
+    description: |-
+      Enable/disable `jsconfig.json` writing into your `/assets` folder with mapping of imports from running `js.Build`
+      https://gohugo.io/getting-started/configuration/#configure-build
+    type: boolean
+    default: false
+additionalProperties: false

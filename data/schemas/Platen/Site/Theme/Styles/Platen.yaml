@@ -1,0 +1,918 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Theme/Styles/Platen.schema.yaml
+title: Platen Style Modules
+description: Defines the map of Platen-specific SCSS style modules for the theme.
+schematize:
+  details: |
+    Defines the map of Platen-specific SCSS style modules for the theme. The existing value is a map
+    of styles that are loaded first for the theme and set defaults for the presentation.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all styles in your own configuration file. Only specify the values you want
+    to add or replace.
+type: object
+properties:
+  Icon:
+    title: Platen Icon Style Module
+    description: Defines the style for Platen icons
+    schematize:
+      weight: 1
+      skipSchemaRender: true
+      details: |
+        Defines the style for Platen icons. By default, the only setting for this property is
+        [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to `false`, this
+        style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .platen-icon {
+          filter: var(--icon-filter);
+        }
+        ```
+
+        This applies to any element with the `platen-icon` class, which includes:
+
+        - The site menu and table of contents icons when in mobile view
+        - The calendar and edit icons in the site footer, if visible
+        - The language icon in the multilingual dropdown picker, if visible
+
+        It sets the filter for those icons to the value defined in [sref:`Theme.Variables.LightCSS.icon-filter`]
+        or [sref:`Theme.Variables.DarkCSS.icon-filter`], depending on the value of the site's
+        [sref:`Theme.Config.Mode`] setting.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/platen/_icon.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Config.Mode`]: Platen.Site.Theme.Config.Mode
+        [sref:`Theme.Variables.DarkCSS.icon-filter`]: Platen.Site.Theme.Variables.DarkCSS.icon-filter
+        [sref:`Theme.Variables.LightCSS.icon-filter`]: Platen.Site.Theme.Variables.LightCSS.icon-filter
+    type: object
+  Brand:
+    title: Brand Style Module
+    description: Defines the style for the branding elements.
+    schematize:
+      weight: 2
+      skipSchemaRender: true
+      details: |
+        Defines the style for the branding elements. By default, the only setting for this property
+        is [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to `false`, this
+        style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .platen-brand {
+          margin-top: 0;
+          margin-bottom: $padding-large;
+
+          img {
+            height: 1.5em;
+            width: 1.5em;
+            margin-inline-end: $padding-medium;
+          }
+        }
+        ```
+
+        This applies to the `h2` defining the site's branding in the site menu, which normally
+        displays the site's logo or title and links to the homepage. It sets the top margin to `0`
+        and the bottom margin to the value defined in
+        [sref:`Theme.Variables.BasicSCSS.padding-large`].
+
+        If the branding heading includes the site's logo, it sets the height and width to `1.5em`
+        and the padding after the logo to the value defined in
+        [sref:`Theme.Variables.BasicSCSS.padding-medium`].
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/platen/_brand.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`Theme.Variables.BasicSCSS.padding-medium`]: Platen.Site.Theme.Variables.BasicSCSS.padding-medium
+    type: object
+  Menu:
+    title: Menu Style Module
+    description: Defines the styles for the site menu.
+    schematize:
+      weight: 3
+      skipSchemaRender: true
+      details: |
+        Defines the styles for the site menu. By default, the only setting for this property is
+        [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to `false`, this
+        style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .platen-menu {
+          flex: 0 0 $menu-width;
+          font-size: $font-size-medium;
+
+          .platen-menu-content {
+            width: $menu-width;
+            padding: $padding-large;
+            background: var(--body-background);
+
+            @include fixed;
+          }
+
+          a,
+          label {
+            color: inherit;
+            cursor: pointer;
+            word-wrap: break-word;
+          }
+
+          a.active {
+            color: var(--color-link);
+          }
+
+          input.toggle + label + ul {
+            display: none;
+          }
+
+          input.toggle:checked + label + ul {
+            display: block;
+          }
+
+          input.toggle + label::after {
+            content: "▸";
+          }
+
+          input.toggle:checked + label::after {
+            content: "▾";
+          }
+        }
+
+        // for RTL support
+        body[dir="rtl"] .platen-menu {
+          input.toggle + label::after {
+            content: "◂";
+          }
+
+          input.toggle:checked + label::after {
+            content: "▾";
+          }
+        }
+
+        .platen-section-flat {
+          margin: $padding-large * 2 0;
+
+          > a,
+          > span,
+          > label {
+            font-weight: bolder;
+          }
+
+          > ul {
+            padding-inline-start: 0;
+          }
+        }
+        ```
+
+        This applies to the site menu. The `.platen-menu` selector defines default behaviors for the
+        site menu itself. The `body[dir="rtil] .platen-menu` selector defines overrides when the
+        language used is written right to left. The `.platen-section-flat` selector defines
+        overrides for sub-menus when their index page's front matter has
+        `Platen.Menu.FlattenSection` set to `true`.
+
+        #### Menu Defaults
+
+        The site menu's definition is a little long, so this section breaks it down by component.
+
+        The menu itself has these settings:
+
+        ```scss
+        flex: 0 0 $menu-width;
+        font-size: $font-size-medium;
+        ```
+
+        Which sets the menu not to shrink or grow but to use the value from
+        [sref:`Theme.Variables.BasicSCSS.menu-width`] as its basis, ensuring a consistent size. It
+        also sets the font size to the value of [sref:`Theme.Variables.BasicSCSS.font-size-medium`],
+        which makes the text slightly smaller than normal by default.
+
+        The selector for `.platen-menu-content` applies to the `div` inside the `aside` that
+        defines the menu. This `div` contains the `nav` itself.
+
+        ```scss
+        .platen-menu-content {
+          width: $menu-width;
+          padding: $padding-large;
+          background: var(--body-background);
+
+          @include fixed;
+        }
+        ```
+
+        This uses [sref:`Theme.Variables.BasicSCSS.menu-width`] to define the width again, ensuring
+        it's always consistent in the flex box, and sets the padding to
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]. It sets the background to the value
+        defined in [sref:`Theme.Variables.LightCSS.body-background`] or
+        [sref:`Theme.Variables.DarkCSS.body-background`], depending on whether the site is
+        displaying in light or dark [sref:`Theme.Config.Mode`]. It also ensures the utility [mixin]
+        defined in [sref:`Theme.Styles.Utils.Fixed`] is applied to those elements.
+
+        The last several selectors control the display of links and labels (used for collapsible
+        menu items).
+
+        ```scss
+        a,
+        label {
+          color: inherit;
+          cursor: pointer;
+          word-wrap: break-word;
+        }
+        ```
+
+        This ensures that the label and links inherit the color of their parent, the cursor looks
+        like a normal arrow, and the text breaks on full words and not in the middle of one.
+
+        ```scss
+        a.active {
+          color: var(--color-link);
+        }
+        ```
+
+        This ensures that, for the active page, the navigation link uses the value defined
+        in [sref:`Theme.Variables.LightCSS.color-link`] or [sref:`Theme.Variables.DarkCSS.color-link`],
+        depending on the value of the [sref:`Theme.Config.Mode`] setting.
+
+        ```scss
+        input.toggle + label + ul {
+          display: none;
+        }
+        ```
+
+        This hides the a collapsible section by default.
+
+        ```scss
+        input.toggle:checked + label + ul {
+          display: block;
+        }
+        ```
+
+        This ensures that when the toggle for a collapsible section is checked, the section displays
+        as expected.
+
+        ```scss
+        input.toggle + label::after {
+          content: "▸";
+        }
+        ```
+
+        This adds an arrow after the collapsible section to indicate that the section is currently
+        collapsed and can be expanded.
+
+        ```scss
+        input.toggle:checked + label::after {
+          content: "▾";
+        }
+        ```
+
+        This transforms the arrow for a collapsible section into one pointing downward, indicating
+        that the section is expanded and can be collapsed.
+
+        #### Right to Left Overrides
+
+        ```scss
+        body[dir="rtl"] .platen-menu {
+          input.toggle + label::after {
+            content: "◂";
+          }
+
+          input.toggle:checked + label::after {
+            content: "▾";
+          }
+        }
+        ```
+
+        This updates the behavior for collapsible sections when the language is written
+        right-to-left so that the arrows point correctly for those site vistors.
+
+        #### Flat Section Overrides
+
+        ```scss
+        .platen-section-flat {
+          margin: $padding-large * 2 0;
+
+          > a,
+          > span,
+          > label {
+            font-weight: bolder;
+          }
+
+          > ul {
+            padding-inline-start: 0;
+          }
+        }
+        ```
+
+        This adds extra vertical padding for flat sections, twice as much as for normal sections. It
+        also makes the immediate child elements bolder and removes the indentation for the
+        subsections.
+
+        #### Overwriting
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/platen/_menu.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [mixin]: https://sass-lang.com/documentation/at-rules/mixin
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Config.Mode`]: Platen.Site.Theme.Config.Mode
+        [sref:`Theme.Styles.Utils.Fixed`]: Platen.Site.Theme.Styles.Utils.Fixed
+        [sref:`Theme.Variables.BasicSCSS.body-min-width`]: Platen.Site.Theme.Variables.BasicSCSS.body-min-width
+        [sref:`Theme.Variables.BasicSCSS.font-size-medium`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-medium
+        [sref:`Theme.Variables.BasicSCSS.menu-width`]: Platen.Site.Theme.Variables.BasicSCSS.menu-width
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`Theme.Variables.DarkCSS.body-background`]: Platen.Site.Theme.Variables.DarkCSS.body-background
+        [sref:`Theme.Variables.DarkCSS.color-link`]: Platen.Site.Theme.Variables.DarkCSS.color-link
+        [sref:`Theme.Variables.LightCSS.body-background`]: Platen.Site.Theme.Variables.LightCSS.body-background
+        [sref:`Theme.Variables.LightCSS.color-link`]: Platen.Site.Theme.Variables.LightCSS.color-link
+    type: object
+  Page:
+    title: Page Style Module
+    description: Defines the style for the platen-page class.
+    schematize:
+      weight: 4
+      skipSchemaRender: true
+      details: |
+        Defines the style for elements with the `platen-page` class. By default, the only setting
+        for this property is [sref:`Enabled`], which defaults to `true`. If you set
+        [sref:`Enabled`] to `false`, this style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .platen-page {
+          min-width: $body-min-width;
+          flex-grow: 1;
+          padding: $padding-large;
+        }
+        ```
+
+        This applies to all of the page-specific content, setting the minimum width of the container
+        to the value defined in [sref:`Theme.Variables.BasicSCSS.body-min-width`], allowing the
+        container to grow, and setting the padding around it to the value defined in
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/platen/_page.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [mixin]: https://sass-lang.com/documentation/at-rules/mixin
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Variables.BasicSCSS.body-min-width`]: Platen.Site.Theme.Variables.BasicSCSS.body-min-width
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+    type: object
+  Post:
+    title: Post Style Module
+    description: Defines the style for the platen-post class.
+    schematize:
+      weight: 5
+      skipSchemaRender: true
+      details: |
+        Defines the style for the `platen-post` class. By default, the only setting for this
+        property is [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .platen-post {
+          margin-bottom: $padding-large * 3;
+        }
+        ```
+
+        This applies to blog post pages, setting their bottom margin to three times the value
+        defined in [sref:`Theme.Variables.BasicSCSS.padding-large`].
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/platen/_post.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+    type: object
+  Header:
+    title: Header Style Module
+    description: Defines the style for the platen-header class.
+    schematize:
+      weight: 6
+      skipSchemaRender: true
+      details: |
+        Defines the style for the platen-header class. By default, the only setting for this
+        property is [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .platen-header {
+          display: none;
+          margin-bottom: $padding-large;
+
+          label {
+            line-height: 0;
+          }
+
+          img.platen-icon {
+            height: 1.5em;
+            width: 1.5em;
+          }
+        }
+        ```
+
+        This applies to the header on a page, hiding it by default (desktop view) and setting the
+        bottom margin to the value defined in [sref:`Theme.Variables.BasicSCSS.padding-large`].
+
+        The label is set to have a line height of 0 and the icon is sized to a square with a height
+        and width one-and-a-half times the base font size. The label and icon are only visible in
+        mobile view.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/platen/_header.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+    type: object
+  Search:
+    title: Search Style Module
+    description: Defines the style for the site search elements.
+    schematize:
+      weight: 7
+      skipSchemaRender: true
+      details: |
+        Defines the style for the site search elements. By default, the only setting for this
+        property is [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .platen-search {
+          position: relative;
+          margin: $padding-large 0;
+          border-bottom: 1px solid transparent;
+
+          input {
+            width: 100%;
+            padding: $padding-medium;
+
+            border: 0;
+            border-radius: $border-radius;
+
+            background: var(--gray-100);
+            color: var(--body-font-color);
+
+            &:required + .platen-search-spinner {
+              display: block;
+            }
+          }
+
+          .platen-search-spinner {
+            position: absolute;
+            top: 0;
+            margin: $padding-medium;
+            margin-inline-start: calc(100% - #{$padding-large + $padding-medium});
+
+            width: $padding-large;
+            height: $padding-large;
+
+            border: $padding-minimal solid transparent;
+            border-top-color: var(--body-font-color);
+            border-radius: 50%;
+
+            @include spin(1s);
+          }
+
+          small {
+            opacity: 0.5;
+          }
+        }
+        ```
+
+        This applies to the site search input, spinner, and results located in the site menu. The
+        following sections elaborate on the style as it applies to the container for the search
+        input, the input itself, the spinner, and the results.
+
+        #### Search Container
+
+        ```scss
+        position: relative;
+        margin: $padding-large 0;
+        border-bottom: 1px solid transparent;
+        ```
+
+        The site search functionality is placed in a `div` with the `platen-search` class, applying
+        this style to the container. It sets the position to be relative to the rest of the site
+        menu, adds vertical margins to the search section using the value defined in
+        [sref:`Theme.Variables.BasicSCSS.padding-large`], and adds a transparent border beneath the
+        section.
+
+        #### Input
+
+        ```scss
+        input {
+          width: 100%;
+          padding: $padding-medium;
+
+          border: 0;
+          border-radius: $border-radius;
+
+          background: var(--gray-100);
+          color: var(--body-font-color);
+
+          &:required + .platen-search-spinner {
+            display: block;
+          }
+        }
+        ```
+
+        This applies to the search input. It ensures the input text box takes up the full width of
+        the container and adds padding around the input using the value defined in
+        [sref:`Theme.Variables.BasicSCSS.padding-medium`].
+
+        It sets the border to zero-width and uses the value defined in
+        [sref:`Theme.Variables.BasicSCSS.border-radius`] as the border radius.
+
+        It sets the background to the value of [sref:`Theme.Variables.LightCSS.gray-100`] or
+        [sref:`Theme.Variables.DarkCSS.gray-100`] depending the setting for
+        [sref:`Theme.Config.Mode`]. It sets the text in the input to
+        [sref:`Theme.Variables.BasicSCSS.body-font-color`].
+
+        When the input is [sref:required], it sets the spinner's display to `block` instead of
+        `none`.
+
+        #### Spinner
+
+        ```scss
+        .platen-search-spinner {
+          position: absolute;
+          top: 0;
+          margin: $padding-medium;
+          margin-inline-start: calc(100% - #{$padding-large + $padding-medium});
+
+          width: $padding-large;
+          height: $padding-large;
+
+          border: $padding-minimal solid transparent;
+          border-top-color: var(--body-font-color);
+          border-radius: 50%;
+
+          @include spin(1s);
+        }
+        ```
+
+        This controls the display of the search spinner, which is visible when the search input
+        takes longer than a second to find results.
+
+        It adds the spinner to the top middle of the page, adding a margin based on the value
+        defined in [sref:`Theme.Variables.BasicSCSS.padding-medium`]. It ensures the spinner is
+        centered and sets its height and width to the value defined in
+        [sref:`Theme.Variables.BasicSCSS.padding-large`].
+
+        It adds a minimal transparent border all around, sets the color of the top border to the
+        body font color with a 50% radius, and uses the utility [mixin] defined in
+        [sref:`Theme.Styles.Utils.Spin`] to control the spinning behavior, rotating every second.
+
+        #### Results
+
+        ```scss
+        small {
+          opacity: 0.5;
+        }
+        ```
+
+        This controls the search results, which are each added in a `small` element, setting their
+        opacity to 50%.
+
+        #### Overwriting
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/platen/_search.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [mixin]: https://sass-lang.com/documentation/at-rules/mixin
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Config.Mode`]: Platen.Site.Theme.Config.Mode
+        [sref:`Theme.Styles.Utils.Spin`]: Platen.Site.Theme.Styles.Utils.Spin
+        [sref:`Theme.Variables.BasicSCSS.border-radius`]: Platen.Site.Theme.Variables.BasicSCSS.border-radius
+        [sref:`Theme.Variables.BasicSCSS.font-size-small`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-small
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`Theme.Variables.BasicSCSS.padding-medium`]: Platen.Site.Theme.Variables.BasicSCSS.padding-medium
+        [sref:`Theme.Variables.DarkCSS.gray-100`]: Platen.Site.Theme.Variables.DarkCSS.gray-100
+        [sref:`Theme.Variables.LightCSS.gray-100`]: Platen.Site.Theme.Variables.LightCSS.gray-100
+        [sref:required]: mdn.html.attribute:required
+    type: object
+  Toc:
+    title: Table of Contents Style Module
+    description: Defines the style for the table of contents on a page.
+    schematize:
+      weight: 8
+      skipSchemaRender: true
+      details: |
+        Defines the style for the table of contents on a page. By default, the only setting for this
+        property is [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .platen-toc {
+          flex: 0 0 $toc-width;
+          font-size: $font-size-small;
+
+          .platen-toc-content {
+            width: $toc-width;
+            padding: $padding-large;
+
+            @include fixed;
+          }
+
+          img {
+            height: 1em;
+            width: 1em;
+          }
+
+          nav > ul > li:first-child {
+            margin-top: 0;
+          }
+        }
+        ```
+
+        This applies to the table of contents on a page, which is placed in an `aside` with the
+        `platen-toc` class. It sets the flex to stay at the size defined in
+        [sref:`Theme.Variables.BasicSCSS.toc-width`] and sets the font size to the value of
+        [sref:`Theme.Variables.BasicSCSS.font-size-small`].
+
+        It adds padding based on the value of [sref:`Theme.Variables.BasicSCSS.padding-large`] and
+        ensures the utility [mixin] defined by [sref:`Theme.Styles.Utils.Fixed`] is used to
+        keep the table of contents static on the page.
+
+        It sets the height and width of the table of contents logo image, and any other images, to
+        `1em`.
+
+        It ensures the first entry in each subsections does not have a top margin to keep the list
+        from taking up too much vertical space.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/platen/_footer.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [mixin]: https://sass-lang.com/documentation/at-rules/mixin
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Styles.Utils.Fixed`]: Platen.Site.Theme.Styles.Utils.Fixed
+        [sref:`Theme.Variables.BasicSCSS.font-size-small`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-small
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`Theme.Variables.BasicSCSS.toc-width`]: Platen.Site.Theme.Variables.BasicSCSS.toc-width
+    type: object
+  Footer:
+    title: Footer Style Module
+    description: Defines the styles for the page footer.
+    schematize:
+      weight: 9
+      skipSchemaRender: true
+      details: |
+        Defines the styles for the page footer. By default, the only setting for this property is
+        [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to `false`, this
+        style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .platen-footer {
+          padding-top: $padding-large;
+          font-size: $font-size-medium;
+
+          img {
+            height: 1em;
+            width: 1em;
+            margin-inline-end: $padding-medium;
+          }
+        }
+        ```
+
+        This applies to the footer for pages on the site, adding padding above the footer based on
+        the value defined in [sref:`Theme.Variables.BasicSCSS.padding-large`] and setting the font
+        size to [sref:`Theme.Variables.BasicSCSS.font-size-medium`].
+
+        It also sets the height and width of images to `1em` and adds padding after each image (when
+        displayed inline) based on [sref:`Theme.Variables.BasicSCSS.padding-medium`]. This applies
+        to the logos included for the last edited information and the edit this page action.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/platen/_footer.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Variables.BasicSCSS.font-size-medium`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-medium
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`Theme.Variables.BasicSCSS.padding-medium`]: Platen.Site.Theme.Variables.BasicSCSS.padding-medium
+    type: object
+  Comments:
+    title: Comments Style Module
+    description: Defines the style for comments sections.
+    schematize:
+      weight: 10
+      skipSchemaRender: true
+      details: |
+        Defines the style for comments sections. By default, the only setting for this property is
+        [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to `false`, this style isn't
+        applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .platen-comments {
+          margin-top: $padding-large;
+        }
+        ```
+
+        This applies to any element with the `platen-comments` class, including the default Disqus
+        comments if enabled. It adds a margin above the section based on the value defined in
+        [sref:`Theme.Variables.BasicSCSS.padding-large`].
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/platen/_comments.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+    type: object
+  Languages:
+    title: Languages Style Module
+    description: Defines the ? style for ?.
+    schematize:
+      weight: 11
+      skipSchemaRender: true
+      details: |
+        Defines the ? style for ?. By default, the only setting for this property is [sref:`Enabled`],
+        which defaults to `true`. If you set [sref:`Enabled`] to `false`, this style isn't applied to the
+        site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .platen-languages {
+          margin-block-end: $padding-large * 2;
+
+          .platen-icon {
+            height: 1em;
+            width: 1em;
+            margin-inline-end: .5em;
+          }
+
+          ul {
+            padding-inline-start: 1.5em;
+          }
+        }
+        ```
+
+        This applies to the language picker if the site is running in multilingual mode.
+
+        It adds a margin after the section equal to double the value defined in
+        [sref:`Theme.Variables.BasicSCSS.padding-large`].
+
+        For the multilingual icon, it sets the height and width to `1em` and adds a `0.5em` margin
+        after the icon before the picker.
+
+        For the items, it adds a `1.5em` leading padding.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/platen/_languages.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+    type: object
+  Responsiveness:
+    title: Responsiveness Style Module
+    description: Defines the responsiveness behavior for elements.
+    schematize:
+      weight: 12
+      skipSchemaRender: true
+      details: |
+        Defines the responsiveness behavior for elements. By default, the only setting for this
+        property is [sref:`Enabled`], which defaults to `true`. If you set [sref:`Enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`Enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .platen-menu-content,
+        .platen-toc-content,
+        .platen-page,
+        .platen-header aside,
+        .markdown {
+          transition: 0.2s ease-in-out;
+          transition-property: transform, margin, opacity, visibility;
+          will-change: transform, margin, opacity;
+        }
+        ```
+
+        This applies to numerous items in the site, controlling their behavior when they need to be
+        displayed or hidden while in mobile view. It creates a smooth transition, sliding the element
+        in or out of view over 0.2 seconds and transforming it as needed.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/platen/_responsiveness.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {.platen-hint .danger }
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
+    type: object
+patternProperties:
+  ".":
+    $ref: ./Defined.yaml
+    schematize:
+      href: pattern-any

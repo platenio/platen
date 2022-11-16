@@ -1,0 +1,26 @@
+{{/*
+  Converts the declared YAML schema into JSON. It uses dot-path notation to access nested levels of
+  data. For example, `foo.bar.baz` maps to `data/schemas/foo/bar/baz.yaml`.
+*/}}
+
+{{- $schema_path := .Params.Schematize -}}
+{{- $schemaData  := .Site.Data.schemas }}
+{{- range $level := split $schema_path "." -}}
+  {{- $schemaData = index $schemaData $level -}}
+{{- end -}}
+{{/* Munge descriptions to link to their docs unless munging isn't desired. */}}
+{{- if not $schemaData.schematize.noMungeDescription -}}
+  {{- $docsURL   := (.OutputFormats.Get "html").Permalink  -}}
+  {{- $schemaData = partial "schematize/utils/schema/munge/description" (dict "schemaData" $schemaData "docsURL" $docsURL) -}}
+{{- end -}}
+{{/* Clean the schema of Schematize conventions */}}
+{{- $schemaData  = partial "schematize/utils/schema/clean" $schemaData -}}
+{{- $schemaJSON := $schemaData | jsonify (dict "indent" "  ") -}}
+{{/*
+  Because the YAML definitions declare themselves as YAML files, it's necessary to munge the ID and
+  any references to YAML into json references.
+*/}}
+{{- $options   := dict "value" $schemaJSON "mungeReferences" true "page" .Page -}}
+{{- $schemaJSON = partial "schematize/utils/schema/munge/path" $options -}}
+
+{{- $schemaJSON }}

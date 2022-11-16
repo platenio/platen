@@ -1,0 +1,36 @@
+{{/*
+  This partial returns the link reference to a specified external header
+*/}}
+{{- $params := . -}}
+{{- $reference := $params.reference -}}
+{{- $target := $params.target -}}
+{{- $href := "" -}}
+
+{{- with site.Params.Schematize.ReferenceMap -}}
+  {{- $srefTarget := printf "%s.srefBase" $target -}}
+  {{- $indices := split $srefTarget "." -}}
+  {{- $srefMap := . -}}
+  {{- $srefBase := "" -}}
+
+  {{- range $index := $indices -}}
+    {{- if eq "srefBase" $index -}}
+      {{- $srefBase = $srefMap.srefBase -}}
+    {{- else -}}
+      {{- if isset $srefMap $index -}}
+        {{- $srefMap = index $srefMap $index -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if reflect.IsMap $srefBase -}}
+    {{- errorf "Specified external sref (%s in %s) but %s.srefBase isn't defined in the site params!" $reference $target $target -}}
+  {{- else if hasPrefix $srefBase "http" -}}
+    {{- $href = printf "%s/%s" $srefBase $reference }}
+  {{- else -}}
+    {{- errorf "something strange happened, srefBase for %s in %s found as: %#v" $reference $target $srefBase -}}
+  {{- end -}}
+{{- else -}}
+  {{- errorf "Specified external sref (%s in %s) but Schematize.ReferenceMap isn't defined in the site params!" $reference $target -}}
+{{- end -}}
+
+{{- return $href -}}

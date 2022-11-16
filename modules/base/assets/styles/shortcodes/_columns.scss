@@ -1,11 +1,11 @@
 .markdown .platen-columns {
-  margin-left: -$padding-16;
-  margin-right: -$padding-16;
+  margin-left: -$padding-large;
+  margin-right: -$padding-large;
 
   > div {
-    margin: $padding-16 0;
+    margin: $padding-large 0;
     min-width: $body-min-width / 2;
-    padding: 0 $padding-16;
+    padding: 0 $padding-large;
   }
 
   &.flatten-in-mobile {

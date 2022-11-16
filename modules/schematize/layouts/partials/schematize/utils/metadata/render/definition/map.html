@@ -1,0 +1,11 @@
+{{/*
+  When a metadata term's definition is a map, we recurse through the metadata list rendering. This
+  allows for a neater presentation of compositional and validation metadata.
+*/}}
+{{ $definition := . }}
+
+<dd>
+
+{{ partial "schematize/utils/metadata/render/list.html" $definition }}
+
+</dd>

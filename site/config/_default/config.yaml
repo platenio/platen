@@ -7,8 +7,23 @@ dataDir: ../data
 
 module:
   replacements: >-
-    github.com/platenio/platen/modules/base -> base
+    github.com/platenio/platen/modules/base -> base,
+    github.com/platenio/platen/modules/schematize -> schematize
   imports:
+    - path: github.com/platenio/platen/modules/schematize
+      mounts:
+        - source: archetypes
+          target: archetypes
+        - source: assets
+          target: assets
+        - source: docs
+          target: content/modules/schematize
+        - source: i18n
+          target: i18n
+        - source: layouts
+          target: layouts
+        - source: static
+          target: static
     - path: github.com/platenio/platen/modules/base
       mounts:
         - source: archetypes
@@ -36,7 +51,7 @@ markup:
         block: true
   tableOfContents:
     startLevel: 1
-    endLevel: 4
+    endLevel: 6
 
 languages:
   en:

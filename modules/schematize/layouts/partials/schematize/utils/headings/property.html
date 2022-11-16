@@ -1,0 +1,81 @@
+{{/*
+  Takes the parameters for an object or property's documentation to write the titular heading for
+  the item. The heading is written one level higher than the current level of the parameters.
+
+  If the parameters don't include a level but the property data does include the `$id` property, the
+  assumed heading level is 1. If the `$id` property is absent and no level is specified, this
+  partial errors.
+
+  If the attempted heading level is greater than 7, this partial errors. The schema needs to be
+  decomposed to use a reference for this property, since h6 is the highest valid heading level.
+
+  If the attempted heading is for a reference without a title, this partial errors because it
+  won't be able to display the information correctly.
+
+  If the schema author sets the schematize.noHeading key to true for a property, the heading is
+  written as bold instead of an actual heading. This is a workaround to avoid needing to decompose
+  the schema.
+*/}}
+{{- $params := . -}}
+{{- $level := 0 -}}
+{{- $property := $params.property -}}
+
+{{/* Handle schematize overrides */}}
+{{- $noHeading := $property.schematize.noHeading }}
+
+{{/* Initialize header text, which needs to be built before rendering */}}
+{{- $headerText := "" -}}
+
+{{/* Set level if possible, error if needed. */}}
+{{- with $property._level -}}
+  {{- $level = add 1 . -}}
+{{- else -}}
+  {{- with (index $property "$id") -}}
+    {{- $level = 1 -}}
+  {{- else -}}
+    {{- errorf "%s %s Property: %#v"
+               "Attempted to write a header for an unleveled property without an ID."
+               "This implies the property is top-level. All top-level properties should have IDs."
+               $property
+    -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Build the heading */}}
+{{ with $property.title -}}
+  {{- if $noHeading -}}
+    {{/* Write the heading as bold to avoid needing to decompose a deep schema. */}}
+    {{- $headerText = printf "**%s**" $property.title -}}
+  {{- else if le $level 6 -}}
+    {{- $headerText = $property.title -}}
+    {{/*
+      If the _id property is set, as for properties and sub-properties, ensure the ID for the
+      heading uses that value. This makes for predictable and deterministic headings instead of
+      automatically generating them from the heading text.
+    */}}
+    {{- with $property._id -}}
+      {{- $href := lower . | urlize -}}
+      {{- $id   := index (split . "." | last 1) 0 -}}
+      {{/* Handle pattern properties differently than others */}}
+      {{- with $property._pattern -}}
+        {{- $id = printf "Pattern: <code>%s</code>" . -}}
+      {{- else -}}
+        {{- $id = printf "<code>%s</code>" $id -}}
+      {{- end -}}
+      {{- $headerText = printf "%s (%s)" $headerText $id -}}
+      {{- $headerText = printf "<h%v id=\"%s\">%s</h%v>" $level $href $headerText $level -}}
+    {{- end -}}
+  {{- else -}}
+    {{- errorf "%s %s Property: %#v"
+               "Attempted to write heading level 7 or higher for property."
+               "Only up to six levels allowed on a page."
+               $property
+    -}}
+  {{- end -}}
+{{- else -}}
+  {{- if $property._asReference -}}
+    {{- errorf "Reference properties must specify a title. Invalid reference: %#v" $property -}}
+  {{- end -}}
+{{ end }}
+
+{{ safeHTML $headerText }}

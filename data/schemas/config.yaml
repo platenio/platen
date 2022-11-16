@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/config.schema.yaml
+title: Hugo Configuration
+schematize:
+  noMungeDescription: true
+type: object
+anyOf:
+  - $ref: ./hugo/config.yaml
+properties:
+  params:
+    type: object
+    schematize:
+      noMungeDescription: true
+    properties:
+      Platen:
+        $ref: ./Platen/Site/Config.yaml
+      Schematize:
+        $ref: ./Schematize/Site/Config.yaml

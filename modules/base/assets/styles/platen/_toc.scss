@@ -1,10 +1,10 @@
 .platen-toc {
   flex: 0 0 $toc-width;
-  font-size: $font-size-12;
+  font-size: $font-size-small;
 
   .platen-toc-content {
     width: $toc-width;
-    padding: $padding-16;
+    padding: $padding-large;
 
     @include fixed;
   }

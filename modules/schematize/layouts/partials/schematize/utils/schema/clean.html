@@ -1,0 +1,35 @@
+{{/* Clean the schema data of all schematize-specific keys before rendering for output */}}
+{{- $data := . -}}
+{{- $munged := dict -}}
+{{- $invalidKeys := slice "_id" "_level" "_page" "_pattern" "_weight" -}}
+
+{{ if $data.schematize.keepSchematize -}}
+    {{/* Don't add schematize to the invalid keys list */}}
+{{- else -}}
+    {{- $invalidKeys = $invalidKeys | append "schematize" -}}
+{{- end -}}
+
+{{- range $key, $value := $data -}}
+    {{- if in $invalidKeys $key -}}
+        {{/* Skip this value from the dict */}}
+    {{- else -}}
+        {{- $cleanedValue := $value -}}
+        {{- if reflect.IsMap $cleanedValue -}}
+            {{- $cleanedValue = partial "schematize/utils/schema/clean" $cleanedValue }}
+        {{- else if reflect.IsSlice $cleanedValue -}}
+            {{- $mungedItems := slice -}}
+            {{- range $item := $cleanedValue -}}
+                {{- if reflect.IsMap $item -}}
+                    {{- $mungedItem := partial "schematize/utils/schema/clean" $item }}
+                    {{- $mungedItems = $mungedItems | append $mungedItem -}}
+                {{- else -}}
+                    {{- $mungedItems = $mungedItems | append $item -}}
+                {{- end -}}
+            {{- end -}}
+            {{- $cleanedValue = $mungedItems -}}
+        {{- end -}}
+        {{- $munged = merge $munged (dict $key $cleanedValue) -}}
+    {{- end -}}
+{{- end -}}
+
+{{- return $munged -}}

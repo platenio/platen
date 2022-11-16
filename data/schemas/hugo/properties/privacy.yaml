@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/privacy.yaml
+schematize:
+  noMungeDescription: true
+title: Privacy Options
+description: |-
+  Configuration for complying with GDPR.
+  https://gohugo.io/about/hugo-and-gdpr/
+type: object
+properties:
+  disqus:
+    type: object
+    properties:
+      disable:
+        type: boolean
+        default: false
+  googleAnalytics:
+    type: object
+    description: |-
+      Disable particular services of Google Analytics.
+      https://gohugo.io/about/hugo-and-gdpr/#googleanalytics
+    properties:
+      anonymizeIP:
+        type: boolean
+        default: false
+      disable:
+        type: boolean
+        default: false
+      respectDoNotTrack:
+        type: boolean
+        default: false
+      useSessionStorage:
+        type: boolean
+        default: false
+  instagram:
+    type: object
+    description: |-
+      Disable particular services of Instagram.
+      https://gohugo.io/about/hugo-and-gdpr/#instagram
+    properties:
+      disable:
+        type: boolean
+        default: false
+      simple:
+        type: boolean
+        default: false
+  youtube:
+    type: object
+    description: |-
+      Disable particular services of YouTube.
+      https://gohugo.io/about/hugo-and-gdpr/#youtube
+    properties:
+      disable:
+        type: boolean
+        default: false
+      privacyEnhanced:
+        type: boolean
+        default: false
+  vimeo:
+    type: object
+    description: |-
+      Disable particular services of Vimeo.
+      https://gohugo.io/about/hugo-and-gdpr/#vimeo
+    properties:
+      disable:
+        type: boolean
+        default: false
+      enableDNT:
+        type: boolean
+        default: false
+      simple:
+        type: boolean
+        default: false

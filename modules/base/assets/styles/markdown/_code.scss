@@ -1,13 +1,13 @@
 .markdown {
   code {
-    padding: 0 $padding-4;
+    padding: 0 $padding-small;
     background: var(--gray-200);
     border-radius: $border-radius;
     font-size: 0.875em;
   }
 
   pre {
-    padding: $padding-16;
+    padding: $padding-large;
     background: var(--gray-100);
     border-radius: $border-radius;
     overflow-x: auto;

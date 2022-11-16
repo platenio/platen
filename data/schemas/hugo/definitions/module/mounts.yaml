@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/definitions/module/mounts.yaml
+title: Mount Options
+description: |-
+  The mount options
+  https://gohugo.io/hugo-modules/configuration/#module-config-mounts
+type: array
+schematize:
+  noMungeDescription: true
+items:
+  type: object
+  default:
+    - source: content
+      target: content
+    - source: static
+      target: static
+    - source: layouts
+      target: layouts
+    - source: data
+      target: data
+    - source: assets
+      target: assets
+    - source: i18n
+      target: i18n
+    - source: archetypes
+      target: archetypes
+  required:
+    - source
+    - target
+  properties:
+    source:
+      description: |-
+        The source path
+        https://gohugo.io/hugo-modules/configuration/#module-config-mounts
+      $ref: ../hugoFolder.yaml
+    target:
+      description: |-
+        The target path
+        https://gohugo.io/hugo-modules/configuration/#module-config-mounts
+      $ref: ../hugoFolder.yaml
+    lang:
+      description: |-
+        The language code
+        https://gohugo.io/hugo-modules/configuration/#module-config-mounts
+      type: string
+      minLength: 1
+    includeFiles:
+      description: |-
+        The included files
+        https://gohugo.io/hugo-modules/configuration/#module-config-mounts
+      oneOf:
+        - type: string
+        - type: array
+          uniqueItems: true
+          items:
+            type: string
+    excludeFiles:
+      description: |-
+        The excluded files
+        https://gohugo.io/hugo-modules/configuration/#module-config-mounts
+      oneOf:
+        - type: string
+        - type: array
+          uniqueItems: true
+          items:
+            type: string
+additionalProperties: false

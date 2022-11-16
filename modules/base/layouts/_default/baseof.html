@@ -1,3 +1,18 @@
+{{- $platenSiteParams := .Site.Params.Platen -}}
+{{- $platenPageParams := .Params.Platen -}}
+
+{{/*
+  Determine if the ToC should be rendered:
+
+  - If set in the page params, use that value.
+  - If set in the site params but not the page, use that value.
+  - If not set at all, default to true.
+*/}}
+{{- $siteRenderToC := $platenSiteParams.TableOfContents.Render -}}
+{{- $pageRenderToC := $platenPageParams.TableOfContents.Render -}}
+{{- $renderToC := default true (default $siteRenderToC $pageRenderToC) -}}
+
+{{/* Write the HTML */}}
 <!DOCTYPE html>
 <html lang="{{ default .Site.Language.Lang .Site.LanguageCode  }}" dir="{{ default "ltr" .Site.Language.LanguageDirection }}">
 <head>
@@ -32,7 +47,7 @@
 
       <label for="menu-control" class="hidden platen-menu-overlay"></label>
     </div>
-    {{ if default true (default .Site.Params.Platen.Display.ShowToC .Params.Platen.ShowToC) }}
+    {{ if $renderToC }}
     <aside class="platen-toc">
       <div class="platen-toc-content">
         {{ template "toc" . }} <!-- Table of Contents -->

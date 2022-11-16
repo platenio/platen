@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/languages.schema.yaml
+title: Hugo Languages Configuration
+schematize:
+  noMungeDescription: true
+type: object
+anyOf:
+  - $ref: ./hugo/properties/languages.yaml

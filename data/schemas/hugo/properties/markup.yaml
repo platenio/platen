@@ -1,0 +1,601 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/markup.yaml
+schematize:
+  noMungeDescription: true
+title: Markdown Options
+description: |-
+  The markdown options
+  https://gohugo.io/getting-started/configuration-markup
+type: object
+default:
+  asciidocExt:
+    attributes: {}
+    backend: html5
+    extensions: []
+    failureLevel: fatal
+    noHeaderOrFooter: true
+    preserveTOC: false
+    safeMode: unsafe
+    sectionNumbers: false
+    trace: false
+    verbose: false
+    workingFolderCurrent: false
+  blackFriday:
+    angledQuotes: false
+    extensions:
+    extensionsMask:
+    footnoteAnchorPrefix: ""
+    footnoteReturnLinkContents: ""
+    fractions: true
+    hrefTargetBlank: false
+    latexDashes: true
+    nofollowLinks: false
+    noreferrerLinks: false
+    plainIDAnchors: true
+    skipHTML: false
+    smartDashes: true
+    smartypants: true
+    smartypantsQuotesNBSP: false
+    taskLists: true
+  defaultMarkdownHandler: goldmark
+  goldmark:
+    extensions:
+      definitionList: true
+      footnote: true
+      linkify: true
+      linkifyProtocol: https
+      strikethrough: true
+      table: true
+      taskList: true
+      typographer: true
+    parser:
+      attribute:
+        block: false
+        title: true
+      autoHeadingID: true
+      autoHeadingIDType: github
+    renderer:
+      hardWraps: false
+      unsafe: false
+      xhtml: false
+  highlight:
+    anchorLineNos: false
+    codeFences: true
+    guessSyntax: false
+    hl_Lines: ""
+    lineAnchors: ""
+    lineNoStart: 1
+    lineNos: false
+    lineNumbersInTable: true
+    noClasses: true
+    noHl: false
+    style: monokai
+    tabWidth: 4
+  tableOfContents:
+    startLevel: 2
+    endLevel: 3
+    ordered: false
+properties:
+  asciidocExt:
+    title: AsciidocExt options
+    description: |-
+      AsciidocExt options
+      https://docs.asciidoctor.org/asciidoctor/latest/cli/man1/asciidoctor/#processing-information
+    type: object
+    properties:
+      attributes:
+        title: document attributes
+        description: |-
+          The document attributes
+          https://docs.asciidoctor.org/asciidoctor/latest/cli/man1/asciidoctor/#document-settings
+        type: object
+        default: {}
+        patternProperties:
+          ".":
+            type: string
+      backend:
+        description: |-
+          The backend output file format
+          https://docs.asciidoctor.org/asciidoctor/latest/cli/man1/asciidoctor/#document-settings
+        type: string
+        default: html5
+        enum:
+          - html5
+          - docbook5
+          - manpage
+          - html
+      extensions:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration-markup#configure-markup
+        type: array
+        default: []
+        uniqueItems: true
+        items:
+          type: string
+          minLength: 1
+      failureLevel:
+        description: |-
+          The minimum logging level
+          https://docs.asciidoctor.org/asciidoctor/latest/cli/man1/asciidoctor/#processing-information
+        type: string
+        default: fatal
+      noHeaderOrFooter:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration-markup#configure-markup
+        type: boolean
+        default: true
+      preserveTOC:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration-markup#configure-markup
+        type: boolean
+        default: false
+      safeMode:
+        description: |-
+          The safe mode
+          https://docs.asciidoctor.org/asciidoctor/latest/safe-modes/
+        type: string
+        default: unsafe
+        enum:
+          - unsafe
+          - safe
+          - server
+          - secure
+      sectionNumbers:
+        description: |-
+          Enable/disable section title's auto-numbering
+          https://docs.asciidoctor.org/asciidoctor.js/latest/cli/options/#document-conversion
+        type: boolean
+        default: false
+      trace:
+        description: |-
+          Include/exclude the backtrace information on errors
+          https://gohugo.io/getting-started/configuration-markup#configure-markup
+        type: boolean
+        default: false
+      verbose:
+        description: |-
+          Enable/disable verbose error printing
+          https://gohugo.io/getting-started/configuration-markup#configure-markup
+        type: boolean
+        default: false
+      workingFolderCurrent:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration-markup#configure-markup
+        type: boolean
+        default: false
+    additionalProperties: false
+  blackfriday:
+    title: Blackfriday options
+    description: |-
+      Blackfriday options
+      https://gohugo.io/getting-started/configuration-markup#blackfriday
+    type: object
+    properties:
+      angledQuotes:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: boolean
+        default: false
+      extensions:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type:
+          - array
+          - "null"
+        default:
+        uniqueItems: true
+        items:
+          type: string
+          minLength: 1
+      extensionsMask:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type:
+          - string
+          - "null"
+        default:
+      footnoteAnchorPrefix:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: string
+        default: ""
+      footnoteReturnLinkContents:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: string
+        default: ""
+      fractions:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: boolean
+        default: true
+      hrefTargetBlank:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: boolean
+        default: false
+      latexDashes:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: boolean
+        default: true
+      nofollowLinks:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: boolean
+        default: false
+      noreferrerLinks:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: boolean
+        default: false
+      plainIDAnchors:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: boolean
+        default: true
+      skipHTML:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: boolean
+        default: false
+      smartDashes:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: boolean
+        default: true
+      smartypants:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: boolean
+        default: true
+      smartypantsQuotesNBSP:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: boolean
+        default: false
+      taskLists:
+        description: https://gohugo.io/getting-started/configuration-markup#blackfriday
+        type: boolean
+        default: true
+    additionalProperties: false
+  defaultMarkdownHandler:
+    description: |-
+      The default markdown renderer
+      https://gohugo.io/getting-started/configuration-markup#blackfriday
+    type: string
+    default: goldmark
+    enum:
+      - goldmark
+      - blackfriday
+  goldmark:
+    title: Goldmark options
+    description: |-
+      Goldmark options
+      https://gohugo.io/getting-started/configuration-markup#goldmark
+    type: object
+    default:
+      extensions:
+        definitionList: true
+        footnote: true
+        linkify: true
+        linkifyProtocol: https
+        strikethrough: true
+        table: true
+        taskList: true
+        typographer: true
+      parser:
+        attribute:
+          block: false
+          title: true
+        autoHeadingID: true
+        autoHeadingIDType: github
+      renderer:
+        hardWraps: false
+        unsafe: false
+        xhtml: false
+    properties:
+      extensions:
+        title: extension options
+        description: |-
+          The extension options
+          https://gohugo.io/getting-started/configuration-markup#goldmark
+        type: object
+        default:
+          definitionList: true
+          footnote: true
+          linkify: true
+          linkifyProtocol: https
+          strikethrough: true
+          table: true
+          taskList: true
+          typographer: true
+        properties:
+          definitionList:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: boolean
+            default: true
+          footnote:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: boolean
+            default: true
+          linkify:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: boolean
+            default: true
+          linkifyProtocol:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: string
+            default: https
+          strikethrough:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: boolean
+            default: true
+          table:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: boolean
+            default: true
+          taskList:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: boolean
+            default: true
+          typographer:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: boolean
+            default: true
+        additionalProperties: false
+      parser:
+        title: parser options
+        description: |-
+          The parser options
+          https://gohugo.io/getting-started/configuration-markup#goldmark
+        type: object
+        default:
+          attribute:
+            block: false
+            title: true
+          autoHeadingID: true
+          autoHeadingIDType: github
+        properties:
+          attribute:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: object
+            default:
+              block: false
+              title: true
+            properties:
+              block:
+                description: |2-
+
+                  https://gohugo.io/getting-started/configuration-markup#goldmark
+                type: boolean
+                default: false
+              title:
+                description: |2-
+
+                  https://gohugo.io/getting-started/configuration-markup#goldmark
+                type: boolean
+                default: true
+            additionalProperties: false
+          autoHeadingID:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: boolean
+            default: true
+          autoHeadingIDType:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: string
+            default: github
+        additionalProperties: false
+      renderer:
+        title: renderer options
+        description: |-
+          The renderer options
+          https://gohugo.io/getting-started/configuration-markup#goldmark
+        type: object
+        default:
+          hardWraps: false
+          unsafe: false
+          xhtml: false
+        properties:
+          hardWraps:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: boolean
+            default: false
+          unsafe:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: boolean
+            default: false
+          xhtml:
+            description: |2-
+
+              https://gohugo.io/getting-started/configuration-markup#goldmark
+            type: boolean
+            default: false
+        additionalProperties: false
+    additionalProperties: false
+  highlight:
+    title: highlighting options
+    description: |-
+      The highlighting options
+      https://gohugo.io/getting-started/configuration-markup#highlight
+    type: object
+    default:
+      anchorLineNos: false
+      codeFences: true
+      guessSyntax: false
+      hl_Lines: ""
+      lineAnchors: ""
+      lineNoStart: 1
+      lineNos: false
+      lineNumbersInTable: true
+      noClasses: true
+      noHl: false
+      style: monokai
+      tabWidth: 4
+    properties:
+      anchorLineNos:
+        description: |-
+          Enable/disable anchors on line numbers
+          https://gohugo.io/getting-started/configuration-markup#highlight
+        type: boolean
+        default: false
+      codeFences:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration-markup#highlight
+        type: boolean
+        default: true
+      guessSyntax:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration-markup#highlight
+        type: boolean
+        default: false
+      hl_Lines:
+        description: |-
+          The highlighted line number range
+          https://gohugo.io/getting-started/configuration-markup#highlight
+        default: ""
+        oneOf:
+          - type: integer
+            minimum: 1
+          - type: string
+            pattern: "^\\d+( \\d+(-\\d+)?)*$"
+      lineAnchors:
+        description: |-
+          The prefix for the anchors on line numbers
+          https://gohugo.io/getting-started/configuration-markup#highlight
+        type: string
+        default: ""
+      lineNoStart:
+        description: |-
+          The first line
+          https://gohugo.io/getting-started/configuration-markup#highlight
+        type: integer
+        default: 1
+        minimum: 1
+      lineNos:
+        description: |-
+          Enable/disable line numbers
+          https://gohugo.io/getting-started/configuration-markup#highlight
+        default: false
+        oneOf:
+          - type: boolean
+          - type: string
+            enum:
+              - table
+              - inline
+      lineNumbersInTable:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration-markup#highlight
+        type: boolean
+        default: true
+      noClasses:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration-markup#highlight
+        type: boolean
+        default: true
+      noHl:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration-markup#highlight
+        type: boolean
+        default: false
+      style:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration-markup#highlight
+        type: string
+        default: monokai
+        enum:
+          - algol
+          - algol_nu
+          - api
+          - arduino
+          - autumn
+          - borland
+          - bw
+          - colorful
+          - dracula
+          - emacs
+          - friendly
+          - fruity
+          - github
+          - igor
+          - lovelace
+          - manni
+          - monokai
+          - monokailight
+          - murphy
+          - native
+          - pastie
+          - perldoc
+          - pygments
+          - rainbow_dash
+          - rrt
+          - swapoff
+          - tango
+          - trac
+          - vim
+          - vs
+          - xcode
+      tabWidth:
+        description: |2-
+
+          https://gohugo.io/getting-started/configuration-markup#highlight
+        type: integer
+        default: 4
+        minimum: 1
+    additionalProperties: false
+  tableOfContents:
+    title: table of contents options
+    description: |-
+      The table of contents options
+      https://gohugo.io/getting-started/configuration-markup#table-of-contents
+    type: object
+    default:
+      endLevel: 3
+      ordered: false
+      startLevel: 2
+    properties:
+      startLevel:
+        description: |-
+          The start heading level
+          https://gohugo.io/getting-started/configuration-markup#table-of-contents
+        type: integer
+        default: 2
+        minimum: 1
+        maximum: 6
+      endLevel:
+        description: |-
+          The end heading level
+          https://gohugo.io/getting-started/configuration-markup#table-of-contents
+        type: integer
+        default: 3
+        minimum: 1
+        maximum: 6
+      ordered:
+        description: |-
+          Enable/disable ordered list generation
+          https://gohugo.io/getting-started/configuration-markup#table-of-contents
+        type: boolean
+        default: false
+    additionalProperties: false

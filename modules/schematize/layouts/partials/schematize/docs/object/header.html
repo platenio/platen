@@ -1,0 +1,33 @@
+{{/*
+  Writes the header element for an object with a heading followed by the summary and metadata for
+  the object.
+
+  This partial uses the parameters from the object's own documentation partial. The parameters are
+  expected to include:
+
+  - `property` - Mandatory. The objects's schema data
+  - `page`     - Mandatory. The hugo Page object for the webpage the documentation is being written
+    on, for resolving references.
+  - `_level` - Mandatory. The current hierarchy level of the page. Used for determining what heading
+    level to write.
+  - `_id` - Optional. The ID this property belongs to. If not specified, the object's title is
+    downcased and urlized for use as the ID for nested objects.
+*/}}
+{{- $params := . -}}
+{{- $data   := $params.property -}}
+{{- $level  := $params._level -}}
+{{- if gt 1 $level -}}
+{{- else -}}
+  {{- if not (isset $data "_id") -}}
+    {{- $data = merge $data (dict "_id" ($data.title | lower | urlize)) -}}
+  {{- end -}}
+  {{- safeHTML "<header>" }}
+
+  {{- partial "schematize/utils/headings/property" $params }}
+
+  {{- partial "schematize/utils/summary" $params }}
+
+  {{- partial "schematize/utils/metadata/render" $params -}}
+
+  {{- safeHTML "</header>" }}
+{{ end }}

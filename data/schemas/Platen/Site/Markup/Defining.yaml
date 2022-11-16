@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Markup/Defining.schema.yaml
+title: Defining Markup Renderers
+description: Defines a valid markup renderer for Platen
+schematize:
+  details: |
+    Platen site and theme developers sometimes need to override how codeblocks, images, links, and
+    headers are rendered into HTML for a page. These settings allow developers to add new rendering
+    options.
+
+    Defined renderers must follow these conventions or they'll break rendering for users:
+
+    1. Defined renderers must analyze the incoming parameters to see if the renderer should be
+       applied in this instance. For example, a link renderer might check for a `foo:` prefix in the
+       link text and skip any links without that prefix.
+    1. Defined renderers must return a string value.
+       
+       1. When an instance is skipped by a renderer, it must return an empty string `""`.
+       1. When an instance is processed by a renderer, it must return the HTML. There's no need to
+          specify `safeHTML` for the return text.
+    
+    Only one renderer can be successfully applied to an instance. When a renderer returns a
+    non-empty string representing the rendered instance, all remaining renderers are skipped and
+    the default renderer isn't applied.
+
+    If no renderers apply to an instance, the default renderer is used instead.
+type: object
+properties:
+  Enabled:
+    title: Enable the Renderer
+    description: Whether the renderer should be used for content.
+    schematize:
+      weight: 1
+      details: |
+        Specifies whether the renderer should be used for content. When adding a renderer to your
+        theme, you must define this value in the theme configuration that is merged with a site's.
+
+        You can choose whether to default this value to `true` or `false` and a site maintainer can
+        override it in their own configuration.
+
+        When this value is set to `true`, the renderer is applied before the default renderer. When
+        this value is set to `false`, the renderer is ignored.
+    type: boolean
+  Partial:
+    title: Renderer Partial
+    description: The name of the partial to call for the renderer.
+    schematize:
+      weight: 2
+      details: |
+        Specifies the name of the partial to call for the renderer. When adding a renderer to your
+        theme, you must define this value in the theme configuration that is merged with a site's.
+        When adding a renderer to your theme, you must define this value in your site configuration.
+
+        This value must map to a partial in your `layouts` folder. We suggest the convention of 
+        always placing your renderers in a `markup/renderers` folder, with the file named for the
+        type of renderer, such as adding `layouts/partials/myTheme/markup/renderers/links.html` for
+        you link renderer, but any valid partial can be used.
+    type: string

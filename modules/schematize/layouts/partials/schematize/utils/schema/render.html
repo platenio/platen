@@ -1,0 +1,46 @@
+{{/*
+  Render prepares the schema data by munging and cleaning it, then writes the HTML necessary to
+  display it in a docs page. Schemas are always written under a header and inside a details element.
+*/}}
+{{- $params := . -}}
+{{- $schemaData  := $params.property -}}
+{{- $level := add 1 $params._level -}}
+{{/* Sometimes you might not want to display the schema for a given object */}}
+{{- $skipSchemaRender := default false $schemaData.schematize.skipSchemaRender -}}
+  {{- if not $skipSchemaRender -}}
+  {{/* Munge descriptions to include links to docs */}}
+  {{- $docsURL := ($params.page.OutputFormats.Get "html").Permalink  -}}
+  {{- $descriptionMungingParams := dict "schemaData" $schemaData "docsURL" $docsURL}}
+  {{- $schemaData = partial "schematize/utils/schema/munge/description" $descriptionMungingParams -}}
+  {{/* Remove schematize-specific keys */}}
+  {{- $cleanedData := partial "schematize/utils/schema/clean" $schemaData -}}
+  {{/* Convert to JSON string and munge YAML paths to actual schema locations */}}
+  {{- $jsonSchema  := $cleanedData | jsonify (dict "indent" "  ") -}}
+  {{- $options := dict "value" $jsonSchema "mungeReferences" true "page" $params.page -}}
+  {{- $jsonSchema = partial "schematize/utils/schema/munge/path" $options }}
+
+  {{/*
+    Because the JSON schema might be added by properties that are objects, check to see if should be
+    prefixed and warn if a prefix can't be resolved when needed.
+  */}}
+  {{- $headingParams := dict "level" $level "title" "JSON Schema" -}}
+  {{- if gt $level 2 -}}
+    {{- with $schemaData._id -}}
+      {{- $id := printf "%s-json-schema" (lower . | urlize ) -}}
+      {{- $headingParams = merge $headingParams (dict "id" $id) -}}
+    {{- else -}}
+      {{- warnf "Writing JSON schema at level %v; this is likely a duplicate without a unique id. Property: %#v" $level $schemaData -}}
+    {{- end -}}
+  {{- end -}}
+
+{{ partial "schematize/utils/headings/arbitrary" $headingParams}}
+
+<details>
+
+<summary>Definition</summary>
+
+{{ printf "```json {.schematize-schema-definition-block}\n%s\n```" $jsonSchema | markdownify }}
+
+</details>
+
+{{ end }}

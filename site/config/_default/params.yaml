@@ -1,27 +1,41 @@
 description: A toolkit for interactive digital books.
 images:
   - /images/logo.svg
+
+Schematize:
+  ReferenceMap:
+    mdn:
+      srefSuffix: in the MDN documentation
+      srefBase: https://developer.mozilla.org/docs
+      css:
+        srefBase: https://developer.mozilla.org/docs/Web/CSS
+      html:
+        attribute:
+          srefBase: https://developer.mozilla.org/docs/HTML/Attributes
+
 Platen:
   Theme:
-    Mode: auto # BookTheme
+    Mode: auto                                # BookTheme
   Display:
-    ShowToC: true # BookToC
-    DateFormat: "January 2, 2006" #BookDateFormat
-    MenuRootSection: / # BookSection
+    TableOfContents:
+      MinimumLevel: 1
+      MaximumLevel: 6
+    DateFormat: "January 2, 2006"             # BookDateFormat
+    MenuRootSection: /                        # BookSection
     Logo:
-      URL: /images/logo.svg # BookLogo
+      URL: /images/logo.svg                   # BookLogo
   Features:
-    Search: # BookSearch
+    Search:                                   # BookSearch
       Enabled: true
-    Comments: # BookComments
+    Comments:                                 # BookComments
       Enabled: true
-    PWA: # BookServiceWorker
+    PWA:                                      # BookServiceWorker
       Enabled: true
-    PortableLinks: # BookPortableLinks
+    PortableLinks:                            # BookPortableLinks
       Enabled: true
   Repository:
     URL: "https://github.com/platenio/platen" # BookRepo
-    CommitPath: commit # BookCommitPath
-    EditPath: edit/main # BookEditPath
-  Multilingual: # BookTranslatedOnly
+    CommitPath: commit                        # BookCommitPath
+    EditPath: edit/main                       # BookEditPath
+  Multilingual:                               # BookTranslatedOnly
     TranslatedOnly: false

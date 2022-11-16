@@ -1,0 +1,24 @@
+{{/*
+  Resolve the reference to a references schema data. This is only supported for locally defined
+  schemas and may behave strangely if accidentally called for external schemas.
+*/}}
+{{- $params   := . }}
+{{- $property := $params.property -}}
+{{- $refPath  := replaceRE "\\.yaml" "" (index $property "$ref") -}}
+{{- $refPath   = relref $params.page (dict "path" $refPath) -}}
+{{- $refPath   = trim $refPath "\\/" -}}
+{{- $refPath   = strings.TrimPrefix "schemas/" $refPath -}}
+{{- $refPath   = replaceRE "\\/" "." $refPath -}}
+{{- $refLevel := default 0 $property._level }}
+{{- $refData  := site.Data.schemas }}
+
+{{- if in $refPath "." -}}
+  {{- range $level := split $refPath "." -}}
+    {{- $refData = index $refData $level -}}
+  {{- end -}}
+{{- else -}}
+  {{- $refData = index $refData $refPath -}}
+{{- end -}}
+
+{{- $refData = merge $refData (dict "_level" $refLevel) -}}
+{{- return $refData -}}

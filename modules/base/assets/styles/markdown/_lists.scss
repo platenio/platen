@@ -1,18 +1,18 @@
 .markdown {
   ul,
   ol {
-    padding-inline-start: $padding-16 * 2;
+    padding-inline-start: $padding-large * 2;
   }
 
   dl {
     dt {
       font-weight: bolder;
-      margin-top: $padding-16;
+      margin-top: $padding-large;
     }
 
     dd {
       margin-inline-start: 0;
-      margin-bottom: $padding-16;
+      margin-bottom: $padding-large;
     }
   }
 }

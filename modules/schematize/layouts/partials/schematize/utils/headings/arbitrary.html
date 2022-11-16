@@ -1,0 +1,57 @@
+{{/*
+  Writes an arbitrary header into the documentation page. Unlike headings/property, which uses the
+  same parameters as the documentation itself, this partial expects a specific dictionary. It also
+  allows more control over the presentation.
+
+  - `level`  - Mandatory. Specifies the heading level. Must be 1--6 inclusive.
+  - `title`  - Mandatory. Specifies the heading text itself. May be valid inline Markdown.
+  - `id`     - Optional. Uses this value instead of allowing Hugo to autogenerate the id for a
+    Markdown heading or creating a default ID for an HTML heading. Strongly encouraged if using an
+    HTML heading.
+  - `asHTML` - Optional. Writes the heading as HTML instead of Markdown, preventing hugo from adding
+    it to the page's TOC. Strongly encouraged to specify with the `id` parameter.
+*/}}
+{{- $params  := . -}}
+{{- $level  := $params.level -}} {{/* Mandatory. Specifies heading level. Must be 1--6 inclusive. */}}
+{{- $title  := $params.title -}} {{/* Mandatory. Specifies the heading text itself. May be Markdown. */}}
+{{- $id     := $params.id -}}    {{/* Override. If not specified, ID is auto-created  */}}
+{{/* $text is the variable that is used to actually write to the page. */}}
+{{- $text   := "" -}}
+{{/* Work through parameters to write the correct heading text. */}}
+{{- with $title -}}
+  {{- with $level -}}
+    {{- if le $level 0 -}}
+      {{- errorf "%s (%v) %s '%s' - %s."
+                 "Specified level"
+                 $level
+                 "is lower than 1 for heading"
+                 $title
+                 "must specify level between 1 and 6 (inclusive)"
+      -}}
+    {{- else if ge $level 6 -}}
+      {{- errorf "%s (%v) %s '%s' - %s."
+                 "Specified level"
+                 $level
+                 "is greater than 6 for heading"
+                 $title
+                 "must specify level between 1 and 6 (inclusive)"
+      -}}
+    {{- else -}}
+      {{- $text = printf "<h%v id=\"%s\">%s</h%v>"
+                 $level
+                 (default ($title | lower | urlize) $id)
+                 $title
+                 $level
+      -}}
+      {{- $text = $text | safeHTML -}}
+    {{- end -}}
+  {{- else -}}
+    {{- errorf "%s '%s' - %s."
+               "No level specified for heading"
+               $title
+               "must specify level between 1 and 6 (inclusive)"
+    -}}
+  {{- end -}}
+{{- end }}
+
+{{ $text }}

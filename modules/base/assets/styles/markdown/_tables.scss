@@ -4,13 +4,13 @@
     display: block;
     border-spacing: 0;
     border-collapse: collapse;
-    margin-top: $padding-16;
-    margin-bottom: $padding-16;
+    margin-top: $padding-large;
+    margin-bottom: $padding-large;
 
     tr th,
     tr td {
-      padding: $padding-8 $padding-16;
-      border: $padding-1 solid var(--gray-200);
+      padding: $padding-medium $padding-large;
+      border: $padding-minimal solid var(--gray-200);
     }
 
     tr:nth-child(2n) {

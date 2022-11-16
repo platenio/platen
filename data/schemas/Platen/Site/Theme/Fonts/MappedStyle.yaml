@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Theme/Fonts/MappedStyle.schema.yaml
+title: Mapped Font Style
+description: Specify a map for more control over the importing of the SCSS module with the fonts.
+schematize:
+  details: >-
+    Mapped font modules provide more control over the importing of an SCSS module with fonts. Add
+    each item as a map with the [sref:`ImportName`] key defined.
+
+    [sref:`ImportName`]: Platen.Site.Theme.Fonts.MappedStyle.ImportName
+type: object
+required:
+  - ImportName
+properties:
+  ImportName:
+    title: Import Name
+    description: Specify the import name of the SCSS module.
+    schematize:
+      weight: 1
+      details: |
+        Specify the import name of the SCSS module. This is mandatory for SCSS modules defined
+        in a map.
+
+        The value must be a string that matches the name of an SCSS module in the
+        `assets/fonts` folder. For example, to add the module in `assets/fonts/_spectral.scss`,
+        specify `spectral`. This value is case sensitive.
+
+        To add the module in `assets/fonts/_spectral.scss`, set this value to `spectral`. This value
+        is case sensitive.
+    type: string
+  Weight:
+    title: Weight
+    description: Specify the weight of the SCSS module.
+    schematize:
+      weight: 2
+      details: |
+        Specify the weight of the SCSS module. Weighted SCSS modules are loaded from lowest to
+        highest weight. Any SCSS module with a weight is loaded before unweighted modules. All
+        SCSS modules defined in a map are loaded before those defined as a simple string.
+    type: integer

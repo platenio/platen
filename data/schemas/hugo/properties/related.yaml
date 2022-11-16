@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/hugo/properties/related.yaml
+schematize:
+  noMungeDescription: true
+title: Related Content Options
+description: |-
+  The related content options
+  https://gohugo.io/getting-started/configuration/#related
+type: object
+default:
+  includeNewer: false
+  indices:
+    - name: keywords
+      weight: 100
+    - name: date
+      weight: 10
+  threshold: 80
+  toLower: false
+properties:
+  threshold:
+    description: |2-
+
+      https://gohugo.io/content-management/related/#top-level-config-options
+    type: integer
+    default: 80
+    minimum: 0
+    maximum: 100
+  includeNewer:
+    description: |-
+      Include/exclude the pages newer than the current page
+      https://gohugo.io/content-management/related/#top-level-config-options
+    type: boolean
+    default: false
+  toLower:
+    description: |-
+      Enable/disable lowering the case keywords in both the indexes and the queries
+      https://gohugo.io/content-management/related/#top-level-config-options
+    type: boolean
+    default: false
+  indices:
+    title: related content option's entry
+    description: |-
+      The related content option's entry
+      https://gohugo.io/content-management/related/#config-options-per-index
+    type: array
+    default:
+      - name: keywords
+        weight: 100
+      - name: date
+        weight: 10
+    items:
+      type: object
+      properties:
+        name:
+          description: |-
+            The index name
+            https://gohugo.io/content-management/related/#config-options-per-index
+          type: string
+          minLength: 1
+        weight:
+          description: |-
+            The weight indicating how important this parameter is relative to the other parameters
+            https://gohugo.io/content-management/related/#config-options-per-index
+          type: string
+        pattern:
+          description: |-
+            The date format
+            https://gohugo.io/content-management/related/#config-options-per-index
+          type: string
+        toLower:
+          description: |-
+            Enable/disable lowering the case keywords in both the indexes and the queries
+            https://gohugo.io/content-management/related/#config-options-per-index
+          type: boolean
+          default: false
+      additionalProperties: false
+additionalProperties: false
