@@ -1,4 +1,5 @@
-{{- $theme             := .Site.Params.Platen.Theme -}}
+{{- $context           := . -}}
+{{- $theme             := $context.Site.Params.Platen.Theme -}}
 {{- $variablesPartial  := "platen/utils/styles/variables.scss" -}}
 {{- $importPartial     := "platen/utils/styles/import.scss" -}}
 {{- $fontsPartial      := "platen/utils/styles/fonts.scss" -}}
@@ -71,6 +72,20 @@
 
 // Markdown covers article/post content, not the site-wide or structural items.
 {{ partial $importPartial (dict "StylesMap" $theme.Styles.Markdown "RootFolder" "markdown") }}
+
+{{ $builtinStyles := slice "Utils" "Base" "Platen" "Mobile" "Wide" "Markdown" }}
+{{ range $styleGroupName, $styles := $theme.Styles }}
+  {{ $rootFolder := default (lower $styleGroupName) $styles.RootFolder }}
+  {{ partial $importPartial (dict "StylesMap" $styles "RootFolder" $rootFolder) }}
+{{ end }}
+
+{{ range $feature, $settings := $context.Site.Params.Platen.Features -}}
+  {{- if $settings.Enabled -}}
+    {{- with $settings.Partials.Style }}
+      {{ partial . $context }}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
 
 // Shortcodes must always load _after_ all more normal/universal items.
 {{ partial $shortcodesPartial $theme.Shortcodes }}

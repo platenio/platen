@@ -170,3 +170,29 @@ Platen:
         Enabled: true
         Style:
           Name: tabs
+  Display:
+    TableOfContents:
+      MinimumLevel: 2
+      MaximumLevel: 4
+    DateFormat: "January 2, 2006"             # BookDateFormat
+    MenuRootSection: /                        # BookSection
+    Logo:
+      URL: /images/logo.svg                   # BookLogo
+  Features:
+    Search:                                   # BookSearch
+      Enabled: true
+    Comments:                                 # BookComments
+      Enabled: true
+      Partials:
+        Header: platen/features/search/header
+    PWA:                                      # BookServiceWorker
+      Enabled: true
+      Partials:
+        Header: platen/features/pwa/header
+    PortableLinks:                            # BookPortableLinks
+      Enabled: true
+  Repository:
+    CommitPath: commit                        # BookCommitPath
+    EditPath: edit/main                       # BookEditPath
+  Multilingual:                               # BookTranslatedOnly
+    TranslatedOnly: false
