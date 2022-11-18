@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Features/Defining.schema.yaml
+title: Defining Features
+description: Settings that control Platen's features
+schematize:
+  details: |
+    Platen and its modules include several features that you can use in your site. These settings
+    control their behavior.
+type: object
+properties:
+  Enabled:
+    title: Enable the Feature
+    description: Choose whether the feature is turned on.
+    schematize:
+      details: |
+        Choose whether the feature is turned on. The default is `true`. When this value is set
+        to `false`, the feature is ignored by Platen.
+      weight: 1
+    type: boolean
+    default: true
+  Partials:
+    title: Feature Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when `Enabled` is set to `true`.
+      weight: 2
+    type: object
+    properties:
+      Header:
+        title: Header Partial
+        description: Injects a partial into the HTML header.
+        schematize:
+          details: |
+            If specified, this partial is processed in the HTML header. This is useful for
+            adding standalone styles, scripts, and metadata. To add a style that uses the SCSS style
+            modules defined in the `Theme` settings, add a new map to `Theme.Styles` or specify a
+            `Style` partial for the feature.
+
+            The partial is given the current page's context.
+        type: string
+      Title:
+        title: Title Partial
+        description: Injects a partial to override the default HTML header title.
+        schematize:
+          details: |
+            If specified, this partial is called when determining the HTML header title for a
+            page, which sets the name of the browser tab and is used in Open Graph.
+
+            The partial is given the current page's context and must return a string.
+            
+            The title implementation for Platen processes every enabled feature with a defined title
+            partial until one of them returns a non-empty string. If the title for a page shouldn't
+            be overridden from the default, the partial must return an empty string (`""`). The
+            order the title partials are processed in isn't deterministic.
+        type: string
+      Style:
+        title: Style Partial
+        description: Injects a partial into the site's SCSS.
+        schematize:
+          details: |
+            If specified, this partial is processed in `platen.scss`, which defines the site's
+            style. This partial is processed after the theme's builtin styles but before the
+            shortcode styles, allowing a shortcode to depend on it.
+
+            The partial is given the current page's context. Note that when importing SCSS
+            modules from this partial, the path is relative to `styles/platen.scss`, not the
+            root of the `assets` folder. To import an SCSS module in `assets/myFeature`, you
+            need to specify the path as `../myFeature/foo`, not `myFeature/foo`.
+        type: string

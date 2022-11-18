@@ -19,18 +19,38 @@ properties:
     schematize:
       weight: 2
   Features:
-    $ref: ./Features.yaml
+    title: Feature Settings
+    description: Settings that control Platen's features
     schematize:
-      weight: 2
+      weight: 3
+      skipSchemaRender: true
+      details: |
+        Platen and its modules include several features that you can use in your site. These settings
+        control their behavior.
+    type: object
+    properties:
+      Search:
+        $ref: ./Features/Search.yaml
+      Comments:
+        $ref: ./Features/Comments.yaml
+      PWA:
+        $ref: ./Features/PWA.yaml
+      PortableLinks:
+        $ref: ./Features/PortableLinks.yaml
+    patternProperties:
+      ".":
+        $ref: ./Features/Defining.yaml
+        schematize:
+          href: pattern-any
   Repository:
     $ref: ./Repository.yaml
     schematize:
-      weight: 2
+      weight: 6
   Multilingual:
     $ref: ./Multilingual.yaml
     schematize:
-      weight: 2
+      weight: 5
   Markup:
     $ref: ./Markup/Config.yaml
     schematize:
-      weight: 2
+      weight: 4
