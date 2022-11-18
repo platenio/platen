@@ -1,12 +1,12 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Platen/Content/Page.schema.yaml
-title: Page Options
-description: Optional settings for overriding site configuration on a content page.
+$id: /schemas/Platen/Content/Section.schema.yaml
+title: Section Options
+description: Optional settings for overriding site configuration on a content section page.
 schematize:
   details: |
-    Defines optional settings for overriding site configuration on a page using values in the page's
-    front matter.
+    Defines optional settings for overriding site configuration on a section (`_index.md`) page
+    using values in the page's front matter.
 type: object
 properties:
   EnableComments:
@@ -35,26 +35,55 @@ properties:
     type: boolean
   Menu:
     title: Site Menu Options
-    description: Alters this page's entry in the site menu
+    description: Alters the section's entry in the site menu
     schematize:
       skipSchemaRender: true
       details: |
-        Defines options for altering how this page is displayed in the site menu. Normal pages can
-        only be optionally hidden.
+        Defines options for altering how this page is displayed in the site menu. These three
+        options are incompatible with each other. A section (`_index.md` file) can be collapsed,
+        flattened, or hidden in the site menu, but not more than one of them. Normal pages can only
+        be optionally hidden.
     type: object
     properties:
-      Hide:
-        title: Hide from Site Menu
-        description: Whether to remove the page from the site menu
+      FlattenSection:
+        title: Flatten Section
+        description: Whether to flatten the section in the site menu
         schematize:
           weight: 2
           details: |
-            Specifies whether to remove the page from the site menu. This setting only has an effect
-            when the page would otherwise be included in the site menu because it is in the folder
-            defined in the site's [sref:`Display.MenuRootSection`] setting.
+            Specifies whether to flatten the section in the site menu. This setting is only valid
+            for section pages (`_index.md` files).
 
-            To prevent the page from being added to the site menu, set this value to `true`. The
-            default is `false`.
+            To make the section display as a flat list in the site menu, set this value to `true`.
+            The default is `false`.
+        type: boolean
+        default: false
+      CollapseSection:
+        title: Collapse Section
+        description: Whether to make the section collapsible in the site menu
+        schematize:
+          weight: 2
+          details: |
+            Specifies whether to make the section collapsible in the site menu. This setting is only
+            valid for section pages (`_index.md` files).
+
+            To make the section display as a collapsible item in the site menu, set this value to
+            `true`. The default is `false`.
+        type: boolean
+        default: false
+      Hide:
+        title: Hide from Site Menu
+        description: Whether to remove the page or section from the site menu
+        schematize:
+          weight: 2
+          details: |
+            Specifies whether to remove the page or section from the site menu. This setting only
+            has an effect when the page or section would otherwise be included in the site menu
+            because it is in the folder defined in the site's [sref:`Display.MenuRootSection`]
+            setting.
+
+            To prevent the page or section from being added to the site menu, set this value to
+            `true`. The default is `false`.
 
             [sref:`Display.MenuRootSection`]: Platen.Site.Display.MenuRootSection
         type: boolean
