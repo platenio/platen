@@ -1,0 +1,8 @@
+{{- $context := . -}}
+{{- $info    := partial "toroidal/utils/getPageInfo" $context -}}
+<li class="toroidal-member-entry">
+  <a href="{{ $info.MemberHomePage }}">{{ $info.MemberName }}</a>
+  {{- with $info.MemberDescription -}}
+  : <span>{{ . }}</span>
+  {{- end -}}
+</li>

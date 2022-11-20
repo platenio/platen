@@ -1,0 +1,29 @@
+{{- $params      := . -}}
+{{- $context     := $params.Context -}}
+{{- $webringName := $params.WebringName -}}
+
+{{- $resource  := "" -}}
+{{- $stylePath  = printf "/toroidal.scss" $webringName -}}
+{{- with (resources.Get "styles/platen.scss") -}}
+  {{- $resource = . -}}
+{{- else -}}
+  {{- $resource = resources.Get "toroidal/toroidal.scss" -}}
+{{- end -}}
+
+{{- with (resources.Get "styles/platen.scss") -}}
+  {{ if $context.Site.Params.Platen.Features.Toroidal.Enabled }}
+    {{ $resource = . }}
+  {{ else }}
+    {{- $resource = resources.Get "toroidal/toroidal.scss" -}}
+  {{ end }}
+{{ else }}
+  {{- $resource = resources.Get "toroidal/toroidal.scss" -}}
+{{ end }}
+
+{{- $stylesFingerprint := $resource
+    | resources.ExecuteAsTemplate $stylePath $context
+    | resources.ToCSS
+    | resources.Minify
+    | resources.Fingerprint
+-}}
+{{- return $stylesFingerprint -}}

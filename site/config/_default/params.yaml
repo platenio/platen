@@ -39,3 +39,6 @@ Platen:
     EditPath: edit/main                       # BookEditPath
   Multilingual:                               # BookTranslatedOnly
     TranslatedOnly: false
+
+Toroidal:
+  WebringName: Platen Site Ring

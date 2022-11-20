@@ -8,8 +8,23 @@ dataDir: ../data
 module:
   replacements: >-
     github.com/platenio/platen/modules/base -> base,
-    github.com/platenio/platen/modules/schematize -> schematize
+    github.com/platenio/platen/modules/schematize -> schematize,
+    github.com/platenio/platen/modules/toroidal -> toroidal
   imports:
+    - path: github.com/platenio/platen/modules/toroidal
+      mounts:
+        - source: archetypes
+          target: archetypes
+        - source: assets
+          target: assets
+        - source: docs
+          target: content/modules/toroidal
+        - source: i18n
+          target: i18n
+        - source: layouts
+          target: layouts
+        - source: static
+          target: static
     - path: github.com/platenio/platen/modules/schematize
       mounts:
         - source: archetypes

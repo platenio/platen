@@ -1,0 +1,42 @@
+{{- $context := . -}}
+{{/* Only add page info for toroidal members; otherwise, error. */}}
+{{- with $context.Params.ToroidalHomePage -}}
+{{- $lang := default $context.Site.Language.Lang $context.Site.LanguageCode -}}
+{{- $dir  := default "ltr" $context.Site.Language.LanguageDirection -}}
+<!DOCTYPE html>
+<html lang="{{ $lang }}" dir="{{ $dir }}">
+  {{- $info        := partial "toroidal/utils/getPageInfo" $context -}}
+  {{- $webringName := $info.WebringName -}}
+  {{- $memberName  := $info.MemberName  -}}
+  {{- $headParams  := dict "context" $context "memberName" $memberName "webringName" $webringName }}
+  <head>
+  {{- with (resources.Get "styles/platen.scss") -}}
+    {{ if $context.Site.Params.Platen.Features.Toroidal.Enabled }}
+      {{ partial "toroidal/html-head-member/platen" $context }}
+    {{ else }}
+      {{ partial "toroidal/html-head-member/default" $headParams }}
+    {{ end }}
+  {{ else }}
+    {{ partial "toroidal/html-head-member/default" $headParams }}
+  {{ end }}
+  {{/* The script here allows members using the iframe to auto-size their iframe on load. */}}
+  <script>
+    window.onload = function() {
+      let sizeData = {
+        height: document.body.scrollHeight,
+        width: document.body.scrollWidth
+      }
+      window.parent.postMessage(sizeData, '*');
+    }
+  </script>
+  </head>
+
+  <body dir="{{ $dir }}">
+
+    {{ partial "toroidal/member-entry-page" $info }}
+
+  </body>
+</html>
+{{- else -}}
+  {{- errorf "Processing Toroidal page without any Toroidal settings in page front matter." -}}
+{{- end }}

@@ -1,0 +1,56 @@
+html {
+  font-size: $font-size-base;
+  scroll-behavior: smooth;
+  touch-action: manipulation;
+}
+
+body {
+  color: var(--body-font-color);
+  background: var(--body-background);
+
+  letter-spacing: 0.33px;
+  font-weight: $body-font-weight;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  box-sizing: border-box;
+  * {
+    box-sizing: inherit;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: $body-font-weight;
+}
+
+nav {
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  ul {
+    padding-inline-start: $padding-16;
+    li {
+      list-style-type: none;
+      margin: 1em 0;
+      position: relative;
+    }
+  }
+  a {
+    text-decoration: none;
+    color: var(--color-link);
+    display: block;
+  }
+  a:hover {
+    opacity: 0.5;
+  }
+  img {
+    vertical-align: baseline;
+  }
+  :focus {
+    @include outline;
+  }
+}

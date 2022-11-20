@@ -13,7 +13,7 @@
     "http://localhost:1313/schemas/params/schema.json": [
       "modules/**/config/**/params.yaml",
       "site/config/**/params.yaml"
-    ],
+    ]
   },
   // Use Vale to lint prose. Change alert level to "suggestion" for first draft.
   "vale.core.useCLI": true,

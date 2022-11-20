@@ -1,0 +1,15 @@
+{{- $params      := .                   -}}
+{{- $context     := $params.Context     -}}
+{{- $webringName := $params.WebringName -}}
+
+{{- $stylesFingerprint := partial "toroidal/utils/getStylesFingerprint" . -}}
+{{- $permalink         := $stylesFingerprint.Permalink                    -}}
+
+{{- $additionalAttributes := "" -}}
+{{- if (urls.Parse $permalink).Host -}}
+  {{- $integrity           := printf `integrity="%s"` $stylesFingerprint.Data.Integrity -}}
+  {{- $crossOrigin         := `crossorigin="anonymous"`                                 -}}
+  {{- $additionalAttributes = printf " %s %s" $integrity $crossOrigin | safeHTML        -}}
+{{- end -}}
+
+<link rel="stylesheet" href="{{ $permalink }}"{{ $additionalAttributes }}>

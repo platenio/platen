@@ -1,0 +1,21 @@
+{{- define "main" -}}
+{{- /*
+  This layout defines the member list page for a toroidal section. It inserts:
+
+  - An article with the `toroidal` class, containing:
+    - an `h2` header explaining the page's purpose
+    - an unordered list with the `toroidal-member-list` class containing an
+      entry for each member of this webring with their homepage set to a URL;
+      this list is paginated.
+*/ -}}
+{{- $webringName := partial "toroidal/utils/getWebringName" . -}}
+<article class="toroidal">
+  <h2>Members of the {{ $webringName }}</h2>
+  <ul class="toroidal-member-list">
+    {{- range where .Paginator.Pages "Params.ToroidalHomePage" "!=" nil -}}
+    {{ partial "toroidal/member-entry-list" . }}
+    {{- end -}}
+  </ul>
+  {{ template "_internal/pagination.html" . }}
+</article>
+{{- end -}}

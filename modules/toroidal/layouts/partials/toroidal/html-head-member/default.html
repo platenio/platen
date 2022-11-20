@@ -1,0 +1,7 @@
+{{- $params      := .                   -}}
+{{- $context     := $params.Context     -}}
+{{- $memberName  := $params.MemberName  -}}
+{{- $webringName := $params.WebringName -}}
+{{- $styleParams := dict "Context" $context "WebringName" $webringName }}
+<title>{{ printf "%s: %s" $webringName $memberName }}</title>
+{{ partial "toroidal/utils/getStylesLink" $styleParams }}

@@ -181,10 +181,10 @@ Platen:
   Features:
     Search:                                   # BookSearch
       Enabled: true
-    Comments:                                 # BookComments
-      Enabled: true
       Partials:
         Header: platen/features/search/header
+    Comments:                                 # BookComments
+      Enabled: false
     PWA:                                      # BookServiceWorker
       Enabled: true
       Partials:

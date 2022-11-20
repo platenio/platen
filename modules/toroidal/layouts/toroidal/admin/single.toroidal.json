@@ -1,0 +1,32 @@
+{{ define "response" -}}
+{{- /*
+  This partial expects to receive the context for a page whose type is
+  `toroidal` or `toroidal/admin`. It writes a JSON object which has the
+  following properties:
+
+  - `webringName`: The name of the webring this page belongs to.
+  - `webringList`: The URL to the page on the host site which lists all of the
+     members of the webring and where the `Member List` link in the generated
+     nav takes a user.
+  - `members`: An array of JSON objects with the following properties:
+    - `name`: The name of this member
+    - `home`: The URL to this member's homepage
+    - `prev`: The URL to the previous webring member's homepage
+    - `next`: The URL to the next webring member's homepage
+*/ -}}
+{{- $context            := .                                         -}}
+{{- $webringName        := partial "toroidal/utils/getWebringName" . -}}
+{{- $webringMemberPages := where .CurrentSection.RegularPages
+                           "Params.ToroidalHomePage" "!=" nil
+-}}
+  {
+    "webringName": "{{ $webringName }}",
+    "webringList": "{{ .CurrentSection.Permalink }}",
+    "members": [
+      {{- range $index, $page := $webringMemberPages -}}
+      {{- if $index }},{{ end }}
+      {{ partial "toroidal/item.toroidal.json" (dict "context" $page "inList" true) -}}
+      {{- end }}
+    ]
+  }
+{{- end }}

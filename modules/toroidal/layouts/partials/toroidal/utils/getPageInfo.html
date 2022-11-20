@@ -1,0 +1,85 @@
+{{- /*
+  This partial expects to receive the context for a page whose type is toroidal
+  and returns a scratch with the following values:
+
+  - `webringName`: The calculated name of the webring this page belongs to.
+  - `memberListHref`: The URL to the page on the host site which lists all of
+     the members of the webring and where the `Member List` link in the
+     generated nav takes a user.
+  - `memberPages`: The list of page contexts for this webring's members.
+  - `memberPageLinks`: The list of home page URLs for this webring's members.
+  - `webringApiUrl`: The URL to the JSON blob on the host site which includes
+     all of the information needed to understand/interact with this webring.
+  - `prevHref`: The URL to the previous member's homepage in this webring.
+  - `nextHref`: The URL to the next member's homepage in this webring.
+  - `styles`: The link element for the calculated SCSS for this member page.
+  - `hideHeader`: Whether or not this member page should display the webring's
+    name as a header tag; this must be explicitly set by the user in the page
+    frontmatter or the header will be displayed.
+  - `randomMemberLink`: Whether or not this member page should include the random
+     member link in the navigation; this must be explicitly set by the site's
+     owner in the site configuration or this will not be displayed.
+  - `memberName`: The name of this member of the webring.
+*/ -}}
+{{- $context := . -}}
+{{- $info := dict "context" $context -}}
+
+{{/* Grab the list of member pages; these are already sorted by weight */}}
+{{- $memberPages := partial "toroidal/utils/getMemberPages" $context -}}
+
+{{/*
+    Grab the variables from site config and page front matter. The first value is the default if
+    the second value is nil or an empty string. Not that for member pages, the value has already
+    taken the webring configuration (set in the front matter of the `_index.md` file) into account.
+    Any cascading values defined for the webring are used for the member page unless that member
+    defines an override.
+
+    Overrides are:
+
+    - `class`             - Member page overrides site
+    - `hideHeader`        - Member page overrides site
+    - `memberDescription` - No override, member page only
+    - `memberHomePage`    - No override, member page only
+    - `memberName`        - No override, member page only
+    - `randomMemberLink   - Member page overrides site.
+*/}}
+{{- $class             := default $context.Site.Params.Toroidal.Class
+                                  $context.Params.ToroidalClass
+-}}
+{{- $hideHeader        := default $context.Site.Params.Toroidal.HideHeader
+                                  $context.Params.ToroidalHideHeader
+-}}
+{{- $memberDescription := $context.Params.description      -}}
+{{- $memberHomePage    := $context.Params.ToroidalHomePage -}}
+{{- $memberName        := $context.Params.name             -}}
+{{- $randomMemberLink  := default $context.Site.Params.Toroidal.RandomMemberLink
+                                  $context.Params.ToroidalRandomMemberLink
+-}}
+
+{{/* Set the variables for the iframe */}}
+{{- $apiRefParams    := dict "path" "admin.md" "outputFormat" "toroidal"     -}}
+{{- $memberListHref  := $context.Parent.Permalink                            -}}
+{{- $memberPageLinks := partial "toroidal/utils/getMemberPageLinks" $context -}}
+{{- $memberUrl       := $context.Permalink                                   -}}
+{{- $hrefParams      := dict "Context" $context "MemberPages" $memberPages   -}}
+{{- $prevHref        := partial "toroidal/utils/getPrevHref" $hrefParams     -}}
+{{- $nextHref        := partial "toroidal/utils/getNextHref" $hrefParams     -}}
+{{- $webringApiUrl   := ref $context.Parent $apiRefParams                    -}}
+{{- $webringName     := partial "toroidal/utils/getWebringName" $context     -}}
+
+{{- $info := merge $info (dict "Class"             $class)             -}}
+{{- $info := merge $info (dict "HideHeader"        $hideHeader)        -}}
+{{- $info := merge $info (dict "MemberDescription" $memberDescription) -}}
+{{- $info := merge $info (dict "MemberHomePage"    $memberHomePage)    -}}
+{{- $info := merge $info (dict "MemberListHref"    $memberListHref)    -}}
+{{- $info := merge $info (dict "MemberName"        $memberName)        -}}
+{{- $info := merge $info (dict "MemberPageLinks"   $memberPageLinks)   -}}
+{{- $info := merge $info (dict "MemberPages"       $memberPages)       -}}
+{{- $info := merge $info (dict "MemberUrl"         $memberUrl)         -}}
+{{- $info := merge $info (dict "NextHref"          $nextHref)          -}}
+{{- $info := merge $info (dict "PrevHref"          $prevHref)          -}}
+{{- $info := merge $info (dict "RandomMemberLink"  $randomMemberLink)  -}}
+{{- $info := merge $info (dict "WebringApiUrl"     $webringApiUrl)     -}}
+{{- $info := merge $info (dict "WebringName"       $webringName)       -}}
+
+{{- return $info -}}
