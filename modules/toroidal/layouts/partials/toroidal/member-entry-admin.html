@@ -1,0 +1,66 @@
+{{- $context       := . -}}
+{{- $iframeParams  := partial "toroidal/utils/getIframeInfo" $context -}}
+{{- $literalParams := partial "toroidal/utils/getPageInfo" $context   -}}
+{{- $literalParams  = merge $literalParams (dict "ForEmbedding" true) -}}
+
+{{- $embedIframe             := partial "toroidal/member-entry-iframe" $iframeParams -}}
+{{- $iframeCommentlessParams := merge $iframeParams (dict "DisplayComments" false) -}}
+{{- $embedIframeCommentless  := partial "toroidal/member-entry-iframe" $iframeCommentlessParams -}}
+
+{{- $embedLiteralCommentless := partial "toroidal/member-entry-page" $literalParams -}}
+{{- $literalParams            = merge $literalParams (dict "DisplayComments" true)  -}}
+{{- $embedLiteral            := partial "toroidal/member-entry-page" $literalParams -}}
+
+{{- $sourceHref := partial "toroidal/utils/getSourceHref" $context                    -}}
+{{- $name       := $literalParams.MemberName                                          -}}
+{{- $homePage   := $literalParams.MemberHomePage                                      -}}
+{{- $baseID     := printf "%s-%s" ($literalParams.WebringName) $name | urlize | lower -}}
+{{- $literalID  := printf "%s-%s" $baseID "literal"                                   -}}
+{{- $iframeID   := printf "%s-%s" $baseID "iframe"                                    -}}
+
+<section class="toroidal-member-entry-admin" id="{{$baseID}}">
+  <h2>{{ $name }}</h2>
+  <section class="toroidal-member-entry-admin-links">
+    <h3>Action Links</h3>
+    <ul>
+      <li>Visit the member <a href="{{ $homePage }}">home page</a></li>
+      {{- with $sourceHref }}
+      <li>Edit the member <a href="{{ $sourceHref }}">definition page</a></li>
+      {{- end }}
+    </ul>
+  </section>
+  <section class="toroidal-member-entry-admin-embed">
+    <h3>Literal HTML</h3>
+    <details id="{{ $literalID }}"
+             data-code-snippet="{{ string $embedLiteral }}"
+             data-code-snippet-commentless="{{ string $embedLiteralCommentless }}">
+      <summary>Code</summary>
+      {{- highlight (string $embedLiteral) "html" -}}
+    </details>
+    <div class="toroidal-copy-buttons">
+      <button type="button" onclick="copyMemberCodeToClipBoard('{{$literalID}}')">
+        Copy literal HTML
+      </button>
+      <button type="button" onclick="copyMemberCodeToClipBoard('{{$literalID}}', true)">
+        Copy literal HTML without comments
+      </button>
+    </div>
+  </section>
+  <section class="toroidal-member-entry-admin-embed">
+    <h3>iframe HTML</h3>
+    <details id="{{ $iframeID }}"
+             data-code-snippet="{{ string $embedIframe }}"
+             data-code-snippet-commentless="{{ string $embedIframeCommentless }}">
+      <summary>Code</summary>
+      {{- highlight (string $embedIframe) "html" -}}
+    </details>
+    <div class="toroidal-copy-buttons">
+      <button type="button" onclick="copyMemberCodeToClipBoard('{{ $iframeID }}')">
+        Copy iframe HTML
+      </button>
+      <button type="button" onclick="copyMemberCodeToClipBoard('{{ $iframeID }}', true)">
+        Copy iframe HTML without comments
+      </button>
+    </div>
+  </section>
+</section>

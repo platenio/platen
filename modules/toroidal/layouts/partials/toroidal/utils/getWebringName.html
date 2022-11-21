@@ -1,0 +1,24 @@
+{{- /*
+  This partial expects to receive the context for a page whose type is toroidal
+  and will resolve the correct name for that page's webring by:
+
+  1. Looking for the index file for the section - for any webrings not defined
+     at the root of a top-level toroidal section, they _require_ an `_index.md`
+     file for the theme to recognize them at all; they are optional for any
+     webrings defined in top-level sections.
+  2. If the index file has the toroidal type, it will inspect that page:
+     - if the `name` parameter is set, it will use that value
+     - if the `name` parameter is not set, it will use the page's Title
+  3. If the index file is not toroidal or no index file is found, it will fall
+     back on the site's webring name. The site webring name is defined as:
+     - The value of the site parameter `.Toroidal.WebringName`, if set.
+     - "Webring" if the parameter is not set.
+*/ -}}
+{{- $context := . -}}
+
+{{- $webringName := default $context.Site.Params.Toroidal.WebringName
+                            $context.Params.ToroidalWebringName
+-}}
+{{- $webringName  = default "Webring" $webringName -}}
+
+{{- return $webringName -}}

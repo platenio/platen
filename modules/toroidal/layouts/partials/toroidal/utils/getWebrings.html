@@ -1,0 +1,25 @@
+{{/*
+  This partial looks over the entire site for toroidal sections and then adds
+  each discovered section with 1+ defined/functional member to the list of
+  webrings. For each of those sections it also looks for child sections with
+  members, adding those too.
+
+  In this implementation, only one level of nesting is supported. It is not
+  recursive. It only looks inside top-level sections which are defined with
+  the toroidal type.
+*/}}
+{{- $context  := .     -}}
+{{- $webrings := slice -}}
+
+{{- range where $context.Site.Sections "Type" "toroidal" -}}
+  {{- if len (where .RegularPages "Params.ToroidalHomePage" "!=" nil) -}}
+    {{- $webrings = $webrings | append . -}}
+  {{- end -}}
+  {{- range .Sections -}}
+    {{- if len (where .RegularPages "Params.ToroidalHomePage" "!=" nil) -}}
+      {{- $webrings = $webrings | append . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $webrings -}}

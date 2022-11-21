@@ -20,3 +20,4 @@ properties:
           enum:
             - github.com/platenio/platen/modules/base
             - github.com/platenio/platen/modules/schematize
+            - github.com/platenio/platen/modules/toroidal

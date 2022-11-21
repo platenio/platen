@@ -12,3 +12,5 @@ properties:
     $ref: ./Platen/Site/Config.yaml
   Schematize:
     $ref: ./Schematize/Site/Config.yaml
+  Toroidal:
+    $ref: ./Toroidal/Site/Config.yaml

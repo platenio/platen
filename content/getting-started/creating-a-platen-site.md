@@ -36,13 +36,18 @@ A text editor
 : You need an application to write and edit your content and site configuration with. You can use
   any tool you like for this, but we recommend [VS Code][06].
 
-### Windows
+{{% tabs "install-per-platform" %}}
 
-The simplest way to install software on Windows is to use a package manager, like [Chocolatey][07]
-or [Scoop][08]. We recommend Chocolatey as the best all-around tool for managing software on your
+{{% tab "Windows" %}}
+
+The simplest way to install software on Windows is to use a package manager, like [Chocolatey]
+or [Scoop]. We recommend Chocolatey as the best all-around tool for managing software on your
 Windows machine.
 
 You can also install these tools manually.
+
+[Chocolatey]: https://docs.chocolatey.org/
+[Scoop]: https://scoop.sh/
 
 {{% tabs "install-windows" %}}
 
@@ -90,11 +95,15 @@ Use the following links to each tool's installation documentation.
 
 {{% /tabs %}}
 
-### macOS
+{{% /tab %}}
 
-The simplest way to install software on macOS is to use a package manager, like [Homebrew][09].
+{{% tab "macOS" %}}
+
+The simplest way to install software on macOS is to use a package manager, like [Homebrew].
 
 You can also install these tools manually.
+
+[Homebrew]: https://brew.sh/
 
 {{% tabs "install-macos" %}}
 
@@ -130,12 +139,16 @@ Use the following links to each tool's installation documentation.
 
 {{% /tabs %}}
 
-### Linux
+{{% /tab %}}
 
-The simplest way to install software on Linux is to use a package manager, like [snap][10].
+{{% tab "Linux" %}}
+
+The simplest way to install software on Linux is to use a package manager, like [snap].
 
 You can also install these tools manually. For OS-specific package managers and instructions, see
 the manual install tab.
+
+[snap]: https://snapcraft.io/docs/installing-snapd
 
 {{% tabs "install-linux" %}}
 
@@ -175,6 +188,10 @@ Use the following links to each tool's installation documentation.
 
 {{% /tabs %}}
 
+{{% /tab %}}
+
+{{% /tabs %}}
+
 ## Create a Platen Site
 
 ## Add Configuration
@@ -187,7 +204,3 @@ Use the following links to each tool's installation documentation.
 [04]: https://go.dev/learn/
 [05]: https://git-scm.com/
 [06]: https://code.visualstudio.com/
-[07]: https://docs.chocolatey.org/
-[08]: https://scoop.sh/
-[09]: https://brew.sh/
-[10]: https://snapcraft.io/docs/installing-snapd

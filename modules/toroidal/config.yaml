@@ -1,0 +1,25 @@
+mediaTypes:
+  application/json:
+    suffixes:
+      - json
+
+outputFormats:
+  toroidal:
+    mediaType: application/json
+    baseName: toroidal
+    isPlainText: true
+
+params:
+  Platen:
+    Features:
+      Toroidal:
+        Enabled: true
+        Partials:
+          Title: platen/features/toroidal/title
+          Style: platen/features/toroidal/style.scss
+  Toroidal:
+    AdminDetails: default
+    RandomMemberLink: true
+    Mode: auto
+    Themes:
+      Default: true

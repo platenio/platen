@@ -106,7 +106,7 @@ Navigate to your hugo project root and add [module] section to your `config.yaml
 ```yaml
 module:
   imports:
-    - path: github.com/platenio/platen/modules/base
+    - path: github.com/platenio/platen/modules/platen
 ```
 
 Then, to load/update the theme module and run hugo:

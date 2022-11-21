@@ -1,0 +1,85 @@
+{{/*
+  This partial returns html/js to embed on a member site to
+  display the webring navigation for that member.
+
+  It expects to receive a dictionary with the params already
+  set, either from a shortcode or other template block. The
+  only logic this performs is to arrange and format the
+  information. All retrieval must be done first.
+*/}}
+{{- $params          := .                                  -}}
+{{- $webringName     := urlize $params.WebringName | lower -}}
+{{- $memberName      := urlize $params.MemberName  | lower -}}
+{{- $memberUrl       := $params.MemberUrl                  -}}
+{{- $displayComments := $params.DisplayComments            -}}
+
+{{- $iframeID     := printf "toroidal-iframe-%s-%s" $webringName $memberName -}}
+{{- $navID        := printf "toroidal-nav-%s" $webringName                   -}}
+{{- $iframeOrigin := strings.TrimSuffix "/" site.BaseURL                     -}}
+
+{{ if $displayComments }}
+{{ "<!--" | safeHTML }}
+{{ "  This is the HTML block you need to insert wherever you want"  | safeHTML }}
+{{ "  your webring to show up. By default, it is displayed exactly" | safeHTML }}
+{{ "  as it is styled on the host." | safeHTML }}
+
+{{ "  The entries in the allow attribute(s) are security defaults." | safeHTML }}
+{{ "  You're welcome to override them if you want, but it's best"   | safeHTML }}
+{{ "  to leave them in place unless something is broken. For more"  | safeHTML }}
+{{ "  info on them, see:"                                           | safeHTML }}
+{{ "      https://www.w3schools.com/tags/tag_iframe.asp"            | safeHTML }}
+{{ "  The only setting that *has* to remain in place is in the"     | safeHTML }}
+{{ "  sandbox attribute; 'allow-top-navigation-by-user-activation'" | safeHTML }}
+{{ "  is what enables the iframe to send users to a member site or" | safeHTML }}
+{{ "  the list of members. The 'allow-same-origin' is required for" | safeHTML }}
+{{ "  the included script to work and set the styling correctly."   | safeHTML }}
+{{ "  The 'allow-scripts' attribute is only required if you are"    | safeHTML }}
+{{ "  using the random member link."                                | safeHTML }}
+{{ "-->"  | safeHTML }}
+{{- end }}
+<iframe id="{{ $iframeID }}"
+        class="toroidal"
+        frameBorder="0"
+        allow="layout-animations 'none';
+        unoptimized-images 'none';
+        oversized-images 'none';
+        sync-script 'none';
+        sync-xhr 'none';
+        unsized-media 'none';"
+        allowfullscreen="false"
+        allowpaymentrequest="false"
+        referrerpolicy="same-origin"
+        sandbox="allow-top-navigation allow-same-origin allow-scripts"
+        scrolling="no"
+        src="{{ $memberUrl }}"
+        title="{{ $webringName }} Navigation" >
+</iframe>
+{{ if $displayComments }}
+{{ "<!--" | safeHTML }}
+{{ "  You can put this script block wherever makes sense for your" | safeHTML }}
+{{ "  site; you might want it in your footer or pulled into a JS"  | safeHTML }}
+{{ "  file, but if you want the iframe to configure correctly,"    | safeHTML }}
+{{ "  you will need it *somewhere*."                               | safeHTML }}
+{{ "-->"  | safeHTML }}
+{{- end }}
+<script>
+  {{- if $displayComments }}
+  {{ "// This script configures the iframe display so that it"   | safeJS }}
+  {{ "// looks okay after loading; this default implementation"  | safeJS }}
+  {{ "// will display the iframe to its actual size wherever"    | safeJS }}
+  {{ "// you put it in your site, themed exactly as it is on"    | safeJS }}
+  {{ "// the host.\n  "                                          | safeJS }}
+  {{- end }}
+  window.addEventListener('message', configureToroidalFrame, false);
+
+  function configureToroidalFrame(evt)
+  {
+    if (evt.origin === {{  $iframeOrigin }}) {
+      let sizeData = evt.data;
+      let iframeID = '{{ $iframeID }}';
+      let toroidalFrame = document.getElementById(iframeID);
+      toroidalFrame.style.height = (sizeData.height + 30) + 'px';
+      toroidalFrame.style.width  = (sizeData.width + 30) + 'px';
+    }
+  }
+</script>

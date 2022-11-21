@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/section.schema.yaml
+title: Page Front Matter
+schematize:
+  noMungeDescription: true
+type: object
+anyOf:
+  - $ref: ./hugo/page.yaml
+  - $ref: ./Toroidal/Content/Section.yaml
+properties:
+  Platen:
+    $ref: ./Platen/Content/Page.yaml

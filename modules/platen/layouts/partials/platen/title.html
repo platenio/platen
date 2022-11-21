@@ -1,0 +1,15 @@
+{{/*
+  Partial to generate page name from Title or File name. Accepts Page as context
+*/}}
+{{- $context := . -}}
+{{- $title := "" -}}
+
+{{- if $context.Title -}}
+  {{- $title = $context.Title -}}
+{{- else if and $context.IsSection $context.File -}}
+  {{- $title = path.Base $context.File.Dir | humanize | title -}}
+{{- else if and $context.IsPage $context.File -}}
+  {{- $title = $context.File.BaseFileName | humanize | title -}}
+{{- end -}}
+
+{{- return $title -}}

@@ -6,8 +6,10 @@ schematize:
   noMungeDescription: true
 type: object
 anyOf:
-  - $ref: ./Schematize/Content/Page.yaml
   - $ref: ./hugo/page.yaml
+  - $ref: ./Schematize/Content/Page.yaml
+  - $ref: ./Toroidal/Content/Admin.yaml
+  - $ref: ./Toroidal/Content/Member.yaml
 properties:
   Platen:
     $ref: ./Platen/Content/Page.yaml

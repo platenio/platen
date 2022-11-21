@@ -1,0 +1,198 @@
+Platen:
+  Theme:
+    Mode: auto
+    Variables:
+      BasicSCSS:
+        padding-minimal: 1px
+        padding-small: 0.25rem
+        padding-medium: 0.5rem
+        padding-large: 1rem
+        font-size-base: 16px
+        font-size-small: 0.75rem
+        font-size-medium: 0.875rem
+        font-size-full: 1rem
+        body-font-weight: normal
+        body-min-width: 20rem
+        container-max-width: 80rem
+        header-height: 3.5rem
+        menu-width: 16rem
+        toc-width: 16rem
+        hint-colors:
+          info: "#6bf"
+          warning: "#fd6"
+          danger: "#f66"
+      CalculatedSCSS:
+        border-radius: $padding-small
+        mobile-breakpoint: $menu-width + $body-min-width * 1.2 + $toc-width
+      LightCSS:
+        gray-100: "#f8f9fa"
+        gray-200: "#e9ecef"
+        gray-500: "#adb5bd"
+        color-link: "#0055bb"
+        color-visited-link: "#8440f1"
+        body-background: white
+        body-font-color: black
+        icon-filter: none
+      DarkCSS:
+        gray-100: rgba(255, 255, 255, 0.1)
+        gray-200: rgba(255, 255, 255, 0.2)
+        gray-500: rgba(255, 255, 255, 0.5)
+        color-link: "#84b2ff"
+        color-visited-link: "#b88dff"
+        body-background: "#343a40"
+        body-font-color: "#e9ecef"
+        icon-filter: brightness(0) invert(1)
+    Styles:
+      Base:
+        HTML:
+          Enabled: true
+        Body:
+          Enabled: true
+        Headings:
+          Enabled: true
+        Links:
+          Enabled: true
+        Images:
+          Enabled: true
+        Focus:
+          Enabled: true
+        Navigation:
+          Enabled: true
+        Pagination:
+          Enabled: true
+        Containers:
+          Enabled: true
+      Platen:
+        Icon:
+          Enabled: true
+        Brand:
+          Enabled: true
+        Menu:
+          Enabled: true
+        Page:
+          Enabled: true
+        Post:
+          Enabled: true
+        Header:
+          Enabled: true
+        Search:
+          Enabled: true
+        Toc:
+          Enabled: true
+        Footer:
+          Enabled: true
+        Comments:
+          Enabled: true
+        Languages:
+          Enabled: true
+        Responsiveness:
+          Enabled: true
+      Mobile:
+        Header:
+          Enabled: true
+        Menu:
+          Enabled: true
+        ToC:
+          Enabled: true
+      Wide:
+        Padding:
+          Enabled: true
+      Markdown:
+        Page:
+          Enabled: true
+        Headings:
+          Enabled: true
+        Links:
+          Enabled: true
+        Bold:
+          Enabled: true
+        Paragraphs:
+          Enabled: true
+        Images:
+          Enabled: true
+        Code:
+          Enabled: true
+        Blockquotes:
+          Enabled: true
+        Tables:
+          Enabled: true
+        Lists:
+          Enabled: true
+        Rulers:
+          Enabled: true
+        Details:
+          Enabled: true
+        Figure:
+          Enabled: true
+        Inner:
+          Enabled: true
+      Utils:
+        Basic:
+          Enabled: true
+        Toggle:
+          Enabled: true
+        Clearfix:
+          Enabled: true
+        Spin:
+          Enabled: true
+        Fixed:
+          Enabled: true
+        Outline:
+          Enabled: true
+    Fonts:
+      Styles:
+        - roboto
+      Settings:
+        Body:
+          Selector: body
+          Family: "'Roboto', sans-serif"
+        Code:
+          Selector: code
+          Family: "'Roboto Mono', monospace"
+    Printing:
+      Styles:
+        Basic:
+          Enabled: true
+    Shortcodes:
+      Button:
+        Enabled: true
+        Style:
+          Name: button
+      Columns:
+        Enabled: true
+        Style:
+          Name: columns
+      Hint:
+        Enabled: true
+        Style:
+          Name: hint
+      Tabs:
+        Enabled: true
+        Style:
+          Name: tabs
+  Display:
+    TableOfContents:
+      MinimumLevel: 2
+      MaximumLevel: 4
+    DateFormat: "January 2, 2006"             # BookDateFormat
+    MenuRootSection: /                        # BookSection
+    Logo:
+      URL: /images/logo.svg                   # BookLogo
+  Features:
+    Search:                                   # BookSearch
+      Enabled: true
+      Partials:
+        Header: platen/features/search/header
+    Comments:                                 # BookComments
+      Enabled: false
+    PWA:                                      # BookServiceWorker
+      Enabled: true
+      Partials:
+        Header: platen/features/pwa/header
+    PortableLinks:                            # BookPortableLinks
+      Enabled: true
+  Repository:
+    CommitPath: commit                        # BookCommitPath
+    EditPath: edit/main                       # BookEditPath
+  Multilingual:                               # BookTranslatedOnly
+    TranslatedOnly: false

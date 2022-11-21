@@ -1,0 +1,21 @@
+{{/*
+  This partial expects to receive the context for a page whose type is toroidal
+  and discovers all of the member sites in the same webring, returning their
+  homepage URLs as a slice of strings.
+
+  It does so by:
+  
+  1. Checking the page's parent for all the regular (i.e. non-section) pages
+     which have configured their homepage to a non-empty string; any page
+     without this set properly must be ignored so links don't break.
+  2. Looping over those discovered pages, appending their defined home page
+     URL to the slice.
+  3. Returning the slice.
+*/}}
+{{- $context := . -}}
+{{- $toroidalPages := where $context.Parent.RegularPages "Params.ToroidalHomePage" "!=" nil -}}
+{{- $memberPageLinks := slice -}}
+{{- range $toroidalPages -}}
+    {{- $memberPageLinks = $memberPageLinks | append .Params.ToroidalHomePage -}}
+{{- end -}}
+{{- return $memberPageLinks -}}

@@ -1,0 +1,13 @@
+name: toroidal
+license: MIT
+licenselink: https://github.com/platenio/platen/blob/main/modules/toroidal/LICENSE
+description: Tooling for hosting your own webring using a hugo site/repo as the source of truth/host.
+homepage: https://platen.io
+tags:
+  - webring
+features:
+  - webring
+min_version: 0.1.0
+author:
+  name: Platen Cooperative
+  homepage: https://platen.io

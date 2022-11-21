@@ -1,0 +1,44 @@
+{{- $context            := . -}}
+{{- $webringName        := partial "toroidal/utils/getWebringName" . -}}
+{{- $webringMemberPages := where $context.CurrentSection.RegularPages
+                                 "Params.ToroidalHomePage" "!=" nil
+-}}
+{{- $class              := default $context.Site.Params.Toroidal.Class
+                                   $context.Params.ToroidalClass
+-}}
+{{- with $class -}}
+  {{- $class = printf " %s" $class | safeHTML -}}
+{{- end -}}
+{{/* Retrieve the details to include about member administration */}}
+{{- $adminDetails := partial "toroidal/utils/getAdminDetails" $context -}}
+
+<article class="toroidal{{ $class }}">
+  <header>
+    <h1>{{ $webringName }} Administration</h1>
+
+    {{ with $adminDetails }}
+    <details>
+      <summary>About Member Administation</summary>
+      {{ $adminDetails }}
+    </details>
+    {{- end }}
+  </header>
+  {{- range $webringMemberPages -}}
+  {{ partial "toroidal/member-entry-admin" . }}
+  {{- end -}}
+  <footer>
+    <script>
+      function copyMemberCodeToClipBoard(id, withoutComments = false) {
+        const idComponents = id.split('-')
+        const webringName  = idComponents[0]
+        const memberName   = idComponents[1]
+        const copyType     = idComponents[2]
+        const codeType     = withoutComments ? 'commentless code' : 'code'
+        const element      = document.getElementById(id).dataset
+        const text         = withoutComments ? element.codeSnippetCommentless : element.codeSnippet
+        navigator.clipboard.writeText(text);
+        alert(`Copied the ${copyType} ${codeType} for ${memberName} as a member of ${webringName}`)
+      }
+    </script>
+  </footer>
+</article>

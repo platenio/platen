@@ -1,0 +1,236 @@
+{{/*
+  This partial returns the nav list for a member of a webring. It expects to
+  receive an instance of scratch with the params already set; the only logic
+  this performs is to arrange and format the information. All retrieval must
+  be done first.
+*/}}
+{{- $params            := .                         -}}
+{{- $class             := $params.Class             -}}
+{{- $displayComments   := $params.DisplayComments   -}}
+{{- $forEmbedding      := $params.ForEmbedding      -}}
+{{- $hideHeader        := $params.HideHeader        -}}
+{{- $memberDescription := $params.MemberDescription -}}
+{{- $memberHomePage    := $params.MemberHomePage    -}}
+{{- $memberListHref    := $params.MemberListHref    -}}
+{{- $memberName        := $params.MemberName        -}}
+{{- $memberPageLinks   := $params.MemberPageLinks   -}}
+{{- $memberPages       := $params.MemberPages       -}}
+{{- $nextHref          := $params.NextHref          -}}
+{{- $prevHref          := $params.PrevHref          -}}
+{{- $randomMemberLink  := $params.RandomMemberLink  -}}
+{{- $webringApiUrl     := $params.WebringApiUrl     -}}
+{{- $webringName       := $params.WebringName       -}}
+{{/* Calculated properties */}}
+{{- with $class -}}
+  {{- $class = printf " %s" $class -}}
+{{- end -}}
+{{- $navId   := printf "toroidal-nav-%s" (urlize $webringName | lower) -}}
+{{- $labelId := printf "%s-label" $navId -}}
+{{- $menuId  := printf "%s-menu"  $navId -}}
+{{- $prevId  := printf "%s-prev"  $navId -}}
+{{- $listId  := printf "%s-list"  $navId -}}
+{{- $randId  := printf "%s-rand"  $navId -}}
+{{- $nextId  := printf "%s-next"  $navId -}}
+{{- $memberPagesData := $memberPageLinks
+                        | jsonify (dict "prefix" "    " "indent" "  ")
+                        | safeJS
+-}}
+
+<nav aria-labelledby="{{ $labelId }}"
+     class="toroidal{{$class}}"
+     id="{{ $navId }}">
+  <script type="text/javascript">
+    {{- if $randomMemberLink -}}
+    {{- if $displayComments }}
+    {{ "// This variable keeps the memberPages list for getting" | safeJS }}
+    {{ "// a random member's homepage when the user clicks the"  | safeJS }}
+    {{ "// 'Random' link in the nav list. For iframes, this is"  | safeJS }}
+    {{ "// always up-to-date and authoritative; for embeds,"     | safeJS }}
+    {{ "// may be out of date in hours or days, so there is"     | safeJS }}
+    {{ "// logic below for retreiving up-to-date info from the"  | safeJS }}
+    {{ "// webring host's API. For more info, see the comments"  | safeJS }}
+    {{ "// on loadFromAdminApi() and window.onload."             | safeJS }}
+    {{ end -}}
+    var memberPages = {{ $memberPagesData }};
+
+    {{- if $displayComments }}
+    {{ "// This function returns a random member page from the" | safeJS }}
+    {{ "// list of known members; it's in a separate function"  | safeJS }}
+    {{ "// to make it easier for you to test/see locally."      | safeJS }}
+    {{ "//"                                                     | safeJS }}
+    {{ "// Note that with a small member list, you'll see that" | safeJS }}
+    {{ "// the same members are repeated often, sometimes even" | safeJS }}
+    {{ "// several times in a row."                             | safeJS }}
+    {{- end }}
+    function getRandomMemberPage() {
+      return memberPages[Math.floor(Math.random() * memberPages.length)];
+    }
+
+    {{- if $displayComments }}
+    {{ "// This is the function that actually gets called when"  | safeJS }}
+    {{ "// a site visitor clicks on the 'Random' link in the"    | safeJS }}
+    {{ "// nav list. It takes the user directly to a random"     | safeJS }}
+    {{ "// member's homepage."                                   | safeJS }}
+    {{ "//"                                                      | safeJS }}
+    {{ "// Note that it only works on *click* for now; if a"     | safeJS }}
+    {{ "// user right-clicks to open in a new tab, they will"    | safeJS }}
+    {{ "// unfortunately not go anywhere."                       | safeJS }}
+    {{- end }}
+    function goToRandomMemberPage() {
+      window.open(getRandomMemberPage(), "_blank")
+    }
+    {{- end }}
+
+    {{- if $forEmbedding -}}
+    {{- if $displayComments }}
+    {{ "// This hardcode is provided by the webring host; so long" | safeJS }}
+    {{ "// as the host's URL or admin API doesn't move, this URL"  | safeJS }}
+    {{ "// should remain valid. If it does move, the host should"  | safeJS }}
+    {{ "// inform all of the members so they can update their own" | safeJS }}
+    {{ "// site code, iframe and embedded nav alike."              | safeJS }}
+    {{- end }}
+    var webringApiUrl = {{ $webringApiUrl | jsonify | safeJS }}
+
+    {{- if $displayComments }}
+    {{ "// Since most toroidal webring members may not be webdevs," | safeJS }}
+    {{ "// this error builder tries to give you as much useful"     | safeJS }}
+    {{ "// info as possible."                                       | safeJS }}
+    {{- end }}
+    function adminApiLoadError(response) {
+      errorDetails = [
+        '\tfor:  {{ $webringName }}',
+        `\tfrom: ${webringApiUrl}`,
+        '\twith status:',
+        `\t\tcode:    ${response.status}`,
+        `\t\tmessage: '${response.statusText}'\n`
+      ].join('\n')
+      errorMessage = [
+        "Error loading latest toroidal data:\n",
+        errorDetails,
+        'Is your host configured to serve the API and is your host online? ',
+        'Full failed response is in console logs.'
+      ].join("")
+      throw Error(errorMessage)
+    }
+
+    {{- if $displayComments }}
+    {{ "// An async function is needed to neatly pull from the" | safeJS }}
+    {{ "// toroidal host's admin api; it handles errors and"    | safeJS }}
+    {{ "// logging to help a member troubleshoot."              | safeJS }}
+    {{- end }}
+    async function loadFromAdminApi() {
+      let data = await fetch(
+        webringApiUrl,
+        {
+          credentials: 'omit'
+        }
+      ).then(response => {
+        if (!response.ok) {
+          adminApiLoadError(response)
+        }
+        return response.json()
+      }).then(object => {
+        return object.data
+      }).catch(error => {
+        console.error(error)
+      })
+      return data
+    }
+
+    {{- if $displayComments }}
+    {{ "// When the window first loads, try to get the most"   | safeJS }}
+    {{ "// up-to-date info for the webring; these should help" | safeJS }}
+    {{ "// keep you from having to update your embed every"    | safeJS }}
+    {{ "// time the webring list is updated or the host's"     | safeJS }}
+    {{ "// settings are changed."                              | safeJS }}
+    {{- end }}
+    window.onload = async function () {
+      {{- if $displayComments }}
+      {{ "// Load the latest data from the host admin api" | safeJS }}
+      {{- end }}
+      data = await loadFromAdminApi()
+      {{- if $displayComments }}
+      {{ "// If data is null, we couldn't fetch the latest info"  | safeJS }}
+      {{ "// from the admin api, so we fall back on the defaults" | safeJS }}
+      {{ "// from the template."                                  | safeJS }}
+      {{- end }}
+      if (data != null) {
+        console.log("Admin Api Data:", data)
+        {{- if $displayComments -}}
+        {{ " // Log for inspection/debug"                          | safeJS }}
+        {{ "// Pull the current list of members from the host API" | safeJS }}
+        {{ "// This effects the random member link."               | safeJS }}
+        {{- end }}
+        memberPages = data.members.map(member => member.home)
+        {{- if $displayComments }}
+        {{ "// Update the webring name" | safeJS }}
+        {{- end }}
+        let labelID = '{{ $labelId }}'
+        labelElement = document.getElementById(labelID)
+        if (labelElement != null) {
+          labelElement.innerText = data.webringName
+        }
+        {{- if $displayComments }}
+        {{ "// Update the webring list href" | safeJS }}
+        {{- end }}
+        let listID = '{{ $listId }}'
+        document.getElementById(listID).href = data.webringList
+        {{- if $displayComments }}
+        {{ "// Pull the current links for this member" | safeJS }}
+        {{- end }}
+        let memberName = '{{ lower $memberName }}'
+        memberData = data.members.find( ({ name }) => {
+          return name.toLowerCase() === memberName
+        })
+        console.log("Relevant Member Data:", memberData)
+        {{- if $displayComments -}}
+        {{ " // Log for inspection/debug"  | safeJS }}
+        {{ "// Update the prev/next hrefs" | safeJS }}
+        {{- end }}
+        let prevID = '{{ $prevId }}'
+        let nextID = '{{ $nextId }}'
+        document.getElementById(prevID).href = memberData.prev
+        document.getElementById(nextID).href = memberData.next
+      }
+    }
+    {{- end }}
+  </script>
+  {{- if not $hideHeader }}
+  <h2 id="{{ $labelId }}">{{ $webringName }}</h2>
+  {{- end }}
+  <ul role="menu"
+      id="{{ $menuId }}"
+      aria-label="{{ $webringName }}">
+    <li role="none">
+      <a role="menuitem"
+         aria-haspopup="false"
+         target="_parent"
+         id="{{ $prevId }}"
+         href="{{ $prevHref }}">Previous</a>
+    </li>
+    <li role="none">
+      <a role="menuitem"
+         aria-haspopup="false"
+         target="_parent"
+         id="{{ $listId }}"
+         href="{{ $memberListHref }}">Member List</a>
+    </li>
+    {{- if $randomMemberLink }}
+    <li role="none">
+      <a role="menuitem"
+         aria-haspopup="false"
+         target="_parent"
+         onclick="this.href=getRandomMemberPage()"
+         id="{{ $randId }}"
+         href="/RandomMember">Random</a>
+    </li>
+    {{- end }}
+    <li role="none">
+      <a role="menuitem"
+         aria-haspopup="false"
+         target="_parent"
+         id="{{ $nextId }}"
+         href="{{ $nextHref }}">Next</a>
+    </li>
+  </ul>
+</nav>

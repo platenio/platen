@@ -1,0 +1,62 @@
+{{/*
+  This partial retrieves the details for a webring administration page. It returns HTML to the
+  admin page partial. If it returns an empty string, the details element isn't rendered.
+
+  It expects to receive the page context for the webring administration page. It uses the details
+  partial defined in `Toroidal.AdminDetails` unless `ToroidalAdminDetails` is specified in the
+  page's front matter. The site value defaults to "default". It can be set to "none" to
+  intentionally exclude the details.
+
+  On Platen sites, when the default details would be used, the Platen default is used instead to
+  account for the differences between a Toroidal webring on a Platen site.
+
+  Webring hosts can override the value and provide their own partials. By default, this partial
+  assumes that the specified details partial is a markdown file unless the name ends with a file
+  extension. It also assumes that the partial is in `layouts/partials/toroidal/adminDetails` unless
+  it has a path prefix, like `myWebring/details`.
+
+  For example, consider the following mapping:
+
+  - `default => toroidal/adminDetails/default.md` on non-Platen sites
+  - `default => toroidal/adminDetails/platen.md` on Platen sites
+  - `none    => toroidal/adminDetails/none.md`
+  - `myWebring/details => myWebring/details.md`
+  - `notMarkdown.thml` => toroidal/adminDetails/notMarkdown.html`
+
+  If the partial file name has the `.md` or `.markdown` extension, the partial renders the Markdown
+  to HTML.
+
+  Finally, the resulting text is passed through `safeHTML` and then returned.
+*/}}
+{{- $context     := .  -}}
+{{- $detailsHTML := "" -}}
+{{- $detailsFile := default site.Params.Toroidal.AdminDetails
+                            $context.Params.ToroidalAdminDetails
+-}}
+
+{{- with (resources.Get "styles/platen.scss") -}}
+  {{- if eq "default" $detailsFile -}}
+    {{- $detailsFile = "platen" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* If no path prefix specified, assume default partial folder */}}
+{{- if eq (path.Base $detailsFile) $detailsFile -}}
+  {{- $detailsFile = printf "toroidal/adminDetails/%s" $detailsFile -}}
+{{- end -}}
+
+{{/* If no file extension specified, assume Markdown */}}
+{{- if eq "" (path.Ext $detailsFile) -}}
+  {{- $detailsFile = printf "%s.md" $detailsFile -}}
+{{- end -}}
+
+{{/* Process the details partial with the admin page's context */}}
+{{- $detailsHTML = partial $detailsFile $context -}}
+
+{{/* If the partial is markdown, render it to HTML */}}
+{{- $markdownExtensions := slice ".markdown" ".md" -}}
+{{- if in $markdownExtensions (path.Ext $detailsFile) -}}
+  {{- $detailsHTML = $detailsHTML | $context.RenderString -}}
+{{- end -}}
+
+{{- return ($detailsHTML | safeHTML) -}}

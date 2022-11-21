@@ -1,0 +1,25 @@
+{{/*
+  Expects a dict with `context` for the current page and `memberPages` for the
+  list of webring member entries in the site. It determines and returns the
+  link for the next page in the webring by:
+
+  1. Checking for the previous page in the section; because the weighting in
+     hugo orders things in reverse from the naive expectation of a user (i.e.
+     the lower weight is "next" instead of "previous"), we have to invert the
+     logic even though we want the _next_ highest page weight from the list.
+  2. If the href can't be determined from the previous step, filter the list
+     of member pages to exclude this page and set the href to the home page
+     url of the first item in that filtered slice.
+*/}}
+{{- $params   := . -}}
+{{- $nextHref := "" -}}
+{{- with $params.Context.PrevInSection -}}
+  {{- $nextHref = .Params.ToroidalHomePage -}}
+{{- end -}}
+{{- if not $nextHref -}}
+  {{- $validMembers := where $params.MemberPages
+                       "Params.ToroidalHomePage" "!=" $params.Context.Params.ToroidalHomePage
+  -}}
+  {{- $nextHref = (index $validMembers 0).Params.ToroidalHomePage -}}
+{{- end -}}
+{{- return $nextHref -}}

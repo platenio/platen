@@ -1,0 +1,11 @@
+{{- $params   := .                                             -}}
+{{- $indent   := strings.Repeat (default 4 $params.Indent) " " -}}
+{{- $comments := $params.Comments                              -}}
+{{- $text     := ""                                            -}}
+
+{{- range $comment := $comments -}}
+  {{- $text = printf "%s\n%s// %s" $text $indent $comment -}}
+{{- end -}}
+{{- warnf "Comments:\n%s" $text -}}
+
+{{- return ($text | safeJS) -}}

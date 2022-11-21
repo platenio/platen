@@ -1,0 +1,28 @@
+{{/*
+  Expects a dict with `context` for the current page and `inList` for whether
+  or not this should be included in a list or is a standalone entry. This
+  partial returns the JSON representation of the metadata for the context of
+  this member page with the following properties:
+
+  - `name`: The name of this member
+  - `home`: The URL to this member's homepage
+  - `prev`: The URL to the previous webring member's homepage
+  - `next`: The URL to the next webring member's homepage
+*/}}
+{{- $params  := . -}}
+{{- $context := $params.context -}}
+{{- $inList  := $params.inList  -}}
+{{- $info    := partial "toroidal/utils/getPageInfo" $context -}}
+{{- if $inList }}{
+        "name": "{{ $info.MemberName     }}",
+        "home": "{{ $info.MemberHomePage }}",
+        "prev": "{{ $info.PrevHref       }}",
+        "next": "{{ $info.NextHref       }}"
+      }
+{{- else }}{
+    "name": "{{ $info.MemberName     }}",
+    "home": "{{ $info.MemberHomePage }}",
+    "prev": "{{ $info.PrevHref       }}",
+    "next": "{{ $info.NextHref       }}"
+  }
+{{- end -}}

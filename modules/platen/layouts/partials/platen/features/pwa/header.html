@@ -1,0 +1,11 @@
+{{- $context := . -}}
+{{- $swJS := resources.Get "scripts/features/pwa/sw-register.js"
+             | resources.ExecuteAsTemplate "sw.js" $context
+             | resources.Minify
+             | resources.Fingerprint
+-}}
+{{- $manifest := resources.Get "scripts/features/pwa/manifest.json"
+                 | resources.ExecuteAsTemplate "manifest.json" $context
+-}}
+<link rel="manifest" href="{{ $manifest.RelPermalink }}">
+<script defer src="{{ $swJS.RelPermalink }}" {{ template "integrity" $swJS }}></script>
