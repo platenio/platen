@@ -194,7 +194,11 @@ Use the following links to each tool's installation documentation.
 
 ## Create a Platen Site
 
+To create a Platen site, you can use the `hugo new` command.
+
 ## Add Configuration
+
+To configure your Platen site...
 
 ## Next Steps
 
