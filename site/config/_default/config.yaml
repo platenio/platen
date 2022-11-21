@@ -7,7 +7,7 @@ dataDir: ../data
 
 module:
   replacements: >-
-    github.com/platenio/platen/modules/base -> base,
+    github.com/platenio/platen/modules/platen -> platen,
     github.com/platenio/platen/modules/schematize -> schematize,
     github.com/platenio/platen/modules/toroidal -> toroidal
   imports:
@@ -39,7 +39,7 @@ module:
           target: layouts
         - source: static
           target: static
-    - path: github.com/platenio/platen/modules/base
+    - path: github.com/platenio/platen/modules/platen
       mounts:
         - source: archetypes
           target: archetypes
