@@ -1,4 +1,5 @@
 {
+  "title": "Tabbed Content",
   "description": "Add a set of markdown content with two different tabs.",
   "body": [
     "{{< tabs \"[[id]]\" >}}",

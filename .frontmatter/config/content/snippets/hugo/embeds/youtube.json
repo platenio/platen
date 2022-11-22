@@ -1,4 +1,5 @@
 {
+  "title": "YouTube",
   "description": "Embed a YouTube video.",
   "body": "{{< vimeo id=\"[[id]]\" autoplay=\"[[autoplay]]\" title=\"[[title]]\" />}}",
   "fields": [

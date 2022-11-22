@@ -1,6 +1,13 @@
 {
+  "title": "Art (from local media)",
   "description": "Add art as a figure with an optional content warning.",
-  "body": "{{< art src=\"[[&mediaUrl]]\" alt=\"[[&alt]]\" class=\"[[classes]]\" content_warning=\"[[&content_warning]]\" />}}",
+  "body": [
+    "{{< art src=\"[[&mediaUrl]]\"",
+    "        alt=\"[[&alt]]\"",
+    "        class=\"[[classes]]\"",
+    "        content_warning=\"[[&content_warning]]\"",
+    "/>}}"
+  ],
   "isMediaSnippet": true,
   "fields": [
     {

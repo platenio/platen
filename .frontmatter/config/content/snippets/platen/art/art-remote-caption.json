@@ -1,7 +1,12 @@
 {
-  "description": "",
+  "title": "Art (from remote source with caption)",
+  "description": "Add art as a figure from a remote source with a caption and an optional content warning.",
   "body": [
-    "{{< art src=\\\"[[&src]]\\\" alt=\\\"[[&alt]]\\\" class=\\\"[[classes]]\\\" content_warning=\\\"[[&content_warning]]\\\" >}}",
+    "{{< art src=\"[[&src]]\"",
+    "        alt=\"[[&alt]]\"",
+    "        class=\"[[classes]]\"",
+    "        content_warning=\"[[&content_warning]]\"",
+    ">}}",
     "[[&caption]]",
     "{{< /art >}}"
   ],

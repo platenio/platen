@@ -1,4 +1,5 @@
 {
+  "title": "Highlight Source Code Block",
   "description": "Convert source code text into syntax-highlighted HTML.",
   "body": [
     "{{< highlight [[language]] >}}",

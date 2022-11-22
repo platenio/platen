@@ -1,4 +1,5 @@
 {
+  "title": "Columns (Flexible)",
   "description": "Add markdown separated into two or more columns, with configurable sizing.",
   "body": [
     "{{< flexcolumns ratio=\"[[&ratio]]\" flattenInMobileView=\"[[flattenInMobileView]]\" >}}",

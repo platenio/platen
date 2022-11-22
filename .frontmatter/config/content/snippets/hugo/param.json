@@ -1,4 +1,5 @@
 {
+  "title": "Hugo Parameter",
   "description": "Insert a hugo parameter's value.",
   "body": "{{< param \"[[name]]\" />}}",
   "fields": [

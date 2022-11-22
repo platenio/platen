@@ -1,6 +1,13 @@
 {
-  "description": "",
-  "body": "{{< art src=\\\"[[&src]]\\\" alt=\\\"[[&alt]]\\\" class=\\\"[[classes]]\\\" content_warning=\\\"[[&content_warning]]\\\" />}}",
+  "title": "Art (from remote source)",
+  "description": "Add art as a figure from a remote source with an optional content warning.",
+  "body": [
+    "{{< art src=\"[[&src]]\"",
+    "        alt=\"[[&alt]]\"",
+    "        class=\"[[classes]]\"",
+    "        content_warning=\"[[&content_warning]]\"",
+    "/>}}"
+  ],
   "fields": [
     {
       "name": "src",

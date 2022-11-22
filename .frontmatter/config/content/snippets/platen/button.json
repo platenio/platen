@@ -1,4 +1,5 @@
 {
+  "title": "Button",
   "description": "Add a button linking to another page or external site.",
   "body": "{{< button [[ref-type]]=\"[[&url]]\" class=\"[[classes]]\" >}}[[text]]{{< /button >}}",
   "fields": [

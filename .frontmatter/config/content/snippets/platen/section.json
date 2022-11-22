@@ -1,4 +1,5 @@
 {
+  "title": "Section List",
   "description": "Add links and summaries for every child page; only valid for a section (\"_index.md\") file.",
   "body": "{{< section >}}",
   "fields": []

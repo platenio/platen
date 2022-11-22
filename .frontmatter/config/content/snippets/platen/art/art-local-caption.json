@@ -1,7 +1,12 @@
 {
+  "title": "Art (from local media with caption)",
   "description": "Add art as a figure with a caption and an optional content warning.",
   "body": [
-    "{{< art src=\"[[&mediaUrl]]\" alt=\"[[&alt]]\" class=\"[[classes]]\" content_warning=\"[[&content_warning]]\" >}}",
+    "{{< art src=\"[[&mediaUrl]]\"",
+    "        alt=\"[[&alt]]\"",
+    "        class=\"[[classes]]\"",
+    "        content_warning=\"[[&content_warning]]\"",
+    ">}}",
     "[[&caption]]",
     "{{< /art >}}"
   ],

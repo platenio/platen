@@ -1,4 +1,5 @@
 {
+  "title": "Katex",
   "description": "Insert katex to render math typesetting.",
   "body": [
     "{{< katex [[display-as-block]] class=\"[[classes]]\" >}}",
