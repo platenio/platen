@@ -6,6 +6,7 @@ summary: |
   with Platen's configuration, automatically and dynamically loading styles without requiring the
   end users to update their own site configuration or assets.
 weight: 100
+type: schematize
 Schematize: Platen.Site.Theme.Styles.Defined
 outputs:
   - HTML

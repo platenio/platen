@@ -6,6 +6,7 @@ summary: |
   matter.
 weight: 1
 Schematize: Schematize.Content.Page
+type: schematize
 outputs:
   - HTML
   - Schematize
