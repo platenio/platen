@@ -1,0 +1,65 @@
+{
+  "name": "schematize",
+  "$schema": "https://beta.frontmatter.codes/config/taxonomy.contenttypes.schema.json",
+  "pageBundle": false,
+  "fields": [
+    {
+      "title": "Page Name",
+      "name": "name",
+      "description": "The short name for the page. Usually, the last segment of the schema's dot path.",
+      "type": "string",
+      "single": true,
+      "required": true
+    },
+    {
+      "title": "Page Title",
+      "name": "title",
+      "description": "The title for the page. This is used in the site navigation menu and for linking to the page.",
+      "type": "string",
+      "single": true,
+      "required": true
+    },
+    {
+      "title": "Page Summary",
+      "name": "summary",
+      "description": "A 1-3 sentence summary of what the schema is for. Usually, a copy of the schema's top-level description key.",
+      "type": "string"
+    },
+    {
+      "title": "Page Weight",
+      "name": "weight",
+      "description": "Determines order for pages, lower weights display first.",
+      "type": "number"
+    },
+    {
+      "title": "Content Type",
+      "name": "type",
+      "description": "Required to tell Front Matter that this is a schematize page. Setting this to anything other than 'schematize' prevents Front Matter from recognizing this content type properly.",
+      "type": "string",
+      "single": true,
+      "required": true,
+      "hidden": true,
+      "default": "schematize"
+    },
+    {
+      "title": "Schema Dot Path",
+      "name": "Schematize",
+      "description": "The dot path notation for the data file this schema resides in, relative to the `data/schemas` folder. To document `data/schemas/foo/bar/baz.yaml`, specify `foo.bar.baz`.",
+      "type": "string",
+      "single": true,
+      "required": true
+    },
+    {
+      "title": "Output Formats",
+      "name": "outputs",
+      "description": "Specifies the output formats to use for this schema. If `HTML` is omitted, no web page is created. If `Schematize` is omitted, the JSON schema isn't published.",
+      "type": "choice",
+      "required": true,
+      "multiple": true,
+      "choices": [
+        { "id": "HTML", "title": "Publish Web Page (HTML)" },
+        { "id": "Schematize", "title": "Publish JSON Schema (Schematize)" }
+      ]
+    }
+  ]
+}
