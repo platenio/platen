@@ -1,5 +1,5 @@
 @media screen and (max-width: $mobile-breakpoint) {
   .platen-header {
-    display: block;
+    display: block !important; 
   }
 }
