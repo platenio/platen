@@ -1,4 +1,5 @@
 {
+  "title": "Columns (even)",
   "description": "Add markdown separated into two or more columns, evenly spaced.",
   "body": [
     "{{< columns >}}",

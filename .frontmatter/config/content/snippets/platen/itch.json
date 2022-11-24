@@ -1,4 +1,5 @@
 {
+  "title": "Itch Embed",
   "description": "Add an embedded widget to a project on itch.io",
   "body": "{{< itchio id=\"[[id]]\" square=\"[[square]]\"  linkback=\"[[linkback]]\" dark=\"[[dark]]\" />}}",
   "fields": [

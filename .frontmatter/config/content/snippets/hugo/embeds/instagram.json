@@ -1,4 +1,5 @@
 {
+  "title": "Instagram",
   "description": "Embed a photo from instagram.",
   "body": "{{< instagram [[id]] />}}",
   "fields": [

@@ -1,4 +1,5 @@
 {
+  "title": "Hint",
   "description": "Add a colored callout hint/alert - info, warning, or danger.",
   "body": ["{{< hint [[type]] >}}", "[[&selection]]", "{{< /hint >}}"],
   "fields": [

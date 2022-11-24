@@ -1,0 +1,36 @@
+{
+  "name": "toroidal/admin",
+  "$schema": "https://beta.frontmatter.codes/config/taxonomy.contenttypes.schema.json",
+  "pageBundle": false,
+  "fields": [
+    {
+      "title": "Content Type",
+      "name": "type",
+      "description": "Required to tell Front Matter that this is a schematize page. Setting this to anything other than 'toroidal/admin' prevents Front Matter from recognizing this content type properly.",
+      "type": "string",
+      "single": true,
+      "required": true,
+      "hidden": true,
+      "default": "toroidal/admin"
+    },
+    {
+      "title": "Output Formats",
+      "name": "outputs",
+      "description": "Specifies the content type that makes this an administration page. If this value isn’t set, the Toroidal module won’t process the page correctly. A webring without an administration page won’t work properly.",
+      "type": "choice",
+      "required": true,
+      "multiple": true,
+      "choices": [
+        { "id": "html", "title": "Publish Web Page (html)" },
+        { "id": "toroidal", "title": "Publish JSON API data (toroidal)" }
+      ]
+    },
+    {
+      "title": "Administration Details",
+      "name": "AdminDetails",
+      "description": "This setting defines the partial to use for the 'About Member Administration' details element in a webring's administration page. For more information, see: https://platen.io/schemas/toroidal/content/admin/#admindetails",
+      "type": "string",
+      "single": true
+    }
+  ]
+}

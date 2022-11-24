@@ -1,4 +1,5 @@
 {
+  "title": "Mermaid",
   "description": "Add a chart or diagram using mermaid.js syntax",
   "body": [
     "{{< mermaid class=\"[[classes]]\" >}}",

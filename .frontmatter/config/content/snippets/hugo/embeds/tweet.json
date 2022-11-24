@@ -1,4 +1,5 @@
 {
+  "title": "Tweet",
   "description": "Embed a tweet.",
   "body": "{{< tweet user=\"[[handle]]\" id=\"[[id]]\" />}}",
   "fields": [

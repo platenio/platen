@@ -1,4 +1,5 @@
 {
+  "title": "New Tab",
   "description": "Add another tab to existing tabbed content; only valid in an existing tabs shortcode.",
   "body": [
     "{{< tab \"[[name]]\" >}}",

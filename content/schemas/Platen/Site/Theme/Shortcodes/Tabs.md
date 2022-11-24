@@ -4,6 +4,7 @@ title: Tabs
 summary: |
   Defines the options for the `tabs` shortcode.
 weight: 1
+type: schematize
 Schematize: Platen.Site.Theme.Shortcodes.Tabs
 outputs:
   - HTML

@@ -1,4 +1,5 @@
 {
+  "title": "Details",
   "description": "Insert a collapsible panel of Markdown content with a title.",
   "body": [
     "{{< details title=\"[[title]]\" open=[[should-be-open]] >}}",

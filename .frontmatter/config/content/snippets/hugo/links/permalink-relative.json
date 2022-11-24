@@ -1,6 +1,7 @@
 {
-  "description": "Insert a fully-qualified permalink to another page.",
-  "body": "{{< ref \"[[path]]\" />}}",
+  "title": "Relative Permalink",
+  "description": "Insert a site-relative permalink to another page.",
+  "body": "{{< relref \"[[path]]\" />}}",
   "fields": [
     {
       "name": "path",

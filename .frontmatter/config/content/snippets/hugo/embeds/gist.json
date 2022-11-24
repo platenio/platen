@@ -1,4 +1,5 @@
 {
+  "title": "Gist",
   "description": "Embed a GitHub gist.",
   "body": "{{< gist [[username]] [[id]] />}}",
   "fields": [

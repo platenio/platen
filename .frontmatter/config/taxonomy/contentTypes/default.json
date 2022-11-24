@@ -52,19 +52,35 @@
       "name": "Platen",
       "fields": [
         {
-          "title": "Show Table of Contents",
-          "name": "ShowToC",
-          "type": "boolean"
-        },
-        {
-          "title": "Enable comments",
-          "name": "EnableComments",
-          "type": "boolean"
-        },
-        {
-          "title": "Exclude from site search",
-          "name": "ShowToC",
-          "type": "boolean"
+          "title": "Table of Contents Options",
+          "name": "TableOfContents",
+          "type": "fields",
+          "fields": [
+            {
+              "title": "Render the Table of Contents",
+              "description": "Specifies whether to render the table of contents for the page. This setting overrides the site's Display.TableOfContents.Render, if set.",
+              "name": "Render",
+              "type": "boolean"
+            },
+            {
+              "title": "Minimum Heading Level",
+              "description": "Specify the minimum heading level to include in the page's table of contents, overriding the site's Display.TableOfContents.MinimumLevel setting. This value only affects the table of contents when UseBuiltIn is set to false.",
+              "name": "MinimumLevel",
+              "type": "number"
+            },
+            {
+              "title": "Maximum Heading Level",
+              "description": "Specify the maximum heading level to include in the page's table of contents, overriding the site's Display.TableOfContents.MaximumLevel setting. This value only affects the table of contents when UseBuiltIn is set to false.",
+              "name": "MaximumLevel",
+              "type": "number"
+            },
+            {
+              "title": "Use Built-In",
+              "description": "Choose whether to use Hugo's builtin table of contents or generate them with Platen, overriding the site’s configuration for this page. This overrides the site's Display.TableOfContents.UseBuiltIn setting.",
+              "name": "UseBuiltIn",
+              "type": "boolean"
+            }
+          ]
         },
         {
           "title": "Menu options",
@@ -85,11 +101,23 @@
             },
             {
               "title": "Hide from site menu",
-              "description": "Applicable to any page.",
+              "description": "Specifies whether to remove the page from the site menu. This setting only has an effect when the page would otherwise be included in the site menu because it is in the folder defined in the site's Display.MenuRootSection setting.",
               "name": "Hide",
               "type": "boolean"
             }
           ]
+        },
+        {
+          "title": "Enable comments",
+          "description": "Specifies whether to enable comments on the page, overriding the site's Features.Comments.Enabled setting for this page.",
+          "name": "EnableComments",
+          "type": "boolean"
+        },
+        {
+          "title": "Exclude from site search",
+          "description": "Specifies whether to exclude the page from site search results. This setting is only effective when the site's Features.Search.Enabled setting is set to true.",
+          "name": "ExcludeFromSearch",
+          "type": "boolean"
         }
       ]
     },

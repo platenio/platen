@@ -3,8 +3,8 @@
 # For more information about the available options for defining a member site,
 # see: http://platen.io/schemas/Toroidal/Content/Section/
 title: {{ $webringName }}
+type: toroidal
 cascade:
-  type: toroidal
   ToroidalWebringName: {{ $webringName }}
 ---
 
