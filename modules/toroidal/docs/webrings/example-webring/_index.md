@@ -2,6 +2,7 @@
 # For more information about the available options for defining a member site,
 # see: http://platen.io/schemas/Toroidal/Content/Section/
 title: Example Webring
+type: toroidal
 cascade:
   type: toroidal
   ToroidalWebringName: Example Webring

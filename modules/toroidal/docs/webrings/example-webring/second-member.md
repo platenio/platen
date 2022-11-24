@@ -5,5 +5,6 @@ name: Second Member
 description: |
   A short summary of the member's site
 weight: 2 # Replace with desired weight.
+type: toroidal
 ToroidalHomePage: https://member.com # Replace with the member's actual site
 ---
