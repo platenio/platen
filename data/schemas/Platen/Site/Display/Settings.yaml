@@ -1,12 +1,13 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Platen/Site/Display.schema.yaml
-title: Display Options
+$id: /schemas/Platen/Site/Display/Settings.schema.yaml
+title: Display Settings
 description: Optional settings controlling how a Platen site is structured.
 schematize:
+  weight: 2
   details: |
-    The Platen display options control how the Platen site is structured and displays, separate from
-    the SCSS styling.
+    The Platen display settings control how the Platen site is structured and displays, separate
+    from the SCSS styling.
 type: object
 properties:
   DateFormat:
@@ -32,26 +33,8 @@ properties:
           - :time_short
       - type: string
     default: January 2, 2006
-  MenuRootSection:
-    title: Menu Root Section
-    description: >-
-      Specifies the root section of the content folder to add to the site menu.
-    schematize:
-      weight: 1
-      details: |
-        Specifies the root section of the content folder to add to the site menu. You can specify a
-        folder path relative to the root of the content folder, like `games` for `content/games`, or
-        `projects/releases` for `content/projects/releases`.
-
-        You can specify a single forward slash (`/`) to set the menu's root section to the entire
-        content folder.
-
-        If you want to uninclude a page or section from the site menu, set the `Platen.Menu.Hide`
-        parameter in the page or section's frontmatter to `true`.
-
-        The default value is `/`.
-    type: string
-    default: /
+  Menu:
+    $ref: ./Menu/Settings.yaml
   TableOfContents:
     title: Table of Contents
     description: Controls the rendering of the table of contents for site pages.
@@ -84,8 +67,8 @@ properties:
             The default is `false` and the site use's Platen to generate the table of contents.
 
             [hugo-toc]: https://gohugo.io/getting-started/configuration-markup/#table-of-contents
-            [sref:`MaximumLevel`]: Platen.Site.Display.TableOfContents.MaximumLevel
-            [sref:`MinimumLevel`]: Platen.Site.Display.TableOfContents.MinimumLevel
+            [sref:`MaximumLevel`]: Platen.Site.Display.Settings.TableOfContents.MaximumLevel
+            [sref:`MinimumLevel`]: Platen.Site.Display.Settings.TableOfContents.MinimumLevel
           weight: 1
         type: boolean
         default: false
@@ -105,8 +88,8 @@ properties:
 
             The default is `2`.
 
-            [sref:`UseBuiltIn`]: Platen.Site.Display.TableOfContents.UseBuiltIn
-            [sref:`MaximumLevel`]: Platen.Site.Display.TableOfContents.MaximumLevel
+            [sref:`UseBuiltIn`]: Platen.Site.Display.Settings.TableOfContents.UseBuiltIn
+            [sref:`MaximumLevel`]: Platen.Site.Display.Settings.TableOfContents.MaximumLevel
           weight: 1
         type: integer
         default: 2
@@ -128,8 +111,8 @@ properties:
 
             The default is `4`.
 
-            [sref:`UseBuiltIn`]: Platen.Site.Display.TableOfContents.UseBuiltIn
-            [sref:`MinimumLevel`]: Platen.Site.Display.TableOfContents.MinimumLevel
+            [sref:`UseBuiltIn`]: Platen.Site.Display.Settings.TableOfContents.UseBuiltIn
+            [sref:`MinimumLevel`]: Platen.Site.Display.Settings.TableOfContents.MinimumLevel
           weight: 1
         type: integer
         default: 4

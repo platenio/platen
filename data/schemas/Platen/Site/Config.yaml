@@ -15,7 +15,7 @@ properties:
     schematize:
       weight: 1
   Display:
-    $ref: ./Display.yaml
+    $ref: ./Display/Settings.yaml
     schematize:
       weight: 2
   Features:

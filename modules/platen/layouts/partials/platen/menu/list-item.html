@@ -1,0 +1,49 @@
+{{- $params   := .                                         -}}
+{{- $position := default $params.position $params.Position -}}
+{{- $name     := default $params.name     $params.Name     -}}
+{{- $href     := default $params.href     $params.Href     -}}
+{{- $collapse := default $params.collapse $params.Collapse -}}
+{{- $flatten  := default $params.flatten  $params.Flatten  -}}
+{{- $class    := default $params.class    $params.Class    -}}
+
+{{- if and $flatten $collapse -}}
+  {{- warnf "Specified both flatten and collapse for '%s' entry in site menu at position %s. Preferring collapse instead." $name $position -}}
+  {{- $flatten = false -}}
+{{- end -}}
+
+{{- if $flatten -}}
+  {{- with $class -}}
+    {{- $class = " %s" $class -}}
+  {{- end -}}
+  {{- $class = printf `class="platen-section-flat%s"` $class -}}
+{{- else -}}
+  {{- with $class -}}
+    {{- $class = printf `class="%s"` $class -}}
+  {{- end -}}
+{{- end -}}
+
+
+{{- $entryElement := printf "<span>%s</span>" $name -}}
+
+{{- if $collapse -}}
+  {{- $entryElement = printf `<a role="button">%s</a>` $name -}}
+{{- end -}}
+
+{{- with $href -}}
+  {{- $entryElement = printf `<a href="%s">%s</a>` $href $name -}}
+{{- end -}}
+
+{{- if $flatten -}}
+<li {{ $class | safeHTMLAttr }}>
+  {{ $entryElement | safeHTML }}
+{{- else if $collapse -}}
+{{- $id          := printf "section-%s" (md5 $name)                                -}}
+<li {{$class | safeHTMLAttr }}>
+  <input type="checkbox" id="{{ $id }}" class="toggle">
+  <label for="{{ $id }}" class="flex justify-between" />
+    {{ $entryElement | safeHTML }}
+  </label>
+{{- else -}}
+<li {{$class | safeHTMLAttr }}>
+  {{ $entryElement | safeHTML }}
+{{- end -}}

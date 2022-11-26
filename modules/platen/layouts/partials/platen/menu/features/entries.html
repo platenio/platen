@@ -1,0 +1,100 @@
+{{- $params          := .                -}}
+{{- $context         := default $params.context $params.Context  -}}
+{{- $entries         := default $params.entries $params.Entries  -}}
+{{- $position        := default $params.position $params.Position -}}
+{{- $usableFeatures  := $params.UsableFeatures -}}
+
+{{- with $usableFeatures -}}
+  {{- $weightedEntries   := slice -}}
+  {{- $unweightedEntries := slice -}}
+
+  {{/*
+    Loop over the entries, if any, to find those for usable features. If they have a Weight, add
+    them to the weighted entries list. If they don't, add them to the unweighted entries list.
+
+    Entries can only be added if they define the Group Key or the Feature key for a usable feature.
+    Usable features are ones that have Enabled set to true and define a value for Partials.Menu.
+
+    Entries for unusable entries are skipped with a warning. Ambiguous entries that don't define
+    the Feature or Group key raise an error.
+  */}}
+  {{- range $entry := $entries -}}
+    {{- with $entry.Feature -}}
+      {{- with (index $usableFeatures (lower .)) -}}
+        {{- with $entry.Weight -}}
+          {{- $weightedEntries = $weightedEntries | append $entry -}}
+        {{- else -}}
+          {{- $unweightedEntries = $unweightedEntries | append $entry -}}
+        {{- end -}}
+      {{- else -}}
+        {{- warnf "%s; %s. %s"
+                  (printf "Feature '%s' isn't usable" $entry.Feature )
+                  (printf "usable features must be Enabled and define Partials.Menu")
+                  (printf "Skipping entry: %#v" $entry)
+        -}}
+      {{- end -}}
+    {{- else -}}
+      {{- with $entry.Group -}}
+        {{- with $entry.Weight -}}
+          {{- $weightedEntries = $weightedEntries | append $entry -}}
+        {{- else -}}
+          {{- $unweightedEntries = $unweightedEntries | append $entry -}}
+        {{- end -}}
+      {{- else -}}
+        {{- errorf "%s %s, %s: %#v"
+                    "Ambiguous feature entry menu for"
+                    $position
+                    "can't process unless the Feature or Group key is defined"
+                    $entry
+        -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/* Process the weighted entries first, in order from lowest to highest weight */}}
+  {{- range $entry := sort $weightedEntries "Weight" -}}
+    {{- with $entry.Group -}}
+      {{- $groupParams := merge $params $entry -}}
+      {{- $groupParams  = merge $groupParams (dict "TopLevel" false) -}}
+      {{- partial "platen/menu/features/group" $groupParams -}}
+    {{- else -}}
+      {{- $entryPartialParams := dict "Context" $context "Entry" $entry -}}
+      {{- $entryPartial := (index $usableFeatures (lower $entry.Feature)).Partials.Menu -}}
+      {{- if $params.TopLevel -}}
+      <ul>
+        {{ partial $entryPartial $entryPartialParams }}
+      </ul>
+      {{- else -}}
+        {{ partial $entryPartial $entryPartialParams }}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{/* Process the unweighted entries next, in non deterministic order */}}
+  {{- range $entry := sort $unweightedEntries -}}
+    {{- with $entry.Group -}}
+      {{- $groupParams := merge $params $entry -}}
+      {{- $groupParams  = merge $groupParams (dict "TopLevel" false) -}}
+      {{- partial "platen/menu/features/group" $groupParams -}}
+    {{- else -}}
+      {{- $entryPartialParams := dict "Context" $context "Entry" $entry -}}
+      {{- $entryPartial := (index $usableFeatures (lower $entry.Feature)).Partials.Menu -}}
+      <ul class="platen">
+        {{ partial $entryPartial $entryPartialParams }}
+      </ul>
+    {{- end -}}
+  {{- end -}}
+{{- else -}}
+  {{/* If UsableFeatures wasn't specified, discover them and call the partial again. */}}
+  {{- $usableFeatures := dict -}}
+  {{- range $feature, $settings := partial "platen/utils/features/getEnabledFeatures" -}}
+    {{- with $settings.Partials.Menu -}}
+      {{- $usableFeatures = merge $usableFeatures (dict $feature $settings) -}}
+    {{- end -}}
+  {{- end -}}
+  {{/* Only call the partial with the usable features if any were found, otherwise bail out. */}}
+  {{- with $usableFeatures -}}
+    {{- $usableParams := $params -}}
+    {{- $usableParams := merge $usableParams (dict "UsableFeatures" $usableFeatures) -}}
+    {{- partial "platen/menu/features/entries" $usableParams -}}
+  {{- end -}}
+{{- end -}}
