@@ -31,6 +31,16 @@
   {{- $metadata = merge $metadata (dict "Must be one of" $oneOf ) -}}
 {{- end -}}
 
+{{- with $property.anyOf -}} {{/* Applies to: any */}}
+  {{- $anyOf := slice -}}
+  {{- range $option := . -}}
+    {{- $recursiveParameters := dict "property" $option "page" $params.page -}}
+    {{- $munged := partial "schematize/utils/metadata/munge" $recursiveParameters -}}
+    {{- $anyOf = $anyOf | append $munged -}}
+  {{- end -}}
+  {{- $metadata = merge $metadata (dict "May be any of" $anyOf ) -}}
+{{- end -}}
+
 {{- with $property.enum -}} {{/* Applies to: string, enum, anyOf, oneOf */}}
   {{- $metadata = merge $metadata (dict "Enums" .) -}}
 {{- end -}}
@@ -76,6 +86,13 @@
   {{- $metadata = merge $metadata (dict "Required Format" .) -}}
 {{- end -}}
 
+{{- with $property.if -}}
+  {{- with $property.schematize.details -}}
+    {{- $title := default "Conditional Settings" $property.schematize.title -}}
+    {{- $metadata = merge $metadata (dict $title .) -}}
+  {{- end -}}
+{{- end -}}
+
 {{- with (index $property "$ref") -}} {{/* Applies to: reference */}}
   {{/* Retrieve the data for the authored reference; only works for local references. */}}
   {{- $refData := partial "schematize/utils/references/resolve/data" $params -}}
@@ -83,12 +100,15 @@
   {{- $resolutionParams := dict "page" $params.page "ref" . "target" "schema" -}}
   {{- $schemaRef := partial "schematize/utils/references/resolve/path" $resolutionParams -}}
   {{/* Retrieve the URL to the docs for the schem. */}}
-  {{- $resolutionParams = merge $resolutionParams (dict "target" "schema") -}}
+  {{- $resolutionParams = merge $resolutionParams (dict "target" "HTML") -}}
   {{- $pageRef   := partial "schematize/utils/references/resolve/path" $resolutionParams -}}
   {{/* Build the summary by combining the details for the reference with a link to the docs */}}
   {{- $summary := default $refData.description $refData.schematize.details -}}
-  {{- $moreInfo := printf "For more information, see [%s](%s)." $refData.title $pageRef -}}
-  {{- $summary = printf "\n%s\n\n%s\n" $summary $moreInfo}}
+  {{- $summary  = default $summary $property.schematize.details -}}
+  {{- if not $property.schematize.skipMoreInfo -}}
+    {{- $moreInfo := printf "For more information, see [%s](%s)." $refData.title $pageRef -}}
+    {{- $summary   = printf "\n%s\n\n%s\n" $summary $moreInfo}}
+  {{- end -}}
   {{/* Keys in the metadata dictionary list are markdownified, so ensure it links to the schema */}}
   {{- $key := printf "%s ([Schema](%s))" $refData.title $schemaRef -}}
   {{- $metadata = merge $metadata (dict $key $summary) -}}

@@ -25,7 +25,19 @@
 {{- else if isset $property "$ref" -}}
   {{- $refData := partial "schematize/utils/references/resolve/data" $params -}}
   {{- $refData = merge $refData (dict "_id" $property._id) -}}
+  {{/*
+    If the definition for the reference property specifies details, override the
+    ones defined for the object itself.
+  */}}
+  {{- with $property.schematize.details -}}
+    {{- $refSchematize := $refData.schematize                               -}}
+    {{- $refSchematize  = merge $refSchematize (dict "details" .)           -}}
+    {{- $refData        = merge $refData (dict "schematize" $refSchematize) -}}
+  {{- end -}}
   {{- $options := dict "property" $refData "page" $params.page -}}
+  {{- with $property.schematize.skipMoreInfo -}}
+    {{- $options = merge $options (dict "_skipMoreInfo" .) -}}
+  {{- end -}}
   {{- partial "schematize/docs/ref" $options -}}
 {{- else if isset $property "patternProperties" -}}
   {{- warnf "Pattern property! %#v" $property -}}
