@@ -3,7 +3,7 @@
     <img src="{{ "svg/menu.svg" | relURL }}" class="platen-icon" alt="Menu" />
   </label>
 
-  <strong>{{ partial "platen/title" . }}</strong>
+  <strong>{{ partial "platen/utils/getTitle" . }}</strong>
 
   <label for="toc-control">
     {{ if default true (default .Site.Params.Platen.Display.ShowToC .Params.Platen.ShowToC) }}

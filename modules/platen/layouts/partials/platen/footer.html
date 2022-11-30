@@ -2,7 +2,7 @@
 
 {{ if and .GitInfo .Site.Params.Platen.Repository.URL }}
   <div>
-    {{- $date := partial "platen/date" (dict "Date" .GitInfo.AuthorDate.Local "Format" .Site.Params.Display.DateFormat) -}}
+    {{- $date := partial "platen/utils/getFormattedDate" (dict "Date" .GitInfo.AuthorDate.Local "Format" .Site.Params.Display.DateFormat) -}}
     {{- $commitPath := default "commit" .Site.Params.Platen.Repository.CommitPath -}}
     <a class="flex align-center" href="{{ .Site.Params.Platen.Repository.URL }}/{{ $commitPath }}/{{ .GitInfo.Hash }}" title='{{ i18n "Last modified by" }} {{ .GitInfo.AuthorName }} | {{ $date }}' target="_blank" rel="noopener">
       <img src="{{ "svg/calendar.svg" | relURL }}" class="platen-icon" alt="Calendar" />

@@ -2,9 +2,9 @@
   {{ range sort .Paginator.Pages }}
   <article class="markdown platen-post">
     <h2>
-      <a href="{{ .RelPermalink }}">{{ partial "platen/title.html" . }}</a>
+      <a href="{{ .RelPermalink }}">{{ partial "platen/utils/getTitle.html" . }}</a>
     </h2>
-    {{ partial "platen/post-meta" . }}
+    {{ partial "platen/utils/posts/meta" . }}
     <p>
       {{- .Summary -}}
       {{ if .Truncated }}

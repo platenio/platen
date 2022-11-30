@@ -7,12 +7,12 @@
 
 {{- template "_internal/opengraph.html" . -}}
 
-<title>{{ partial "platen/html-head-title" . }}</title>
+<title>{{ partial "platen/utils/getHtmlHeadTitle.html" . }}</title>
 
 <link rel="icon" href="{{ "favicon.png" | relURL }}" type="image/x-icon">
 
 {{- range .Translations }}
-  <link rel="alternate" hreflang="{{ default .Language.Lang .Site.LanguageCode }}" href="{{ .Permalink }}" title="{{ partial "platen/title" . }}">
+  <link rel="alternate" hreflang="{{ default .Language.Lang .Site.LanguageCode }}" href="{{ .Permalink }}" title="{{ partial "platen/utils/getTitle" . }}">
 {{- end -}}
 
 <!-- Theme stylesheet, you can customize scss by creating `assets/custom.scss` in your website -->

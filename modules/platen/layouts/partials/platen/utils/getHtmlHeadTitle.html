@@ -10,7 +10,7 @@
 {{- end -}}
 
 {{- if eq "" $title -}}
-  {{- $title = printf "%s | %s" (partial "platen/title" $context) $context.Site.Title -}}
+  {{- $title = printf "%s | %s" (partial "platen/utils/getTitle" $context) $context.Site.Title -}}
 {{- end }}
 
 {{- return $title -}}

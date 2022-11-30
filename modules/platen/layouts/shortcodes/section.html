@@ -1,7 +1,7 @@
 <dl>
 {{ range .Page.Pages }}
   <dt>
-    <a href="{{ .RelPermalink }}">{{ partial "platen/title" . }}</a>
+    <a href="{{ .RelPermalink }}">{{ partial "platen/utils/getTitle" . }}</a>
   </dt>
   <dd class="markdown-inner">
     {{ default .Summary .Description }}

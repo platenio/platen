@@ -7,8 +7,8 @@
 {{ if gt $index 0}},{{end}} {
     "id": {{ $index }},
     "href": "{{ $page.RelPermalink }}",
-    "title": {{ (partial "platen/title" $page) | jsonify }},
-    "section": {{ (partial "platen/title" $page.Parent) | jsonify }},
+    "title": {{ (partial "platen/utils/getTitle" $page) | jsonify }},
+    "section": {{ (partial "platen/utils/getTitle" $page.Parent) | jsonify }},
     "content": {{ $page.Plain | jsonify }}
 }
 {{- end -}}

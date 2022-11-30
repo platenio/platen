@@ -1,10 +1,10 @@
 {{- $context            := . -}}
 
 <nav>
-{{ partial "platen/brand" $context }}
-{{ partial "platen/search" $context }}
+{{ partial "platen/menu/brand" $context }}
+{{ partial "platen/features/search/menu" $context }}
 {{ if $context.Site.IsMultiLingual }}
-  {{ partial "platen/languages" . }}
+  {{ partial "platen/menu/languages" . }}
 {{ end }}
 
 {{ partial "platen/menu/feature" (dict "Context" $context "Position" "BeforeInjection") }}

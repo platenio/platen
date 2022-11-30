@@ -1,9 +1,9 @@
 {{ define "main" }}
 <article class="markdown">
   <h1>
-    <a href="{{ .RelPermalink }}">{{ partial "platen/title.html" . }}</a>
+    <a href="{{ .RelPermalink }}">{{ partial "platen/utils/getTitle.html" . }}</a>
   </h1>
-  {{ partial "platen/post-meta" . }}
+  {{ partial "platen/utils/posts/meta" . }}
   {{- .Content -}}
 </article>
 {{ end }}

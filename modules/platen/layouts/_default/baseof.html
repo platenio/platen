@@ -81,7 +81,7 @@
 {{ define "comments" }}
   {{ if and .Content (default false (default .Site.Params.Platen.Features.Comments.Enabled .Params.Platen.EnableComments)) }}
   <div class="platen-comments">
-    {{- partial "platen/comments" . -}}
+    {{- partial "platen/features/comments" . -}}
   </div>
   {{ end }}
 {{ end }}
