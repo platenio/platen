@@ -9,15 +9,19 @@
   - `_level` - Optional. The current hierarchy level of the page. Used for determining what heading
     level to write.
   - `_id` - Optional. The ID this property belongs to.
+  - `_skipMoreInfo` - Optional. Indicates whether the "For more information..." note should be
+    included.
 */}}
 {{- $params := . -}}
 {{- $referenceProperty := merge $params.property (dict "_asReference" true) -}}
+{{- $skipMoreInfo  := default false $params._skipMoreInfo -}}
 {{- $current_level := add $referenceProperty._level 1 -}}
 
 {{ partial "schematize/utils/headings/property" $params }}
 
 {{ partial "schematize/utils/summary" $params }}
 
+{{ if not $skipMoreInfo }}
 {{- $refParams := dict
   "page" $params.page
   "target" "page"
@@ -26,3 +30,4 @@
 {{ $reference := partial "schematize/utils/references/resolve/path" $refParams }}
 
 For more information, see [{{ $referenceProperty.title }}]({{ $reference }})
+{{ end }}

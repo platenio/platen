@@ -1,0 +1,13 @@
+{{- $params := . -}}
+{{- $navId  := printf "toroidal-nav-%s" (urlize $params.WebringName | lower) -}}
+{{- $idMap  := dict
+               "Nav"   $navId
+               "Label" (printf "%s-label" $navId)
+               "Menu"  (printf "%s-menu"  $navId)
+               "Prev"  (printf "%s-prev"  $navId)
+               "List"  (printf "%s-list"  $navId)
+               "Rand"  (printf "%s-rand"  $navId)
+               "Next"  (printf "%s-next"  $navId)
+-}}
+
+{{- return $idMap -}}

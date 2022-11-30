@@ -1,11 +1,11 @@
 ---
-name: Display
-title: Display Options
+name: Settings
+title: Settings
 summary: |
   Optional settings controlling how a Platen site is structured.
-weight: 2
+weight: 1
 type: schematize
-Schematize: Platen.Site.Display
+Schematize: Platen.Site.Display.Settings
 outputs:
   - HTML
   - Schematize

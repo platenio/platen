@@ -1,15 +1,33 @@
+{{- $context            := . -}}
+
 <nav>
-{{ partial "platen/brand" . }}
-{{ partial "platen/search" . }}
-{{ if .Site.IsMultiLingual }}
+{{ partial "platen/brand" $context }}
+{{ partial "platen/search" $context }}
+{{ if $context.Site.IsMultiLingual }}
   {{ partial "platen/languages" . }}
 {{ end }}
 
-{{ partial "platen/inject/menu-before" . }}
-{{ partial "platen/menu-hugo" .Site.Menus.before }}
-{{ partial "platen/menu-filetree" . }}
-{{ partial "platen/menu-hugo" .Site.Menus.after }}
-{{ partial "platen/inject/menu-after" . }}
+{{ partial "platen/menu/feature" (dict "Context" $context "Position" "BeforeInjection") }}
+
+{{ partial "platen/inject/menu-before" $context }}
+
+{{ partial "platen/menu/feature" (dict "Context" $context "Position" "BeforeHugoConfig") }}
+
+{{ partial "platen/menu/hugo" $context.Site.Menus.before }}
+
+{{ partial "platen/menu/feature" (dict "Context" $context "Position" "BeforeRootSection") }}
+
+{{ partial "platen/menu/filetree" $context }}
+
+{{ partial "platen/menu/feature" (dict "Context" $context "Position" "AfterRootSection") }}
+
+{{ partial "platen/menu/hugo" $context.Site.Menus.after }}
+
+{{ partial "platen/menu/feature" (dict "Context" $context "Position" "AfterHugoConfig") }}
+
+{{ partial "platen/inject/menu-after" $context }}
+
+{{ partial "platen/menu/feature" (dict "Context" $context "Position" "AfterInjection") }}
 </nav>
 
 <!-- Restore menu position as soon as possible to avoid flickering -->

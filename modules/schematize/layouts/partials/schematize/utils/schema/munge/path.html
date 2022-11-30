@@ -36,7 +36,7 @@
     {{- if eq true (index $params "mungeReferences") -}}
       {{/* This reference munging implementation only works on JSON blobs. */}}
       {{- $temp_munged := replaceRE "\\.yaml" "" $munged -}}
-      {{- $refPattern := "\\\"\\$ref\\\":\\s+\\\".+\\.yaml\\\"" -}}
+      {{- $refPattern := `"\$ref":\s+".+\.yaml\"` -}}
       {{- $references := findRE $refPattern $munged -}}
       {{- range $references -}}
         {{- $current := . -}}

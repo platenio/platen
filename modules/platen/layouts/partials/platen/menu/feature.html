@@ -1,0 +1,24 @@
+{{- $params := . -}}
+{{- $context := $params.Context -}}
+{{- $position := $params.Position -}}
+{{- with (index site.Params.Platen.Display.Menu $position) -}}
+  {{- $positionSettings := . -}}
+  {{- with $positionSettings.Entries -}}
+    {{- $partialParams := merge $params $positionSettings -}}
+    {{- with $positionSettings.Group -}}
+      {{ partial "platen/menu/features/group" $partialParams }}
+    {{- else -}}
+      {{- $partialParams = merge $partialParams (dict "TopLevel" true) -}}
+      {{ partial "platen/menu/features/entries" $partialParams }}
+    {{- end -}}
+  {{- else -}}
+    {{- if reflect.IsSlice $positionSettings -}}
+      {{- warnf "processing entries as naive list: %#v" $positionSettings -}}
+    {{- else -}}
+      {{- errorf "%s; %s"
+                 (printf "Unable to process feature menu items for %s" $position)
+                 (printf "value is neither a map defining the 'Entries' key nor slice of entries: %#v" $positionSettings)
+      -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

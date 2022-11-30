@@ -1,0 +1,60 @@
+{{- $params      := .                                         -}}
+{{- $context     := default $params.context  $params.Context  -}}
+{{- $entries     := default $params.entries  $params.Entries  -}}
+{{- $group       := default $params.group    $params.Group    -}}
+{{- $position    := default $params.position $params.Position -}}
+{{- $topLevel    := default $params.topLevel $params.TopLevel -}}
+
+{{- $class       := default $group.class $group.Class -}}
+{{- $name        := default $group.name  $group.Name  -}}
+{{- $topLevel     = default true         $topLevel    -}}
+
+{{- with $name -}}
+  {{- with $entries -}}
+    {{- with $class -}}
+      {{- $class = printf ` class="%s"` $class -}}
+    {{- end -}}
+    {{/* Top-level groups are added in their own unordered list; others are already in one. */}}
+    {{- if $topLevel -}}
+      <ul{{ $class | safeHTMLAttr }}>
+        {{ partial "platen/menu/list-item" (merge $group (dict "Position" $position)) }}
+        <ul>
+          {{ partial "platen/menu/features/entries" $params }}
+        </ul>
+      </ul>
+    {{- else -}}
+      {{ partial "platen/menu/list-item" (merge $group (dict "Position" $position)) }}
+      <ul {{ $class | safeHTMLAttr }}>
+        {{ partial "platen/menu/features/entries" $params }}
+      </ul>
+    {{- end -}}
+  {{- else -}}
+    {{- warnf "Specified Group '%s' for position %s without any entries; skipping this Group."
+              $name
+              $position
+    -}}
+  {{- end -}}
+{{- else -}}
+  {{/*
+    If the Name key isn't defined and Group isn't a map or slice, assume the value is the name of
+    the group and recall the partial.
+  */}}
+  {{- if reflect.IsMap $group -}}
+    {{- errorf "Specified Group as a map without mandatory key 'Name' for position %s: %#v" $position $group -}}
+  {{- else if reflect.IsSlice $group -}}
+    {{- errorf "%s. %s. Definition: %#v"
+               (printf "Specified Group as an array for position %s" $position)
+               "Must be a map with the key 'Name' defined or a string"
+               $group
+    -}}
+  {{- else -}}
+    {{- $group = dict "Name" (print $group) -}}
+    {{- $mungedParams := dict "Context" $context
+                              "Class"       $class
+                              "Entries"     $entries
+                              "Group"       $group
+                              "Position"    $position
+    -}}
+    {{- partial "platen/menu/features/group" $mungedParams -}}
+  {{- end  -}}
+{{- end  -}}

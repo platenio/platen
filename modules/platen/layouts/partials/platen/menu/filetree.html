@@ -1,4 +1,7 @@
-{{ $platenSection := default "*" .Site.Params.Platen.Display.MenuRootSection  }}
+{{ $platenSection := default .Site.Params.Platen.Display.Menu.RootSection
+                             .Site.Params.Platen.Display.Menu.RootSection
+}}
+{{ $platenSection  = default "/" $platenSection }}
 {{ if eq $platenSection "*" }}
   {{ $platenSection = "/" }}{{/* Backward compatibility */}}
 {{ end }}

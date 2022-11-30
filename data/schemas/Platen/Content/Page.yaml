@@ -51,12 +51,12 @@ properties:
           details: |
             Specifies whether to remove the page from the site menu. This setting only has an effect
             when the page would otherwise be included in the site menu because it is in the folder
-            defined in the site's [sref:`Display.MenuRootSection`] setting.
+            defined in the site's [sref:`Display.Menu.RootSection`] setting.
 
             To prevent the page from being added to the site menu, set this value to `true`. The
             default is `false`.
 
-            [sref:`Display.MenuRootSection`]: Platen.Site.Display.MenuRootSection
+            [sref:`Display.Menu.RootSection`]: Platen.Site.Display.Menu.Settings.RootSection
         type: boolean
         default: false
   TableOfContents:
@@ -83,7 +83,7 @@ properties:
 
             This value must be less than or equal to the value of [sref:`MaximumLevel`].
 
-            [sref:`Display.TableOfContents.MinimumLevel`]: Platen.Site.Display.TableOfContents.MinimumLevel
+            [sref:`Display.TableOfContents.MinimumLevel`]: Platen.Site.Display.Settings.TableOfContents.MinimumLevel
             [sref:`UseBuiltIn`]: Platen.Content.Page.UseBuiltIn
             [sref:`MaximumLevel`]: Platen.Content.Page.MaximumLevel
           weight: 1
@@ -106,7 +106,7 @@ properties:
 
             This value must be greater than or equal to the value of [sref:`MinimumLevel`].
 
-            [sref:`Display.TableOfContents.MaximumLevel`]: Platen.Site.Display.TableOfContents.MaximumLevel
+            [sref:`Display.TableOfContents.MaximumLevel`]: Platen.Site.Display.Settings.TableOfContents.MaximumLevel
             [sref:`UseBuiltIn`]: Platen.Content.Page.UseBuiltIn
             [sref:`MinimumLevel`]: Platen.Content.Page.MinimumLevel
           weight: 1
@@ -131,7 +131,7 @@ properties:
             within the specified values for [sref:`MinimumLevel`] and [sref:`MaximumLevel`],
             inclusive.
 
-            [sref:`Display.TableOfContents.UseBuiltIn`]: Platen.Site.Display.TableOfContents.UseBuiltIn
+            [sref:`Display.TableOfContents.UseBuiltIn`]: Platen.Site.Display.Settings.TableOfContents.UseBuiltIn
             [sref:`MinimumLevel`]: Platen.Content.Page.MinimumLevel
             [sref:`MaximumLevel`]: Platen.Content.Page.MaximumLevel
           weight: 1
@@ -150,6 +150,6 @@ properties:
             To render the table of contents for a page when it's disabled at the site level, set
             this value to `true`.
 
-            [sref:`Display.TableOfContents.Render`]: Platen.Site.Display.TableOfContents.Render
+            [sref:`Display.TableOfContents.Render`]: Platen.Site.Display.Settings.TableOfContents.Render
         type: boolean
         default: false
