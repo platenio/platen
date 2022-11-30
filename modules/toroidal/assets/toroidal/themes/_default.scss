@@ -1,4 +1,4 @@
-article.toroidal {
+div.toroidal {
   header {
     margin-top: 0;
     margin-bottom: 1rem;
@@ -41,7 +41,7 @@ article.toroidal {
 }
 
 // Member Page navigation
-nav.toroidal, nav.toroidal .toroidal-default {
+body > nav.toroidal, body > nav.toroidal .toroidal-default {
   padding: 0em 1em;
   ul {
     list-style-type: none;
@@ -49,5 +49,12 @@ nav.toroidal, nav.toroidal .toroidal-default {
     li {
       padding-left: 0;
     }
+  }
+}
+
+li > nav.toroidal, li > nav.toroidal .toroidal-default {
+  padding-top: 0;
+  ul {
+    margin-top: 0;
   }
 }

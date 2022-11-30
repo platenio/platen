@@ -1,0 +1,30 @@
+{{- $name := . -}}
+
+{{- $headerLines := slice
+                    `$params       := .`
+                    `$liParams     := dict`
+                    (printf `$webringName  := default "%s" $params.DisplayName` $name)
+                    `$liParams      = merge $liParams (dict "WebringName" $webringName) `
+                    `$liParams      = merge $liParams (dict "MenuCollapse" $params.Collapse)`
+                    `$liParams      = merge $liParams (dict "MenuFlatten" $params.Flatten)`
+                    `$liParams      = merge $liParams (dict "Class" $params.Collapse)`
+-}}
+
+{{- $padToLength := 0 -}}
+{{- range $line := $headerLines -}}
+  {{- $lineLength := len $line -}}
+  {{- if gt $lineLength $padToLength -}}
+    {{- $padToLength = $lineLength -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $mungedHeaderLines := slice -}}
+{{- range $line := $headerLines -}}
+  {{- $padCount := sub $padToLength (len $line) -}}
+  {{- $mungedLine := printf `{{- %s%s -}}` $line (strings.Repeat $padCount " ") -}}
+  {{- $mungedHeaderLines = $mungedHeaderLines | append $mungedLine -}}
+{{- end -}}
+
+{{- delimit $mungedHeaderLines "\n" | safeHTML }}
+
+{{ print `{{ partial "platen/features/toroidal/menu/list-item" $liParams }}` | safeHTML -}}

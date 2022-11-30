@@ -1,0 +1,20 @@
+{{- $params := . -}}
+{{- $nameSpace      := replace (lower (urlize $params.WebringName)) "-" "_" -}}
+
+{{- $names := dict 
+    "NameSpace"                     $nameSpace
+    "MemberPagesDataVariable"       (printf "%s.memberPages" $nameSpace)
+    "GetFunctionName"               (printf "%s.getRandomMemberPage" $nameSpace)
+    "GetFunction"                   (printf "%s.getRandomMemberPage()" $nameSpace)
+    "GoToFunctionName"              (printf "%s.goToRandomMemberPage" $nameSpace)
+    "GoToFunction"                  (printf "%s.goToRandomMemberPage()" $nameSpace)
+    "ApiUrlVariable"                (printf "%s.webringApiUrl" $nameSpace)
+    "AdminApiLoadErrorFunctionName" (printf "%s.adminApiLoadError" $nameSpace)
+    "AdminApiLoadErrorFunction"     (printf "%s.adminApiLoadError(response)" $nameSpace)
+    "LoadFromAdminApiFunctionName"  (printf "%s.loadFromAdminApi"    $nameSpace)
+    "LoadFromAdminApiFunction"      (printf "%s.loadFromAdminApi()"  $nameSpace)
+    "WindowLoadHandlerFunctionName" (printf "%s.windowLoadHandler"   $nameSpace)
+    "WindowLoadHandlerFunction"     (printf "%s.windowLoadHandler()" $nameSpace)
+-}}
+
+{{- return $names -}}

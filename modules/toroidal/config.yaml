@@ -17,6 +17,7 @@ params:
         Partials:
           Title: platen/features/toroidal/title
           Style: platen/features/toroidal/style.scss
+          Menu: platen/features/toroidal/menu/render
   Toroidal:
     AdminDetails: default
     RandomMemberLink: true

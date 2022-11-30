@@ -12,7 +12,7 @@
 {{/* Retrieve the details to include about member administration */}}
 {{- $adminDetails := partial "toroidal/utils/getAdminDetails" $context -}}
 
-<article class="toroidal{{ $class }}">
+<div class="toroidal{{ $class }}">
   <header>
     <h1>{{ $webringName }} Administration</h1>
 
@@ -41,4 +41,4 @@
       }
     </script>
   </footer>
-</article>
+</div>

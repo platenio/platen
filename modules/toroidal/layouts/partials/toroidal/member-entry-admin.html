@@ -1,22 +1,28 @@
-{{- $context       := . -}}
-{{- $iframeParams  := partial "toroidal/utils/getIframeInfo" $context -}}
-{{- $literalParams := partial "toroidal/utils/getPageInfo" $context   -}}
-{{- $literalParams  = merge $literalParams (dict "ForEmbedding" true) -}}
+{{- $context  := .                                             -}}
+{{- $pageInfo := partial "toroidal/utils/getPageInfo" $context -}}
 
-{{- $embedIframe             := partial "toroidal/member-entry-iframe" $iframeParams -}}
-{{- $iframeCommentlessParams := merge $iframeParams (dict "DisplayComments" false) -}}
+{{- $iframeParams            := partial "toroidal/utils/getIframeInfo" $context                 -}}
+{{- $embedIframe             := partial "toroidal/member-entry-iframe" $iframeParams            -}}
+{{- $iframeCommentlessParams := merge $iframeParams (dict "DisplayComments" false)              -}}
 {{- $embedIframeCommentless  := partial "toroidal/member-entry-iframe" $iframeCommentlessParams -}}
 
+{{- $literalParams           := merge $pageInfo (dict "ForEmbedding" true)          -}}
 {{- $embedLiteralCommentless := partial "toroidal/member-entry-page" $literalParams -}}
 {{- $literalParams            = merge $literalParams (dict "DisplayComments" true)  -}}
 {{- $embedLiteral            := partial "toroidal/member-entry-page" $literalParams -}}
 
-{{- $sourceHref := partial "toroidal/utils/getSourceHref" $context                    -}}
-{{- $name       := $literalParams.MemberName                                          -}}
-{{- $homePage   := $literalParams.MemberHomePage                                      -}}
-{{- $baseID     := printf "%s-%s" ($literalParams.WebringName) $name | urlize | lower -}}
-{{- $literalID  := printf "%s-%s" $baseID "literal"                                   -}}
-{{- $iframeID   := printf "%s-%s" $baseID "iframe"                                    -}}
+{{- $platenMenuParams           := merge $pageInfo (dict "ForEmbedding" true)                      -}}
+{{- $embedPlatenMenuCommentless := partial "platen/features/toroidal/menu/entry" $platenMenuParams -}}
+{{- $platenMenuParams            = merge $platenMenuParams (dict "DisplayComments" true)           -}}
+{{- $embedPlatenMenu            := partial "platen/features/toroidal/menu/entry" $platenMenuParams -}}
+
+{{- $sourceHref   := partial "toroidal/utils/getSourceHref" $context                    -}}
+{{- $name         := $literalParams.MemberName                                          -}}
+{{- $homePage     := $literalParams.MemberHomePage                                      -}}
+{{- $baseID       := printf "%s-%s" ($literalParams.WebringName) $name | urlize | lower -}}
+{{- $literalID    := printf "%s-%s" $baseID "literal"                                   -}}
+{{- $iframeID     := printf "%s-%s" $baseID "iframe"                                    -}}
+{{- $platenMenuID := printf "%s-%s" $baseID "platen-menu"                               -}}
 
 <section class="toroidal-member-entry-admin" id="{{$baseID}}">
   <h2>{{ $name }}</h2>
@@ -42,7 +48,7 @@
         Copy literal HTML
       </button>
       <button type="button" onclick="copyMemberCodeToClipBoard('{{$literalID}}', true)">
-        Copy literal HTML without comments
+        Copy literal HTML<br />without comments
       </button>
     </div>
   </section>
@@ -59,7 +65,24 @@
         Copy iframe HTML
       </button>
       <button type="button" onclick="copyMemberCodeToClipBoard('{{ $iframeID }}', true)">
-        Copy iframe HTML without comments
+        Copy iframe HTML<br />without comments
+      </button>
+    </div>
+  </section>
+  <section class="toroidal-member-entry-admin-embed">
+    <h3>Platen Menu HTML</h3>
+    <details id="{{ $platenMenuID }}"
+             data-code-snippet="{{ string $embedPlatenMenu }}"
+             data-code-snippet-commentless="{{ string $embedPlatenMenuCommentless }}">
+      <summary>Code</summary>
+      {{- highlight (string $embedPlatenMenu) "html" -}}
+    </details>
+    <div class="toroidal-copy-buttons">
+      <button type="button" onclick="copyMemberCodeToClipBoard('{{ $platenMenuID }}')">
+        Copy Platen menu partial
+      </button>
+      <button type="button" onclick="copyMemberCodeToClipBoard('{{ $platenMenuID }}', true)">
+        Copy Platen menu partial<br />without comments
       </button>
     </div>
   </section>

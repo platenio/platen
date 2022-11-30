@@ -22,6 +22,22 @@ schematize:
     [sref:`Feature`]: Platen.Site.Display.Menu.Entry.Feature
     [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group
 type: object
+anyOf:
+  - if:
+      properties:
+        Feature:
+          const: Toroidal
+    then:
+      $ref: ./Toroidal.yaml
+    schematize:
+      title: Toroidal Webring Entries
+      details: |
+        You can use the Toroidal feature to add a webring's navigation to the site menu without
+        having to redefine each part of the navigation manually.
+
+        For more information, see [sref:Toroidal Entry Settings].
+
+        [sref:Toroidal Entry Settings]: Platen.Site.Display.Menu.Toroidal 
 properties:
   Feature:
     title: Feature Name

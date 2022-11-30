@@ -1,0 +1,36 @@
+{{- $params            := .                         -}}
+{{- $webringName       := $params.WebringName       -}}
+{{- $menuCollapse      := $params.MenuCollapse      -}}
+{{- $menuFlatten       := $params.MenuFlatten       -}}
+{{- $class             := $params.Class             -}}
+
+{{- if and $menuFlatten $menuCollapse -}}
+  {{- warnf "Specified both flatten and collapse for '%s' webring entry in site menu. Preferring collapse instead." $webringName -}}
+  {{- $menuFlatten = false -}}
+{{- end -}}
+
+{{- if $menuFlatten -}}
+  {{- with $class -}}
+    {{- $class = " %s" $class -}}
+  {{- end -}}
+  {{- $class = printf `class="platen-section-flat%s"` $class -}}
+{{- else -}}
+  {{- with $class -}}
+    {{- $class = printf `class="%s"` $class -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $menuFlatten -}}
+<li {{ $class | safeHTMLAttr }}>
+  <span>{{ $webringName}}</span>
+{{- else if $menuCollapse -}}
+{{- $id          := printf "section-%s" (md5 $webringName)                                -}}
+<li {{$class | safeHTMLAttr }}>
+  <input type="checkbox" id="{{ $id }}" class="toggle">
+  <label for="{{ $id }}" class="flex justify-between" />
+    <a role="button">{{ $webringName }}</a>
+  </label>
+{{- else -}}
+<li {{$class | safeHTMLAttr }}>
+  <span>{{ $webringName }}</span>
+{{- end -}}
