@@ -1,7 +1,7 @@
-{{ $name := .Name }}
-{{ $value := .Value }}
-{{ $prefix := cond (eq true .IsCSS) "--" "$" }}
-{{ $default := cond (eq true .IsDefault) " !default" "" }}
+{{ $name    := .Name                                     }}
+{{ $value   := .Value                                    }}
+{{ $prefix  := cond (eq true .IsCSS)     "--"        "$" }}
+{{ $default := cond (eq true .IsDefault) " !default" ""  }}
 
 {{ if reflect.IsMap $value }}
   {{ $prefix }}{{ $name }}: (

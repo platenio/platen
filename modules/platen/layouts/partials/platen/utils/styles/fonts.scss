@@ -1,9 +1,9 @@
-{{ $fontStyles := .Styles }}
-{{ $weightedFontStyles := slice }}
-{{ $unweightedFontStyles := slice }}
+{{ $fontStyles           := .Styles }}
+{{ $weightedFontStyles   := slice   }}
+{{ $unweightedFontStyles := slice   }}
 {{ range $fontStyles }}
   {{ if (and (reflect.IsMap .) (isset . "Weight")) }}
-    {{ $weightedFontStyles = $weightedFontStyles | append .}}
+    {{ $weightedFontStyles = $weightedFontStyles | append . }}
   {{ else if reflect.IsMap . }}
     {{ $unweightedFontStyles = $unweightedFontStyles | append .ImportName }}
   {{ else }}

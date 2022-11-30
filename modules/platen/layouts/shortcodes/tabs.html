@@ -1,10 +1,13 @@
 {{ if .Inner }}{{ end }}
-{{ $id := .Get 0 }}
+{{ $id    := .Get 0 }}
 {{ $group := printf "tabs-%s" $id }}
 
 <div class="platen-tabs">
 {{- range $index, $tab := .Scratch.Get $group -}}
-  <input type="radio" class="toggle" name="{{ $group }}" id="{{ printf "%s-%d" $group $index }}" {{ if not $index }}checked="checked"{{ end }} />
+  <input type="radio"
+         class="toggle"
+         name="{{ $group }}"
+         id="{{ printf "%s-%d" $group $index }}" {{ if not $index }}checked="checked"{{ end }} />
   <label for="{{ printf "%s-%d" $group $index }}">
     {{- $tab.Name -}}
   </label>

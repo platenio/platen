@@ -22,9 +22,9 @@
     readable on smaller screens. If `flattenForMobile` is not specified,
     the columns will still display horizontally, even on smaller screens.
 */ -}}
-{{- $ratio  := default "" (cond .IsNamedParams (.Get "ratio") (.Get 0)) -}}
-{{- $flattenForMobile  := (cond .IsNamedParams (.Get "flattenForMobile") (ne nil (.Get 1))) }}
-{{- $mobileClassSuffix := cond $flattenForMobile " flatten-in-mobile" "" -}}
+{{- $ratio             := default "" (cond .IsNamedParams (.Get "ratio") (.Get 0))          -}}
+{{- $flattenForMobile  := (cond .IsNamedParams (.Get "flattenForMobile") (ne nil (.Get 1))) -}}
+{{- $mobileClassSuffix := cond $flattenForMobile " flatten-in-mobile" ""                    -}}
 
 {{- with $ratio -}}
   {{- if strings.Contains $ratio ":" -}}

@@ -1,4 +1,6 @@
-{{- $useBuiltInToC := default false $.Site.Params.Platen.Display.TableOfContents.UseBuiltIn -}}
+{{- $useBuiltInToC := default false 
+                      site.Params.Platen.Display.TableOfContents.UseBuiltIn
+-}}
 {{- with .Params.Platen.TableOfContents -}}
   {{- if isset . "UseBuiltIn" -}}
     {{- $useBuiltInToC = .Params.Platen.TableOfContents.UseBuiltIn -}}

@@ -1,7 +1,7 @@
-{{ $ref := "" }}
+{{ $ref    := "" }}
 {{ $target := "" }}
 {{ with .Get "href" }}
-  {{ $ref = . }}
+  {{ $ref    = .        }}
   {{ $target = "_blank" }}
 {{ end }}
 {{ with .Get "relref" }}

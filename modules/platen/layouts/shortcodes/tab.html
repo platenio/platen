@@ -1,5 +1,5 @@
 {{ if .Parent }}
-  {{ $name := .Get 0 }}
+  {{ $name  := .Get 0                           }}
   {{ $group := printf "tabs-%s" (.Parent.Get 0) }}
 
   {{ if not (.Parent.Scratch.Get $group) }}

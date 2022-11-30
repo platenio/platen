@@ -1,27 +1,27 @@
 {{- if .IsNamedParams -}}
-{{- $.Scratch.Set "src"  (.Get "src") -}}
-{{- $.Scratch.Set "alt" (.Get "alt") -}}
-{{- $.Scratch.Set "class"  (.Get "class") -}}
-{{- $.Scratch.Set "content_warning"  (.Get "content_warning") -}}
+  {{- $.Scratch.Set "src"             (.Get "src")             -}}
+  {{- $.Scratch.Set "alt"             (.Get "alt")             -}}
+  {{- $.Scratch.Set "class"           (.Get "class")           -}}
+  {{- $.Scratch.Set "content_warning" (.Get "content_warning") -}}
 {{- else -}}
-{{- $.Scratch.Set "src"  (.Get 0) -}}
-{{- $.Scratch.Set "alt" (.Get 1) -}}
-{{- $.Scratch.Set "class"  (.Get 2) -}}
-{{- $.Scratch.Set "content_warning"  (.Get 3) -}}
+  {{- $.Scratch.Set "src"             (.Get 0) -}}
+  {{- $.Scratch.Set "alt"             (.Get 1) -}}
+  {{- $.Scratch.Set "class"           (.Get 2) -}}
+  {{- $.Scratch.Set "content_warning" (.Get 3) -}}
 {{- end -}}
 
-{{- $src             := $.Scratch.Get "src" -}}
-{{- $alt             := $.Scratch.Get "alt" | default nil -}}
-{{- $class           := $.Scratch.Get "class" | default "full" -}}
-{{- $content_warning := $.Scratch.Get "content_warning" | default false -}}
-{{- $caption         := .Inner | default nil -}}
+{{- $src             := $.Scratch.Get "src"                              -}}
+{{- $alt             := $.Scratch.Get "alt"             | default nil    -}}
+{{- $class           := $.Scratch.Get "class"           | default "full" -}}
+{{- $content_warning := $.Scratch.Get "content_warning" | default false  -}}
+{{- $caption         := .Inner                          | default nil    -}}
 
 {{- if eq $alt nil -}}
-{{- if $.Site.Params.warnOnMissingAltText -}}
-{{- warnf (printf "Missing alt text for '%v'" $src) -}}
-{{- else -}}
-{{- errorf (printf "Missing alt text for '%v'" $src) -}}
-{{- end -}}
+  {{- if $.Site.Params.warnOnMissingAltText -}}
+    {{- warnf (printf "Missing alt text for '%v'" $src) -}}
+  {{- else -}}
+    {{- errorf (printf "Missing alt text for '%v'" $src) -}}
+  {{- end -}}
 {{- end -}}
 
 {{ if $content_warning }}

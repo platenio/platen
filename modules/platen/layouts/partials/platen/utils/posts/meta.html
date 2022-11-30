@@ -1,5 +1,7 @@
 {{ with .Date }}
-  <h5>{{ partial "platen/utils/getFormattedDate" (dict "Date" . "Format" $.Site.Params.Platen.Display.DateFormat) }}</h5>
+  <h5>
+    {{ partial "platen/utils/getFormattedDate" (dict "Date" . "Format" $.Site.Params.Platen.Display.DateFormat) }}
+  </h5>
 {{ end }}
 
 {{ range $taxonomy, $_ := .Site.Taxonomies }}

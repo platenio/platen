@@ -1,13 +1,13 @@
 {{- if .IsNamedParams -}}
-  {{- $.Scratch.Set "id"  (.Get "id") -}}
-  {{- $.Scratch.Set "square" (.Get "square") -}}
-  {{- $.Scratch.Set "linkback"  (.Get "linkback") -}}
-  {{- $.Scratch.Set "dark"  (.Get "dark") -}}
+  {{- $.Scratch.Set "id"       (.Get "id")       -}}
+  {{- $.Scratch.Set "square"   (.Get "square")   -}}
+  {{- $.Scratch.Set "linkback" (.Get "linkback") -}}
+  {{- $.Scratch.Set "dark"     (.Get "dark")     -}}
 {{- else -}}
-  {{- $.Scratch.Set "id"  (.Get 0) -}}
-  {{- $.Scratch.Set "square" (.Get 1) -}}
-  {{- $.Scratch.Set "linkback"  (.Get 2) -}}
-  {{- $.Scratch.Set "dark"  (.Get 3) -}}
+  {{- $.Scratch.Set "id"       (.Get 0) -}}
+  {{- $.Scratch.Set "square"   (.Get 1) -}}
+  {{- $.Scratch.Set "linkback" (.Get 2) -}}
+  {{- $.Scratch.Set "dark"     (.Get 3) -}}
 {{- end -}}
 {{- $.Scratch.Set "url" (printf "https://itch.io/embed/%s" ($.Scratch.Get "id")) -}}
 {{- if (eq ($.Scratch.Get "linkback") "true") -}}

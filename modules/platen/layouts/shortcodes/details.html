@@ -1,7 +1,7 @@
-{{- $summary := cond .IsNamedParams (.Get "title") (.Get 0) -}}
-{{- $anchor  := default (urlize (lower $summary)) (.Get "id") -}}
-{{- $class   := cond .IsNamedParams (.Get "class") "" -}}
-{{- $shouldBeOpen := or (.Get "open") (in .Params "open") -}}
+{{- $summary      := cond    .IsNamedParams            (.Get "title") (.Get 0) -}}
+{{- $anchor       := default (urlize (lower $summary)) (.Get "id")             -}}
+{{- $class        := cond    .IsNamedParams            (.Get "class") ""       -}}
+{{- $shouldBeOpen := or      (.Get "open")             (in .Params "open")     -}}
 
 <details {{ if ne "" $class }}class="{{ $class }}"{{ end }}{{ if $shouldBeOpen }}open{{ end }}>
   <summary id="{{ $anchor }}">{{ $summary | .Page.RenderString }}</summary>

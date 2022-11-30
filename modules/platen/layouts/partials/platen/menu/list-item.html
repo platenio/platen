@@ -37,7 +37,7 @@
 <li {{ $class | safeHTMLAttr }}>
   {{ $entryElement | safeHTML }}
 {{- else if $collapse -}}
-{{- $id          := printf "section-%s" (md5 $name)                                -}}
+{{- $id          := printf "section-%s" (md5 $name) -}}
 <li {{$class | safeHTMLAttr }}>
   <input type="checkbox" id="{{ $id }}" class="toggle">
   <label for="{{ $id }}" class="flex justify-between" />

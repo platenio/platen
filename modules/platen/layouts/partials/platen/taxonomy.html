@@ -1,7 +1,7 @@
 <nav>
   <ul>
   {{ range $term, $_ := .Site.Taxonomies }}
-    {{ with $.Site.GetPage (printf "/%s" $term | urlize) }}
+    {{ with site.GetPage (printf "/%s" $term | urlize) }}
     <li class="platen-section-flat">
       <strong>{{ .Title | title }}</strong>
       <ul>
