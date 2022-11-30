@@ -21,7 +21,14 @@ Platen:
       MinimumLevel: 1
       MaximumLevel: 6
     DateFormat: "January 2, 2006"             # BookDateFormat
-    MenuRootSection: /                        # BookSection
+    Menu:
+      RootSection: /                          # BookSection
+      BeforeInjection:
+        Entries:
+          - Feature: Toroidal
+            Weight: 1
+            PagePath: sites/platen
+            DisplayName: Platen Sites
     Logo:
       URL: /images/logo.svg                   # BookLogo
   Features:
