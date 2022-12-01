@@ -5,17 +5,19 @@
 <meta name="theme-color" content="#FFFFFF">
 <meta name="color-scheme" content="light dark">
 
-{{- template "_internal/opengraph.html" . -}}
+{{- template "_internal/opengraph.html" $context -}}
 
-<title>{{ partial "platen/utils/getHtmlHeadTitle.html" . }}</title>
+<title>
+  {{ partial "platen/utils/getHtmlHeadTitle.html" $context }}
+</title>
 
 <link rel="icon" href="{{ "favicon.png" | relURL }}" type="image/x-icon">
 
-{{- range .Translations }}
+{{- range $translatedPage := .Translations }}
   <link rel="alternate"
-        hreflang="{{ default .Language.Lang .Site.LanguageCode }}"
-        href="{{ .Permalink }}"
-        title="{{ partial "platen/utils/getTitle" . }}">
+        hreflang="{{ default $translatedPage.Language.Lang $translatedPage.Site.LanguageCode }}"
+        href="{{ $translatedPage.Permalink }}"
+        title="{{ partial "platen/utils/getTitle" $translatedPage }}">
 {{- end -}}
 
 <!-- Theme stylesheet, you can customize scss by creating `assets/custom.scss` in your website -->
@@ -25,9 +27,11 @@
                | resources.Minify
                | resources.Fingerprint
 }}
-<link rel="stylesheet" href="{{ $styles.RelPermalink }}" {{ template "integrity" $styles }}>
+<link rel="stylesheet"
+      href="{{ $styles.RelPermalink }}"
+      {{ partial "platen/utils/getIntegrityAttributes" $styles }}>
 
-{{- range $feature, $settings := .Site.Params.Platen.Features -}}
+{{ range $feature, $settings := .Site.Params.Platen.Features -}}
   {{- if $settings.Enabled -}}
     {{- with $settings.Partials.Header -}}
       {{ partial . $context }}
@@ -35,17 +39,14 @@
   {{- end -}}
 {{- end -}}
 
-{{- template "_internal/google_analytics.html" . -}}
+{{- template "_internal/google_analytics.html" $context -}}
 
 <!-- RSS -->
-{{- with .OutputFormats.Get "rss" -}}
-  {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
-{{ end -}}
+{{- with .OutputFormats.Get "rss" }}
+  {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` 
+            .Rel .MediaType.Type .Permalink site.Title
+            | safeHTML
+  }}
+{{ end }}
 
 {{ "<!--" | safeHTML }} Made with Platen https://platen.io {{ "-->" | safeHTML }}
-
-{{- define "integrity" -}}
-  {{- if (urls.Parse .Permalink).Host -}}
-    integrity="{{ .Data.Integrity }}" crossorigin="anonymous"
-  {{- end -}}
-{{- end -}}
