@@ -1,10 +1,16 @@
+{{/*
+    Docs.ShortCode: section
+*/}}
+{{- $input := . -}}
+
+{{/* render */}}
 <dl>
-{{ range .Page.Pages }}
+{{ range $page := $input.Page.Pages }}
   <dt>
-    <a href="{{ .RelPermalink }}">{{ partial "platen/utils/getTitle" . }}</a>
+    <a href="{{ $page.RelPermalink }}">{{ partial "platen/utils/getTitle" $page }}</a>
   </dt>
   <dd class="markdown-inner">
-    {{ default .Summary .Description }}
+    {{ default $page.Summary $page.Description }}
   </dd>
 {{ end }}
 </dl>

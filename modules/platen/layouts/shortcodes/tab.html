@@ -1,12 +1,18 @@
-{{ if .Parent }}
-  {{ $name  := .Get 0                           }}
-  {{ $group := printf "tabs-%s" (.Parent.Get 0) }}
+{{/*
+    Docs.ShortCode: tab
+*/}}
+{{- $input  := .             -}}
+{{- $parent := $input.Parent -}}
+{{/* Process the tab */}}
+{{- if $parent -}}
+  {{- $name  := $input.Get 0                     -}}
+  {{- $group := printf "tabs-%s" ($parent.Get 0) -}}
 
-  {{ if not (.Parent.Scratch.Get $group) }}
-    {{ .Parent.Scratch.Set $group slice }}
-  {{ end }}
+  {{- if not ($parent.Scratch.Get $group) -}}
+    {{- $parent.Scratch.Set $group slice -}}
+  {{- end -}}
 
-  {{ .Parent.Scratch.Add $group (dict "Name" $name "Content" .Inner) }}
-{{ else }}
-  {{ errorf "%q: 'tab' shortcode must be inside 'tabs' shortcode" .Page.Path }}
-{{ end}}
+  {{- $parent.Scratch.Add $group (dict "Name" $name "Content" $input.Inner) -}}
+{{- else -}}
+  {{- errorf "%q: 'tab' shortcode must be inside 'tabs' shortcode" $input.Page.Path -}}
+{{- end -}}

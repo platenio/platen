@@ -1,11 +1,28 @@
-{{- $summary      := cond    .IsNamedParams            (.Get "title") (.Get 0) -}}
-{{- $anchor       := default (urlize (lower $summary)) (.Get "id")             -}}
-{{- $class        := cond    .IsNamedParams            (.Get "class") ""       -}}
-{{- $shouldBeOpen := or      (.Get "open")             (in .Params "open")     -}}
+{{/*
+    Docs.ShortCode: details
+*/}}
+{{- $input := . -}}
+{{/* Process input parameters */}}
+{{- $summary      := default      ($input.Get 0)            ($input.Get "title")      -}}
+{{- $anchor       := default      (urlize (lower $summary)) ($input.Get "id")         -}}
+{{- $class        := default      ""                        ($input.Get "class")      -}}
+{{- $content      := $input.Inner                                                     -}}
+{{- $shouldBeOpen := or           ($input.Get "open")       (in $input.Params "open") -}}
 
-<details {{ if ne "" $class }}class="{{ $class }}"{{ end }}{{ if $shouldBeOpen }}open{{ end }}>
-  <summary id="{{ $anchor }}">{{ $summary | .Page.RenderString }}</summary>
+{{/* Build the list of attributes for the container element */}}
+{{- $detailsAttributes := slice -}}
+{{- with $class -}}
+  {{- $detailsAttributes = $detailsAttributes | append (printf `class="%s"` $class) -}}
+{{- end -}}
+{{- if $shouldBeOpen -}}
+  {{- $detailsAttributes = $detailsAttributes | append "open" -}}
+{{- end -}}
+{{- $detailsAttributes = partial "platen/utils/getSafeAttributes" $detailsAttributes -}}
+
+{{/* Render */}}
+<details {{ $detailsAttributes }}>
+  <summary id="{{ $anchor }}">{{ $summary | $input.Page.RenderString }}</summary>
   <div class="markdown-inner">
-    {{ .Inner | .Page.RenderString }}
+    {{ $content | $input.Page.RenderString }}
   </div>
 </details>

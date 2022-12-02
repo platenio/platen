@@ -1,14 +1,41 @@
-{{- if not (.Page.Scratch.Get "katex") -}}
-<!-- Include katext only first time -->
-<link rel="stylesheet" href="{{ "katex/katex.min.css" | relURL }}" />
-<script defer src="{{ "katex/katex.min.js" | relURL }}"></script>
-<script defer src="{{ "katex/auto-render.min.js" | relURL }}"
-        onload="renderMathInElement(document.body);"></script>
-{{- .Page.Scratch.Set "katex" true -}}
+{{/*
+    Docs.ShortCode: katex
+*/}}
+{{- $input := . -}}
+
+{{/* Process input parameters */}}
+{{- $class   := $input.Get "class"     -}}
+{{- $content := trim $input.Inner "\n" -}}
+{{- $display := default (in $input.Params "display") ($input.Get "display") -}}
+
+{{/* Munge the content depending on whether it should be in display mode or not */}}
+{{- if $display -}}
+  {{- $content = printf "\\[%s\\]" $content -}}
+{{- else -}}
+  {{- $content = printf "\\(%s\\)" $content -}}
 {{- end -}}
 
-<span {{- with .Get "class" }} class="{{ . }}"{{ end }}>
-  {{ cond (in .Params "display") "\\[" "\\(" -}}
-  {{- trim .Inner "\n" -}}
-  {{- cond (in .Params "display") "\\]" "\\)" }}
-</span>
+{{/* Define the list of attributes for the span element */}}
+{{- $attributes := slice }}
+{{- with $class -}}
+  {{- $attributes = $attributes | append (printf `class="%s"` $class) -}}
+{{- end -}}
+{{- $attributes = partial "platen/utils/getSafeAttributes" $attributes -}}
+
+{{/*
+  Handle the katex links/scripts only the first time they're needed on a page.
+
+  Use the page's scratch to add handling other shortcodes can take advantage of.
+*/}}
+{{- if not ($input.Page.Scratch.Get "katex") -}}
+  <link rel="stylesheet" href="{{ "katex/katex.min.css" | relURL }}" />
+  <script defer src="{{ "katex/katex.min.js" | relURL }}"></script>
+  <script defer src="{{ "katex/auto-render.min.js" | relURL }}"
+          onload="renderMathInElement(document.body);"></script>
+
+  {{/* Now that the links/scripts are added, set `Katex` in the page scratch. */}}
+  {{- $input.Page.Scratch.Set "katex" true -}}
+{{- end -}}
+
+{{/* Render */}}
+<span {{ $attributes }}>{{ $content }}</span>

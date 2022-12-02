@@ -1,33 +1,43 @@
-{{- if .IsNamedParams -}}
-  {{- $.Scratch.Set "id"       (.Get "id")       -}}
-  {{- $.Scratch.Set "square"   (.Get "square")   -}}
-  {{- $.Scratch.Set "linkback" (.Get "linkback") -}}
-  {{- $.Scratch.Set "dark"     (.Get "dark")     -}}
-{{- else -}}
-  {{- $.Scratch.Set "id"       (.Get 0) -}}
-  {{- $.Scratch.Set "square"   (.Get 1) -}}
-  {{- $.Scratch.Set "linkback" (.Get 2) -}}
-  {{- $.Scratch.Set "dark"     (.Get 3) -}}
-{{- end -}}
-{{- $.Scratch.Set "url" (printf "https://itch.io/embed/%s" ($.Scratch.Get "id")) -}}
-{{- if (eq ($.Scratch.Get "linkback") "true") -}}
-  {{- $.Scratch.Set "url" (printf "%s?linkback=true" ($.Scratch.Get "url")) -}}
-{{- end -}}
-{{- if (eq ($.Scratch.Get "dark") "true") -}}
-  {{- if strings.HasSuffix ($.Scratch.Get "url") "?linkback=true" -}}
-    {{- $.Scratch.Set "url" (printf "%s&dark=true" ($.Scratch.Get "url")) -}}
-  {{- else -}}
-    {{- $.Scratch.Set "url" (printf "%s?dark=true" ($.Scratch.Get "url")) -}}
+{{/*
+    Docs.ShortCode: itchio
+*/}}
+{{- $input := . -}}
+{{/* Process input parameters */}}
+{{- $id       := default ($input.Get 0) ($input.Get "id")       -}}
+{{- $square   := default ($input.Get 0) ($input.Get "square")   -}}
+{{- $linkback := default ($input.Get 0) ($input.Get "linkback") -}}
+{{- $dark     := default ($input.Get 0) ($input.Get "dark")     -}}
+{{/* Process the shortcode if the ID has been specified, otherwise error */}}
+{{- with $id -}}
+  {{/* Build the list of URL queries based on the input parameters */}}
+  {{- $urlQueryParams := slice -}}
+  {{- if $linkback -}}
+    {{- $urlQueryParams = $urlQueryParams | append "linkback=true" -}}
   {{- end -}}
-{{- end -}}
-{{- if (eq ($.Scratch.Get "square") "true") -}}
-  {{ $.Scratch.Set "width" "208"}}
-{{- else -}}
-  {{ $.Scratch.Set "width" "552"}}
-{{- end -}}
+  {{- if $dark -}}
+    {{- $urlQueryParams = $urlQueryParams | append "dark=true" -}}
+  {{- end -}}
+  {{- $urlQueryParams = delimit $urlQueryParams "&" -}}
 
-<iframe frameborder="0"
-        src="{{ $.Scratch.Get "url" }}"
-        width="{{ $.Scratch.Get "width" }}"
-        height="167">
-</iframe>
+  {{/* Define the URL with the query parameters, if any */}}
+  {{- $url := printf "https://itch.io/embed/%s" $id -}}
+  {{- with $urlQueryParams -}}
+    {{- $url = printf "%s?%s" $url $urlQueryParams -}}
+  {{- end -}}
+
+  {{/* Define the width; these values are hardcoded for square/non-square by itch. */}}
+  {{- $width := cond $square "208" "552" -}}
+
+  {{/* Define the list of attributes for the iframe element */}}
+  {{- $attributes := slice                                                -}}
+  {{- $attributes  = $attributes | append `frameborder="0"`               -}}
+  {{- $attributes  = $attributes | append (printf `src="%s"`   $url)      -}}
+  {{- $attributes  = $attributes | append (printf `width="%s"` $width)    -}}
+  {{- $attributes  = $attributes | append `height="167"`                  -}}
+  {{- $attributes  = partial "platen/utils/getSafeAttributes" $attributes -}}
+
+  {{/* Render */}}
+  <iframe {{ $attributes }}></iframe>
+{{- else -}}
+  {{- errorf "Missing mandatory id for %s shortcode at %s" $input.Name $input.Position -}}
+{{- end -}}

@@ -1,0 +1,15 @@
+{{/*
+    Docs.Partial: getSafeAttributes
+
+    This partial takes a slice of HTML element attributes as strings and returns
+    the strings delimited by a single space, marked as safe for insertion as
+    HTML attributes.
+
+    This makes it more convenient to build attribute lists for elements to let
+    you render them when needed.
+*/}}
+{{- $inputAttributeSlice := . -}}
+
+{{- $safeAttributes := delimit $inputAttributeSlice " " | safeHTMLAttr -}}
+
+{{- return $safeAttributes -}}

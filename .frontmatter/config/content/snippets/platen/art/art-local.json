@@ -5,7 +5,7 @@
     "{{< art src=\"[[&mediaUrl]]\"",
     "        alt=\"[[&alt]]\"",
     "        class=\"[[classes]]\"",
-    "        content_warning=\"[[&content_warning]]\"",
+    "        contentWarning=\"[[&contentWarning]]\"",
     "/>}}"
   ],
   "isMediaSnippet": true,
