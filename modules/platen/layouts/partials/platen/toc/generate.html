@@ -1,9 +1,15 @@
-{{- $pageContent := .Content -}}
+{{/*
+    Docs.Partial: generate
+*/}}
+{{- $context     := . -}}
+{{- $pageContent := $context.Content -}}
+
 {{/* Parse settings for minimum and maximum heading levels to include in ToC */}}
 {{- $minLevel := default 2         site.Params.Platen.Display.TableOfContents.MinimumLevel -}}
-{{- $minLevel  = default $minLevel .Params.Platen.TableOfContents.MinimumLevel             -}}
+{{- $minLevel  = default $minLevel $context.Params.Platen.TableOfContents.MinimumLevel     -}}
 {{- $maxLevel := default 4         site.Params.Platen.Display.TableOfContents.MaximumLevel -}}
-{{- $maxLevel  = default $maxLevel .Params.Platen.TableOfContents.MaximumLevel             -}}
+{{- $maxLevel  = default $maxLevel $context.Params.Platen.TableOfContents.MaximumLevel     -}}
+
 {{/* Build Regex to find includable headings. */}}
 {{- $headerFullPattern := printf "<h[%v-%v].*?>(.|\n)+?</h[%v-%v]>"
                           $minLevel $maxLevel $minLevel $maxLevel
@@ -20,11 +26,12 @@
 {{- with site.Params.Platen.Display.TableOfContents.OrderedList -}}
   {{- $listType = cond . "ol" "ul" -}}
 {{- end -}}
-{{- with .Params.Platen.TableOfContents.OrderedList -}}
+{{- with $context.Params.Platen.TableOfContents.OrderedList -}}
   {{- $listType = cond . "ol" "ul" -}}
 {{- end -}}
+
 {{/* Create open and closing list tags for convenience */}}
-{{- $openList  := printf "<%s>" $listType | safeHTML -}}
+{{- $openList  := printf "<%s>"  $listType | safeHTML -}}
 {{- $closeList := printf "</%s>" $listType | safeHTML -}}
 
 {{/* Find all headings in the rendered content */}}

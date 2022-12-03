@@ -115,7 +115,7 @@ properties:
             [sref:`Display.TableOfContents.MinimumLevel`]: Platen.Site.Display.Settings.TableOfContents.MinimumLevel
             [sref:`UseBuiltIn`]: Platen.Content.Page.UseBuiltIn
             [sref:`MaximumLevel`]: Platen.Content.Page.MaximumLevel
-          weight: 1
+          weight: 3
         type: integer
         default: 2
         minimum: 1
@@ -138,11 +138,29 @@ properties:
             [sref:`Display.TableOfContents.MaximumLevel`]: Platen.Site.Display.Settings.TableOfContents.MaximumLevel
             [sref:`UseBuiltIn`]: Platen.Content.Page.UseBuiltIn
             [sref:`MinimumLevel`]: Platen.Content.Page.MinimumLevel
-          weight: 1
+          weight: 4
         type: integer
         default: 4
         minimum: 1
         maximum: 6
+      OrderedList:
+        title: As Ordered List
+        description: Specify whether table of contents entries should render in an ordered list.
+        schematize:
+          weight: 5
+          details: |
+            Specify whether the table of contents should render its entries in an ordered list with
+            numerals before each item. By default, the table of contents is rendered in an unordered
+            list without any list markers, only with indents.
+
+            Set this value to `true` to add the entries in an ordered list instead.
+
+            This value overrides [sref:`Display.TableOfContents.OrderedList`] in the site's
+            configuration.
+
+            [sref:`Display.TableOfContents.OrderedList`]: Platen.Site.Display.Settings.TableOfContents.OrderedList
+        type: boolean
+        default: false
       UseBuiltIn:
         title: Use Built-In
         description: Choose whether to use Hugo's builtin table of contents.

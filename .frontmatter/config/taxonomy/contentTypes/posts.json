@@ -59,9 +59,47 @@
       "name": "Platen",
       "fields": [
         {
-          "title": "Show Table of Contents",
-          "name": "ShowToC",
+          "title": "Render Page Title as Heading",
+          "description": "Use this setting to specify whether the page title should be rendered as an <h1> element instead of the default <strong> element.",
+          "name": "TitleAsHeading",
           "type": "boolean"
+        },
+        {
+          "title": "Table of Contents Options",
+          "name": "TableOfContents",
+          "type": "fields",
+          "fields": [
+            {
+              "title": "Render the Table of Contents",
+              "description": "Specifies whether to render the table of contents for the page. This setting overrides the site's Display.TableOfContents.Render, if set.",
+              "name": "Render",
+              "type": "boolean"
+            },
+            {
+              "title": "Minimum Heading Level",
+              "description": "Specify the minimum heading level to include in the page's table of contents, overriding the site's Display.TableOfContents.MinimumLevel setting. This value only affects the table of contents when UseBuiltIn is set to false.",
+              "name": "MinimumLevel",
+              "type": "number"
+            },
+            {
+              "title": "Maximum Heading Level",
+              "description": "Specify the maximum heading level to include in the page's table of contents, overriding the site's Display.TableOfContents.MaximumLevel setting. This value only affects the table of contents when UseBuiltIn is set to false.",
+              "name": "MaximumLevel",
+              "type": "number"
+            },
+            {
+              "title": "Use Built-In",
+              "description": "Choose whether to use Hugo's builtin table of contents or generate them with Platen, overriding the site's configuration for this page. This overrides the site's Display.TableOfContents.UseBuiltIn setting.",
+              "name": "UseBuiltIn",
+              "type": "boolean"
+            },
+            {
+              "title": "As Ordered List",
+              "description": "Specify whether the table of contents should render its entries in an ordered list with numerals before each item. By default, the table of contents is rendered in an unordered list without any list markers, only with indents. This value overrides the site's Display.TableOfContents.OrderedList setting.",
+              "name": "OrderedList",
+              "type": "boolean"
+            }
+          ]
         },
         {
           "title": "Enable comments",

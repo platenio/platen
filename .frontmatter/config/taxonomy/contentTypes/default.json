@@ -52,6 +52,12 @@
       "name": "Platen",
       "fields": [
         {
+          "title": "Render Page Title as Heading",
+          "description": "Use this setting to specify whether the page title should be rendered as an <h1> element instead of the default <strong> element.",
+          "name": "TitleAsHeading",
+          "type": "boolean"
+        },
+        {
           "title": "Table of Contents Options",
           "name": "TableOfContents",
           "type": "fields",
@@ -76,8 +82,14 @@
             },
             {
               "title": "Use Built-In",
-              "description": "Choose whether to use Hugo's builtin table of contents or generate them with Platen, overriding the site’s configuration for this page. This overrides the site's Display.TableOfContents.UseBuiltIn setting.",
+              "description": "Choose whether to use Hugo's builtin table of contents or generate them with Platen, overriding the site's configuration for this page. This overrides the site's Display.TableOfContents.UseBuiltIn setting.",
               "name": "UseBuiltIn",
+              "type": "boolean"
+            },
+            {
+              "title": "As Ordered List",
+              "description": "Specify whether the table of contents should render its entries in an ordered list with numerals before each item. By default, the table of contents is rendered in an unordered list without any list markers, only with indents. This value overrides the site's Display.TableOfContents.OrderedList setting.",
+              "name": "OrderedList",
               "type": "boolean"
             }
           ]
