@@ -43,7 +43,7 @@ properties:
         schematize:
           href: pattern-any
   Repository:
-    $ref: ./Repository.yaml
+    $ref: ./Repository/Settings.yaml
     schematize:
       weight: 6
   Multilingual:
