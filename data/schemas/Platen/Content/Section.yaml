@@ -182,3 +182,18 @@ properties:
             [sref:`Display.TableOfContents.Render`]: Platen.Site.Display.Settings.TableOfContents.Render
         type: boolean
         default: false
+  TitleAsHeading:
+    title: Render Page Title as Heading
+    description: Specify whether the page title should be rendered as an h1 instead of strong.
+    schematize:
+      details: |
+        Use this setting to specify whether the page title should be rendered as an `<h1>`
+        element instead of the default `<strong>` element.
+
+        If this set to `true`, Platen renders the title text in an `<h1>` with the ID set to
+        the title, downcased and urlized.
+
+        When the page title is rendered as a heading, it's always visible, even when not in mobile
+        view.
+    type: boolean
+    default: false

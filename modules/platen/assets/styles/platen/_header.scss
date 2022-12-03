@@ -1,5 +1,4 @@
 .platen-header {
-  display: none;
   margin-bottom: $padding-large;
 
   label {
@@ -9,5 +8,15 @@
   img.platen-icon {
     height: 1.5em;
     width: 1.5em;
+  }
+}
+
+.platen-header:has(strong) {
+  display: none;
+}
+
+.platen-header:has(h1) {
+  label {
+    display: none;
   }
 }

@@ -33,6 +33,35 @@ properties:
           - :time_short
       - type: string
     default: January 2, 2006
+  Header:
+    title: Page Header Settings
+    description: Controls the rendering of the header element for site pages.
+    schematize:
+      skipSchemaRender: true
+      details: |
+        Controls the rendering of the header element for site pages. By default, every page is
+        rendered with a header element that includes the controls for displaying the menu and table
+        of contents in mobile view and the page's title in a `<strong>` element.
+
+        You can use the [sref:`TitleAsHeading`] option to write the page's title as an `<h1>`
+        instead.
+    type: object
+    properties:
+      TitleAsHeading:
+        title: Render Page Title as Heading
+        description: Specify whether the page title should be rendered as an h1 instead of strong.
+        schematize:
+          details: |
+            Use this setting to specify whether the page title should be rendered as an `<h1>`
+            element instead of the default `<strong>` element.
+
+            If this set to `true`, Platen renders the title text in an `<h1>` with the ID set to
+            the title, downcased and urlized.
+
+            When the page title is rendered as a heading, it's always visible, even when not in
+            mobile view.
+        type: boolean
+        default: false
   Menu:
     $ref: ./Menu/Settings.yaml
   TableOfContents:

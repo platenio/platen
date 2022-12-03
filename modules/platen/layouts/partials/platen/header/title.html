@@ -1,0 +1,28 @@
+{{/*
+    Docs.Partial: menuControl
+*/}}
+{{- $context := . -}}
+
+{{/* Get the title text */}}
+{{- $titleText := partial "platen/utils/getTitle" $context -}}
+
+{{/* Determine the element type. */}}
+{{- $shouldBeHeader := default site.Params.Platen.Display.Header.TitleAsHeading
+                               $context.Params.Platen.TitleAsHeading
+-}}
+{{- $shouldBeHeader  = default false $shouldBeHeader -}}
+
+{{- $elementType       := cond $shouldBeHeader "h1" "strong" -}}
+{{- $openTagAttributes := slice                              -}}
+{{- if $shouldBeHeader -}}
+  {{- $id               := urlize (lower $titleText)                          -}}
+  {{- $openTagAttributes = $openTagAttributes | append (printf `id="%s"` $id) -}}
+{{- end -}}
+{{- $openTagAttributes = partial "platen/utils/getSafeAttributes" $openTagAttributes -}}
+{{- $openTag          := printf `<%s %s>` $elementType $openTagAttributes | safeHTML -}}
+{{- $closeTag         := printf `</%s>`   $elementType                    | safeHTML -}}
+
+{{/* Render */}}
+{{ $openTag }}
+  {{- $titleText -}}
+{{ $closeTag }}
