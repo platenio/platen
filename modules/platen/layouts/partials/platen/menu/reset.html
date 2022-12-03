@@ -1,0 +1,14 @@
+{{/*
+    Docs.Partial: reset
+
+    Restores menu position as soon as possible to avoid flickering.
+*/}}
+{{- $context := . -}}
+
+{{/* Get the script */}}
+{{ $script := resources.Get "scripts/platen/menu-reset.js" | resources.Minify }}
+
+{{/* Render */}}
+{{ with $script.Content -}}
+  <script>{{ $script.Content | safeJS }}</script>
+{{- end }}
