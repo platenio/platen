@@ -8,7 +8,6 @@ summary: >
 categories:
   - meta
 weight: 10
-type: Post
 ---
 
 For years now, analog tabletop games have been getting digital and physical releases. Unfortunately,
