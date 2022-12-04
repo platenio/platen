@@ -1,0 +1,17 @@
+{{/*
+    Docs.Partial: siteStyleLink
+*/}}
+{{- $context := . -}}
+
+{{/* Retrieve favicon */}}
+{{- $href := "favicon.png" | relURL -}}
+
+{{/* Define the attribute list for the link */}}
+{{- $attributes := slice                                                -}}
+{{- $attributes  = $attributes | append `rel="icon"`                    -}}
+{{- $attributes  = $attributes | append (printf `href="%s"` $href)      -}}
+{{- $attributes  = $attributes | append `type="image/x-icon"`           -}}
+{{- $attributes  = partial "platen/utils/getSafeAttributes" $attributes -}}
+
+{{/* Render */}}
+<link {{ $attributes }}>

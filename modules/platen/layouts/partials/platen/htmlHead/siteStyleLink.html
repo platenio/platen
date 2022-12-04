@@ -1,0 +1,24 @@
+{{/*
+    Docs.Partial: siteStyleLink
+*/}}
+{{- $context := . -}}
+
+{{/* Retrieve and process the site style */}}
+{{- $siteStyle := resources.Get "styles/platen.scss"
+                  | resources.ExecuteAsTemplate "platen.scss" $context
+                  | resources.ToCSS
+                  | resources.Minify
+                  | resources.Fingerprint
+-}}
+{{- $href      := $siteStyle.RelPermalink                                  -}}
+{{- $integrity := partial "platen/utils/getIntegrityAttributes" $siteStyle -}}
+
+{{/* Define the style link attribute list */}}
+{{- $attributes := slice                                                -}}
+{{- $attributes  = $attributes | append `rel="stylesheet"`              -}}
+{{- $attributes  = $attributes | append (printf `href="%s"` $href)      -}}
+{{- $attributes  = $attributes | append $integrity                      -}}
+{{- $attributes  = partial "platen/utils/getSafeAttributes" $attributes -}}
+
+{{/* Render */}}
+<link {{ $attributes }}>

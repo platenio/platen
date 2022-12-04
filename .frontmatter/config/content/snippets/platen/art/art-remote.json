@@ -5,7 +5,7 @@
     "{{< art src=\"[[&src]]\"",
     "        alt=\"[[&alt]]\"",
     "        class=\"[[classes]]\"",
-    "        content_warning=\"[[&content_warning]]\"",
+    "        contentWarning=\"[[&contentWarning]]\"",
     "/>}}"
   ],
   "fields": [
@@ -24,7 +24,7 @@
       "default": ""
     },
     {
-      "name": "content_warning",
+      "name": "contentWarning",
       "title": "Content Warning: List any CWs appropriate for the art.",
       "type": "string",
       "single": true,

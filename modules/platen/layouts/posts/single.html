@@ -1,13 +1,13 @@
 {{ define "main" }}
-<article class="markdown">
-  <h1>
-    <a href="{{ .RelPermalink }}">{{ partial "platen/title.html" . }}</a>
-  </h1>
-  {{ partial "platen/post-meta" . }}
-  {{- .Content -}}
-</article>
+  {{- $context := . -}}
+  <article class="markdown">
+    {{ partial "platen/post/title" $context }}
+    {{ partial "platen/utils/posts/meta" $context }}
+    {{- $context.Content -}}
+  </article>
 {{ end }}
 
 {{ define "toc" }}
-  {{ partial "platen/toc" . }}
+  {{- $context := . -}}
+  {{ partial "platen/toc" $context }}
 {{ end }}

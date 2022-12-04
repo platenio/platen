@@ -1,0 +1,24 @@
+{{/*
+  Docs.Partial: title
+*/}}
+{{- $context := . -}}
+
+{{/* Determine whether the page already has an h1 */}}
+{{- $hasHeading := default site.Params.Platen.Display.Header.TitleAsHeading
+                           $context.Params.Platen.TitleAsHeading
+-}}
+{{- $hasHeading  = default false $hasHeading -}}
+
+{{/* Continue only if the post doesn't already have a title heading */}}
+{{- if not $hasHeading -}}
+  {{- $titleText := partial "platen/utils/getTitle" $context -}}
+  {{- $href := $context.RelPermalink -}}
+
+  {{/* Define the attribute list for the link */}}
+  {{- $attributes := slice                                                -}}
+  {{- $attributes  = $attributes | append (printf `href="%s"` $href)      -}}
+  {{- $attributes  = partial "platen/utils/getSafeAttributes" $attributes -}}
+
+  {{/* Render the heading */}}
+  <h1><a {{ $attributes }}>{{ $titleText }}</a></h1>
+{{- end -}}

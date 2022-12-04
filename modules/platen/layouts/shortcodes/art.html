@@ -1,42 +1,67 @@
-{{- if .IsNamedParams -}}
-{{- $.Scratch.Set "src"  (.Get "src") -}}
-{{- $.Scratch.Set "alt" (.Get "alt") -}}
-{{- $.Scratch.Set "class"  (.Get "class") -}}
-{{- $.Scratch.Set "content_warning"  (.Get "content_warning") -}}
-{{- else -}}
-{{- $.Scratch.Set "src"  (.Get 0) -}}
-{{- $.Scratch.Set "alt" (.Get 1) -}}
-{{- $.Scratch.Set "class"  (.Get 2) -}}
-{{- $.Scratch.Set "content_warning"  (.Get 3) -}}
+{{/*
+    Docs.ShortCode: art
+*/}}
+{{- $input := . -}}
+
+{{/* Process input parameters */}}
+{{- $src            := default ($input.Get 0) ($input.Get "src")            -}}
+{{- $alt            := default ($input.Get 1) ($input.Get "alt")            -}}
+{{- $class          := default ($input.Get 2) ($input.Get "class")          -}}
+{{- $class           = default "full"         $class                        -}}
+{{- $contentWarning := default ($input.Get 3) ($input.Get "contentWarning") -}}
+{{- $caption        := default nil            $input.Inner                  -}}
+
+{{/* Handle missing alt text */}}
+{{- $missingAltText := eq nil $alt                      -}}
+{{- if $missingAltText -}}
+  {{- $handlerParams := dict "Input" $input 
+                             "Suffix" "\n\tMake sure to specify alt text with the 'alt' parameter."
+  -}}
+  {{- partial "platen/handlers/missingAltText" $handlerParams -}}
 {{- end -}}
 
-{{- $src             := $.Scratch.Get "src" -}}
-{{- $alt             := $.Scratch.Get "alt" | default nil -}}
-{{- $class           := $.Scratch.Get "class" | default "full" -}}
-{{- $content_warning := $.Scratch.Get "content_warning" | default false -}}
-{{- $caption         := .Inner | default nil -}}
+{{/* Define classes for easy reference elsewhere */}}
+{{- $artClass := "platen-art"             -}}
+{{- $cwClass  := "platen-content-warning" -}}
 
-{{- if eq $alt nil -}}
-{{- if $.Site.Params.warnOnMissingAltText -}}
-{{- warnf (printf "Missing alt text for '%v'" $src) -}}
-{{- else -}}
-{{- errorf (printf "Missing alt text for '%v'" $src) -}}
-{{- end -}}
-{{- end -}}
 
-{{ if $content_warning }}
-<figure class="art {{ $class }}{{ if $content_warning }} content_warning{{ end }}">
-  <img src="{{ $src }}" alt="{{ $alt }}" class="content_warning">
-  {{- if ne $caption nil -}}
-  <figcaption>{{ $caption | markdownify }}</figcaption>
-  <button class="content_warning">{{ $content_warning }}</button>
-  {{- end -}}
+{{/* Define the attribute list for the figure element */}}
+{{- $figureAttributes := slice -}}
+{{- $figureClass      := slice $artClass -}}
+{{- with $contentWarning -}}
+  {{- $figureClass = $figureClass | append $cwClass -}}
+{{- end -}}
+{{- with $class -}}
+  {{- $figureClass = $figureClass | append $class -}}
+{{- end -}}
+{{- $figureClass      = delimit $figureClass " "                                      -}}
+{{- $figureAttributes = $figureAttributes | append (printf `class="%s"` $figureClass) -}}
+{{- $figureAttributes = partial "platen/utils/getSafeAttributes" $figureAttributes    -}}
+
+{{/* Define the attibute list for the img element */}}
+{{- $imageAttributes := slice                                              -}}
+{{- $imageAttributes  = $imageAttributes | append (printf `src="%s"` $src) -}}
+{{- $imageAttributes  = $imageAttributes | append (printf `alt="%s"` $alt) -}}
+{{- with $contentWarning -}}
+  {{- $imageAttributes = $imageAttributes | append (printf `class="%s"` $cwClass) -}}
+{{- end -}}
+{{- $imageAttributes = partial "platen/utils/getSafeAttributes" $imageAttributes -}}
+
+{{/* Define the attribute list for the button element */}}
+{{- $cwButtonAttributes := slice                                                         -}}
+{{- $cwButtonAttributes  = $cwButtonAttributes | append `type="button"`                  -}}
+{{- $cwButtonAttributes  = $cwButtonAttributes | append `class="platen-content-warning"` -}}
+{{- $cwButtonAttributes  = partial "platen/utils/getSafeAttributes" $cwButtonAttributes  -}}
+
+{{/* Render */}}
+<figure {{ $figureAttributes }}>
+  <img {{ $imageAttributes }}>
+  {{ with $caption -}}
+    <figcaption>{{ $caption | markdownify }}</figcaption>
+  {{- end }}
+  {{ with $contentWarning -}}
+    <button {{ $cwButtonAttributes }}>
+      {{ $contentWarning | markdownify }}
+    </button>
+  {{- end }}
 </figure>
-{{ else }}
-<figure class="art {{ $class }}">
-  <img src="{{ $src }}" alt="{{ $alt }}">
-  {{- if ne $caption nil -}}
-  <figcaption>{{ $caption | markdownify }}</figcaption>
-  {{- end -}}
-</figure>
-{{ end }}

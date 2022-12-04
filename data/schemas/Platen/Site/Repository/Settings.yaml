@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Repository/Settings.schema.yaml
+title: Repository Settings
+description: Settings defining how the Platen site is version controlled
+schematize:
+  details: |
+    Platen is designed with version control in mind. These settings inform Platen about the version
+    control host you're using
+type: object
+properties:
+  URL:
+    title: Repository URL
+    description: Defines the URL to the root of the repository on your version control host.
+    schematize:
+      weight: 1
+      details: |
+        Defines the URL to the root of the repository on your version control host.
+    type: string
+  CommitPath:
+    title: Commit Path
+    description: Sets the repository-relative path for the "See this page's source" link.
+    schematize:
+      weight: 2
+      details: |
+        Sets the repository-relative path for the "See this page's source" link.
+    type: string
+    default: commit
+  EditPath:
+    title: Edit Path
+    description: Sets the repository-relative path for the "Edit this page" link.
+    schematize:
+      weight: 3
+      details: |
+        Sets the repository-relative path for the "Edit this page" link.
+    type: string
+    default: edit/main
+  ContentRoot:
+    title: Repository-Relative Content Folder
+    description: Specifies the path to the content folder relative to the repository root.
+    schematize:
+      weight: 4
+      details: |
+        Specifies the path to the content folder relative to the repository root. This is different
+        from Hugo's `contentDir` setting, which specifies the path to the content folder relative to
+        the Hugo project's root.
+
+        This value is useful for defining the URLs for the "Edit this page" links, which need to
+        point to where the file is located _in the repository_, not in the site layout. If your Hugo
+        site isn't defined in a subfolder in your repository, you don't need to use this setting.
+
+        Platen will attempt to use Hugo's `contentDir` parameter to resolve the file paths for you
+        if it's set. It will trim any leading `../` from the value. If the automatic resolution for
+        the value still gives you an incorrect URL, use this setting to define it explicitly.
+    type: string
+  MountedPaths:
+    title: Mounted Content Paths
+    description: Specifies maps for mounted content paths from repository-relative to site-relative.
+    schematize:
+      weight: 5
+      details: |
+        Specifies maps for mounted content paths to enable accurate and functional URLs for the
+        "Edit this page" links when your site has mounted content. If you're not using Hugo modules
+        to mount content from outside of your content directory, this setting does nothing.
+
+        You can use this setting to correctly map to files in the same repository, another
+        repository, or skip them entirely for a set of mounted content.
+    type: array
+    items:
+      $ref: ./MountedPath.yaml

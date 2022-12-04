@@ -1,6 +1,11 @@
 {{ if default true .Site.Params.Platen.Features.Search.Enabled }}
 <div class="platen-search">
-  <input type="text" id="platen-search-input" placeholder="{{ i18n "Search" }}" aria-label="{{ i18n "Search" }}" maxlength="64" data-hotkeys="s/" />
+  <input type="text"
+         id="platen-search-input"
+         placeholder="{{ i18n "Search" }}"
+         aria-label="{{ i18n "Search" }}"
+         maxlength="64"
+         data-hotkeys="s/" />
   <div class="platen-search-spinner hidden"></div>
   <ul id="platen-search-results"></ul>
 </div>

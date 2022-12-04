@@ -1,0 +1,38 @@
+{{/*
+    Docs.Partial: title
+*/}}
+{{- $postContext := . -}}
+
+{{- $href := $postContext.RelPermalink -}}
+{{- $title := partial "platen/utils/getTitle.html" $postContext -}}
+{{- $summary := $postContext.Summary -}}
+{{- $isTruncated := $postContext.Truncated -}}
+
+{{/* Define attribute list for article */}}
+{{- $articleAttributes := slice -}}
+{{- $articleAttributes  = $articleAttributes 
+                          | append `class="markdown platen-post"`
+-}}
+{{- $articleAttributes  = partial "platen/utils/getSafeAttributes"
+                                  $articleAttributes
+-}}
+
+{{/* Define attribute list for link */}}
+{{- $aAttributes := slice                                                 -}}
+{{- $aAttributes  = $aAttributes | append (printf `href="%s"` $href)      -}}
+{{- $aAttributes  = partial "platen/utils/getSafeAttributes" $aAttributes -}}
+
+{{/* Add the truncated suffix if needed*/}}
+{{- if $isTruncated -}}
+  {{- $summary = printf `%s <a %s>...</a>` $summary $aAttributes | safeHTML -}}
+{{- end -}}
+
+{{/* Define the metadata elements */}}
+{{- $meta := partial "platen/utils/posts/meta" $postContext | safeHTML -}}
+
+{{/* Render */}}
+<article {{ $articleAttributes }}>
+  <h2><a {{ $aAttributes }}>{{ $title }}</a></h2>
+  {{ $meta }}
+  <p>{{ $summary }}</p>
+</article>

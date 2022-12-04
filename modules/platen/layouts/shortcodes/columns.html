@@ -1,4 +1,6 @@
-{{- /*
+{{/*
+    Docs.ShortCode: columns
+
     This shortcode can be used to turn markdown content into columns with a
     flexible ratio.
     It has two optional parameters, `ratio` and `flattenForMobile`. They can
@@ -21,33 +23,84 @@
     collapse into a vertical stack when in mobile view to help make them more
     readable on smaller screens. If `flattenForMobile` is not specified,
     the columns will still display horizontally, even on smaller screens.
-*/ -}}
-{{- $ratio  := default "" (cond .IsNamedParams (.Get "ratio") (.Get 0)) -}}
-{{- $flattenForMobile  := (cond .IsNamedParams (.Get "flattenForMobile") (ne nil (.Get 1))) }}
-{{- $mobileClassSuffix := cond $flattenForMobile " flatten-in-mobile" "" -}}
+*/}}
 
+{{- $input             := .                                                      -}}
+
+{{/* Process input parameters */}}
+{{- $ratio             := default ($input.Get 0) ($input.Get "Ratio")            -}}
+{{- $ratio              = default ""             $ratio                          -}}
+{{- $flattenForMobile  := default ($input.Get 1) ($input.Get "flattenForMobile") -}}
+{{- $columns           := split   $input.Inner   "<--->"                         -}}
+
+{{/*
+  Handle mobile flattening. If not using named params, specifying either boolean true or the string
+  `flattenForMobile` adds the behavior. Boolean false, `nil`, and any other string value does not.
+*/}}
+{{- if not $input.IsNamedParams -}}
+  {{- $flattenForMobile = or (eq true               $flattenForMobile)
+                             (eq "flattenForMobile" $flattenForMobile)
+  -}}
+{{- end -}}
+
+{{/*
+  Handle ratio declarations. If ratio is specified but the segment count isn't the same as the
+  column count, raise an error. After this handling, ratio is replaced with the slice of ratios
+  by splitting on the colon in the input string. If no colon is included, ratio is set to an empty
+  string instead.
+*/}}
 {{- with $ratio -}}
   {{- if strings.Contains $ratio ":" -}}
-    {{- $ratio = split . ":" -}}
+    {{- $ratioSlice  := split . ":"     -}}
+    {{- $ratioCount  := len $ratioSlice -}}
+    {{- $columnCount := len $columns    -}}
+    {{- if ne $ratioCount $columnCount -}}
+      {{- $message := printf "Invalid ratio for %s at %s" $input.Name $input.Position -}}
+      {{- $message  = printf "%s\n\tSpecified ratio %s has %v segments but there are %v columns."
+                             $message $ratio $ratioCount $columnCount
+      -}}
+      {{- $message  = printf "%s The number of ratio segments must match the number of columns."
+                             $message
+      -}}
+      {{- errorf $message -}}
+    {{- else -}}
+      {{- $ratio = $ratioSlice -}}
+    {{- end -}}
   {{- else -}}
     {{- $ratio = "" -}}
   {{- end -}}
 {{- end -}}
 
-<div class="platen-columns flex flex-wrap{{ $mobileClassSuffix }}">
-{{- if $ratio -}}
-  {{- range $i, $val := split .Inner "<--->" -}}
-    {{- if gt (len $ratio) $i}}
-      <div style="flex-grow:{{ index $ratio $i }};" class="flex-even markdown-inner">
-        {{- $val | $.Page.RenderString -}}
-      </div>
-    {{- end -}}
-  {{- end -}}
-{{- else -}}
-  {{- range split .Inner "<--->" -}}
-  <div class="flex-even markdown-inner">
-    {{- . | $.Page.RenderString -}}
-  </div>
-  {{- end -}}
+{{/* Define the default classes for the container div and the column divs. */}}
+{{- $containerClasses := "platen-columns flex flex-wrap" -}}
+{{- $columnClasses    := "flex-even markdown-inner"      -}}
+{{- if $flattenForMobile -}}
+  {{- $containerClasses = printf "%s flatten-in-mobile" $containerClasses -}}
 {{- end -}}
+
+{{/*
+  Process the columns for rendering, defining their attributes. This creates a slice of dictionaries
+  with the Attribute and Content keys defined. The attribute key holds the class attribute and, if
+  using ratios, the style attribute. It combines them into a single string and makes them insertable
+  as HTML attributes later, associated with their column's content.
+*/}}
+{{- $columnsToRender := slice -}}
+{{- range $columnIndex, $columnContent := $columns -}}
+  {{- $attributes := slice (printf `class="%s"` $columnClasses) -}}
+  {{- if $ratio -}}
+    {{- $columnRatio := index $ratio $columnIndex                                           -}}
+    {{- $attributes   = $attributes | append (printf `style="flex-grow: %s;"` $columnRatio) -}}
+  {{- end -}}
+  {{- $attributes      = partial "platen/utils/getSafeAttributes" $attributes   -}}
+  {{- $columnParams   := dict "Attributes" $attributes "Content" $columnContent -}}
+  {{- $columnsToRender = $columnsToRender | append $columnParams                -}}
+{{- end -}}
+
+{{/* Render the column container and each column in turn. */}}
+<div class="{{ $containerClasses }}">
+  {{- range $column := $columnsToRender }}
+  <div {{ $column.Attributes }}>
+    {{ $column.Content | $.Page.RenderString }}
+  </div>
+  {{ end }}
 </div>

@@ -5,5 +5,7 @@
                  | resources.Minify
                  | resources.Fingerprint
 }}
+{{- $searchJSIntegrity := partial "platen/utils/getIntegrityAttributes" $searchJS -}}
 <script defer src="{{ "flexsearch.min.js" | relURL }}"></script>
-<script defer src="{{ $searchJS.RelPermalink }}" {{ template "integrity" $searchJS }}></script>
+<script defer src="{{ $searchJS.RelPermalink }}"
+              {{ $searchJSIntegrity }}></script>

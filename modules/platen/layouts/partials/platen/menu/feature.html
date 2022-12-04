@@ -1,6 +1,7 @@
-{{- $params := . -}}
-{{- $context := $params.Context -}}
+{{- $params   := .                -}}
+{{- $context  := $params.Context  -}}
 {{- $position := $params.Position -}}
+
 {{- with (index site.Params.Platen.Display.Menu $position) -}}
   {{- $positionSettings := . -}}
   {{- with $positionSettings.Entries -}}

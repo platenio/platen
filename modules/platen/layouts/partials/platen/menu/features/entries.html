@@ -54,11 +54,11 @@
   {{/* Process the weighted entries first, in order from lowest to highest weight */}}
   {{- range $entry := sort $weightedEntries "Weight" -}}
     {{- with $entry.Group -}}
-      {{- $groupParams := merge $params $entry -}}
+      {{- $groupParams := merge $params $entry                       -}}
       {{- $groupParams  = merge $groupParams (dict "TopLevel" false) -}}
-      {{- partial "platen/menu/features/group" $groupParams -}}
+      {{- partial "platen/menu/features/group" $groupParams          -}}
     {{- else -}}
-      {{- $entryPartialParams := dict "Context" $context "Entry" $entry -}}
+      {{- $entryPartialParams := dict "Context" $context "Entry" $entry                 -}}
       {{- $entryPartial := (index $usableFeatures (lower $entry.Feature)).Partials.Menu -}}
       {{- if $params.TopLevel -}}
       <ul>
@@ -72,11 +72,11 @@
   {{/* Process the unweighted entries next, in non deterministic order */}}
   {{- range $entry := sort $unweightedEntries -}}
     {{- with $entry.Group -}}
-      {{- $groupParams := merge $params $entry -}}
+      {{- $groupParams := merge $params $entry                       -}}
       {{- $groupParams  = merge $groupParams (dict "TopLevel" false) -}}
-      {{- partial "platen/menu/features/group" $groupParams -}}
+      {{- partial "platen/menu/features/group" $groupParams          -}}
     {{- else -}}
-      {{- $entryPartialParams := dict "Context" $context "Entry" $entry -}}
+      {{- $entryPartialParams := dict "Context" $context "Entry" $entry                 -}}
       {{- $entryPartial := (index $usableFeatures (lower $entry.Feature)).Partials.Menu -}}
       <ul class="platen">
         {{ partial $entryPartial $entryPartialParams }}
@@ -93,8 +93,8 @@
   {{- end -}}
   {{/* Only call the partial with the usable features if any were found, otherwise bail out. */}}
   {{- with $usableFeatures -}}
-    {{- $usableParams := $params -}}
+    {{- $usableParams := $params                                                     -}}
     {{- $usableParams := merge $usableParams (dict "UsableFeatures" $usableFeatures) -}}
-    {{- partial "platen/menu/features/entries" $usableParams -}}
+    {{- partial "platen/menu/features/entries" $usableParams                         -}}
   {{- end -}}
 {{- end -}}

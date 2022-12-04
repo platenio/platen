@@ -1,9 +1,10 @@
+{{- $context := . -}}
 <!DOCTYPE html>
-<html lang="{{ .Site.Language.Lang }}">
+<html lang="{{ site.Language.Lang }}">
 
   <head>
-    {{ partial "platen/html-head" . }}
-    {{ partial "platen/inject/head" . }}
+    {{ partial "platen/htmlHead" $context }}
+    {{ partial "platen/inject/head" $context }}
 
     <style>
       .not-found {
@@ -23,12 +24,12 @@
         <h1>404</h1>
         <h2>Page Not Found</h2>
         <h3>
-          <a href="{{ .Site.Home.RelPermalink }}">{{ .Site.Title }}</a>
+          <a href="{{ site.Home.RelPermalink }}">{{ site.Title }}</a>
         </h3>
       </div>
     </main>
 
-    {{ partial "platen/inject/body" . }}
+    {{ partial "platen/inject/body" $context }}
   </body>
 
   </html>

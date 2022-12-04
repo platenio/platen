@@ -1,0 +1,100 @@
+{{/*
+    Docs.Partial: editThisPage
+*/}}
+{{- $context := . -}}
+
+{{/* Retrieve settings from the site config */}}
+{{- $platenSettings := site.Params.Platen                       -}}
+{{- $repoUrl        := $platenSettings.Repository.URL           -}}
+{{- $editPath       := $platenSettings.Repository.EditPath      -}}
+
+{{/*
+  Determine the repository-root-relative path to content directory.
+
+  1. If Platen.Repository.ContentRoot is specified, use that value.
+  1. If it isn't, check if contentDir is set. If it is, check if it's a relative
+     path and make it non-relative. Relative paths break the URL builder.
+  1. If neither Platen.Repository.ContentRoot nor contentDir are set, fall back
+     on `content`.
+*/}}
+{{- $contentDir     := "content" -}}
+{{- with $platenSettings.Repository.ContentRoot -}}
+  {{- $contentDir = . -}}
+{{- else -}}
+  {{- with site.Params.contentDir -}}
+    {{- $contentDir = . -}}
+    {{- if (hasPrefix $contentDir "../") -}}
+      {{- $contentDir = strings.TrimLeft "./" $contentDir  -}}
+    {{- end -}}
+  {{- end -}}
+{{- end  -}}
+
+{{/* Retrieve info from the page */}}
+{{- $gitInfo := $context.GitInfo -}}
+{{- $file    := $context.File    -}}
+
+{{/* This partial should only render if the page has git info and the base URL is defined */}}
+{{- $shouldRender := and $file $gitInfo $repoUrl $editPath -}}
+
+{{- $href := "" -}}
+
+{{ if $shouldRender }}
+  {{/*
+    Munge the file path if needed. This only applies when you have content mounted from a module.
+    It loops over the list of mounted paths in Platen.Repository.MountedPaths and if the file's
+    path has the target value as a prefix, replaces the target value with the source value.
+
+    Without this munging, mounted content can't have a functional "edit this page" link.
+  */}}
+  {{- $filePath := replace $file.Path "\\" "/" -}}
+  {{- $notYetMunged := true -}}
+  {{- range $mountedMap := $platenSettings.Repository.MountedPaths -}}
+    {{/*  {{- $target := default $mountedMap.target $mountedMap.Target -}}  */}}
+    {{/*  {{- $source := default $mountedMap.source $mountedMap.Source -}}  */}}
+    {{- if and $notYetMunged (hasPrefix $filePath $mountedMap.Target) -}}
+      {{- $filePath     = replace $filePath $mountedMap.Target $mountedMap.Source -}}
+      {{- $notYetMunged = false                             -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $notYetMunged -}}
+    {{- $filePath = printf "%s/%s" $contentDir $filePath -}}
+  {{- end -}}
+  {{/* Build the href for the link depending on the munged file path */}}
+  {{- if hasPrefix (upper $filePath) "IGNORE!!" -}}
+    {{/* In this case, the content is mounted content and the user chose to ignore it here. */}}
+    {{- $href = "" -}}
+  {{- else if ((urls.Parse $filePath).Scheme) -}}
+    {{/* In this case, the content is mounted content and lives in an external repository. */}}
+    {{- $href = $filePath -}}
+  {{- else -}}
+    {{/* In this case, the content is in this repository. Build the URL. */}}
+    {{- $href = slice $repoUrl $editPath $filePath -}}
+    {{- $href = delimit $href "/"                  -}}
+  {{- end}}
+
+  {{- with $href -}}
+    {{/* Define the attributes for the link. */}}
+    {{- $linkAttributes := slice                                                     -}}
+    {{- $linkAttributes  = $linkAttributes | append `class="flex align-center"`      -}}
+    {{- $linkAttributes  = $linkAttributes | append (printf `href="%s"` $href)       -}}
+    {{- $linkAttributes  = $linkAttributes | append `target="_blank"`                -}}
+    {{- $linkAttributes  = $linkAttributes | append `rel="noopener"`                 -}}
+    {{- $linkAttributes  = partial "platen/utils/getSafeAttributes" $linkAttributes  -}}
+
+    {{/* Define the attributes for the image. */}}
+    {{- $imageAttributes := slice                                                     -}}
+    {{- $src             := "svg/edit.svg" | relURL                                   -}}
+    {{- $imageAttributes  = $imageAttributes | append (printf `src="%s"` $src)        -}}
+    {{- $imageAttributes  = $imageAttributes | append `class="platen-icon"`           -}}
+    {{- $imageAttributes  = $imageAttributes | append `alt="Edit"`                    -}}
+    {{- $imageAttributes  = partial "platen/utils/getSafeAttributes" $imageAttributes -}}
+
+    {{/* Render */}}
+    <div>
+      <a {{ $linkAttributes }}>
+        <img {{ $imageAttributes }}/>
+        <span>{{ i18n "Edit this page" }}</span>
+      </a>
+    </div>
+  {{- end -}}
+{{- end -}}

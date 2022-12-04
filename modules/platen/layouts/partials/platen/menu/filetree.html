@@ -15,7 +15,7 @@
     {{ range (where .Section.Pages "Params.Platen.Menu.Hide" "ne" true) }}
       {{ if .IsSection }}
         <li {{- if .Params.Platen.Menu.FlattenSection }} class="platen-section-flat" {{ end -}}>
-          {{ template "platen-page-link" (dict "Page" . "CurrentPage" $.CurrentPage) }}
+          {{ template "platen-page-link"        (dict "Page"    . "CurrentPage" $.CurrentPage) }}
           {{ template "platen-section-children" (dict "Section" . "CurrentPage" $.CurrentPage) }}
         </li>
       {{ else if and .IsPage .Content }}
@@ -32,17 +32,20 @@
   {{ $ancestor := .Page.IsAncestor .CurrentPage }}
 
   {{ if .Page.Params.Platen.Menu.CollapseSection }}
-    <input type="checkbox" id="section-{{ md5 .Page }}" class="toggle" {{ if or $current $ancestor }}checked{{ end }} />
+    <input type="checkbox"
+           id="section-{{ md5 .Page }}"
+           class="toggle" {{ if or $current $ancestor }}checked{{ end }} />
     <label for="section-{{ md5 .Page }}" class="flex justify-between">
-      <a {{ if .Page.Content }}href="{{ .Page.Permalink }}"{{ else }}role="button"{{ end }} class="{{ if $current }}active{{ end }}">
-        {{- partial "platen/title" .Page -}}
+      <a {{ if .Page.Content }}href="{{ .Page.Permalink }}"{{ else }}role="button"{{ end }}
+         class="{{ if $current }}active{{ end }}">
+        {{- partial "platen/utils/getTitle" .Page -}}
       </a>
     </label>
   {{ else if .Page.Content }}
     <a href="{{ .Page.Permalink }}" class="{{ if $current }} active{{ end }}">
-      {{- partial "platen/title" .Page -}}
+      {{- partial "platen/utils/getTitle" .Page -}}
     </a>
   {{ else }}
-    <span>{{- partial "platen/title" .Page -}}</span>
+    <span>{{- partial "platen/utils/getTitle" .Page -}}</span>
   {{ end }}
 {{ end }}

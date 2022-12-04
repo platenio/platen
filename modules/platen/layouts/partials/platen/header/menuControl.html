@@ -1,0 +1,24 @@
+{{/*
+    Docs.Partial: menuControl
+*/}}
+{{- $context := . -}}
+
+{{/* Get the menu icon */}}
+{{- $src := "svg/menu.svg" | relURL -}}
+
+{{/* Define the attributes for the label element */}}
+{{- $labelAttributes := slice                                                     -}}
+{{- $labelAttributes  = $labelAttributes | append `for="menu-control"`            -}}
+{{- $labelAttributes  = partial "platen/utils/getSafeAttributes" $labelAttributes -}}
+
+{{/* Define the attributes for the image element */}}
+{{- $imageAttributes := slice                                                     -}}
+{{- $imageAttributes  = $imageAttributes | append (printf `src="%s"` $src)        -}}
+{{- $imageAttributes  = $imageAttributes | append `class="platen-icon"`           -}}
+{{- $imageAttributes  = $imageAttributes | append `alt="Menu"`                    -}}
+{{- $imageAttributes  = partial "platen/utils/getSafeAttributes" $imageAttributes -}}
+
+{{/* Render */}}
+<label {{ $labelAttributes }} >
+  <img {{ $imageAttributes }} />
+</label>

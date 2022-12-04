@@ -1,0 +1,31 @@
+{{- $context := . -}}
+
+{{ partial "platen/htmlHead/meta" $context }}
+
+{{- template "_internal/opengraph.html" $context -}}
+
+<title>
+  {{ partial "platen/utils/getHtmlHeadTitle" $context }}
+</title>
+
+{{ partial "platen/htmlHead/faviconLink" $context }}
+
+{{- range $translatedPage := .Translations }}
+  {{ partial "platen/htmlHead/translationLink" $translatedPage }}
+{{- end -}}
+
+{{ partial "platen/htmlHead/siteStyleLink" $context }}
+
+{{ range $feature, $settings := .Site.Params.Platen.Features -}}
+  {{- if $settings.Enabled -}}
+    {{- with $settings.Partials.Header -}}
+      {{ partial . $context }}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- template "_internal/google_analytics.html" $context -}}
+
+{{ partial "platen/htmlHead/rssLink" }}
+
+{{ "<!--" | safeHTML }} Made with Platen https://platen.io {{ "-->" | safeHTML }}

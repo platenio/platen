@@ -1,15 +1,21 @@
-{{- $pageContent := .Content -}}
+{{/*
+    Docs.Partial: generate
+*/}}
+{{- $context     := . -}}
+{{- $pageContent := $context.Content -}}
+
 {{/* Parse settings for minimum and maximum heading levels to include in ToC */}}
-{{- $minLevel := default 2 $.Site.Params.Platen.Display.TableOfContents.MinimumLevel -}}
-{{- $minLevel  = default $minLevel .Params.Platen.TableOfContents.MinimumLevel -}}
-{{- $maxLevel := default 4 $.Site.Params.Platen.Display.TableOfContents.MaximumLevel -}}
-{{- $maxLevel  = default $maxLevel .Params.Platen.TableOfContents.MaximumLevel -}}
+{{- $minLevel := default 2         site.Params.Platen.Display.TableOfContents.MinimumLevel -}}
+{{- $minLevel  = default $minLevel $context.Params.Platen.TableOfContents.MinimumLevel     -}}
+{{- $maxLevel := default 4         site.Params.Platen.Display.TableOfContents.MaximumLevel -}}
+{{- $maxLevel  = default $maxLevel $context.Params.Platen.TableOfContents.MaximumLevel     -}}
+
 {{/* Build Regex to find includable headings. */}}
 {{- $headerFullPattern := printf "<h[%v-%v].*?>(.|\n)+?</h[%v-%v]>"
-                      $minLevel $maxLevel $minLevel $maxLevel
+                          $minLevel $maxLevel $minLevel $maxLevel
 -}}
 {{- $headerTextPattern := printf "<h[%v-%v].*?>((.|\n)+?)</h[%v-%v]>"
-                      $minLevel $maxLevel $minLevel $maxLevel
+                          $minLevel $maxLevel $minLevel $maxLevel
 -}}
 
 {{/* Build Regex to find heading levels. */}}
@@ -17,25 +23,26 @@
 
 {{/* Parse settings to determine if the items should be in ordered or unordered lists */}}
 {{- $listType := "ul" -}}
-{{- with $.Site.Params.Platen.Display.TableOfContents.OrderedList -}}
+{{- with site.Params.Platen.Display.TableOfContents.OrderedList -}}
   {{- $listType = cond . "ol" "ul" -}}
 {{- end -}}
-{{- with .Params.Platen.TableOfContents.OrderedList -}}
+{{- with $context.Params.Platen.TableOfContents.OrderedList -}}
   {{- $listType = cond . "ol" "ul" -}}
 {{- end -}}
+
 {{/* Create open and closing list tags for convenience */}}
-{{- $openList  := printf "<%s>" $listType | safeHTML -}}
+{{- $openList  := printf "<%s>"  $listType | safeHTML -}}
 {{- $closeList := printf "</%s>" $listType | safeHTML -}}
 
 {{/* Find all headings in the rendered content */}}
-{{- $headers := findRE $headerFullPattern $pageContent -}}
-{{- $has_headers := ge (len $headers) 1 -}}
+{{- $headers     := findRE $headerFullPattern $pageContent -}}
+{{- $has_headers := ge (len $headers) 1                    -}}
 {{- if $has_headers -}}
 
 {{- $largest := 6 -}}
 {{- range $headers -}}
   {{- $headerLevel := index (findRE $levelPattern . 1) 0 -}}
-  {{- $headerLevel := len (seq $headerLevel) -}}
+  {{- $headerLevel := len (seq $headerLevel)             -}}
   {{- if lt $headerLevel $largest -}}
     {{- $largest = $headerLevel -}}
   {{- end -}}
@@ -61,13 +68,13 @@
     {{- $cleanedID := replace (replace $id "id=\"" "") "\"" "" -}}
 
     {{/* Get header text, stripped of anchor and leading/trailing whitespace */}}
-    {{- $header := replaceRE $headerTextPattern "$1" $header -}}
-    {{- $header := replaceRE "<a class=\"anchor\".*</a>" "" $header -}}
-    {{- $header := replaceRE "\n" "" $header -}}
-    {{- $header := trim $header " " -}}
+    {{- $header := replaceRE $headerTextPattern          "$1" $header -}}
+    {{- $header := replaceRE "<a class=\"anchor\".*</a>" ""   $header -}}
+    {{- $header := replaceRE "\n"                        ""   $header -}}
+    {{- $header := trim $header " "                                   -}}
 
     {{- if ne $index 0 -}}
-      {{- $prevHeader := index $headers (sub $index 1) -}}
+      {{- $prevHeader      := index $headers (sub $index 1)                      -}}
       {{- $prevHeaderLevel := index (findRE $levelPattern $prevHeader 1) 0 | int -}}
         {{/* Handle nested lists based on level */}}
         {{- if gt $headerLevel $prevHeaderLevel -}}
@@ -105,9 +112,9 @@
     {{- end -}}
   {{- end -}}
 
-  {{ $firstHeaderLevel := $largest }}
-  {{- $lastHeader := index $headers (sub (len $headers) 1) -}}
-  {{- $lastHeaderLevel := int (index (findRE $levelPattern $lastHeader 1) 0) -}}
+  {{- $firstHeaderLevel := $largest                                           -}}
+  {{- $lastHeader       := index $headers (sub (len $headers) 1)              -}}
+  {{- $lastHeaderLevel  := int (index (findRE $levelPattern $lastHeader 1) 0) -}}
   </li>
   {{- range seq (sub $lastHeaderLevel $firstHeaderLevel) -}}
     {{- if in ($.Scratch.Get "bareul") (add . $firstHeaderLevel) -}}

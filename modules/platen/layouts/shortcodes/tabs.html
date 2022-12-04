@@ -1,15 +1,66 @@
-{{ if .Inner }}{{ end }}
-{{ $id := .Get 0 }}
-{{ $group := printf "tabs-%s" $id }}
+{{/*
+    Docs.ShortCode: tabs
+*/}}
+{{- $input := . -}}
 
+{{/* Process input parameters */}}
+{{- $id   := default ($input.Get 0) ($input.Get "id") -}}
+
+{{/* Initialize the list of tabs to render */}}
+{{- $tabs := slice                                    -}}
+
+{{- with $id -}}
+  {{/* Define the group id for the tabs. Must be unique on the page */}}
+  {{ $group := printf "tabs-%s" $id }}
+  
+  {{/* Error if there's no inner text. */}}
+  {{- if not $input.Inner -}}
+  {{- end -}}
+
+  {{/* Define the list of attributes for the span element */}}
+  {{- $definedTabs := $input.Scratch.Get $group -}}
+  {{- range $index, $tab := $definedTabs -}}
+    {{/* Initialize variables for processing the defined tab. */}}
+    {{- $tabParams       := $tab                                                  -}}
+    {{- $id              := printf "%s-%d" $group $index                          -}}
+    {{- $inputAttributes := slice                                                 -}}
+    {{- $labelAttributes := slice                                                 -}}
+    {{- $divAttributes   := slice                                                 -}}
+
+    {{/* Build the attributes list for the input element */}}
+    {{- $inputAttributes  = $inputAttributes | append `type="radio"`              -}}
+    {{- $inputAttributes  = $inputAttributes | append `class="toggle"`            -}}
+    {{- $inputAttributes  = $inputAttributes | append (printf `name="%s"` $group) -}}
+    {{- $inputAttributes  = $inputAttributes | append (printf `id="%s"`   $id)    -}}
+    {{- if not $index -}}
+      {{- $inputAttributes  = $inputAttributes | append `checked="checked"` -}}
+    {{- end -}}
+    {{- $inputAttributes  = partial "platen/utils/getSafeAttributes" $inputAttributes  -}}
+    {{- $tabParams        = merge $tabParams (dict "InputAttributes" $inputAttributes) -}}
+
+    {{/* Build the attributes for the label element */}}
+    {{- $labelAttributes = $labelAttributes | append (printf `for="%s"` $id)          -}}
+    {{- $labelAttributes = partial "platen/utils/getSafeAttributes" $labelAttributes  -}}
+    {{- $tabParams       = merge $tabParams (dict "LabelAttributes" $labelAttributes) -}}
+
+    {{/* Build the attributes for the div element containing the tab content */}}
+    {{- $divAttributes = $divAttributes | append `class="platen-tabs-content markdown-inner"` -}}
+    {{- $divAttributes = partial "platen/utils/getSafeAttributes" $divAttributes              -}}
+    {{- $tabParams     = merge $tabParams (dict "DivAttributes" $divAttributes)               -}}
+
+    {{/* Add the defined tab parameters to the slice of tabs to render */}}
+    {{- $tabs = $tabs | append $tabParams -}}
+  {{- end -}}
+{{- else -}}
+{{- end -}}
+
+{{/* Render */}}
 <div class="platen-tabs">
-{{- range $index, $tab := .Scratch.Get $group -}}
-  <input type="radio" class="toggle" name="{{ $group }}" id="{{ printf "%s-%d" $group $index }}" {{ if not $index }}checked="checked"{{ end }} />
-  <label for="{{ printf "%s-%d" $group $index }}">
-    {{- $tab.Name -}}
-  </label>
-  <div class="platen-tabs-content markdown-inner">
-    {{- .Content | $.Page.RenderString -}}
+{{- range $tab := $tabs -}}
+  <input {{ $tab.InputAttributes }}/>
+  <label {{ $tab.LabelAttributes}}>{{- $tab.Name -}}</label>
+  <div {{ $tab.DivAttributes }}>
+    {{- $tab.Content | $input.Page.RenderString -}}
   </div>
 {{- end -}}
 </div>

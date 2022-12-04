@@ -1,0 +1,22 @@
+{{/*
+  Docs.Partial: rssLink
+*/}}
+{{- $context := . -}}
+
+{{- with $context.OutputFormats.Get "rss" -}}
+  {{- $rss   := .                   -}}
+  {{- $rel   := $rss.Rel            -}}
+  {{- $type  := $rss.MediaType.Type -}}
+  {{- $href  := $rss.Permalink      -}}
+  {{- $title := site.Title          -}}
+  {{/* Define attribute list for link */}}
+  {{- $attributes := slice                                                -}}
+  {{- $attributes  = $attributes | append (printf `rel="%s"`   $rel)      -}}
+  {{- $attributes  = $attributes | append (printf `type="%s"`  $type)     -}}
+  {{- $attributes  = $attributes | append (printf `href="%s"`  $href)     -}}
+  {{- $attributes  = $attributes | append (printf `title="%s"` $title)    -}}
+  {{- $attributes  = partial "platen/utils/getSafeAttributes" $attributes -}}
+
+  {{/* Render */}}
+  <link {{ $attributes }}>
+{{- end -}}

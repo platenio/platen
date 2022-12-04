@@ -1,0 +1,51 @@
+{{/*
+    Docs.Partial: editThisPage
+*/}}
+{{- $context := . -}}
+
+{{/* Retrieve settings from the site config */}}
+{{- $platenSettings := site.Params.Platen                 -}}
+{{- $repoUrl        := $platenSettings.Repository.URL     -}}
+{{- $dateFormat     := $platenSettings.Display.DateFormat -}}
+
+{{/* Retrieve info from the page */}}
+{{- $gitInfo := $context.GitInfo -}}
+
+{{/* This partial should only render if the page has git info and the base URL is defined */}}
+{{- $shouldRender := and $gitInfo $repoUrl -}}
+
+{{ if $shouldRender }}
+  {{/* Define the commit path and date based on site config and git info */}}
+  {{- $commitPath     := default "commit" $platenSettings.Repository.CommitPath        -}}
+  {{- $dateParams     := dict    "Date" $gitInfo.AuthorDate.Local "Format" $dateFormat -}}
+  {{- $date           := partial "platen/utils/getFormattedDate" $dateParams           -}}
+
+  {{/* Define the attributes for the link. */}}
+  {{- $linkAttributes := slice                                                     -}}
+  {{- $linkAttributes  = $linkAttributes | append `class="flex align-center"`      -}}
+  {{- $href           := slice $repoUrl $commitPath $gitInfo.Hash                  -}}
+  {{- $href           := delimit $href "/"                                         -}}
+  {{- $linkAttributes  = $linkAttributes | append (printf `href="%s"` $href)       -}}
+  {{- $title          := slice (i18n "Last modified by") $gitInfo.AuthorName $date -}}
+  {{- $title          := delimit $title " " " | "                                  -}}
+  {{- $linkAttributes  = $linkAttributes | append (printf `title="%s"` $title)     -}}
+  {{- $linkAttributes  = $linkAttributes | append `target="_blank"`                -}}
+  {{- $linkAttributes  = $linkAttributes | append `rel="noopener"`                 -}}
+  {{- $linkAttributes  = partial "platen/utils/getSafeAttributes" $linkAttributes  -}}
+
+  {{/* Define the attributes for the image. */}}
+  {{- $imageAttributes := slice                                                     -}}
+  {{- $src             := "svg/calendar.svg" | relURL                               -}}
+  {{- $imageAttributes  = $imageAttributes | append (printf `src="%s"` $src)        -}}
+  {{- $imageAttributes  = $imageAttributes | append `class="platen-icon"`           -}}
+  {{- $imageAttributes  = $imageAttributes | append `alt="Calendar"`                -}}
+  {{- $imageAttributes  = partial "platen/utils/getSafeAttributes" $imageAttributes -}}
+
+  {{/* Render */}}
+  <div>
+    <a {{ $linkAttributes }}>
+      <img {{ $imageAttributes }}/>
+      <span>{{ $date }}</span>
+    </a>
+  </div>
+{{- end -}}

@@ -1,5 +1,5 @@
 {{- $platenSiteParams := .Site.Params.Platen -}}
-{{- $platenPageParams := .Params.Platen -}}
+{{- $platenPageParams := .Params.Platen      -}}
 
 {{/*
   Determine if the ToC should be rendered:
@@ -14,9 +14,10 @@
 
 {{/* Write the HTML */}}
 <!DOCTYPE html>
-<html lang="{{ default .Site.Language.Lang .Site.LanguageCode  }}" dir="{{ default "ltr" .Site.Language.LanguageDirection }}">
+<html lang="{{ default .Site.Language.Lang .Site.LanguageCode  }}"
+      dir="{{ default "ltr" .Site.Language.LanguageDirection }}">
 <head>
-  {{ partial "platen/html-head" . }}
+  {{ partial "platen/htmlHead" . }}
   {{ partial "platen/inject/head" . }}
 </head>
 <body dir="{{ default "ltr" .Site.Language.LanguageDirection }}">
@@ -79,9 +80,12 @@
 {{ end }}
 
 {{ define "comments" }}
-  {{ if and .Content (default false (default .Site.Params.Platen.Features.Comments.Enabled .Params.Platen.EnableComments)) }}
+  {{ $commentsEnabled := default .Site.Params.Platen.Features.Comments.Enabled
+                                 .Params.Platen.EnableComments
+  }}
+  {{ if and .Content (default false $commentsEnabled) }}
   <div class="platen-comments">
-    {{- partial "platen/comments" . -}}
+    {{- partial "platen/features/comments" . -}}
   </div>
   {{ end }}
 {{ end }}

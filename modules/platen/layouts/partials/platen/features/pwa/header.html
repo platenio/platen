@@ -7,5 +7,7 @@
 {{- $manifest := resources.Get "scripts/features/pwa/manifest.json"
                  | resources.ExecuteAsTemplate "manifest.json" $context
 -}}
+{{- $manifestIntegrity := partial "platen/utils/getIntegrityAttributes" $swJS -}}
 <link rel="manifest" href="{{ $manifest.RelPermalink }}">
-<script defer src="{{ $swJS.RelPermalink }}" {{ template "integrity" $swJS }}></script>
+<script defer src="{{ $swJS.RelPermalink }}"
+              {{ $manifestIntegrity }}></script>

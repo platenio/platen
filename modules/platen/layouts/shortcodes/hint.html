@@ -1,3 +1,23 @@
-<blockquote class="platen-hint {{ .Get 0 }}">
-  {{ .Inner | .Page.RenderString }}
+{{/*
+    Docs.ShortCode: hint
+*/}}
+{{- $input   := .                                           -}}
+{{/* Process input parameters */}}
+{{- $class   := default ($input.Get 0) ($input.Get "class") -}}
+{{- $content := $input.Inner                                -}}
+
+{{/* Build list of attributes for rendering element */}}
+{{- $attributes := slice -}}
+{{- with $class -}}
+  {{- $attributes = $attributes | append (printf `class="platen-hint %s"` $class) -}}
+{{- else -}}
+  {{- $attributes = $attributes | append `class="platen-hint"` -}}
+{{- end -}}
+
+{{/* Convert slice of attributes to insertable HTML */}}
+{{- $attributes = partial "platen/utils/getSafeAttributes" $attributes -}}
+
+{{/* Render */}}
+<blockquote {{ $attributes }}>
+  {{ $content | $input.Page.RenderString }}
 </blockquote>

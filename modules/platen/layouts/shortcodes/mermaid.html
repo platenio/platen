@@ -1,12 +1,35 @@
-{{ if not (.Page.Scratch.Get "mermaid") }}
-<!-- Include mermaid only first time -->
-<script src="{{ "mermaid.min.js" | relURL }}"></script>
-{{ with resources.Get "scripts/shortcodes/mermaid/config.json" }}
-  <script>mermaid.initialize({{ .Content | safeJS }})</script>
-{{ end }}
-{{ .Page.Scratch.Set "mermaid" true }}
-{{ end }}
+{{/*
+    Docs.ShortCode: mermaid
+*/}}
+{{- $input := . -}}
 
-<p class="mermaid{{ with .Get "class" }} {{ . }}{{ end }}">
-  {{- .Inner -}}
-</p>
+{{/* Process input parameters */}}
+{{- $class   := $input.Get "class" -}}
+{{- $content := $input.Inner       -}}
+
+{{/* Define the list of attributes for the span element */}}
+{{- $attributes := slice -}}
+{{- with $class -}}
+  {{- $attributes = $attributes | append (printf `class="mermaid %s"` $class) -}}
+{{- else -}}
+  {{- $attributes = $attributes | append `class="mermaid"` -}}
+{{- end -}}
+{{- $attributes = partial "platen/utils/getSafeAttributes" $attributes -}}
+
+{{/*
+  Handle the mermaid links/scripts only the first time they're needed on a page.
+
+  Use the page's scratch to add handling other shortcodes can take advantage of.
+*/}}
+{{ if not ($input.Page.Scratch.Get "mermaid") -}}
+  {{- $mermaidConfig := resources.Get "scripts/shortcodes/mermaid/config.json" -}}
+  <script src="{{ "mermaid.min.js" | relURL }}"></script>
+  {{ with $mermaidConfig -}}
+    <script>mermaid.initialize({{ $mermaidConfig.Content | safeJS }})</script>
+  {{- end -}}
+
+  {{- $input.Page.Scratch.Set "mermaid" true -}}
+{{- end }}
+
+{{/* Render */}}
+<p {{ $attributes }}>{{- $content -}}</p>

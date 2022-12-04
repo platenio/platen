@@ -33,6 +33,35 @@ properties:
           - :time_short
       - type: string
     default: January 2, 2006
+  Header:
+    title: Page Header Settings
+    description: Controls the rendering of the header element for site pages.
+    schematize:
+      skipSchemaRender: true
+      details: |
+        Controls the rendering of the header element for site pages. By default, every page is
+        rendered with a header element that includes the controls for displaying the menu and table
+        of contents in mobile view and the page's title in a `<strong>` element.
+
+        You can use the [sref:`TitleAsHeading`] option to write the page's title as an `<h1>`
+        instead.
+    type: object
+    properties:
+      TitleAsHeading:
+        title: Render Page Title as Heading
+        description: Specify whether the page title should be rendered as an h1 instead of strong.
+        schematize:
+          details: |
+            Use this setting to specify whether the page title should be rendered as an `<h1>`
+            element instead of the default `<strong>` element.
+
+            If this set to `true`, Platen renders the title text in an `<h1>` with the ID set to
+            the title, downcased and urlized.
+
+            When the page title is rendered as a heading, it's always visible, even when not in
+            mobile view.
+        type: boolean
+        default: false
   Menu:
     $ref: ./Menu/Settings.yaml
   TableOfContents:
@@ -90,7 +119,7 @@ properties:
 
             [sref:`UseBuiltIn`]: Platen.Site.Display.Settings.TableOfContents.UseBuiltIn
             [sref:`MaximumLevel`]: Platen.Site.Display.Settings.TableOfContents.MaximumLevel
-          weight: 1
+          weight: 3
         type: integer
         default: 2
         minimum: 1
@@ -113,11 +142,26 @@ properties:
 
             [sref:`UseBuiltIn`]: Platen.Site.Display.Settings.TableOfContents.UseBuiltIn
             [sref:`MinimumLevel`]: Platen.Site.Display.Settings.TableOfContents.MinimumLevel
-          weight: 1
+          weight: 4
         type: integer
         default: 4
         minimum: 1
         maximum: 6
+      OrderedList:
+        title: As Ordered List
+        description: Specify whether table of contents entries should render in an ordered list.
+        schematize:
+          weight: 5
+          details: |
+            Specify whether the table of contents should render its entries in an ordered list with
+            numerals before each item. By default, the table of contents is rendered in an unordered
+            list without any list markers, only with indents.
+
+            Set this value to `true` to add the entries in an ordered list instead.
+
+            This value can be overridden on a per-page basis.
+        type: boolean
+        default: false
       Render:
         title: Render the Table of Contents
         description: Whether to render the table of contents for the site's content

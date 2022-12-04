@@ -1,0 +1,46 @@
+{{/*
+    Docs.Partial: meta
+*/}}
+{{- $context := . -}}
+
+{{/* Build list of meta tags */}}
+{{- $metaTags := dict -}}
+
+{{/* Add the character set tag */}}
+{{- $charsetAttributes := slice                                               -}}
+{{- $charsetAttributes  = $charsetAttributes | append `charset="UTF-8"`       -}}
+{{- $metaTags           = merge $metaTags (dict "charset" $charsetAttributes) -}}
+
+{{/* Add the viewport tag */}}
+{{- $viewportAttributes := slice                                                    -}}
+{{- $viewportAttributes  = $viewportAttributes | append `name="viewport"`           -}}
+{{- $viewportContent    := printf `content="width=device-width, initial-scale=1.0"` -}}
+{{- $viewportAttributes  = $viewportAttributes | append $viewportContent            -}}
+{{- $metaTags            = merge $metaTags (dict "viewport" $viewportAttributes)    -}}
+
+{{/* Add the description tag */}}
+{{- $descriptionAttributes := slice                                                       -}}
+{{- $descriptionAttributes  = $descriptionAttributes | append `name="description"`        -}}
+{{- $descriptionContent    := default $context.Summary $context.Description               -}}
+{{- $descriptionContent     = printf `content="%s"` $descriptionContent                   -}}
+{{- $descriptionAttributes  = $descriptionAttributes | append $descriptionContent         -}}
+{{- $metaTags               = merge $metaTags (dict "description" $descriptionAttributes) -}}
+
+{{/* Add the theme color tag */}}
+{{- $themeColorAttributes := slice                                                     -}}
+{{- $themeColorAttributes  = $themeColorAttributes | append `name="theme-color"`       -}}
+{{- $themeColorContent    := `content="#FFFFFF"`                                       -}}
+{{- $themeColorAttributes  = $themeColorAttributes | append $themeColorContent         -}}
+{{- $metaTags              = merge $metaTags (dict "themeColor" $themeColorAttributes) -}}
+
+{{/* Add the color scheme tag */}}
+{{- $colorSchemeAttributes := slice                                                       -}}
+{{- $colorSchemeAttributes  = $colorSchemeAttributes | append `name="color-scheme"`       -}}
+{{- $colorSchemeContent    := `content="light dark"`                                      -}}
+{{- $colorSchemeAttributes  = $colorSchemeAttributes | append $colorSchemeContent         -}}
+{{- $metaTags               = merge $metaTags (dict "colorScheme" $colorSchemeAttributes) -}}
+
+{{/* Render */}}
+{{- range $tag, $attributes := $metaTags }}
+  <meta {{ partial "platen/utils/getSafeAttributes" $attributes }}>
+{{ end -}}

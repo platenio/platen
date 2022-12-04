@@ -12,12 +12,12 @@
   <head>
   {{- with (resources.Get "styles/platen.scss") -}}
     {{ if $context.Site.Params.Platen.Features.Toroidal.Enabled }}
-      {{ partial "toroidal/html-head-member/platen" $context }}
+      {{ partial "toroidal/htmlHeadMember/platen" $context }}
     {{ else }}
-      {{ partial "toroidal/html-head-member/default" $headParams }}
+      {{ partial "toroidal/htmlHeadMember/default" $headParams }}
     {{ end }}
   {{ else }}
-    {{ partial "toroidal/html-head-member/default" $headParams }}
+    {{ partial "toroidal/htmlHeadMember/default" $headParams }}
   {{ end }}
   {{/* The script here allows members using the iframe to auto-size their iframe on load. */}}
   <script>
