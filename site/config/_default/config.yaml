@@ -9,8 +9,10 @@ module:
   replacements: >-
     github.com/platenio/platen/modules/platen -> platen,
     github.com/platenio/platen/modules/schematize -> schematize,
-    github.com/platenio/platen/modules/toroidal -> toroidal
+    github.com/platenio/platen/modules/toroidal -> toroidal,
+    github.com/platenio/platen/modules/memo -> memo
   imports:
+    - path: github.com/platenio/platen/modules/memo
     - path: github.com/platenio/platen/modules/toroidal
       mounts:
         - source: archetypes

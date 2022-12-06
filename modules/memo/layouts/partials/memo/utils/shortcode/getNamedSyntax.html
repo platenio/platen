@@ -1,0 +1,59 @@
+{{- $params           := .                    -}}
+{{- $name             := $params.Name         -}}
+{{- $namedSyntax      := $name                -}}
+{{- $namedParams      := $params.Data         -}}
+{{- $inner            := $params.InnerDef     -}}
+{{- $tagType          := $params.TagType      -}}
+{{- $commentTagParams := dict "Type" $tagType -}}
+{{- $namedSyntaxes    := slice                -}}
+
+{{- range $param, $metadata := $namedParams -}}
+  {{- $paramSyntax := default $param $metadata.title -}}
+  {{- if eq "Boolean" $metadata.type -}}
+    {{- $paramSyntax = printf `%s=(true|false)` $paramSyntax -}}
+  {{- else if (eq "Integer" $metadata.type) -}}
+    {{- $paramSyntax = printf `%s=int` $paramSyntax -}}
+  {{- else }}
+    {{- $paramSyntax = printf `%s="%s"` $paramSyntax $paramSyntax -}}
+  {{- end -}}
+  {{- if not $metadata.required -}}
+    {{- $paramSyntax = printf `[%s]` $paramSyntax -}}
+  {{- end -}}
+  {{- $syntax  := dict "Position" $metadata.position "Value" $paramSyntax -}}
+  {{- $namedSyntaxes = $namedSyntaxes | append $syntax -}}
+{{- end -}}
+{{- $namedSyntaxes = sort $namedSyntaxes "Position" -}}
+
+{{- $syntaxCount  := len $namedSyntaxes -}}
+{{- $syntaxLength := add 10 (add (len $namedSyntax) (len (delimit $namedSyntaxes " "))) -}}
+{{- $shouldBeMultiLineSyntax := or (gt $syntaxCount 3) (gt $syntaxLength 70) -}}
+
+{{- if $shouldBeMultiLineSyntax -}}
+  {{- $leadingSpaceCount := add 5 (len $namedSyntax)              -}}
+  {{- $leadingWhiteSpace := strings.Repeat $leadingSpaceCount " " -}}
+  {{- range $index, $syntax := $namedSyntaxes -}}
+    {{- if eq 0 $index -}}
+      {{- $namedSyntax = printf "%s %s" $namedSyntax $syntax.Value -}}
+    {{- else -}}
+      {{- $namedSyntax = printf "%s\n%s%s" $namedSyntax $leadingWhiteSpace $syntax.Value -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $commentTagParams := merge $commentTagParams (dict "MultiLine" true "Syntax" $namedSyntax) -}}
+  {{- $namedSyntax       = partial "memo/utils/shortcode/getCommentedTag" $commentTagParams      -}}
+{{- else -}}
+  {{- range $syntax := $namedSyntaxes -}}
+    {{- $namedSyntax = printf "%s %s" $namedSyntax $syntax.Value -}}
+  {{- end -}}
+  {{- $commentTagParams := merge $commentTagParams (dict "Syntax" $namedSyntax)             -}}
+  {{- $namedSyntax       = partial "memo/utils/shortcode/getCommentedTag" $commentTagParams -}}
+{{- end -}}
+
+{{- with $inner -}}
+  {{- $innerParams := dict "Data" $inner "Named" true                                   -}}
+  {{- $innerValue  := partial "memo/utils/shortcode/getInnerSyntax" $innerParams        -}}
+  {{- $commentTagParams := merge $commentTagParams (dict "Syntax" (printf "/%s" $name)) -}}
+  {{- $closingTag  := partial "memo/utils/shortcode/getCommentedTag" $commentTagParams  -}}
+  {{- $namedSyntax  = printf "%s\n%s\n%s" $namedSyntax $innerValue $closingTag          -}}
+{{- end -}}
+
+{{- return $namedSyntax -}}

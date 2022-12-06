@@ -1,0 +1,16 @@
+{{- $params     := .                  -}}
+{{- $type       := lower $params.Type -}}
+
+{{- $renderedCode := "" -}}
+
+{{- if hasPrefix (lower $type) "memo" -}}
+  {{- if in (lower $type) "example-shortcode" -}}
+    {{- $renderedCode = partial "memo/renderers/example/shortcode" $params -}}
+  {{- else if (in (lower $type) "example-renderer") -}}
+    {{- $renderedCode = partial "memo/renderers/example/renderer" $params -}}
+  {{- else if (in (lower $type) "example-data") -}}
+    {{- $renderedCode = partial "memo/renderers/example/data" $params -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $renderedCode -}}

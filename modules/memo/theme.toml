@@ -1,0 +1,13 @@
+name = "memo"
+license = "MIT"
+licenselink = "https://github.com/platenio/platen/blob/main/modules/memo/LICENSE"
+description = "Platen documentation module"
+homepage = "https://github.com/platenio/platen"
+demosite = "https://platen.io"
+tags = [ "hugo", "docs" ]
+features = [ "docs" ]
+min_version = "0.104.0"
+
+[author]
+    name = "Platen Cooperative"
+    homepage = "https://platen.io"

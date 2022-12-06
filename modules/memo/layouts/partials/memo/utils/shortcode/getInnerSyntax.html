@@ -1,0 +1,37 @@
+{{- $params     := .                  -}}
+{{- $inner      := $params.Data       -}}
+{{- $named      := $params.Named      -}}
+{{- $positional := $params.Positional -}}
+
+{{- $whiteSpace := cond (eq true $inner.trimsleadingwhitespace) "  " "" -}}
+{{- $innerValue := $inner.syntax                                        -}}
+
+{{- if eq nil $innerValue -}}
+  {{- with $inner.nested -}}
+    {{- $syntaxParams := dict "Data" $inner.nested -}}
+    {{- $innerSyntax  := partial "memo/utils/shortcode/getSyntax" $syntaxParams -}}
+    {{- if $named -}}
+      {{- $innerValue = $innerSyntax.NamedSyntax -}}
+    {{- else if $positional -}}
+      {{- $innerValue = $innerSyntax.PositionalSyntax -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $innerValue = default "Text" $inner.type -}}
+    {{- if in $innerValue "Markdown" -}}
+      {{- $innerValue = "Markdown" -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if in $innerValue "\n" -}}
+  {{- $lines := split $innerValue "\n"}}
+  {{- $mungedLines := slice -}}
+  {{- range $line := $lines -}}
+    {{- $mungedLines = $mungedLines | append (printf "%s%s" $whiteSpace $line) -}}
+  {{- end -}}
+  {{- $innerValue = delimit $mungedLines "\n" -}}
+{{- else -}}
+  {{- $innerValue = printf "%s%s" $whiteSpace $innerValue -}}
+{{- end -}}
+
+{{- return $innerValue -}}

@@ -1,0 +1,91 @@
+{{- $params                   := .                                -}}
+{{- $name                     := $params.Name                     -}}
+{{- $hasPositionalParams      := $params.HasPositionalParams      -}}
+{{- $hasNamedParams           := $params.HasNamedParams           -}}
+{{- $forComplex               := $params.ForComplex               -}}
+{{- $requiredParams           := $params.RequiredParams           -}}
+{{- $requiresPositionalParams := $params.RequiresPositionalParams -}}
+{{- $requiresNamedParams      := $params.RequiresNamedParams      -}}
+{{- $requiresParams           := $params.RequiresParams           -}}
+{{- $requiresBothParams       := $params.RequiresBothParams       -}}
+{{- $inner                    := $params.InnerDef                 -}}
+
+{{- $hasBoth                  := and $hasNamedParams $hasPositionalParams -}}
+
+
+{{- $synopsis := "" -}}
+{{- if $forComplex -}}
+  {{- $synopsis = printf "For advanced usage, the `%s` shortcode" $name -}}
+  {{- if $requiresParams -}}
+    {{- $requiredParams := delimit $requiredParams ", " ", and" -}}
+    {{- if $requiresBothParams -}}
+      {{- $synopsis = printf "%s supports both positional and named parameters." $synopsis -}}
+    {{- else if $requiresNamedParams -}}
+      {{- $synopsis = printf "%s supports named parameters." $synopsis -}}
+    {{- else if $requiresPositionalParams -}}
+      {{- $synopsis = printf "%s supports positional parameters." $synopsis -}}
+    {{- end -}}
+    {{- $synopsis = printf "%s Requires the %s parameters only for this syntax." $requiredParams -}}
+  {{- else if $hasBoth -}}
+    {{- $synopsis = printf "%s supports both positional and named parameters." $synopsis -}}
+  {{- else if $hasPositionalParams -}}
+    {{- $synopsis = printf "%s supports positional parameters." $synopsis -}}
+  {{- else if $hasNamedParams -}}
+    {{- $synopsis = printf "%s supports named parameters." $synopsis -}}
+  {{- else -}}
+    {{- $synopsis = printf "%s has no parameters." $synopsis -}}
+  {{- end -}}
+{{- else -}}
+  {{- $synopsis = printf "The `%s` shortcode" $name -}}
+  {{- if and $hasPositionalParams $hasNamedParams -}}
+    {{- $synopsis = printf "%s supports both positional and named parameters." $synopsis -}}
+  {{- else if $hasPositionalParams -}}
+    {{- $synopsis = printf "%s supports positional parameters." $synopsis -}}
+  {{- else if $hasNamedParams -}}
+    {{- $synopsis = printf "%s supports named parameters." $synopsis -}}
+  {{- else -}}
+    {{- $synopsis = printf "%s has no parameters." $synopsis -}}
+  {{- end -}}
+{{- end -}}
+{{- with $inner -}}
+  {{- $synopsis = printf "%s It requires opening and closing tags." $synopsis -}}
+  {{- with $inner.nested -}}
+    {{- $nestedInner           := .                 -}}
+    {{- $nestedName            := $nestedInner.name -}}
+    {{- $innerPositionalParams := dict              -}}
+    {{- $innerNamedParams      := dict              -}}
+    {{- range $param, $definition := $nestedInner.parameters -}}
+      {{- if isset $definition "position" -}}
+        {{- $innerPositionalParams = merge $innerPositionalParams (dict $param $definition) -}}
+      {{- end -}}
+      {{- if isset $definition "named" -}}
+        {{- $innerNamedParams = merge $innerNamedParams (dict $param $definition) -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $innerHasPositionalParams := gt (len $innerPositionalParams) 0 -}}
+    {{- $innerHasNamedParams      := gt (len $innerNamedParams)      0 -}}
+    {{- $innerSynopsisParams      := dict "Name"                $nestedName
+                                          "HasPositionalParams" $innerHasPositionalParams
+                                          "HasNamedParams"      $innerHasNamedParams
+                                          "InnerDef"            $nestedInner
+    -}}
+    {{- $innerSynopsis := partial "memo/utils/shortcode/getSynopsis" $innerSynopsisParams -}}
+    
+    {{- $innerPrefix   := "" -}}
+    {{- if $nestedInner.required -}}
+      {{- $innerPrefix = printf "The `%s` shortcode requires at least one" $name         -}}
+      {{- $innerPrefix = printf "%s use of the `%s` shortcode." $innerPrefix $nestedName -}}
+    {{- else -}}
+      {{- if $forComplex -}}
+        {{- $innerPrefix = printf "In this syntax, you can use the `%s` shortcode" $nestedName -}}
+        {{- $innerPrefix = printf "%s in the `%s` shortcode's inner text." $innerPrefix $name  -}}
+      {{- else -}}
+        {{- $innerPrefix = printf "In the inner text for the `%s` shortcode" $name              -}}
+        {{- $innerPrefix = printf "%s you can use the `%s` shortcode." $innerPrefix $nestedName -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $synopsis = printf "%s\n\n%s%s" $synopsis $innerPrefix $innerSynopsis -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $synopsis -}}

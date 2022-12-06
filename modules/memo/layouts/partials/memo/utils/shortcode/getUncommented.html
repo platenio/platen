@@ -1,0 +1,9 @@
+{{- $definition := . -}}
+
+{{- $munged     := $definition                         -}}
+{{- $munged      = replaceRE `\{\{%\/\*` `{{%` $munged -}}
+{{- $munged      = replaceRE `\{\{<\/\*` `{{<` $munged -}}
+{{- $munged      = replaceRE `\*\/%\}\}` `%}}` $munged -}}
+{{- $munged      = replaceRE `\*\/>\}\}` `>}}` $munged -}}
+
+{{- return $munged -}}

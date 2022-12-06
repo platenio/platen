@@ -1,0 +1,9 @@
+params:
+  Platen:
+    Features:
+      Memo:
+        Enabled: true
+        Partials:
+          Title: platen/features/memo/title
+          Renderers:
+            Codeblock: platen/features/memo/codeblock

@@ -1,0 +1,40 @@
+{{- $param := . -}}
+{{- $type  := $param.type -}}
+
+{{- $metadata   := slice -}}
+
+{{- $mungedType := $type -}}
+{{- if hasPrefix $mungedType "String" -}}
+    {{- $mungedType = "String" -}}
+{{- end -}}
+{{- $metadata  = $metadata | append (dict "Type" $mungedType) -}}
+
+{{- $required := default false $param.required -}}
+{{- $metadata  = $metadata | append (dict "Required" (print $required)) -}}
+
+{{- if isset $param "position" -}}
+  {{- $position := print $param.position                       -}}
+  {{- $metadata  = $metadata | append (dict "Position" $position) -}}
+{{- end -}}
+
+{{- if in $type "Markdown" -}}
+  {{- $metadata = $metadata | append (dict "RendersMarkdown" true) -}}
+{{- end -}}
+
+{{- $trimsLeadingWhiteSpaceKey := "TrimsLeadingWhiteSpace" -}}
+{{- with (index $param (lower $trimsLeadingWhiteSpaceKey)) -}}
+  {{- $value   := .                                                           -}}
+  {{- $metadata = $metadata | append (dict $trimsLeadingWhiteSpaceKey $value) -}}
+{{- end -}}
+
+{{- $metadataCodeBlock := slice "```yaml { Memo=ShortCodeMetadata }" -}}
+{{- range $metadataDict := $metadata -}}
+  {{- range $key, $value := $metadataDict -}}
+    {{- $entry := printf "%s: %v" $key $value                   -}}
+    {{- $metadataCodeBlock = $metadataCodeBlock | append $entry -}}
+  {{- end -}}
+{{- end -}}
+{{- $metadataCodeBlock = $metadataCodeBlock | append "```" -}}
+{{- $metadataCodeBlock = delimit $metadataCodeBlock "\n"   -}}
+
+{{- return $metadataCodeBlock -}}

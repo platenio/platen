@@ -1,0 +1,7 @@
+{{- $params          := .                       -}}
+{{- $id            := $params.ID            -}}
+{{- $attributeSyntax := $params.AttributeSyntax -}}
+
+{{- $opening := printf "``````markdown\n```%s%s"  $id $attributeSyntax -}}
+
+{{- return $opening -}}
