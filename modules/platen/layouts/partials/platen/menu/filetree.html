@@ -29,7 +29,9 @@
 
 {{ define "platen-page-link" }}{{/* (dict "Page" .Page "CurrentPage" .CurrentPage) */}}
   {{ $current := eq .CurrentPage .Page }}
-  {{ $ancestor := .Page.IsAncestor .CurrentPage }}
+  {{ $ancestor := .Page.IsAncestor .CurrentPage }}  
+  {{- $titleParams := dict "Context" .Page "ForMenu" true          -}}
+  {{- $titleText   := partial "platen/utils/getTitle" $titleParams -}}
 
   {{ if .Page.Params.Platen.Menu.CollapseSection }}
     <input type="checkbox"
@@ -38,14 +40,14 @@
     <label for="section-{{ md5 .Page }}" class="flex justify-between">
       <a {{ if .Page.Content }}href="{{ .Page.Permalink }}"{{ else }}role="button"{{ end }}
          class="{{ if $current }}active{{ end }}">
-        {{- partial "platen/utils/getTitle" .Page -}}
+        {{- $titleText -}}
       </a>
     </label>
   {{ else if .Page.Content }}
     <a href="{{ .Page.Permalink }}" class="{{ if $current }} active{{ end }}">
-      {{- partial "platen/utils/getTitle" .Page -}}
+      {{- $titleText -}}
     </a>
   {{ else }}
-    <span>{{- partial "platen/utils/getTitle" .Page -}}</span>
+    <span>{{- $titleText -}}</span>
   {{ end }}
 {{ end }}

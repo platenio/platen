@@ -1,10 +1,11 @@
 {{/*
-    Docs.Partial: menuControl
+    Docs.Partial: title
 */}}
 {{- $context := . -}}
 
 {{/* Get the title text */}}
-{{- $titleText := partial "platen/utils/getTitle" $context -}}
+{{- $titleParams := dict "Context" $context "ForHeader" true     -}}
+{{- $titleText   := partial "platen/utils/getTitle" $titleParams -}}
 
 {{/* Determine the element type. */}}
 {{- $shouldBeHeader := default site.Params.Platen.Display.Header.TitleAsHeading

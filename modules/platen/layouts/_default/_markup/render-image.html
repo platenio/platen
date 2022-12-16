@@ -1,17 +1,28 @@
 {{- $params := . -}}
 
-{{- $linkText := "" -}}
+{{- $renderedImage := "" -}}
 
-{{- range $renderer := .Page.Site.Params.Platen.Markup.ImageRenderers -}}
-  {{- if and $renderer.Enabled (eq "" $linkText) -}}
-    {{- with $renderer.Partial -}}
-      {{- $linkText = partial . $params }}
+{{/* Use renderers from features first */}}
+{{- range $feature := site.Params.Platen.Features -}}
+  {{- if and $feature.Enabled (eq "" $renderedImage) -}}
+    {{- with $feature.Partials.Renderers.Image -}}
+      {{- $renderedCode = partial . $params }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
-{{- with $linkText -}}
-  {{- safeHTML $linkText -}}
+{{/* Use arbitrary renderers if no feature applied */}}
+{{- range $renderer := .Page.Site.Params.Platen.Markup.ImageRenderers -}}
+  {{- if and $renderer.Enabled (eq "" $renderedImage) -}}
+    {{- with $renderer.Partial -}}
+      {{- $renderedImage = partial . $params }}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Render the image or use the default renderer if needed */}}
+{{- with $renderedImage -}}
+  {{- safeHTML $renderedImage -}}
 {{- else -}}
   {{- partial "platen/markup/renderers/images/default" $params -}}
 {{- end -}}

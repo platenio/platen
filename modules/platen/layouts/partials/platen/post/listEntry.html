@@ -3,10 +3,11 @@
 */}}
 {{- $postContext := . -}}
 
-{{- $href := $postContext.RelPermalink -}}
-{{- $title := partial "platen/utils/getTitle.html" $postContext -}}
-{{- $summary := $postContext.Summary -}}
-{{- $isTruncated := $postContext.Truncated -}}
+{{- $href        := $postContext.RelPermalink                    -}}
+{{- $titleParams := dict "Context" $postContext "ForList" true   -}}
+{{- $title       := partial "platen/utils/getTitle" $titleParams -}}
+{{- $summary     := $postContext.Summary                         -}}
+{{- $isTruncated := $postContext.Truncated                       -}}
 
 {{/* Define attribute list for article */}}
 {{- $articleAttributes := slice -}}

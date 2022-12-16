@@ -1,16 +1,18 @@
-{{- $context := . -}}
-{{- $title := "" -}}
+{{- $context     := .                                            -}}
+{{- $title       := ""                                           -}}
+{{- $titleParams := dict "Context" $context "ForHtmlHead" true   -}}
 
 {{- range $feature, $settings := $context.Site.Params.Platen.Features -}}
   {{- if and (eq "" $title) $settings.Enabled -}}
     {{- with $settings.Partials.Title -}}
-      {{ $title = partial . $context }}
+      {{ $title = partial . $titleParams }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
 {{- if eq "" $title -}}
-  {{- $title = printf "%s | %s" (partial "platen/utils/getTitle" $context) $context.Site.Title -}}
+  {{- $titleText   := partial "platen/utils/getTitle" $titleParams -}}
+  {{- $title = printf "%s | %s" $titleText $context.Site.Title     -}}
 {{- end }}
 
 {{- return $title -}}

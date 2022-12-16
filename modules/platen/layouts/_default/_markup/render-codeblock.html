@@ -1,0 +1,28 @@
+{{- $params := . -}}
+
+{{- $renderedCode := "" -}}
+
+{{/* Use renderers from features first */}}
+{{- range $feature := site.Params.Platen.Features -}}
+  {{- if and $feature.Enabled (eq "" $renderedCode) -}}
+    {{- with $feature.Partials.Renderers.Codeblock -}}
+      {{- $renderedCode = partial . $params }}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Use arbitrary renderers if no feature applied */}}
+{{- range $renderer := site.Params.Platen.Markup.CodeblockRenderers -}}
+  {{- if and $renderer.Enabled (eq "" $renderedCode) -}}
+    {{- with $renderer.Partial -}}
+      {{- $renderedCode = partial . $params }}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Render the code or use the default renderer if needed */}}
+{{- with $renderedCode -}}
+  {{- safeHTML $renderedCode -}}
+{{- else -}}
+  {{- partial "platen/markup/renderers/code/default" $params -}}
+{{- end -}}
