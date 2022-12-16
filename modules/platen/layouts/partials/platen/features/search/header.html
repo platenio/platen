@@ -2,10 +2,27 @@
 {{- $searchJSFile := printf "%s.search.js" .Language.Lang }}
 {{- $searchJS := resources.Get "scripts/features/search/index.js"
                  | resources.ExecuteAsTemplate $searchJSFile $context
-                 | resources.Minify
                  | resources.Fingerprint
 }}
 {{- $searchJSIntegrity := partial "platen/utils/getIntegrityAttributes" $searchJS -}}
-<script defer src="{{ "flexsearch.min.js" | relURL }}"></script>
+{{/* Get FlexSearch from CDN
+
+  This is currently commented out because the transition to 0.7.0+ will require substantial rework.
+
+{{- $searchApiVersion   := default "0.7.31" site.Params.Platen.Features.Search.FlexSearchVersion -}}
+{{- $urlPrefix          := "https://rawcdn.githack.com/nextapps-de/flexsearch"                   -}}
+{{- $searchApiUrl       := printf "%s/%s/dist/flexsearch.bundle.js" $urlPrefix $searchApiVersion -}}
+{{- $searchApi          := resources.GetRemote $searchApiUrl | resources.Fingerprint             -}}
+
+*/}}
+{{/* Get FlexSearch from local assets. */}}
+{{- $searchApi          := resources.Get "scripts/features/search/flexsearch.min.js"
+                           | resources.Copy "scripts/flexsearch.min.js"
+                           | resources.Fingerprint
+-}}
+{{- $searchApiIntegrity := partial "platen/utils/getIntegrityAttributes" $searchApi -}}
+{{/* Render */}}
+<script defer src="{{ $searchApi.RelPermalink }}"
+              {{ $searchApiIntegrity }}></script>
 <script defer src="{{ $searchJS.RelPermalink }}"
               {{ $searchJSIntegrity }}></script>
