@@ -162,11 +162,9 @@ snap install go --channel=latest/stable
 snap install code --channel=latest/stable
 ```
 
-{{< hint info >}}
-
-**Note:** Most Linux distros already have git installed.
-
-{{< /hint >}}
+{{< details title="Note" class="info" open=true >}}
+  Most Linux distros already have git installed.
+{{< /details >}}
 
 {{% /tab %}}
 
