@@ -1,6 +1,11 @@
 .markdown .platen-columns {
   margin-left: -$padding-large;
   margin-right: -$padding-large;
+  flex-direction: column;
+
+  @media (min-width:56rem) {
+      flex-direction: row;
+  }
 
   > div {
     margin: $padding-large 0;
@@ -8,11 +13,9 @@
     padding: 0 $padding-large;
   }
 
-  &.flatten-in-mobile {
-    flex-direction: column;
-
+  &.no-flatten-in-mobile {
     @media (min-width:56rem) {
-        flex-direction: row;
+        flex-direction: column;
     }
   }
 }
