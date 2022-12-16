@@ -10,7 +10,10 @@
 {{- $class           = default "full"         $class                        -}}
 {{- $contentWarning := default ($input.Get 3) ($input.Get "contentWarning") -}}
 {{- $caption        := default nil            $input.Inner                  -}}
-
+{{- with $caption -}}
+  {{- $trimParams := dict "Text" $caption "TrimEOL" true                   -}}
+  {{- $caption     = partial "platen/utils/getLeadTrimmedText" $trimParams -}}
+{{- end -}}
 {{/* Handle missing alt text */}}
 {{- $missingAltText := eq nil $alt                      -}}
 {{- if $missingAltText -}}
@@ -24,6 +27,8 @@
 {{- $artClass := "platen-art"             -}}
 {{- $cwClass  := "platen-content-warning" -}}
 
+{{/* Initialize the render strings */}}
+{{- $renderStrings := slice -}}
 
 {{/* Define the attribute list for the figure element */}}
 {{- $figureAttributes := slice -}}
@@ -34,34 +39,51 @@
 {{- with $class -}}
   {{- $figureClass = $figureClass | append $class -}}
 {{- end -}}
-{{- $figureClass      = delimit $figureClass " "                                      -}}
-{{- $figureAttributes = $figureAttributes | append (printf `class="%s"` $figureClass) -}}
-{{- $figureAttributes = partial "platen/utils/getSafeAttributes" $figureAttributes    -}}
+{{- $figureClass      = delimit $figureClass " "                                         -}}
+{{- $figureAttributes = $figureAttributes | append (printf `class="%s"` $figureClass)    -}}
+{{- $figureAttributes = partial "platen/utils/getSafeAttributes" $figureAttributes       -}}
+{{- $renderStrings    = $renderStrings | append (printf "<figure %s>" $figureAttributes) -}}
+
+{{/* Handle the content warning, if needed */}}
+{{- $cwID               := "" -}}
+{{- with $contentWarning -}}
+  {{- $cwID             = printf "content-warning-%s" (lower $contentWarning | urlize) -}}
+  {{- $inputAttributes := slice `type="checkbox"`
+                         | append (printf `class="%s"` $cwClass)
+                         | append (printf `name="toggle-%s"` $cwID)
+                         | append (printf `id="%s"`   $cwID)
+  -}}
+  {{- $attributeParams := dict "Attributes" $inputAttributes "IndentCount" 9        -}}
+  {{- $inputAttributes  = partial "platen/utils/getSafeAttributes" $attributeParams -}}
+  {{- $renderStrings    = $renderStrings
+                          | append (printf "  <input %s/>" $inputAttributes)
+                          | append (printf `  <label for="%s">%s</label>` $cwID $contentWarning)
+  -}}
+{{- end -}}
 
 {{/* Define the attibute list for the img element */}}
-{{- $imageAttributes := slice                                              -}}
-{{- $imageAttributes  = $imageAttributes | append (printf `src="%s"` $src) -}}
-{{- $imageAttributes  = $imageAttributes | append (printf `alt="%s"` $alt) -}}
-{{- with $contentWarning -}}
-  {{- $imageAttributes = $imageAttributes | append (printf `class="%s"` $cwClass) -}}
-{{- end -}}
-{{- $imageAttributes = partial "platen/utils/getSafeAttributes" $imageAttributes -}}
+{{- $imageAttributes := slice (printf `src="%s"` $src)
+                        | append (printf `alt="%s"` $alt)
+-}}
+{{- $imageAttributes = partial "platen/utils/getSafeAttributes" $imageAttributes      -}}
+{{- $renderStrings   = $renderStrings | append (printf "  <img %s>" $imageAttributes) -}}
 
-{{/* Define the attribute list for the button element */}}
-{{- $cwButtonAttributes := slice                                                         -}}
-{{- $cwButtonAttributes  = $cwButtonAttributes | append `type="button"`                  -}}
-{{- $cwButtonAttributes  = $cwButtonAttributes | append `class="platen-content-warning"` -}}
-{{- $cwButtonAttributes  = partial "platen/utils/getSafeAttributes" $cwButtonAttributes  -}}
+{{- with $caption -}}
+  {{- $renderParams := dict "Page"        $input.Page
+                            "Content"     $caption
+                            "IndentCount" 4
+                            "AsBlock"     true
+  -}}
+  {{- $renderedcaption := partial "platen/utils/getPrettyRender" $renderParams              -}}
+  {{- $figCaption      := printf "  <figcaption>\n    %s\n  </figcaption>" $renderedcaption -}}
+  {{- $renderStrings    = $renderStrings | append $figCaption                               -}}
+{{- end -}}
+
+{{/* Add the closing tag for the figure */}}
+{{- $renderStrings = $renderStrings | append "</figure>" -}}
+
+{{/* Combine render strings */}}
+{{- $renderString := delimit $renderStrings "\n" -}}
 
 {{/* Render */}}
-<figure {{ $figureAttributes }}>
-  <img {{ $imageAttributes }}>
-  {{ with $caption -}}
-    <figcaption>{{ $caption | markdownify }}</figcaption>
-  {{- end }}
-  {{ with $contentWarning -}}
-    <button {{ $cwButtonAttributes }}>
-      {{ $contentWarning | markdownify }}
-    </button>
-  {{- end }}
-</figure>
+{{- $renderString | safeHTML -}}

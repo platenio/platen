@@ -154,6 +154,10 @@ Platen:
         Basic:
           Enabled: true
     Shortcodes:
+      Art:
+        Enabled: true
+        Style:
+          Name: art
       Button:
         Enabled: true
         Style:

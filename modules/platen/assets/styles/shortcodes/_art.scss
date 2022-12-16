@@ -1,0 +1,67 @@
+// Backup
+figure.platen-art {
+  // Set the position to relative to support CW content
+  position: relative;
+
+  // By default and when specified, have the art take up 100% of the width.
+  &.full {
+    img {
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  figcaption {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: smaller;
+  }
+
+  &.platen-content-warning {
+    // Blur the image by default until unhidden by visitor
+    img {
+      z-index: 10;
+      filter: blur(30px);
+    }
+    // Hide the caption by default until unhidden by visitor
+    figcaption {
+      visibility: hidden;
+    }
+    // Hide the checkbox
+    input.platen-content-warning {
+      visibility: hidden;
+    }
+
+    // Make the label take up the entire space
+    input.platen-content-warning + label {
+      position: absolute;
+      z-index: 1;
+      bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      margin: 1px ;
+      text-align: center;
+      &::before {
+        content: "Content Warning:";
+        display: block;
+        font-weight: bolder;
+        font-size: larger;
+        margin-bottom: 1em;
+        margin-top: 1em;
+      }
+    }
+    // Hide the label when checked so the art is there on its own
+    input[type="checkbox"]:checked + label {
+      opacity: 0;
+    }
+    // Unblur the image when visitor opts-in to seeing CW content
+    input[type="checkbox"]:checked + label + img {
+      filter: blur(0);
+    }
+    // Show the caption when visitor opts in to seeing CW content
+    input[type="checkbox"]:checked + label + img + figcaption {
+      visibility: visible;
+    }
+  }
+}
