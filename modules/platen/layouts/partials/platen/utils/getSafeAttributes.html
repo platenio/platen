@@ -8,8 +8,27 @@
     This makes it more convenient to build attribute lists for elements to let
     you render them when needed.
 */}}
-{{- $inputAttributeSlice := . -}}
+{{- $inputAttributeSlice := .     -}}
+{{- $multiLine           := false -}}
+{{- $indentCount         := 0    -}}
 
-{{- $safeAttributes := delimit $inputAttributeSlice " " | safeHTMLAttr -}}
+{{- if reflect.IsMap $inputAttributeSlice -}}
+  {{- $multiLine           = default $multiLine         $inputAttributeSlice.MultiLine         -}}
+  {{- $indentCount         = default $indentCount $inputAttributeSlice.IndentCount -}}
+  {{- $inputAttributeSlice = $inputAttributeSlice.Attributes                                   -}}
+{{- end -}}
+
+{{- $mungedAttributes := delimit $inputAttributeSlice " " | safeHTMLAttr -}}
+
+{{- if or $multiLine (gt (len $mungedAttributes) 70) -}}
+  {{- $mungedAttributes = index $inputAttributeSlice 0 -}}
+  {{- range $index, $attribute := $inputAttributeSlice -}}
+    {{- if ne 0 $index -}}
+      {{- $mungedAttributes = printf "%s\n%s%s" $mungedAttributes (strings.Repeat $indentCount " ") $attribute -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $safeAttributes := $mungedAttributes | safeHTMLAttr -}}
 
 {{- return $safeAttributes -}}

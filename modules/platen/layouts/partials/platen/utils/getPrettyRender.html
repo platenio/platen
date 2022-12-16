@@ -1,0 +1,47 @@
+{{- $params      := .                                 -}}
+{{- $page        := $params.Page                      -}}
+{{- $asBlock     := default false $params.AsBlock     -}}
+{{- $content     := $params.Content                   -}}
+{{- $indentCount := default 0     $params.IndentCount -}}
+
+{{- $renderedString := "" -}}
+{{- with $content -}}
+  {{- with $page -}}
+    {{- if $asBlock -}}
+      {{- $renderedString = $content | $page.RenderString (dict "display" "block") -}}
+    {{- else -}}
+      {{- $renderedString = $content | $page.RenderString -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $renderedString = $content | markdownify -}}
+  {{- end -}}
+{{- else -}}
+  {{- errorf "Can't pretty render without content."}}
+{{- end -}}
+
+{{- with $indentCount -}}
+  {{- $lines         := split $renderedString "\n" -}}
+  {{- $mungedContent := index $lines 0             -}}
+  {{- range $index, $line := $lines -}}
+    {{- if ne 0 $index -}}
+    {{- $mungedContent = printf "%s\n%s%s"
+                                $mungedContent
+                                (strings.Repeat $indentCount " ")
+                                $line
+    -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $findPattern       := `<pre.+?>(.|\s)+?</pre>`       -}}
+  {{- $undoPattern       := printf `\n%s` (strings.Repeat $indentCount " ") -}}
+  {{- $preformatted      := findRE $findPattern $mungedContent -}}
+  {{- range $block := $preformatted -}}
+    {{- $mungedContent  = replace $mungedContent $block (replaceRE $undoPattern "\n" $block) -}}
+  {{- end -}}
+  {{- $renderedString = $mungedContent -}}
+{{- end -}}
+
+{{- $renderedString = strings.TrimRight " "  $renderedString -}}
+{{- $renderedString = strings.TrimRight "\n" $renderedString -}}
+{{- $renderedString = $renderedString | safeHTML -}}
+
+{{- return $renderedString -}}
