@@ -192,6 +192,14 @@ Platen:
       Enabled: true
       Partials:
         Header: platen/features/pwa/header
+    Katex:
+      Enabled: true
+      AlwaysLoad: false
+      Version: 0.16.4
+      Partials:
+        Header: platen/features/katex/header
+        Renderers:
+          Codeblock: platen/features/katex/codeblock
     PortableLinks:                            # BookPortableLinks
       Enabled: true
   Repository:

@@ -4,9 +4,11 @@
 {{- $input := . -}}
 
 {{/* Process input parameters */}}
-{{- $class   := $input.Get "class"     -}}
-{{- $content := trim $input.Inner "\n" -}}
-{{- $display := default (in $input.Params "display") ($input.Get "display") -}}
+{{- $display       := default ($input.Get 0) ($input.Get "display")            -}}
+{{- $display        = default false          $display                          -}}
+{{- $class         := default ($input.Get 1) ($input.Get "class")              -}}
+{{- $contentParams := dict "Text" $input.InnerDeindent "TrimEOL" true          -}}
+{{- $content       := partial "platen/utils/getLeadTrimmedText" $contentParams -}}
 
 {{/* Munge the content depending on whether it should be in display mode or not */}}
 {{- if $display -}}
@@ -16,9 +18,14 @@
 {{- end -}}
 
 {{/* Define the list of attributes for the span element */}}
-{{- $attributes := slice }}
+{{- $attributes := slice -}}
+{{- $classes    := slice -}}
 {{- with $class -}}
-  {{- $attributes = $attributes | append (printf `class="%s"` $class) -}}
+  {{- $classes = $classes | append $class -}}
+{{- end -}}
+{{- $classes = delimit $classes " " -}}
+{{- with $classes -}}
+  {{- $attributes = $attributes | append (printf `class="%s"` $classes)  -}}
 {{- end -}}
 {{- $attributes = partial "platen/utils/getSafeAttributes" $attributes -}}
 
@@ -27,15 +34,9 @@
 
   Use the page's scratch to add handling other shortcodes can take advantage of.
 */}}
-{{- if not ($input.Page.Scratch.Get "katex") -}}
-  <link rel="stylesheet" href="{{ "katex/katex.min.css" | relURL }}" />
-  <script defer src="{{ "katex/katex.min.js" | relURL }}"></script>
-  <script defer src="{{ "katex/auto-render.min.js" | relURL }}"
-          onload="renderMathInElement(document.body);"></script>
-
-  {{/* Now that the links/scripts are added, set `Katex` in the page scratch. */}}
-  {{- $input.Page.Scratch.Set "katex" true -}}
+{{- if not ($input.Page.Store.Get "hasKatex") -}}
+  {{- $input.Page.Store.Set "hasKatex" true -}}
 {{- end -}}
 
 {{/* Render */}}
-<span {{ $attributes }}>{{ $content }}</span>
+{{- printf "<span %s>%s</span>" $attributes $content | safeHTML -}}
