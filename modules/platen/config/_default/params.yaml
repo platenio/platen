@@ -200,6 +200,13 @@ Platen:
         Header: platen/features/katex/header
         Renderers:
           Codeblock: platen/features/katex/codeblock
+    Mermaid:
+      Enabled: true
+      Version: 9.3.0
+      Partials:
+        Header: platen/features/mermaid/header
+        Renderers:
+          Codeblock: platen/features/mermaid/codeblock
     PortableLinks:                            # BookPortableLinks
       Enabled: true
   Repository:
