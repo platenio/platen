@@ -17,7 +17,7 @@ Platen:
         header-height: 3.5rem
         menu-width: 16rem
         toc-width: 16rem
-        hint-colors:
+        details-colors:
           info: "#6bf"
           warning: "#fd6"
           danger: "#f66"
@@ -162,10 +162,10 @@ Platen:
         Enabled: true
         Style:
           Name: columns
-      Hint:
+      Details:
         Enabled: true
         Style:
-          Name: hint
+          Name: details
       Tabs:
         Enabled: true
         Style:

@@ -16,10 +16,10 @@ To use Toroidal to host a webring, you need to have a Hugo site. Toroidal has a 
 - Go 1.18 or newer. Go is required to use Hugo modules like Toroidal. To install Golang, see the
   [Go documentation][02].
 
-{{% hint info %}}
-**Note:** Even though Hugo and Toroidal requires Go, a programming language, you won't be doing any
-programming to use this module. It's only needed for managing Hugo modules.
-{{% /hint %}}
+{{< details title="About Go" class="info" open=true >}}
+  Even though Hugo and Toroidal requires Go, a programming language, you won't be doing any
+  programming to use this module. It's only needed for managing Hugo modules.
+{{< /details >}}
 
 With Hugo and Go installed, you'll need to make sure your site is set up to use Hugo Modules. See
 the [Use Hugo Modules][03] article in Hugo's documentation to do so.
@@ -175,14 +175,14 @@ By default, the member definition page shows the webring name as the title with 
 - `Random` to take a site visitor to a random member in the webring
 - `Next` to take a site visitor to the next member in the webring
 
-{{% hint info %}}
+{{< details title="Working Example" class="info" open=true >}}
 You can also see a working example of a webring on this site. You can visit the [member list] and
 the [administration page]. The member links don't go to a real site, but otherwise you can see
 how things look.
 
 [member list]: /modules/toroidal/webrings/example-webring
 [administration page]: /modules/toroidal/webrings/example-webring/admin
-{{% /hint %}}
+{{< /details >}}
 
 ## Adding Webring Navigation to Member Sites
 
