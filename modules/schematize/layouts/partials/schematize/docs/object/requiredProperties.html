@@ -16,9 +16,9 @@
     object's properties. This value should be null for a top-level object and set for any nested
     objects, like properties of a top-level object.
 */}}
-{{- $params := . -}}
-{{- $data := $params.property -}}
-{{- $level := $params._level -}}
+{{- $params := .                      -}}
+{{- $data   := $params.property       -}}
+{{- $level  := add 1 $params._level   -}}
 {{- $prefix := default "" $params._id -}}
 
 {{ with $data.required }}
@@ -28,9 +28,9 @@
   }}
 
   {{- range . }}
-    {{- $title := (index $data.properties .).title -}}
+    {{- $title := (index $data.properties .).title                                      -}}
     {{- $link  := printf "%s#%s%s" $params.page.Permalink $prefix (. | lower | urlize ) -}}
-    {{- $text := printf "\n- [%s](%s)" $title $link -}}
+    {{- $text := printf "\n- [%s](%s)" $title $link                                     -}}
     {{ $text }}
   {{- end -}}
   {{- print "\n{.schematize-required-properties-list}" }}

@@ -13,9 +13,9 @@
   - `_id` - Optional. The ID this property belongs to. If not specified, the object's title is
     downcased and urlized for use as the ID for nested objects.
 */}}
-{{- $params := . -}}
+{{- $params := .                -}}
 {{- $data   := $params.property -}}
-{{- $level  := $params._level -}}
+{{- $level  := $params._level   -}}
 {{- if gt 1 $level -}}
 {{- else -}}
   {{- if not (isset $data "_id") -}}
