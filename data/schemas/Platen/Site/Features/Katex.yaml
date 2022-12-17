@@ -113,56 +113,56 @@ properties:
             [sref:`AlwaysLoad`]: Platen.Site.Features.Katex.AlwaysLoad
         type: string
         default: platen/features/katex/header
-    Renderers:
-      title: Renderer Partials
-      description: Registers one or more partials that act as render hooks.
-      type: object
-      schematize:
-        skipSchemaRender: true
-        details: |
-          Defines a map of partials to use as Markdown render hooks. Like all partials, these are
-          only processed when `Enabled` is set to `true`.
+      Renderers:
+        title: Renderer Partials
+        description: Registers one or more partials that act as render hooks.
+        type: object
+        schematize:
+          skipSchemaRender: true
+          details: |
+            Defines a map of partials to use as Markdown render hooks. Like all partials, these are
+            only processed when `Enabled` is set to `true`.
 
-          Supported renderer partials include:
+            Supported renderer partials include:
 
-          - `Codeblock`, processed for fenced code blocks with a language ID
-          - `Heading`, processed for headings
-          - `Image`, processed for image links
-          - `Link`, processed for non-image links
+            - `Codeblock`, processed for fenced code blocks with a language ID
+            - `Heading`, processed for headings
+            - `Image`, processed for image links
+            - `Link`, processed for non-image links
 
-          In all cases, all renderer partials for enabled features are checked one after the other
-          unless they return a render string. Only the first applicable partial that returns a
-          render string is processed and rendered.
-      properties:
-        Codeblock:
-          title: Codeblock Render Hook Partial
-          description: Adds a partial to call when processing the codeblock render hook.
-          schematize:
-            details: |
-              Adds support for KaTeX and mhchem markup rendering for content. This render hook is only
-              processed when the language ID for a codeblock is `chem`, `katex`, or `math`.
+            In all cases, all renderer partials for enabled features are checked one after the other
+            unless they return a render string. Only the first applicable partial that returns a
+            render string is processed and rendered.
+        properties:
+          Codeblock:
+            title: Codeblock Render Hook Partial
+            description: Adds a partial to call when processing the codeblock render hook.
+            schematize:
+              details: |
+                Adds support for KaTeX and mhchem markup rendering for content. This render hook is only
+                processed when the language ID for a codeblock is `chem`, `katex`, or `math`.
 
-              It registers the current page as having KaTeX, which ensures the library and style
-              modules are loaded for automatic rendering. If the codeblock uses the `\ce{...}` tag or
-              has the `chem` language code, it registers the current page as having chemistry markup
-              and ensures the mhchem KaTeX plugin is loaded as well.
+                It registers the current page as having KaTeX, which ensures the library and style
+                modules are loaded for automatic rendering. If the codeblock uses the `\ce{...}` tag or
+                has the `chem` language code, it registers the current page as having chemistry markup
+                and ensures the mhchem KaTeX plugin is loaded as well.
 
-              It renders the definition inside the codeblock inside a `span` element, denoting it as
-              display-mode KaTeX by default. With the `class` attribute, it adds the specified classes
-              to the element. With the `display` attribute, an author can explicitly control whether
-              the span is rendered in display mode. Setting `display` to `false` renders the markup in
-              inline mode.
+                It renders the definition inside the codeblock inside a `span` element, denoting it as
+                display-mode KaTeX by default. With the `class` attribute, it adds the specified classes
+                to the element. With the `display` attribute, an author can explicitly control whether
+                the span is rendered in display mode. Setting `display` to `false` renders the markup in
+                inline mode.
 
-              This value defaults to `platen/features/katex/codeblock`. You can replace it with a
-              different value, defining a new partial, or override the existing partial by creating
-              the file `layouts/partials/platen/features/katex/codeblock.html` in your own site or
-              module.
+                This value defaults to `platen/features/katex/codeblock`. You can replace it with a
+                different value, defining a new partial, or override the existing partial by creating
+                the file `layouts/partials/platen/features/katex/codeblock.html` in your own site or
+                module.
 
-              For more information about defining codeblock render hook partials, see
-              [Defining a Codeblock Render Hook Partial][01] in the [Theme Guide][02].
+                For more information about defining codeblock render hook partials, see
+                [Defining a Codeblock Render Hook Partial][01] in the [Theme Guide][02].
 
-              <!-- Reference Links -->
-              [01]: /styling
-              [02]: /styling
-          type: string
-          default: platen/features/katex/codeblock
+                <!-- Reference Links -->
+                [01]: /styling
+                [02]: /styling
+            type: string
+            default: platen/features/katex/codeblock
