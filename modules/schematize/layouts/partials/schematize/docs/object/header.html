@@ -21,13 +21,11 @@
   {{- if not (isset $data "_id") -}}
     {{- $data = merge $data (dict "_id" ($data.title | lower | urlize)) -}}
   {{- end -}}
-  {{- safeHTML "<header>" }}
-
-  {{- partial "schematize/utils/headings/property" $params }}
-
-  {{- partial "schematize/utils/summary" $params }}
-
-  {{- partial "schematize/utils/metadata/render" $params -}}
-
-  {{- safeHTML "</header>" }}
+  {{- $renderStrings := slice    "<header>"
+                        | append (partial "schematize/utils/headings/property" $params)
+                        | append (partial "schematize/utils/summary" $params)
+                        | append (partial "schematize/utils/metadata/render" $params)
+                        | append "</header>"
+  -}}
+  {{- delimit $renderStrings "\n\n" | safeHTML }}
 {{ end }}

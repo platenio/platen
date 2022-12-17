@@ -23,8 +23,11 @@
 {{- $data   := $params.property     -}}
 
 {{ with $data.patternProperties }}
-  {{ partial "schematize/utils/headings/arbitrary" (dict "level" $level "title" "Pattern Properties") }}
+  {{/* Render the heading for the pattern properties */}}
+  {{- $headingParams := dict  "level" $level "title" "Pattern Properties"                    -}}
+  {{- $renderStrings := slice (partial "schematize/utils/headings/arbitrary" $headingParams) -}}
 
+  {{/* Build the list of sorted properties, munging the ID as needed for better linking */}}
   {{ $sortedProperties := dict -}}
   {{- range $name, $info := $data.patternProperties -}}
     {{- $weight := default 0 $info.schematize.weight -}}
@@ -48,8 +51,14 @@
     {{- $sortedProperties = merge $sortedProperties (dict $name $property)                  -}}
   {{- end -}}
 
+  {{/* Grab the render string for each pattern property */}}
   {{- range $info := sort $sortedProperties "_weight" "asc" -}}
-    {{- $property := merge $info (dict "_level" $level)                                     -}}
-    {{ partial "schematize/utils/typePicker" (dict "property" $property "page" $params.page) }}
-  {{ end }}
-{{ end }}
+    {{- $property         := merge   $info      (dict "_level" $level)           -}}
+    {{- $pickerParams     := dict    "property" $property "page"   $params.page  -}}
+    {{- $renderedProperty := partial "schematize/utils/typePicker" $pickerParams -}}
+    {{- $renderStrings     = $renderStrings | append $renderedProperty           -}}
+  {{- end -}}
+
+  {{/* Render */}}
+  {{- delimit $renderStrings "\n\n" | safeHTML -}}
+{{- end -}}
