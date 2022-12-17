@@ -1,7 +1,7 @@
 {{- $context := . -}}
 
 {{- $loadKatex := $context.Store.Get "hasKatex"
-                  | default $context.Params.Platen.Features.Katex.Enabled
+                  | default $context.Params.Platen.Features.Katex.AlwaysLoad
                   | default site.Params.Platen.Features.Katex.AlwaysLoad
 -}}
 

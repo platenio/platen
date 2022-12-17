@@ -1,6 +1,6 @@
 ---
 name: Valid
-title: Minimal Shortcode Settings
+title: Valid Definitions
 summary: |
   Defines the minimal properties a theme developer needs to define for a shortcode to function with
   Platen's configuration, automatically and dynamically loading styles without requiring the end

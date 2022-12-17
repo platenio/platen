@@ -10,8 +10,8 @@ schematize:
     With the [sref:`RootSection`] setting, you can define a content folder to add to the site menu as
     the main section.
 
-    With the [sref:`BeforeInjection`], [sref:`BeforeHugoConfig`], [sref:`BeforeRoot`],
-    [sref:`AfterRoot`], [sref:`AfterHugoConfig`], and [sref:`AfterInjection`] settings
+    With the [sref:`BeforeInjection`], [sref:`BeforeHugoConfig`], [sref:`BeforeRootSection`],
+    [sref:`AfterRootSection`], [sref:`AfterHugoConfig`], and [sref:`AfterInjection`] settings
     (collectively, the menu position settings), you can use Platen [sref:features] to add entries to
     the site's menu in one of several locations using a partial defined for the feature.
 
@@ -24,7 +24,17 @@ schematize:
     For more information on how this setting is used internally and how to define a feature that can
     support these menu items, see [sref:`Partials.Menu` in Defining Features].
 
+    <!-- Reference Links -->
     [sref:`Partials.Menu` in Defining Features]: Platen.Site.Features.Defining.Partials.Menu
+    [sref:`RootSection`]: Platen.Site.Display.Menu.Settings.RootSection
+    [sref:`BeforeInjection`]: Platen.Site.Display.Menu.Settings.BeforeInjection
+    [sref:`BeforeHugoConfig`]: Platen.Site.Display.Menu.Settings.BeforeHugoConfig
+    [sref:`BeforeRootSection`]: Platen.Site.Display.Menu.Settings.BeforeRootSection
+    [sref:`AfterInjection`]: Platen.Site.Display.Menu.Settings.AfterInjection
+    [sref:`AfterHugoConfig`]: Platen.Site.Display.Menu.Settings.AfterHugoConfig
+    [sref:`AfterRootSection`]: Platen.Site.Display.Menu.Settings.AfterRootSection
+    [sref:Defining a Feature Menu Entry]: Platen.Site.Display.Menu.Entry
+    [sref:features]: Platen.Site.Features.Defining
 type: object
 properties:
   RootSection:
@@ -41,10 +51,14 @@ properties:
         You can specify a single forward slash (`/`) to set the menu's root section to the entire
         content folder.
 
-        If you want to uninclude a page or section from the site menu, set the `Platen.Menu.Hide`
-        parameter in the page or section's frontmatter to `true`.
+        If you want to uninclude a page or section from the site menu, set the
+        `Platen.Menu.Hide` parameter in the [sref:page] or [sref:section]'s frontmatter to `true`.
 
         The default value is `/`.
+
+        <!-- Reference Links -->
+        [sref:page]: Platen.Content.Page.Menu.Hide
+        [sref:section]: Platen.Content.Section.Menu.Hide
     type: string
     default: /
   BeforeInjection:
@@ -75,6 +89,7 @@ properties:
             You must define at least one entry to include at this position. A position without any
             entries isn't processed, even if [sref:`Group`] is defined.
 
+            <!-- Reference Links -->
             [sref:`Group`]: Platen.Site.Display.Menu.Settings.pattern-positional.group
         type: array
         items:
@@ -90,6 +105,7 @@ properties:
               Entries with the [sref:`Group`] setting acommodate a nested list of entries (defined
               in [sref:`Entries`]) in the menu, using this entry as the parent container.
 
+              <!-- Reference Links -->
               [sref:`Entries`]: Platen.Site.Display.Menu.Entry.Entries
               [sref:`Feature`]: Platen.Site.Display.Menu.Entry.Feature
               [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group
@@ -122,6 +138,7 @@ properties:
             You must define at least one entry to include at this position. A position without any
             entries isn't processed, even if [sref:`Group`] is defined.
 
+            <!-- Reference Links -->
             [sref:`Group`]: Platen.Site.Display.Menu.Settings.pattern-positional.group
         type: array
         items:
@@ -137,6 +154,7 @@ properties:
               Entries with the [sref:`Group`] setting acommodate a nested list of entries (defined
               in [sref:`Entries`]) in the menu, using this entry as the parent container.
 
+              <!-- Reference Links -->
               [sref:`Entries`]: Platen.Site.Display.Menu.Entry.Entries
               [sref:`Feature`]: Platen.Site.Display.Menu.Entry.Feature
               [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group
@@ -169,6 +187,7 @@ properties:
             You must define at least one entry to include at this position. A position without any
             entries isn't processed, even if [sref:`Group`] is defined.
 
+            <!-- Reference Links -->
             [sref:`Group`]: Platen.Site.Display.Menu.Settings.pattern-positional.group
         type: array
         items:
@@ -184,6 +203,7 @@ properties:
               Entries with the [sref:`Group`] setting acommodate a nested list of entries (defined
               in [sref:`Entries`]) in the menu, using this entry as the parent container.
 
+              <!-- Reference Links -->
               [sref:`Entries`]: Platen.Site.Display.Menu.Entry.Entries
               [sref:`Feature`]: Platen.Site.Display.Menu.Entry.Feature
               [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group
@@ -216,6 +236,7 @@ properties:
             You must define at least one entry to include at this position. A position without any
             entries isn't processed, even if [sref:`Group`] is defined.
 
+            <!-- Reference Links -->
             [sref:`Group`]: Platen.Site.Display.Menu.Settings.pattern-positional.group
         type: array
         items:
@@ -231,6 +252,7 @@ properties:
               Entries with the [sref:`Group`] setting acommodate a nested list of entries (defined
               in [sref:`Entries`]) in the menu, using this entry as the parent container.
 
+              <!-- Reference Links -->
               [sref:`Entries`]: Platen.Site.Display.Menu.Entry.Entries
               [sref:`Feature`]: Platen.Site.Display.Menu.Entry.Feature
               [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group
@@ -262,6 +284,7 @@ properties:
             You must define at least one entry to include at this position. A position without any
             entries isn't processed, even if [sref:`Group`] is defined.
 
+            <!-- Reference Links -->
             [sref:`Group`]: Platen.Site.Display.Menu.Settings.pattern-positional.group
         type: array
         items:
@@ -277,6 +300,7 @@ properties:
               Entries with the [sref:`Group`] setting acommodate a nested list of entries (defined
               in [sref:`Entries`]) in the menu, using this entry as the parent container.
 
+              <!-- Reference Links -->
               [sref:`Entries`]: Platen.Site.Display.Menu.Entry.Entries
               [sref:`Feature`]: Platen.Site.Display.Menu.Entry.Feature
               [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group
@@ -308,6 +332,7 @@ properties:
             You must define at least one entry to include at this position. A position without any
             entries isn't processed, even if [sref:`Group`] is defined.
 
+            <!-- Reference Links -->
             [sref:`Group`]: Platen.Site.Display.Menu.Settings.pattern-positional.group
         type: array
         items:
@@ -323,6 +348,7 @@ properties:
               Entries with the [sref:`Group`] setting acommodate a nested list of entries (defined
               in [sref:`Entries`]) in the menu, using this entry as the parent container.
 
+              <!-- Reference Links -->
               [sref:`Entries`]: Platen.Site.Display.Menu.Entry.Entries
               [sref:`Feature`]: Platen.Site.Display.Menu.Entry.Feature
               [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group

@@ -1,23 +1,33 @@
-// Backup
 figure.platen-art {
-  // Set the position to relative to support CW content
-  position: relative;
+  // By default, the figure takes up the full width of its container.
+  width: 100%;
 
-  // By default and when specified, have the art take up 100% of the width.
-  &.full {
-    img {
-      width: 100%;
-      object-fit: contain;
-    }
+  // The image should always take up the full width of the figure.
+  img {
+    object-fit: contain;
+    width: 100%;
   }
 
   figcaption {
-    margin-top: 1rem;
+    margin-top: $padding-large;
     text-align: center;
     font-size: smaller;
   }
 
+  &.half {
+    width: 50%;
+  }
+  &.third {
+    width: 33%
+  }
+  &.quarter {
+    width: 25%
+  }
+
   &.platen-content-warning {
+    // Set the position to relative to support fixed CW content
+    position: relative;
+
     // Blur the image by default until unhidden by visitor
     img {
       z-index: 10;

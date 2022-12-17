@@ -2,7 +2,7 @@
 name: Tabs
 title: Tabs
 summary: |
-  Defines the options for the `tabs` shortcode.
+  Defines the map of options for the `tabs` shortcode's SCSS style module.
 weight: 1
 type: schematize
 Schematize: Platen.Site.Theme.Shortcodes.Tabs

@@ -222,22 +222,26 @@ properties:
         Shortcodes defined in this way must not depend on each other.
     type: object
     properties:
+      Art:
+        $ref: ./Shortcodes/Art.yaml
+        schematize:
+          weight: 1
       Button:
         $ref: ./Shortcodes/Button.yaml
         schematize:
-          weight: 1
+          weight: 2
       Columns:
         $ref: ./Shortcodes/Columns.yaml
         schematize:
-          weight: 2
-      Hint:
-        $ref: ./Shortcodes/Hint.yaml
-        schematize:
           weight: 3
+      Details:
+        $ref: ./Shortcodes/Details.yaml
+        schematize:
+          weight: 4
       Tabs:
         $ref: ./Shortcodes/Tabs.yaml
         schematize:
-          weight: 4
+          weight: 5
     patternProperties:
       ".":
         $ref: ./Shortcodes/Valid.yaml

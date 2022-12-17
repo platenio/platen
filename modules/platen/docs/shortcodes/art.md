@@ -56,6 +56,16 @@ The Platen Logo was designed by [Monday](https://www.davecox.design/).
 {{</* /art */>}}
 ```
 
+```memo-example-shortcode { title="Floating Half-Width Example" }
+{{</* art "/images/logo.svg" "Platen Logo" "half float-left" /*/>}}
+
+In this example, the art takes up half the available width and floats to
+the left of this content.
+
+This combination lets you include art alongside your content without breaking
+the flow.
+```
+
 ```memo-example-shortcode { title="Example with Content Warning" }
 {{</* art src="/images/logo.svg"
           alt="Platen Logo" 

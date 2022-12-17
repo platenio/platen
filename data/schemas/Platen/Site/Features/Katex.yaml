@@ -1,0 +1,168 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Features/Katex.schema.yaml
+title: KaTeX Rendering
+description: Settings that control the site's KaTeX feature.
+schematize:
+  details: |
+    These settings control Platen's KaTeX rendering feature. When this feature is enabled, you can
+    use [KaTeX][01] markup in your content with the [`katex` shortcode][02], the `chem`, `katex`,
+    and `math` [codeblock rendering hooks][03], and even with KaTeX's own open/closing tags in
+    normal Markdown content if [sref:`AlwaysLoad`] is set to `true`.
+
+    With KaTeX, you can write mathematical and chemical formulae in plaintext and render them as
+    beautiful formula on your site.
+
+    You can override some of these settings at a [sref:content-level].
+
+    <!-- Reference Links -->
+    [01]:  https://katex.org/
+    [02]: /modules/platen/shortcodes/katex
+    [03]: /modules/platen/renderers/katex
+    [sref:`AlwaysLoad`]: Platen.Site.Features.Katex.AlwaysLoad
+    [sref:content-level]: Platen.Content.Features.Katex
+type: object
+properties:
+  Enabled:
+    title: Enable KaTeX
+    description: Choose whether KaTeX rendering is available for the site.
+    schematize:
+      details: |
+        Choose whether the site renders KaTeX. The default is `true`.
+      weight: 1
+    type: boolean
+    default: true
+  AlwaysLoad:
+    title: Always Load KaTeX
+    description: Choose whether the KaTeX style and libraries are always added to pages.
+    schematize:
+      details: |
+        Choose whether the KaTeX style and library modules are always added to site pages. By
+        default, the modules and style code are only added to pages where KaTeX markup is used
+        with the codeblock render hook or the `katex` shortcode, or where the page's front matter
+        has [sref:`Platen.Features.Katex.AlwaysLoad`] set to `true`.
+
+        When this setting is set to `true`, the modules are added to every page and will always
+        be called to auto-render any valid KaTeX found on the page. This is useful for sites that
+        make heavy use of inline KaTeX without the shortcode.
+
+        The default value is `false`.
+
+        <!-- Reference Links -->
+        [sref:`Platen.Features.Katex.AlwaysLoad`]: Platen.Content.Features.Katex.AlwaysLoad
+      weight: 2
+    type: boolean
+    default: false
+  Version:
+    title: KaTeX Version
+    description: Specify the version of KaTeX to load when needed.
+    schematize:
+      details: |
+        Specify the version of KaTeX to load when needed. The KaTeX feature retrieves the style and
+        script modules for KaTeX from a CDN at build time. This value is used to determine which
+        version to bundle with the site and use for auto-rendering.
+
+        You can set this value to any valid released version of KaTeX, but if you override the
+        default there may be incompatibilities with the available fonts. In that case, you'll need
+        to also download the fonts for that version and add them to the `static/katex` folder,
+        replacing the existing fonts.
+
+        Due to the fragility of the KaTeX auto-rendering library and fonts, this setting can only be
+        defined at the site level at this time.
+      weight: 2
+    type: string
+    default: 0.16.4
+  Partials:
+    title: Feature Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when [sref:`Enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`Enabled`]: Platen.Site.Features.Katex.Enabled
+      weight: 100
+      skipSchemaRender: true
+    type: object
+    properties:
+      Header:
+        title: Header Partial
+        description: Injects a partial into the HTML header.
+        schematize:
+          details: |
+            If specified, this partial is processed in the HTML header with the current page's
+            context. The default value is `platen/features/katex/header`. You can overwrite
+            this value, replacing it with another partial entirely, or you can add the same file to
+            your own theme or site, effectively replacing it.
+
+            The default partial pulls the KaTeX style and library modules from a CDN if any of the
+            following conditions are met:
+            
+            1. The page content includes the `katex` shortcode
+            1. The page content includes any codeblocks with `chem`, `katex`, or `math` as the
+               language ID.
+            1. The page front matter has [sref:`Platen.Features.Katex.Enable`] set to `true`
+            1. The site is configured with [sref:`AlwaysLoad`] enabled.
+
+            With the modules loaded, the page will automatically render any valid KaTeX on the
+            page, displaying the formulae.
+
+            <!-- Reference Links -->
+            [sref:`Platen.Features.Katex.AlwaysLoad`]: Platen.Content.Features.Katex.AlwaysLoad
+            [sref:`AlwaysLoad`]: Platen.Site.Features.Katex.AlwaysLoad
+        type: string
+        default: platen/features/katex/header
+    Renderers:
+      title: Renderer Partials
+      description: Registers one or more partials that act as render hooks.
+      type: object
+      schematize:
+        skipSchemaRender: true
+        details: |
+          Defines a map of partials to use as Markdown render hooks. Like all partials, these are
+          only processed when `Enabled` is set to `true`.
+
+          Supported renderer partials include:
+
+          - `Codeblock`, processed for fenced code blocks with a language ID
+          - `Heading`, processed for headings
+          - `Image`, processed for image links
+          - `Link`, processed for non-image links
+
+          In all cases, all renderer partials for enabled features are checked one after the other
+          unless they return a render string. Only the first applicable partial that returns a
+          render string is processed and rendered.
+      properties:
+        Codeblock:
+          title: Codeblock Render Hook Partial
+          description: Adds a partial to call when processing the codeblock render hook.
+          schematize:
+            details: |
+              Adds support for KaTeX and mhchem markup rendering for content. This render hook is only
+              processed when the language ID for a codeblock is `chem`, `katex`, or `math`.
+
+              It registers the current page as having KaTeX, which ensures the library and style
+              modules are loaded for automatic rendering. If the codeblock uses the `\ce{...}` tag or
+              has the `chem` language code, it registers the current page as having chemistry markup
+              and ensures the mhchem KaTeX plugin is loaded as well.
+
+              It renders the definition inside the codeblock inside a `span` element, denoting it as
+              display-mode KaTeX by default. With the `class` attribute, it adds the specified classes
+              to the element. With the `display` attribute, an author can explicitly control whether
+              the span is rendered in display mode. Setting `display` to `false` renders the markup in
+              inline mode.
+
+              This value defaults to `platen/features/katex/codeblock`. You can replace it with a
+              different value, defining a new partial, or override the existing partial by creating
+              the file `layouts/partials/platen/features/katex/codeblock.html` in your own site or
+              module.
+
+              For more information about defining codeblock render hook partials, see
+              [Defining a Codeblock Render Hook Partial][01] in the [Theme Guide][02].
+
+              <!-- Reference Links -->
+              [01]: /styling
+              [02]: /styling
+          type: string
+          default: platen/features/katex/codeblock

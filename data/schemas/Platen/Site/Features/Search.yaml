@@ -20,7 +20,10 @@ properties:
     schematize:
       details: |
         Define a map of partials for Platen to inject as needed. These partials are only
-        injected when `Enabled` is set to `true`.
+        injected when [sref:`Enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`Enabled`]: Platen.Site.Features.Search.Enabled
       weight: 2
     type: object
     properties:
@@ -28,6 +31,7 @@ properties:
         title: Header Partial
         description: Injects a partial into the HTML header.
         schematize:
+          weight: 1
           details: |
             If specified, this partial is processed in the HTML header with the current page's
             context. The default value is `platen/features/search/header`. You can overwrite

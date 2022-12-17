@@ -14,6 +14,7 @@ schematize:
     matching a [sref:`Target`] value is munged to replace that path prefix with the one
     defined in [sref:`Source`].
 
+    <!-- Reference Links -->
     [sref:`Source`]: Platen.Site.Repository.MountedPath.Source
     [sref:`Target`]: Platen.Site.Repository.MountedPath.Target
 type: object
@@ -140,6 +141,7 @@ properties:
         To ensure platen doesn't render an "Edit this page" link for this content, you would specify this value as
         `IGNORE!!` and set [sref:`Target`] to `reference/super-neat`.
 
+        <!-- Reference Links -->
         [sref:`Target`]: Platen.Site.Repository.MountedPath.Target
     type: string
   Target:
@@ -183,4 +185,5 @@ properties:
         To ensure platen maps the mounted content correctly, you would specify this value as
         `reference/super-neat` and set [sref:`Source`] to `SuperNeat/docs`.
 
+        <!-- Reference Links -->
         [sref:`Source`]: Platen.Site.Repository.MountedPath.Source

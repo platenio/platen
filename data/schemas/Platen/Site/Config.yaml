@@ -29,28 +29,44 @@ properties:
         control their behavior.
     type: object
     properties:
-      Search:
-        $ref: ./Features/Search.yaml
       Comments:
         $ref: ./Features/Comments.yaml
-      PWA:
-        $ref: ./Features/PWA.yaml
+        schematize:
+          weight: 1
+      Katex:
+        $ref: ./Features/Katex.yaml
+        schematize:
+          weight: 2
+      Mermaid:
+        $ref: ./Features/Mermaid.yaml
+        schematize:
+          weight: 3
       PortableLinks:
         $ref: ./Features/PortableLinks.yaml
+        schematize:
+          weight: 4
+      PWA:
+        $ref: ./Features/PWA.yaml
+        schematize:
+          weight: 5
+      Search:
+        $ref: ./Features/Search.yaml
+        schematize:
+          weight: 6
     patternProperties:
       ".":
         $ref: ./Features/Defining.yaml
         schematize:
           href: pattern-any
-  Repository:
-    $ref: ./Repository/Settings.yaml
-    schematize:
-      weight: 6
-  Multilingual:
-    $ref: ./Multilingual.yaml
-    schematize:
-      weight: 5
   Markup:
     $ref: ./Markup/Config.yaml
     schematize:
       weight: 4
+  Multilingual:
+    $ref: ./Multilingual.yaml
+    schematize:
+      weight: 5
+  Repository:
+    $ref: ./Repository/Settings.yaml
+    schematize:
+      weight: 6

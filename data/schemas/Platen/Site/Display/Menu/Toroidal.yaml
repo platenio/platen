@@ -34,6 +34,7 @@ schematize:
       that your partial is aware of. The entire entry is passed to the partial when it's rendered
       along with the context for the page the menu is being rendered on.
 
+    <!-- Reference Links -->
     [sref:`Platen.Display.Menu`]: Platen.Site.Display.Menu.Settings
     [sref:`Feature`]: Platen.Site.Display.Menu.Entry.Feature
     [sref:`Weight`]: Platen.Site.Display.Menu.Entry.Weight
@@ -73,6 +74,7 @@ properties:
 
         If neither this setting nor [sref:`PartialPath`] are defined, Hugo raises an error.
 
+        <!-- Reference Links -->
         [sref:`PartialPath`]: Platen.Site.Display.Menu.Toroidal.PartialPath
     type: string
   PartialPath:
@@ -101,6 +103,7 @@ properties:
 
         If neither this setting nor [sref:`PagePath`] are defined, Hugo raises an error.
 
+        <!-- Reference Links -->
         [sref:`PagePath`]: Platen.Site.Display.Menu.Toroidal.PagePath
     type: string
   DisplayName:
@@ -127,6 +130,7 @@ properties:
         This setting is incompatible with [sref:`Flatten`]. A webring entry can be collapsed or
         flattened, but not both.
 
+        <!-- Reference Links -->
         [sref:`Flatten`]: Platen.Site.Display.Menu.Toroidal.Flatten
     type: boolean
   Flatten:
@@ -143,14 +147,6 @@ properties:
         This setting is incompatible with [sref:`Collapse`]. A webring entry can be collapsed or
         flattened, but not both.
 
+        <!-- Reference Links -->
         [sref:`Collapse`]: Platen.Site.Display.Menu.Toroidal.Collapse
     type: boolean
-  Class:
-    title: CSS Classes
-    description: >-
-      Foo.
-    schematize:
-      weight: 7
-      details: |
-        Bar.
-    type: string

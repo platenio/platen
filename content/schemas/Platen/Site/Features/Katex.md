@@ -1,9 +1,9 @@
 ---
-name: Search
-title: Site Search
+name: Katex
+title: KaTeX Rendering
 weight: 10
 type: schematize
-Schematize: Platen.Site.Features.Search
+Schematize: Platen.Site.Features.Katex
 outputs:
   - HTML
   - Schematize

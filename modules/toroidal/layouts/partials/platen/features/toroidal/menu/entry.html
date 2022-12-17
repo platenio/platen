@@ -5,17 +5,13 @@
   be done first.
 */}}
 {{- $params            := .                         -}}
-{{- $class             := "platen"             -}}
-{{/* Calculated properties */}}
-{{- with $params.Class -}}
-  {{- $class = printf " %s" $params.Class -}}
-{{- end -}}
 
-{{- $idMap   := partial "toroidal/utils/getNavIDs"          $params -}}
-{{- $jsNames := partial "toroidal/utils/scripting/getNames" $params -}}
-{{- $js := partial "toroidal/utils/scripting/render.js" $params | htmlUnescape -}}
-{{- $js  = split $js "\n" -}}
-{{- $js  = delimit $js "\n    " -}}
+{{/* Calculated properties */}}
+{{- $idMap   := partial "toroidal/utils/getNavIDs"           $params                -}}
+{{- $jsNames := partial "toroidal/utils/scripting/getNames"  $params                -}}
+{{- $js      := partial "toroidal/utils/scripting/render.js" $params | htmlUnescape -}}
+{{- $js       = split   $js "\n"                                                    -}}
+{{- $js       = delimit $js "\n    "                                                -}}
 
 {{- if $params.ForEmbedding }}
   {{- partial "platen/features/toroidal/menu/embed-header" $params.WebringName }}

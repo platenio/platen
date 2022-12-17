@@ -7,7 +7,6 @@
 {{- $src            := default ($input.Get 0) ($input.Get "src")            -}}
 {{- $alt            := default ($input.Get 1) ($input.Get "alt")            -}}
 {{- $class          := default ($input.Get 2) ($input.Get "class")          -}}
-{{- $class           = default "full"         $class                        -}}
 {{- $contentWarning := default ($input.Get 3) ($input.Get "contentWarning") -}}
 {{- $caption        := default nil            $input.Inner                  -}}
 {{- with $caption -}}

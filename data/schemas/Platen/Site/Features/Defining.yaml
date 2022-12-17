@@ -25,7 +25,10 @@ properties:
     schematize:
       details: |
         Define a map of partials for Platen to inject as needed. These partials are only
-        injected when `Enabled` is set to `true`.
+        injected when [sref:`Enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`Enabled`]: Platen.Site.Features.Defining.Enabled
       weight: 2
       skipSchemaRender: true
     type: object
@@ -34,19 +37,26 @@ properties:
         title: Header Partial
         description: Injects a partial into the HTML header.
         schematize:
+          weight: 1
           details: |
-            If specified, this partial is processed in the HTML header. This is useful for
-            adding standalone styles, scripts, and metadata. To add a style that uses the SCSS style
-            modules defined in the `Theme` settings, add a new map to `Theme.Styles` or specify a
-            `Style` partial for the feature.
+            If specified, this partial is processed in the HTML header. This is useful for adding
+            standalone styles, scripts, and metadata. To add a style that uses the SCSS style
+            modules defined in the [sref:`Theme`] settings, add a new map to [sref:`Theme.Styles`]
+            or specify a [sref:`Style`] partial for the feature.
 
             The partial is given the current page's context.
+
+            <!-- Reference Links -->
+            [sref:`Theme`]: Platen.Site.Theme.Config
+            [sref:`Theme.Styles`]: Platen.Site.Theme.Config.Styles
+            [sref:`Style`]: Platen.Site.Features.Defining.Partials.Style
         type: string
       Menu:
         title: Menu Partial
         description: Defines a partial for injection in the site menu.
         type: string
         schematize:
+          weight: 2
           details: |
             This partial is processed in the `platen/menu` partial, which defines the site's menu.
             This partial is processed several times depending on the [sref:`Menu`] setting.
@@ -98,9 +108,10 @@ properties:
                1. Ensure that the first element inside the list item is an input (`<input>`) element
                   with the type set to `checkbox`, a unique id, and the `toggle` class.
 
-                  > **Note:** To generate a unique id, you can use the `md5` function in your
-                  > partial to create a string unlikely to collide with any others.
-                  {.platen-hint .info}
+                  {{< details title="Note"  class="info" open=true >}}
+                  To generate a unique id, you can use the `md5` function in your partial to create
+                  a string unlikely to collide with any others.
+                  {{< /details >}}
 
                1. Ensure that the second element inside the list item is a label (`<label>`) element
                   with the `for` attribute set to the unique id of the input and the classes `flex`
@@ -127,10 +138,30 @@ properties:
                  </ul>
                </li>
                ```
+      Renderers:
+        $ref: ./Renderers.yaml
+        schematize:
+          weight: 3
+      Style:
+        title: Style Partial
+        description: Injects a partial into the site's SCSS.
+        schematize:
+          weight: 4
+          details: |
+            If specified, this partial is processed in `platen.scss`, which defines the site's
+            style. This partial is processed after the theme's builtin styles but before the
+            shortcode styles, allowing a shortcode to depend on it.
+
+            The partial is given the current page's context. Note that when importing SCSS
+            modules from this partial, the path is relative to `styles/platen.scss`, not the
+            root of the `assets` folder. To import an SCSS module in `assets/myFeature`, you
+            need to specify the path as `../myFeature/foo`, not `myFeature/foo`.
+        type: string
       Title:
         title: Title Partial
         description: Injects a partial to override the default HTML header title.
         schematize:
+          weight: 5
           details: |
             If specified, this partial is called when determining the HTML header title for a
             page, which sets the name of the browser tab and is used in Open Graph.
@@ -141,18 +172,4 @@ properties:
             partial until one of them returns a non-empty string. If the title for a page shouldn't
             be overridden from the default, the partial must return an empty string (`""`). The
             order the title partials are processed in isn't deterministic.
-        type: string
-      Style:
-        title: Style Partial
-        description: Injects a partial into the site's SCSS.
-        schematize:
-          details: |
-            If specified, this partial is processed in `platen.scss`, which defines the site's
-            style. This partial is processed after the theme's builtin styles but before the
-            shortcode styles, allowing a shortcode to depend on it.
-
-            The partial is given the current page's context. Note that when importing SCSS
-            modules from this partial, the path is relative to `styles/platen.scss`, not the
-            root of the `assets` folder. To import an SCSS module in `assets/myFeature`, you
-            need to specify the path as `../myFeature/foo`, not `myFeature/foo`.
         type: string

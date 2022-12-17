@@ -12,9 +12,10 @@ schematize:
     full list of all styles in your own configuration file. Only specify the values you want
     to add or replace.
 
-    For more information on authoring SCSS style modules, see [the SCSS documentation][a01].
+    For more information on authoring SCSS style modules, see [the SCSS documentation][01].
 
-    [a01]: https://sass-lang.com/documentation/at-rules/use
+    <!-- Reference Links -->
+    [01]: https://sass-lang.com/documentation/at-rules/use
 type: object
 properties:
   Basic:
@@ -57,15 +58,17 @@ properties:
         content are visible.
 
         You can overwrite this definition for your own site or theme by creating the file
-        `styles/printing/_basic.scss` in your [assets folder], which defaults to `assets` in
+        `styles/printing/_basic.scss` in your [assets folder][01], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
-        For more information on authoring SCSS, see the [learning guide].
+        For more information on authoring SCSS, see the [learning guide][02].
 
-        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
-        [learning guide]: https://sass-lang.com/guide
+        <!-- Reference Links -->
+        [01]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [02]: https://sass-lang.com/guide
         [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
     type: object

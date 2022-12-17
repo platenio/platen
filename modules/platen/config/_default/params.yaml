@@ -77,7 +77,7 @@ Platen:
           Enabled: true
         Search:
           Enabled: true
-        Toc:
+        ToC:
           Enabled: true
         Footer:
           Enabled: true
@@ -141,7 +141,7 @@ Platen:
           Enabled: true
     Fonts:
       Styles:
-        - roboto
+        - ImportName: roboto
       Settings:
         Body:
           Selector: body

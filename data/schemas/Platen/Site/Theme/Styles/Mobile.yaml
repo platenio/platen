@@ -41,8 +41,9 @@ properties:
         `styles/mobile/_header.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -202,8 +203,9 @@ properties:
         `styles/mobile/_menu.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -298,8 +300,9 @@ properties:
         `styles/mobile/_toc.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 

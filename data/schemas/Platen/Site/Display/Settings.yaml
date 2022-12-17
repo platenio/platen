@@ -37,6 +37,7 @@ properties:
     title: Page Header Settings
     description: Controls the rendering of the header element for site pages.
     schematize:
+      weight: 2
       skipSchemaRender: true
       details: |
         Controls the rendering of the header element for site pages. By default, every page is
@@ -45,6 +46,9 @@ properties:
 
         You can use the [sref:`TitleAsHeading`] option to write the page's title as an `<h1>`
         instead.
+
+        <!-- Reference Links -->
+        [sref:`TitleAsHeading`]: Platen.Site.Display.Settings.Header.TitleAsHeading
     type: object
     properties:
       TitleAsHeading:
@@ -62,13 +66,44 @@ properties:
             mobile view.
         type: boolean
         default: false
+  Logo:
+    title: Site Logo
+    description: Defines the branding logo for the site.
+    schematize:
+      weight: 3
+      skipSchemaRender: true
+      details: |
+        Defines the logo for the site. The logo is added to the site menu before the site's name.
+    type: object
+    properties:
+      URL:
+        title: Logo URL
+        description: Choose whether to use Hugo's builtin table of contents.
+        schematize:
+          details: |
+            Defines the path to the logo file. You can specify the path to an image in the `assets`
+            folder for your site, a site-relative path to the file in your `static` folder, or to
+            a remote image. You can also set this value to an empty string to remove the logo from
+            the site menu entirely.
+
+            We recommend placing your logo in the `assets` folder for best results and the `static`
+            folder for ease-of-use. We don't recommend you use a remote image for your site's logo
+            due to site performance impacts.
+
+            This value defaults to `/images/logo.svg`, which you can place in the `static` or
+            `assets` folder for your site.
+          weight: 1
+        type: string
+        default: /images/logo.svg
   Menu:
     $ref: ./Menu/Settings.yaml
+    schematize:
+      weight: 4
   TableOfContents:
     title: Table of Contents
     description: Controls the rendering of the table of contents for site pages.
     schematize:
-      weight: 2
+      weight: 5
       skipSchemaRender: true
       details: |
         Controls the rendering of the table of contents for site pages. You can choose whether to
@@ -88,14 +123,15 @@ properties:
 
             Hugo's builtin table of contents only includes markdown headings, not HTML headings
             added in shortcodes. For more information on configuring the behavior for Hugo's builtin
-            table of contents, see [Table of Contents in the Hugo documentation][hugo-toc]
+            table of contents, see [Table of Contents in the Hugo documentation][01]
 
             Platen's table of contents includes all headings, HTML and Markdown, as long as they're
             within the specified values for [sref:`MinimumLevel`] and [sref:`MaximumLevel`], inclusive.
 
             The default is `false` and the site use's Platen to generate the table of contents.
 
-            [hugo-toc]: https://gohugo.io/getting-started/configuration-markup/#table-of-contents
+            <!-- Reference Links -->
+            [01]: https://gohugo.io/getting-started/configuration-markup/#table-of-contents
             [sref:`MaximumLevel`]: Platen.Site.Display.Settings.TableOfContents.MaximumLevel
             [sref:`MinimumLevel`]: Platen.Site.Display.Settings.TableOfContents.MinimumLevel
           weight: 1
@@ -117,6 +153,7 @@ properties:
 
             The default is `2`.
 
+            <!-- Reference Links -->
             [sref:`UseBuiltIn`]: Platen.Site.Display.Settings.TableOfContents.UseBuiltIn
             [sref:`MaximumLevel`]: Platen.Site.Display.Settings.TableOfContents.MaximumLevel
           weight: 3
@@ -140,6 +177,7 @@ properties:
 
             The default is `4`.
 
+            <!-- Reference Links -->
             [sref:`UseBuiltIn`]: Platen.Site.Display.Settings.TableOfContents.UseBuiltIn
             [sref:`MinimumLevel`]: Platen.Site.Display.Settings.TableOfContents.MinimumLevel
           weight: 4
@@ -177,32 +215,3 @@ properties:
             The default value is `true`.
         type: boolean
         default: true
-  Logo:
-    title: Site Logo
-    description: Defines the branding logo for the site.
-    schematize:
-      weight: 2
-      skipSchemaRender: true
-      details: |
-        Defines the logo for the site. The logo is added to the site menu before the site's name.
-    type: object
-    properties:
-      URL:
-        title: Logo URL
-        description: Choose whether to use Hugo's builtin table of contents.
-        schematize:
-          details: |
-            Defines the path to the logo file. You can specify the path to an image in the `assets`
-            folder for your site, a site-relative path to the file in your `static` folder, or to
-            a remote image. You can also set this value to an empty string to remove the logo from
-            the site menu entirely.
-
-            We recommend placing your logo in the `assets` folder for best results and the `static`
-            folder for ease-of-use. We don't recommend you use a remote image for your site's logo
-            due to site performance impacts.
-
-            This value defaults to `/images/logo.svg`, which you can place in the `static` or `assets`
-            folder for your site.
-          weight: 1
-        type: string
-        default: /images/logo.svg

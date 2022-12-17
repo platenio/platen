@@ -2,7 +2,9 @@
 
 {{- if $context.Store.Get "hasMermaid" -}}
   {{/* Get the Mermaid URL */}}
-  {{- $version       := default "9" site.Params.Platen.Features.Mermaid.Version     -}}
+  {{- $version       := default site.Params.Platen.Features.Mermaid.Version
+                                $context.Params.Platen.Features.Mermaid.Version
+  -}}
   {{- $urlPrefix     := "https://cdn.jsdelivr.net/npm"                                 -}}
   {{- $libraryURL    := printf "%s/mermaid@%v/dist/mermaid.esm.min.mjs" $urlPrefix $version -}}
   {{- $library       := resources.GetRemote $libraryURL

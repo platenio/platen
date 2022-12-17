@@ -34,6 +34,16 @@
   align-items: center;
 }
 
+.float-left {
+  float: left;
+  padding-right: $padding-large;
+}
+
+.float-right {
+  float: right;
+  padding-left: $padding-large;
+}
+
 .mx-auto {
   margin: 0 auto;
 }

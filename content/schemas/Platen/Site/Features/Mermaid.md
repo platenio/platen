@@ -1,9 +1,9 @@
 ---
-name: Search
-title: Site Search
+name: Mermaid
+title: Mermaid Diagrams
 weight: 10
 type: schematize
-Schematize: Platen.Site.Features.Search
+Schematize: Platen.Site.Features.Mermaid
 outputs:
   - HTML
   - Schematize

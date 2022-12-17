@@ -212,8 +212,9 @@ properties:
         `toroidal/themes/_default.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the module's definition.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         If you're hosting the webring on a Platen site, you can use any variables and style modules
         available to page content. For more information, see [sref:`Platen.Theme`].

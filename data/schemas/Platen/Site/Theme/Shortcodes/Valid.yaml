@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
 $id: /schemas/Platen/Site/Theme/Shortcodes/Valid.schema.yaml
-title: Minimal Shortcode Settings
+title: Defining a Valid Shortcode Style Module
 description: Defines the minimal properties for a Platen-styled shortcode
 schematize:
   details: |
@@ -24,14 +24,14 @@ required:
   - Enabled
 properties:
   Enabled:
-    title: Enabled
+    title: Enable the Shortcode
     description: Whether to enable the shortcode for the site
     schematize:
       weight: 1
       details: |
         Defines whether to enable the shortcode for the site. This value usually defaults
         to `true`. When this value is set to `false`, the configuration and styling for the
-        shortcode is disabled.
+        shortcode is disabled and Platen raises an error when the shortcode is used.
     type: boolean
     default: true
   Style:

@@ -19,7 +19,7 @@ properties:
       weight: 1
       details: |
         Defines the default border radius for the theme. It defaults to the value of
-        `[sref:$padding-small`]`. You can specify any single valid size, such as `3px`, `1rem`, or
+        [sref:`$padding-small`]. You can specify any single valid size, such as `3px`, `1rem`, or
         `0.1em`, or reference any value defined in [sref:`Theme.Variables.BasicSCSS`].
 
         This value is used for the `border-radius` of the following elements:
@@ -34,7 +34,7 @@ properties:
 
         For more information, see {{% sref "border-radius" "mdn.css" /%}}.
 
-        [sref:$padding-small]: Platen.Site.Theme.Variables.BasicSCSS.padding-small
+        [sref:`$padding-small`]: Platen.Site.Theme.Variables.BasicSCSS.padding-small
         [sref:`Theme.Variables.BasicSCSS`]: Platen.Site.Theme.Variables.BasicSCSS
     type: string
     default: $padding-small

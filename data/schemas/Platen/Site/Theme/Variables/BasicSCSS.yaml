@@ -208,7 +208,7 @@ properties:
     title: Body Font Weight
     description: Defines the base font weight for all body text.
     schematize:
-      weight: 8
+      weight: 9
       details: |
         Defines the base font weight for all body text. The default is `normal`, which is the
         same as `400`. For more information, see {{% sref "font-weight" "mdn.css" /%}}.
@@ -232,7 +232,7 @@ properties:
     title: Minimum Body Width
     description: Defines the minimum width of the body container for the theme.
     schematize:
-      weight: 9
+      weight: 10
       details: |
         Defines the minimum width of the body container for the theme. The default is `20rem`, which
         is defined by the value of the [sref:`font-size-base`] variable.
@@ -255,7 +255,7 @@ properties:
     title: Maximum Container Width
     description: Defines the maximum width of containers for the theme.
     schematize:
-      weight: 10
+      weight: 11
       details: |
         Defines the maximum width of containers for the theme. The default is `80rem`, which is
         defined by the value of the [sref:`font-size-base`] variable.
@@ -278,7 +278,7 @@ properties:
     title: Header Height
     description: Defines the height for header elements in the theme.
     schematize:
-      weight: 10
+      weight: 12
       details: |
         Defines the height for `header` elements in the theme. The default is `3.5rem`, which is
         defined by the value of the [sref:`font-size-base`] variable.
@@ -300,7 +300,7 @@ properties:
     title: Menu Width
     description: Defines the width of the site menu.
     schematize:
-      weight: 11
+      weight: 13
       details: |
         Defines the width of the site menu. The default is `16rem`, which is defined by the value of
         the [sref:`font-size-base`] variable.
@@ -319,7 +319,7 @@ properties:
     title: Table of Contents Width
     description: Defines the width of the table of contents.
     schematize:
-      weight: 12
+      weight: 14
       details: |
         Defines the width of the table of contents. The default is `16rem`, which is defined by the
         value of the [sref:`font-size-base`] variable.
@@ -334,16 +334,17 @@ properties:
     type: string
     pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
     default: 16rem
-  hint-colors:
-    title: Hint Colors
-    description: Defines colors for blockquotes created by the hint shortcode.
+  details-colors:
+    title: Details Colors
+    description: Defines colors for details elements created by the details shortcode.
     schematize:
-      weight: 13
+      skipSchemaRender: true
+      weight: 15
       details: |
-        Defines colors for blockquotes created by the hint shortcode. The existing value is a map of
-        variables, named `info`, `warning`, and `danger`. Theme authors and site maintainers can
-        replace these values and add their own new keys to the map. These keys are automatically
-        incorporated into the theme.
+        Defines colors for details elements created by the [`details`][01] shortcode. The existing
+        value is a map of variables, named `info`, `warning`, and `danger`. Theme authors and site
+        maintainers can replace these values and add their own new keys to the map. These keys are
+        automatically incorporated into the theme.
 
         For example, if you define the following configuration for a site:
 
@@ -353,7 +354,7 @@ properties:
             Theme:
               Variables:
                 BasicSCSS:
-                  hint-colors:
+                  details-colors:
                     info: pink
                     example: "#ee82ee"
         ```
@@ -364,7 +365,10 @@ properties:
         You don't need to keep the full list of all variables in your own configuration file. Only
         specify the values you want to add or replace.
 
-        For more information on valid values, see {{% sref "color_value" "mdn.css" %}}`color`{{% /sref %}}.
+        For more information on valid values, see [sref:`<color>`].
+
+        [01]: /modules/platen/shortcodes/details
+        [sref:`<color>`]: mdn.css:color_value
     type: object
     patternProperties:
       ".":
@@ -378,4 +382,6 @@ properties:
           href: pattern-any
           noMungeDescription: true
           details: |
-            Specify a valid color. For more info, see {{% sref "color_value" "mdn.css" %}}`color`{{% /sref %}}.
+            Specify a valid color. For more info, see [sref:`<color>`].
+
+            [sref:`<color>`]: mdn.css:color_value
