@@ -196,7 +196,7 @@ properties:
         overrides for sub-menus when their index page's front matter has
         `Platen.Menu.FlattenSection` set to `true`.
 
-        #### Menu Defaults
+        ### Menu Defaults
 
         The site menu's definition is a little long, so this section breaks it down by component.
 
@@ -293,7 +293,7 @@ properties:
         This transforms the arrow for a collapsible section into one pointing downward, indicating
         that the section is expanded and can be collapsed.
 
-        #### Right to Left Overrides
+        ### Right to Left Overrides
 
         ```scss
         body[dir="rtl"] .platen-menu {
@@ -310,7 +310,7 @@ properties:
         This updates the behavior for collapsible sections when the language is written
         right-to-left so that the arrows point correctly for those site vistors.
 
-        #### Flat Section Overrides
+        ### Flat Section Overrides
 
         ```scss
         .platen-section-flat {
@@ -332,7 +332,7 @@ properties:
         also makes the immediate child elements bolder and removes the indentation for the
         subsections.
 
-        #### Overwriting
+        ### Overwriting
 
         You can overwrite this definition for your own site or theme by creating the file
         `styles/platen/_menu.scss` in your [assets folder], which defaults to `assets` in
@@ -550,7 +550,7 @@ properties:
         following sections elaborate on the style as it applies to the container for the search
         input, the input itself, the spinner, and the results.
 
-        #### Search Container
+        ### Search Container
 
         ```scss
         position: relative;
@@ -564,7 +564,7 @@ properties:
         [sref:`Theme.Variables.BasicSCSS.padding-large`], and adds a transparent border beneath the
         section.
 
-        #### Input
+        ### Input
 
         ```scss
         input {
@@ -598,7 +598,7 @@ properties:
         When the input is [sref:required], it sets the spinner's display to `block` instead of
         `none`.
 
-        #### Spinner
+        ### Spinner
 
         ```scss
         .platen-search-spinner {
@@ -630,7 +630,7 @@ properties:
         body font color with a 50% radius, and uses the utility [mixin] defined in
         [sref:`Theme.Styles.Utils.Spin`] to control the spinning behavior, rotating every second.
 
-        #### Results
+        ### Results
 
         ```scss
         small {
@@ -641,7 +641,7 @@ properties:
         This controls the search results, which are each added in a `small` element, setting their
         opacity to 50%.
 
-        #### Overwriting
+        ### Overwriting
 
         You can overwrite this definition for your own site or theme by creating the file
         `styles/platen/_search.scss` in your [assets folder], which defaults to `assets` in

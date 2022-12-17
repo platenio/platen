@@ -112,7 +112,7 @@ properties:
         On Platen sites, when the `default` details would be used, `platen` is used instead to
         account for the differences between a Toroidal webring on a Platen site.
         
-        #### Defining and Overriding Details
+        ### Defining and Overriding Details
 
         You can override the pre-defined options by creating a file of the same name and path in
         your own site or module. You can also define entirely new options, as long as your partial

@@ -22,6 +22,10 @@ schematize:
     [sref:`AlwaysLoad`]: Platen.Site.Features.Katex.AlwaysLoad
     [sref:content-level]: Platen.Content.Features.Katex
 type: object
+examples:
+  - Enabled: true
+    AlwaysLoad: true
+    Version: 0.16.0
 properties:
   Enabled:
     title: Enable KaTeX
@@ -90,6 +94,7 @@ properties:
         title: Header Partial
         description: Injects a partial into the HTML header.
         schematize:
+          weight: 1
           details: |
             If specified, this partial is processed in the HTML header with the current page's
             context. The default value is `platen/features/katex/header`. You can overwrite
@@ -102,7 +107,7 @@ properties:
             1. The page content includes the `katex` shortcode
             1. The page content includes any codeblocks with `chem`, `katex`, or `math` as the
                language ID.
-            1. The page front matter has [sref:`Platen.Features.Katex.Enable`] set to `true`
+            1. The page front matter has [sref:`Platen.Features.Katex.AlwaysLoad`] set to `true`
             1. The site is configured with [sref:`AlwaysLoad`] enabled.
 
             With the modules loaded, the page will automatically render any valid KaTeX on the
@@ -118,6 +123,7 @@ properties:
         description: Registers one or more partials that act as render hooks.
         type: object
         schematize:
+          weight: 2
           skipSchemaRender: true
           details: |
             Defines a map of partials to use as Markdown render hooks. Like all partials, these are

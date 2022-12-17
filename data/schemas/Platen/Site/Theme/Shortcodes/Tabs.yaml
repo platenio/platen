@@ -82,7 +82,7 @@ properties:
         tab. Each tab's content is placed in a div with the `platen-tabs-content` and
         `markdown-inner` classes.
 
-        #### Tab Container
+        ### Tab Container
 
         ```scss
         margin-top: $padding-large;
@@ -109,7 +109,7 @@ properties:
 
         It uses [sref:flex box] to display the tabs and their labels and uses [sref:`flex-wrap`].
 
-        #### Tab Labels
+        ### Tab Labels
 
         ```scss
         label {
@@ -140,7 +140,7 @@ properties:
         When the input for a label is focused, the label uses the [sref:`Theme.Styles.Utils.Outline`]
         mixin to add a full box outline to the label.
 
-        #### Tab Content
+        ### Tab Content
 
         ```scss
         .platen-tabs-content {
@@ -165,7 +165,7 @@ properties:
         Finally, their display is set to `none` so they're hidden until selected. When a tab is
         selected, the display is changed `block`, making it visible.
 
-        #### Overriding
+        ### Overriding
 
         You can overwrite this definition for your own site or theme by creating the file
         `styles/shortcodes/_tabs.scss` in your [assets folder][02], which defaults to `assets` in

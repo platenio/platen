@@ -109,7 +109,7 @@ properties:
         }
         ```
 
-        #### Headings Defaults
+        ### Headings Defaults
 
         ```scss
         font-weight: normal;
@@ -130,7 +130,7 @@ properties:
         }
         ```
 
-        #### Smaller Headings
+        ### Smaller Headings
 
         ```scss
         h4,
@@ -148,7 +148,7 @@ properties:
         }
         ```
 
-        #### Overwriting
+        ### Overwriting
 
         You can overwrite this definition for your own site or theme by creating the file
         `styles/markdown/_headings.scss` in your [assets folder], which defaults to `assets` in
@@ -375,7 +375,7 @@ properties:
         }
         ```
 
-        #### Code Defaults
+        ### Code Defaults
 
         ```scss
         code {
@@ -386,7 +386,7 @@ properties:
         }
         ```
 
-        #### Code Blocks
+        ### Code Blocks
 
         ```scss
         pre {
@@ -402,7 +402,7 @@ properties:
         }
         ```
 
-        #### Code Blocks with Line Numbers
+        ### Code Blocks with Line Numbers
 
         ```scss
         .highlight table tr {
@@ -417,7 +417,7 @@ properties:
         }
         ```
 
-        #### Overwriting
+        ### Overwriting
 
         You can overwrite this definition for your own site or theme by creating the file
         `styles/markdown/_code.scss` in your [assets folder], which defaults to `assets` in
@@ -519,7 +519,7 @@ properties:
 
         This applies to `table` elements and their children in Markdown content.
 
-        #### Table Container
+        ### Table Container
 
         ```scss
         overflow: auto;
@@ -530,7 +530,7 @@ properties:
         margin-bottom: $padding-large;
         ```
 
-        #### Cells
+        ### Cells
 
         ```scss
         tr th,
@@ -540,7 +540,7 @@ properties:
         }
         ```
 
-        #### Rows
+        ### Rows
 
         ```scss
         tr:nth-child(2n) {
@@ -548,7 +548,7 @@ properties:
         }
         ```
 
-        #### Overwriting
+        ### Overwriting
 
         You can overwrite this definition for your own site or theme by creating the file
         `styles/markdown/_tables.scss` in your [assets folder], which defaults to `assets` in
@@ -600,7 +600,7 @@ properties:
 
         This applies to ordered and unordered lists in markdown as well as definition lists.
 
-        #### Ordered and Unordered Lists
+        ### Ordered and Unordered Lists
 
         ```scss
         ul,
@@ -609,7 +609,7 @@ properties:
         }
         ```
 
-        #### Definition Lists
+        ### Definition Lists
 
         ```scss
         dl {
@@ -625,7 +625,7 @@ properties:
         }
         ```
 
-        #### Overwriting
+        ### Overwriting
 
         You can overwrite this definition for your own site or theme by creating the file
         `styles/markdown/_lists.scss` in your [assets folder], which defaults to `assets` in

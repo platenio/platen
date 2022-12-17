@@ -106,7 +106,7 @@ properties:
         }
         ```
 
-        #### Admin Page
+        ### Admin Page
 
         The webring administration page content is all placed inside an `article` element with the
         `toroidal` class.
@@ -186,7 +186,7 @@ properties:
         This style ensures the buttons use flex rows for their styling and have a consistent height,
         width, and padding for readability and ease of clicking.
 
-        #### Member Pages
+        ### Member Pages
 
         ```scss
         nav.toroidal {
@@ -206,7 +206,7 @@ properties:
         keep the elements from butting up directly against the side of the frame. It removes the
         list bullets and indent for the entries.
 
-        #### Overwriting
+        ### Overwriting
 
         You can overwrite this definition for your own site or theme by creating the file
         `toroidal/themes/_default.scss` in your [assets folder], which defaults to `assets` in

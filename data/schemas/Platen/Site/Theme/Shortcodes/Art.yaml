@@ -107,7 +107,7 @@ properties:
         If the shortcode specifies a caption, it's added in a `figcaption` element beneath the
         image. By default, the `<figure>` element has the `platen-art` class.
 
-        #### Defaults
+        ### Defaults
 
         ```scss
         width: 100%
@@ -131,7 +131,7 @@ properties:
         [sref:`$padding-large`] with the text centered beneath the image and the font size decreased
         on step.
 
-        #### Sizing Classes
+        ### Sizing Classes
 
         ```scss
         &.half {
@@ -151,7 +151,7 @@ properties:
         can include their artwork beside the rest of their content without having to use the
         [`columns`][02] shortcode for the same effect.
 
-        #### Content Warning
+        ### Content Warning
 
         ```scss
         img {
@@ -202,7 +202,7 @@ properties:
         figure to unblur the image and hide the content warning instead, clicking again to reverse
         the process.
 
-        #### Overriding
+        ### Overriding
 
         You can overwrite this definition for your own site or theme by creating the file
         `styles/shortcodes/_tabs.scss` in your [assets folder][03], which defaults to `assets` in
