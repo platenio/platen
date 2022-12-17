@@ -1,24 +1,40 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Platen/Site/Theme/Shortcodes/Valid.schema.yaml
-title: Defining a Valid Shortcode Style Module
-description: Defines the minimal properties for a Platen-styled shortcode
+$id: /schemas/Platen/Site/Shortcodes/Valid.schema.yaml
+title: Defining a Registered Shortcode
+description: Defines the minimal properties for a Platen-aware shortcode
 schematize:
   details: |
-    Defines the minimal properties a theme developer needs to define for a shortcode to
-    function with Platen's configuration, automatically and dynamically loading styles without
-    requiring the end users to update their own site configuration or assets.
+    Defines the minimal properties a theme developer needs to define for a shortcode to integrate
+    with Platen's configuration, automatically and dynamically loading styles without requiring the
+    end users to update their own site configuration or assets. and adding site-level control over
+    the shortcode behaviors.
 
-    At a minimum, every shortcode must define the [sref:`Enabled`] setting. If the shortcode has
-    specific styling needs, it must define the [sref:`Style`] setting with the [sref:`Name`]
-    property set to the name of the style module in `assets/styles/shortcodes`, like `tabs` for the
-    style module at `assets/styles/shortcodes/_tabs.scss`.
+    Platen, through the site configuration, keeps a registry of integrated shortcodes. This enables
+    site authors and theme developers to discover, enable, disable, and configure shortcodes in a
+    friendlier way than Hugo's default, without preventing Hugo's built-in behavior.
 
-    The shortcode's style asset **must** be placed in the `assets/styles/shortcodes` folder.
+    At a minimum, every registered shortcode must define the [sref:`Enabled`] setting. If the
+    shortcode has specific styling needs, it must define the [sref:`Style`] setting with the
+    [sref:`Name`] property set to the name of the style module in `assets/styles/shortcodes`, like
+    `tabs` for the style module at `assets/styles/shortcodes/_tabs.scss`.
 
-    [sref:`Enabled`]: Platen.Site.Theme.Shortcodes.Valid.Enabled
-    [sref:`Style`]: Platen.Site.Theme.Shortcodes.Valid.Style
-    [sref:`Name`]: Platen.Site.Theme.Shortcodes.Valid.Style.Name
+    A registered shortcode's style asset **must** be placed in the `assets/styles/shortcodes`
+    folder.
+
+    In addition to these properties, any registered shortcode may define any other settings that
+    make sense for it. Theme developers should use these settings to provide sensible defaults that
+    are meant to be overridden.
+
+    For more information on developing a registered shortcode for Platen, see
+    [Defining a Registered Shortcode][01] in the [Theme Guide][02].
+
+    <!-- Link References -->
+    [01]: /styling
+    [02]: /styling
+    [sref:`Enabled`]: Platen.Site.Shortcodes.Valid.Enabled
+    [sref:`Style`]: Platen.Site.Shortcodes.Valid.Style
+    [sref:`Name`]: Platen.Site.Shortcodes.Valid.Style.Name
 type: object
 required:
   - Enabled

@@ -2,7 +2,7 @@
 name: Markup
 title: Markup Options
 summary: Schemas for Platen's Markup Configuration
-weight: 7
+weight: 15
 Platen:
   Menu:
     CollapseSection: true

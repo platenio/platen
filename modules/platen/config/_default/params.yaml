@@ -153,27 +153,6 @@ Platen:
       Styles:
         Basic:
           Enabled: true
-    Shortcodes:
-      Art:
-        Enabled: true
-        Style:
-          Name: art
-      Button:
-        Enabled: true
-        Style:
-          Name: button
-      Columns:
-        Enabled: true
-        Style:
-          Name: columns
-      Details:
-        Enabled: true
-        Style:
-          Name: details
-      Tabs:
-        Enabled: true
-        Style:
-          Name: tabs
   Display:
     TableOfContents:
       MinimumLevel: 2
@@ -213,6 +192,33 @@ Platen:
           Codeblock: platen/features/mermaid/codeblock
     PortableLinks:                            # BookPortableLinks
       Enabled: true
+  Shortcodes:
+    art:
+      Enabled: true
+      Style:
+        Name: art
+    button:
+      Enabled: true
+      Style:
+        Name: button
+    columns:
+      Enabled: true
+      Style:
+        Name: columns
+    details:
+      Enabled: true
+      Style:
+        Name: details
+    itchio:
+      Enabled: true
+    katex:
+      Enabled: true
+    section:
+      Enabled: true
+    tabs:
+      Enabled: true
+      Style:
+        Name: tabs
   Repository:
     CommitPath: commit                        # BookCommitPath
     EditPath: edit/main                       # BookEditPath

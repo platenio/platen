@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Platen/Site/Theme/Shortcodes/Columns.schema.yaml
-title: Columns
+$id: /schemas/Platen/Site/Shortcodes/columns.schema.yaml
+title: columns
 description: Defines the settings for the columns shortcode
 schematize:
   details: |

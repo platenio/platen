@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Platen/Site/Theme/Shortcodes/Art.schema.yaml
-title: Art
+$id: /schemas/Platen/Site/Shortcodes/art.schema.yaml
+title: art
 description: Defines the settings for the art shortcode
 schematize:
   details: |

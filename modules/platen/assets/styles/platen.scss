@@ -88,7 +88,7 @@
 {{- end -}}
 
 // Shortcodes must always load _after_ all more normal/universal items.
-{{ partial $shortcodesPartial $theme.Shortcodes }}
+{{ partial $shortcodesPartial $context.Site.Params.Platen.Shortcodes }}
 
 // Custom site-maintainer defined styles.
 @import "custom";

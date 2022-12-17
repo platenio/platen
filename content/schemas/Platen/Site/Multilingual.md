@@ -6,7 +6,7 @@ summary: |
   combined with [Hugo's][hugo-multilingual].
 
   [hugo-multilingual]: https://gohugo.io/content-management/multilingual/
-weight: 6
+weight: 16
 type: schematize
 Schematize: Platen.Site.Multilingual
 outputs:

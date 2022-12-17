@@ -7,7 +7,7 @@ summary: |
   users to update their own site configuration or assets.
 weight: 100
 type: schematize
-Schematize: Platen.Site.Theme.Shortcodes.Valid
+Schematize: Platen.Site.Shortcodes.Valid
 outputs:
   - HTML
   - Schematize

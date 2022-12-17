@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Platen/Site/Theme/Shortcodes/Details.schema.yaml
-title: Hint
+$id: /schemas/Platen/Site/Shortcodes/details.schema.yaml
+title: details
 description: Defines the settings for the details shortcode
 schematize:
   details: |
