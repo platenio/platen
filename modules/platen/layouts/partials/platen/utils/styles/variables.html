@@ -1,0 +1,20 @@
+{{- $params  := .                                         -}}
+{{- $name    := $params.Name                              -}}
+{{- $value   := $params.Value                             -}}
+{{- $prefix  := cond (eq true .IsCSS)     "--"        "$" -}}
+{{- $default := cond (eq true .IsDefault) " !default" ""  -}}
+
+{{- $renderStrings := slice -}}
+{{ if reflect.IsMap $value }}
+  {{- $renderStrings = $renderStrings | append (printf "%s%s: (" $prefix $name) -}}
+  {{ range $k, $v := $value }}
+    {{- $renderStrings = $renderStrings | append (printf "%s: %v," $k $v) -}}
+  {{ end }}
+  {{- $renderStrings = $renderStrings | append (printf ")%s;" $default) -}}
+{{ else }}
+  {{- $variable     := printf "%s%s: %v%s;" $prefix $name $value $default }}
+  {{- $renderStrings = $renderStrings | append $variable -}}
+{{ end }}
+
+{{/*  Return the SCSS to render  */}}
+{{- delimit $renderStrings "\n  " "\n" -}}

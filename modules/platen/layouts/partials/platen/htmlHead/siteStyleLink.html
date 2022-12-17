@@ -7,9 +7,14 @@
 {{- $siteStyle := resources.Get "styles/platen.scss"
                   | resources.ExecuteAsTemplate "platen.scss" $context
                   | resources.ToCSS
-                  | resources.Minify
-                  | resources.Fingerprint
 -}}
+
+{{- if site.IsServer -}}
+  {{- $siteStyle = $siteStyle | resources.Fingerprint -}}
+{{- else -}}
+  {{- $siteStyle = $siteStyle | resources.Minify | resources.Fingerprint -}}
+{{- end -}}
+
 {{- $href      := $siteStyle.RelPermalink                                  -}}
 {{- $integrity := partial "platen/utils/getIntegrityAttributes" $siteStyle -}}
 
