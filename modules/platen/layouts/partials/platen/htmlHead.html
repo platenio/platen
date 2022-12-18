@@ -1,5 +1,7 @@
 {{- $context := . -}}
 
+{{- partial "platen/configuration/checkShortcodes" $context -}}
+
 {{ partial "platen/htmlHead/meta" $context }}
 
 {{- template "_internal/opengraph.html" $context -}}

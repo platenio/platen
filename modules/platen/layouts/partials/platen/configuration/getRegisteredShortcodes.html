@@ -1,0 +1,16 @@
+{{- $params       := .                                  -}}
+{{- $disabledOnly := default false $params.DisabledOnly -}}
+
+{{- $registeredShortcodes := site.Params.Platen.Shortcodes -}}
+
+{{- if $disabledOnly -}}
+  {{- $disabledShortcodes := dict -}}
+  {{- range $shortcode, $settings := $registeredShortcodes -}}
+    {{- if eq false $settings.enabled -}}
+      {{- $disabledShortcodes = merge $disabledShortcodes (dict $shortcode $settings) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $registeredShortcodes = $disabledShortcodes -}}
+{{- end -}}
+
+{{- return $registeredShortcodes -}}

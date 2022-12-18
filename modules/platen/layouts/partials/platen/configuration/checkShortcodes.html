@@ -1,0 +1,30 @@
+{{/*  Current page context  */}}
+{{- $context := . -}}
+
+{{/* Retrieve the registered shortcodes, process the disabled ones */}}
+{{- $params     := dict "DisabledOnly" true                                             -}}
+{{- $shortcodes := partialCached "platen/configuration/getRegisteredShortcodes" $params -}}
+
+{{- range $shortcode, $settings := $shortcodes -}}
+  {{- $names := slice $shortcode -}}
+  {{- with $settings.aliases -}}
+    {{- $names = union $names $settings.aliases -}}
+  {{- end -}}
+  
+  {{- $prefix  := "[^`]?{{(<|%)"                                     -}}
+  {{- $pattern := printf `%s\s+(%s)\s+` $prefix (delimit $names "|") -}}
+  {{- $usages  := findRE $pattern $context.RawContent                -}}
+  {{- if gt (len $usages) 0 -}}
+    {{- $message := slice    (printf "Found usage of the disabled '%s'"        $shortcode)
+                    | append (printf "shortcode in content for '%s'."          $context.File.Path)
+                    | append (printf "Set Platen.Shortcode.%s.Enabled to true" $shortcode)
+                    | append "in your site configuration or remove all uses of the shortcode."
+    -}}
+    {{- with $settings.aliases -}}
+      {{- $aliases := delimit $settings.aliases "', '" "', and '"                 -}}
+      {{- $suffix  := printf "Aliases for this shortcode include: '%s'." $aliases -}}
+      {{- $message  = $message | append $suffix                                   -}}
+    {{- end -}}
+    {{- errorf "%s" (delimit $message " ") -}}
+  {{- end -}}
+{{- end -}}
