@@ -29,28 +29,99 @@ properties:
         control their behavior.
     type: object
     properties:
-      Search:
-        $ref: ./Features/Search.yaml
       Comments:
         $ref: ./Features/Comments.yaml
-      PWA:
-        $ref: ./Features/PWA.yaml
+        schematize:
+          weight: 1
+      Katex:
+        $ref: ./Features/Katex.yaml
+        schematize:
+          weight: 2
+      Mermaid:
+        $ref: ./Features/Mermaid.yaml
+        schematize:
+          weight: 3
       PortableLinks:
         $ref: ./Features/PortableLinks.yaml
+        schematize:
+          weight: 4
+      PWA:
+        $ref: ./Features/PWA.yaml
+        schematize:
+          weight: 5
+      Search:
+        $ref: ./Features/Search.yaml
+        schematize:
+          weight: 6
     patternProperties:
       ".":
         $ref: ./Features/Defining.yaml
         schematize:
           href: pattern-any
-  Repository:
-    $ref: ./Repository/Settings.yaml
+  Shortcodes:
+    title: Shortcode Options
+    description: Configure registered shortcodes
     schematize:
-      weight: 6
-  Multilingual:
-    $ref: ./Multilingual.yaml
-    schematize:
-      weight: 5
+      weight: 4
+      skipSchemaRender: true
+      details: |
+        Defines the configuration for shortcodes that integrate with Platen.
+
+        While you can add shortcodes independently of this configuration, the setting provides a
+        standardized and discoverable way for theme developers building on Platen to make their
+        shortcodes usable for others without requiring modifying the base theme's files.
+
+        Platen modules use this configuration to add their shortcodes and make them configurable.
+
+        Shortcodes defined in this way must not depend on each other.
+    type: object
+    properties:
+      art:
+        $ref: ./Shortcodes/art.yaml
+        schematize:
+          weight: 1
+      button:
+        $ref: ./Shortcodes/button.yaml
+        schematize:
+          weight: 2
+      columns:
+        $ref: ./Shortcodes/columns.yaml
+        schematize:
+          weight: 3
+      details:
+        $ref: ./Shortcodes/details.yaml
+        schematize:
+          weight: 4
+      itchio:
+        $ref: ./Shortcodes/itchio.yaml
+        schematize:
+          weight: 5
+      katex:
+        $ref: ./Shortcodes/katex.yaml
+        schematize:
+          weight: 6
+      section:
+        $ref: ./Shortcodes/section.yaml
+        schematize:
+          weight: 7
+      tabs:
+        $ref: ./Shortcodes/tabs.yaml
+        schematize:
+          weight: 8
+    patternProperties:
+      ".":
+        $ref: ./Shortcodes/Valid.yaml
+        schematize:
+          href: pattern-any
   Markup:
     $ref: ./Markup/Config.yaml
     schematize:
-      weight: 4
+      weight: 5
+  Multilingual:
+    $ref: ./Multilingual.yaml
+    schematize:
+      weight: 6
+  Repository:
+    $ref: ./Repository/Settings.yaml
+    schematize:
+      weight: 7

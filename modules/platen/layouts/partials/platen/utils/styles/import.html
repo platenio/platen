@@ -1,0 +1,14 @@
+{{- $stylesMap     := .StylesMap  -}}
+{{- $rootFolder    := .RootFolder -}}
+{{- $renderStrings := slice -}}
+
+{{- range $name, $settings := $stylesMap -}}
+  {{- if $settings.Enabled }}
+    {{- $mungedName   := default (lower $name) $settings.Name               -}}
+    {{- $importLine   := printf  `@import "%s/%s";` $rootFolder $mungedName -}}
+    {{- $renderStrings = $renderStrings | append $importLine                -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Return the SCSS to render  */}}
+{{- delimit $renderStrings "\n" -}}

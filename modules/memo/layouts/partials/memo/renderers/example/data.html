@@ -1,0 +1,35 @@
+{{- $params     := .                     -}}
+{{- $definition := $params.Inner         -}}
+{{- $type       := $params.Type          -}}
+{{- $attributes := $params.Attributes    -}}
+{{- $page       := $params.Page          -}}
+
+{{- $renderedCode := "" -}}
+
+{{- with $definition -}}
+  {{- $id        := default (sha1 $definition) $attributes.id -}}
+  {{- $title     := $attributes.title                         -}}
+  {{- $data      := $definition | transform.Unmarshal         -}}
+  {{- $openTabs  := printf `%s tabs "%s" %s` "{{<" $id ">}}"  -}}
+  {{- $closeTabs := printf `%s /tabs %s`     "{{<" ">}}"      -}}
+  {{- $languages := slice "yaml" "toml" "json"                -}}
+  {{- $tabsDefinition := slice $openTabs -}}
+  {{- range $language := $languages -}}
+    {{- $openTab  := printf `%s tab "%s" %s` "{{<" (upper $language) ">}}" -}}
+    {{- $closeTab := printf `%s /tab %s`     "{{<" ">}}"                   -}}
+    {{- $code     := $data | transform.Remarshal $language                 -}}
+    {{- $tabsDefinition = $tabsDefinition
+                          | append $openTab
+                          | append (printf "```%s" $language)
+                          | append (trim $code "\n")
+                          | append "```"
+                          | append $closeTab
+    -}}
+  {{- end -}}
+  {{- $tabsDefinition = $tabsDefinition | append $closeTabs     -}}
+  {{- $tabsDefinition = delimit $tabsDefinition "\n"            -}}
+  {{- $renderedCode = $params.Page.RenderString $tabsDefinition -}}
+  {{- $renderedCode = $renderedCode | replaceRE "\n+" "\n"      -}}
+{{- end -}}
+
+{{- return $renderedCode -}}

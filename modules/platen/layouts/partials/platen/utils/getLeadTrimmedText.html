@@ -1,0 +1,68 @@
+{{- $params := . -}}
+
+{{- $text    := $params -}}
+{{- $eol     := "\n"    -}}
+{{- $trimEOL := false   -}}
+
+{{- if reflect.IsMap $params -}}
+  {{- $text    = $params.Text             -}}
+  {{- $eol     = default $eol $params.EOL -}}
+  {{- $trimEOL = $params.TrimEOL          -}}
+{{- end -}}
+
+{{- $mungedReturn := "" -}}
+{{- $prefixEOL := ""    -}}
+{{- $suffixEOL := ""    -}}
+
+{{/* Find leading and trailing EOL to preserve if needed */}}
+{{- if ne true $trimEOL -}}
+  {{/* Determine base pattern for matching the EOL */}}
+  {{- $pattern := `\n` -}}
+  {{- if eq "\r" $eol -}}
+    {{- $pattern = `\r` -}}
+  {{- else if (eq "\r\n" $eol) -}}
+    {{- $pattern = `\r\n` -}}
+  {{- end -}}
+
+  {{/* Preserve prefix EOL only if trimEOL is false or "suffix" */}}
+  {{- if ne "prefix" $trimEOL -}}
+    {{- $prefixPattern := printf `^(%s)+` $pattern -}}
+    {{- $prefixMatches := findRE $prefixPattern $text -}}
+    {{- if len $prefixMatches -}}
+      {{- $prefixEOL = index $prefixMatches 0 -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/* Preserve suffix EOL only if trimEOL is false or "prefix" */}}
+  {{- if ne "suffix" $trimEOL -}}
+    {{- $suffixPattern := printf `(%s)+$` $pattern -}}
+    {{- $suffixMatches := findRE $suffixPattern $text -}}
+    {{- if len $suffixMatches -}}
+      {{- $suffixEOL = index $suffixMatches 0 -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Trim EOL then look for leading whitespace on the first line */}}
+{{- $text               = trim $text $eol       -}}
+{{- $leadingWhiteSpace := findRE `^(\s)+` $text -}}
+
+{{/* If there's leading whitespace on the first line, trim that from all lines */}}
+{{- if len $leadingWhiteSpace -}}
+  {{- $leadingWhiteSpace = index $leadingWhiteSpace 0 -}}
+  {{- $lines            := split $text $eol           -}}
+  {{- $munged           := slice                      -}}
+  {{- range $line := $lines -}}
+    {{- $munged = $munged | append (strings.TrimPrefix $leadingWhiteSpace $line) -}}
+  {{- end -}}
+
+  {{/* Rebuild the text with whitespace trimmed */}}
+  {{- $munged = delimit $munged $eol                          -}}
+  {{/* Re-add leading and trailing EOL */}}
+  {{- $mungedReturn = printf "%s%s%s" $prefixEOL $munged $suffixEOL -}}
+{{- else -}}
+  {{/* return the input text with only EOLs munged if needed */}}
+  {{- $mungedReturn = printf "%s%s%s" $prefixEOL $text $suffixEOL -}}
+{{- end -}}
+
+{{- return $mungedReturn -}}

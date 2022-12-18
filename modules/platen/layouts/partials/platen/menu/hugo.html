@@ -13,7 +13,7 @@
     <a href="{{ .URL }}" {{ if not .Page }}target="_blank" rel="noopener"{{ end }}>
       {{- .Pre -}}
       {{ with .Page }}
-        {{ partial "platen/utils/getTitle" .Page }}
+        {{ partial "platen/utils/getTitle" (dict "Context" .Page "ForMenu" true) }}
       {{ else }}
         {{ .Name }}
       {{ end }}

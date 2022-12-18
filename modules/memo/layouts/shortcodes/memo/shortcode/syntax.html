@@ -1,0 +1,52 @@
+{{/*
+    Docs.ShortCode: memo/shortcode/syntax
+*/}}
+{{- $input      := .                  -}}
+{{- $pageParams := $input.Page.Params -}}
+{{- $data       := $pageParams.Memo   -}}
+
+{{/* Process input parameters */}}
+{{- $name            := default        ($input.Get 0) ($input.Get "name")   -}}
+{{- $nested          := default        false          ($input.Get "nested") -}}
+{{- $headingLevel    := cond           $nested        5 3                   -}}
+{{- $heading         := strings.Repeat $headingLevel  "#"                   -}}
+
+{{- if $nested -}}
+  {{- $data = $data.innertext.nested -}}
+  {{- $name = $data.name             -}}
+{{- else if eq nil $name -}}
+  {{- $name = default $input.Page.Name $data.name -}}
+{{- end -}}
+
+{{- $stringsToRender := slice -}}
+
+{{- with $data -}}
+  {{- $syntaxParams  := dict "Data" $data "Name" $name                         -}}
+  {{- $syntaxData    := partial "memo/utils/shortcode/getSyntax" $syntaxParams -}}
+  {{- $syntaxStrings := slice $syntaxData.Synopsis                             -}}
+  
+  {{- with $syntaxData.NamedSyntax -}}
+    {{- $syntaxStrings = $syntaxStrings | append (printf "%s Named Syntax" $heading) -}}
+    {{- $namedSyntax  := printf "```go\n%s\n```" $syntaxData.NamedSyntax             -}}
+    {{- $syntaxStrings = $syntaxStrings | append $namedSyntax                        -}}
+  {{- end -}}
+
+  {{- with $syntaxData.PositionalSyntax -}}
+    {{- $syntaxStrings      = $syntaxStrings | append (printf "%s Positional Syntax" $heading) -}}
+    {{- $positionalSyntax  := printf "```go\n%s\n```" $syntaxData.PositionalSyntax             -}}
+    {{- $syntaxStrings      = $syntaxStrings | append $positionalSyntax                        -}}
+  {{- end -}}
+
+  {{- if and (eq nil $syntaxData.NamedSyntax) (eq nil $syntaxData.NamedSyntax) -}}
+    {{- $tagType          := $data.tagtype                                                -}}
+    {{- $commentTagParams := dict "Syntax" $name "Type" $tagType                          -}}
+    {{- $simpleSyntax := partial "memo/utils/shortcode/getCommentedTag" $commentTagParams -}}
+    {{- $simpleSyntax  = printf "```go\n%s\n```" $simpleSyntax                            -}}
+    {{- $syntaxStrings = $syntaxStrings | append $simpleSyntax                            -}}
+  {{- end -}}
+
+  {{- $syntaxString := delimit $syntaxStrings "\n\n" -}}
+  {{- $input.Page.RenderString $syntaxString         -}}
+{{- else -}}
+  {{- errorf "Shortcode data not defined in Memo" -}}
+{{- end -}}

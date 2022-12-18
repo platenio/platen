@@ -6,9 +6,9 @@ description: Settings for multilingual sites
 schematize:
   details: |
     Platen and Hugo are designed to support multilingual sites out-of-the-box. These settings are
-    combined with [Hugo's][hugo-multilingual].
+    combined with [Hugo's multilingual mode][01].
 
-    [hugo-multilingual]: https://gohugo.io/content-management/multilingual/
+    [01]: https://gohugo.io/content-management/multilingual/
 type: object
 properties:
   TranslatedOnly:
@@ -20,10 +20,10 @@ properties:
         Specifies whether the site is only a translation of another project or site. When this value
         is set to true, the translations menu picker isn't rendered.
 
-        This setting is intended for use with Hugo's [multilingual multihost configuration].
+        This setting is intended for use with Hugo's [multilingual multihost configuration][01].
 
         The default value is `false`.
 
-        [multilingual multihost configuration]: https://gohugo.io/content-management/multilingual/#configure-multilingual-multihost
+        [01]: https://gohugo.io/content-management/multilingual/#configure-multilingual-multihost
     type: boolean
     default: false

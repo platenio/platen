@@ -9,7 +9,12 @@ schematize:
     headers are rendered into HTML for a page. These settings allow developers to add new rendering
     options.
 
-    For more information on defining a rendering option, see [Defining Markup Renderers].
+    For more information on defining a rendering option, see [Defining Markup Renderers][01] in the
+    [Theme Guide][02].
+
+    <!-- Reference Links -->
+    [01]: /styling
+    [02]: /styling
 type: object
 properties:
   CodeblockRenderers:
@@ -26,11 +31,25 @@ properties:
         $ref: ./Defining.yaml
         schematize:
           href: pattern-any
+  HeadingRenderers:
+    title: Heading Renderers
+    description: Defines a map of custom renderers for headings in Markdown.
+    schematize:
+      weight: 2
+      skipSchemaRender: true
+      details: |
+        Defines a map of custom renderers for images in Markdown.
+    type: object
+    patternProperties:
+      ".":
+        $ref: ./Defining.yaml
+        schematize:
+          href: pattern-any
   ImageRenderers:
     title: Image Renderers
     description: Defines a map of custom renderers for images in Markdown.
     schematize:
-      weight: 1
+      weight: 3
       skipSchemaRender: true
       details: |
         Defines a map of custom renderers for images in Markdown.
@@ -44,21 +63,7 @@ properties:
     title: Link Renderers
     description: Defines a map of custom renderers for links in Markdown.
     schematize:
-      weight: 1
-      skipSchemaRender: true
-      details: |
-        Defines a map of custom renderers for images in Markdown.
-    type: object
-    patternProperties:
-      ".":
-        $ref: ./Defining.yaml
-        schematize:
-          href: pattern-any
-  HeadingRenderers:
-    title: Heading Renderers
-    description: Defines a map of custom renderers for headings in Markdown.
-    schematize:
-      weight: 1
+      weight: 4
       skipSchemaRender: true
       details: |
         Defines a map of custom renderers for images in Markdown.

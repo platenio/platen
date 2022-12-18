@@ -5,15 +5,23 @@
 {{/* Process input parameters */}}
 {{- $summary      := default      ($input.Get 0)            ($input.Get "title")      -}}
 {{- $anchor       := default      (urlize (lower $summary)) ($input.Get "id")         -}}
-{{- $class        := default      ""                        ($input.Get "class")      -}}
+{{- $class        := default      ($input.Get 1)            ($input.Get "class")      -}}
 {{- $content      := $input.Inner                                                     -}}
 {{- $shouldBeOpen := or           ($input.Get "open")       (in $input.Params "open") -}}
 
+{{- $content = partial "platen/utils/getLeadTrimmedText" (dict "Text" $content "TrimEOL" true) -}}
+{{- $content = partial "platen/utils/getPrettyRender"
+               (dict "Page" $input.Page "Content" $content "IndentCount" 4 "AsBlock" true)
+-}}
+
 {{/* Build the list of attributes for the container element */}}
 {{- $detailsAttributes := slice -}}
+{{- $classes := slice "platen-details" -}}
 {{- with $class -}}
-  {{- $detailsAttributes = $detailsAttributes | append (printf `class="%s"` $class) -}}
+  {{- $classes = $classes | append $class -}}
 {{- end -}}
+{{- $classes           = delimit $classes " "                                       -}}
+{{- $detailsAttributes = $detailsAttributes | append (printf `class="%s"` $classes) -}}
 {{- if $shouldBeOpen -}}
   {{- $detailsAttributes = $detailsAttributes | append "open" -}}
 {{- end -}}
@@ -23,6 +31,6 @@
 <details {{ $detailsAttributes }}>
   <summary id="{{ $anchor }}">{{ $summary | $input.Page.RenderString }}</summary>
   <div class="markdown-inner">
-    {{ $content | $input.Page.RenderString }}
+    {{ $content }}
   </div>
 </details>

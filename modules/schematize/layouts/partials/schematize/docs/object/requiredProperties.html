@@ -16,23 +16,28 @@
     object's properties. This value should be null for a top-level object and set for any nested
     objects, like properties of a top-level object.
 */}}
-{{- $params := . -}}
-{{- $data := $params.property -}}
-{{- $level := $params._level -}}
-{{- $prefix := default "" $params._id -}}
+{{- $params             := .                      -}}
+{{- $data               := $params.property       -}}
+{{- $level              := add 1 $params._level   -}}
+{{- $prefix             := default "" $params._id -}}
+{{- $requiredProperties := $data.required         -}}
 
-{{ with $data.required }}
+{{ with $requiredProperties }}
+  {{/* Define the heading for required properties as the first item in the render strings */}}
+  {{- $headingParams := dict  "level" $level "title" "Required Properties" -}}
+  {{- $renderStrings := slice (partial "schematize/utils/headings/arbitrary" $headingParams)
+                        | append ""
+  -}}
 
-  {{- partial "schematize/utils/headings/arbitrary" 
-    (dict "level" $level "title" "Required Properties")
-  }}
-
-  {{- range . }}
-    {{- $title := (index $data.properties .).title -}}
-    {{- $link  := printf "%s#%s%s" $params.page.Permalink $prefix (. | lower | urlize ) -}}
-    {{- $text := printf "\n- [%s](%s)" $title $link -}}
-    {{ $text }}
+  {{/* Build the unordered list of required properties, linking to their heading */}}
+  {{- range $property := $requiredProperties -}}
+    {{- $title        := (index $data.properties $property).title                   -}}
+    {{- $id           := $property | lower | urlize                                 -}}
+    {{- $link         := printf "%s#%s%s" $params.page.Permalink $prefix $id        -}}
+    {{- $renderStrings = $renderStrings | append (printf "- [%s](%s)" $title $link) -}}
   {{- end -}}
-  {{- print "\n{.schematize-required-properties-list}" }}
+  {{- $renderStrings = $renderStrings | append "{.schematize-required-properties-list}" -}}
 
-{{ end }}
+  {{/* Render */}}
+  {{- delimit $renderStrings "\n" | safeHTML -}}
+{{- end -}}

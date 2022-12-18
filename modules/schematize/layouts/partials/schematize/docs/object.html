@@ -16,18 +16,20 @@
     object's properties. This value should be null for a top-level object and set for any nested
     objects, like properties of a top-level object.
 */}}
-{{- $params := .}}
+{{- $params     := .                -}}
 {{- $schemaData := $params.property -}}
 {{/* Need to determine if this is a top-level object so we can appropriately open the section. */}}
 {{- $base_level := default 0 $schemaData._level -}}
 {{/* The current_level is used for everything except the initial heading. */}}
-{{- $current_level := add $base_level 1 -}}
-{{- $property_prefix := "" -}}
+{{- $current_level   := add $base_level 1 -}}
+{{- $property_prefix := ""                -}}
 
+{{/* Retrieve the schema data */}}
 {{- $schemaData = partial "schematize/utils/schema/munge/id" $params -}}
-{{- $params = merge $params (dict "property" $schemaData) -}}
+{{- $params     = merge $params (dict "property" $schemaData)        -}}
 
-{{ $openSectionHTML := ""}}
+
+{{ $openSectionHTML := "" }}
 {{- if eq $base_level 0 -}}
   {{/*
     Top-level objects are placed in a section with the schematize class and no ID, because their
@@ -39,40 +41,33 @@
     Nested objects are placed in a section with their ID set to `_id`. This also defines the prefix
     for this object's own properties.
   */}}
-  {{- $property_prefix = printf "%s." $schemaData._id -}}
-  {{- $openSectionHTML = printf "<section id=\"%s\">" $schemaData._id }}
+  {{- $property_prefix = printf "%s."                 $schemaData._id -}}
+  {{- $openSectionHTML = printf "<section id=\"%s\">" $schemaData._id -}}
 {{- end -}}
 
-{{ $openSectionHTML | safeHTML }}
-
 {{/*
-  Arguably, these param definitions could be simplified since they're currently all the same.
+  Arguably, these param definitions could be simplified since they're currently mostly the same.
   However, we're leaving it with this minor duplication for clarity and to support future iterations
   where these partials may require other parameters.
 */}}
+{{- $sharedParams   := merge $params       (dict "_level" $current_level) -}}
+{{- $headerParams   := $sharedParams                                      -}}
+{{- $schemaParams   := $sharedParams                                      -}}
+{{- $examplesParams := $sharedParams                                      -}}
+{{- $requiredParams := merge $sharedParams (dict "_id" $property_prefix)  -}}
+{{- $propertyParams := merge $sharedParams (dict "_id" $property_prefix)  -}}
+{{- $patternParams  := merge $sharedParams (dict "_id" $property_prefix)  -}}
 
-{{- $headerParams := merge $params (dict "_level" $current_level) -}}
-{{ partial "schematize/docs/object/header" $headerParams }}
+{{/* Build the render strings */}}
+{{- $renderStrings := slice $openSectionHTML
+                      | append (partial "schematize/docs/object/header" $headerParams)
+                      | append (partial "schematize/utils/schema/render" $schemaParams)
+                      | append (partial "schematize/docs/object/examples" $examplesParams)
+                      | append (partial "schematize/docs/object/requiredProperties" $requiredParams)
+                      | append (partial "schematize/docs/object/properties" $propertyParams)
+                      | append (partial "schematize/docs/object/patternProperties" $patternParams)
+                      | append "</section>"
+-}}
 
-{{ $schemaRenderingParams := merge $params (dict "_level" $current_level) }}
-{{ partial "schematize/utils/schema/render" $schemaRenderingParams }}
-
-{{- $examplesParams := merge $params (dict "_level" $current_level) -}}
-{{ partial "schematize/docs/object/examples" $examplesParams }}
-
-{{/*
-  Now that we're moving into properties, increment the current level by one to ensure the page
-  hierarchy is correct.
-*/}}
-{{ $current_level = add $current_level 1 }}
-
-{{- $requiredPropertyParams := merge $params (dict "_level" $current_level "_id" $property_prefix) -}}
-{{ partial "schematize/docs/object/requiredProperties" $requiredPropertyParams }}
-
-{{- $propertyParams := merge $params (dict "_level" $current_level "_id" $property_prefix) -}}
-{{ partial "schematize/docs/object/properties" $propertyParams }}
-
-{{- $propertyParams := merge $params (dict "_level" $current_level "_id" $property_prefix) -}}
-{{ partial "schematize/docs/object/patternProperties" $propertyParams }}
-
-</section>
+{{/* Render */}}
+{{- delimit $renderStrings "\n\n" | safeHTML -}}

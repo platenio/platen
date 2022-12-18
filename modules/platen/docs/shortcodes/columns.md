@@ -3,6 +3,43 @@ title: columns
 summary: >-
   Documentation on the `columns` shortcode, which turns Markdown content into columns with a
   flexible ratio.
+Platen:
+  TitleAsHeading: true
+Memo:
+  Name: columns
+  Parameters:
+    id:
+      Named: true
+      Position: 0
+      Type: String.ID
+      Required: true
+    class:
+      Named: true
+      Position: 1
+      Type: String.Class
+      Required: false
+  InnerText:
+    Required: true
+    TrimsLeadingWhiteSpace: true
+    Nested:
+      Name: column
+      Required: true
+      TagType: NoProcess
+      Parameters:
+        grow:
+          Named: true
+          Position: 0
+          Type: integer
+          Required: false
+        class:
+          Named: true
+          Position: 1
+          Type: String.Class
+          Required: false
+      InnerText:
+        Required: true
+        Type: String.Markdown.Block
+        TrimsLeadingWhiteSpace: true
 ---
 
 The `columns` shortcode makes it possible for you to convert Markdown content into columns with
@@ -13,161 +50,112 @@ own `div`. The Markdown content in each column is rendered as normal.
 
 ## Syntax
 
-The `flexcolumn` shortcode supports both positional and named parameters. It requires opening and
-closing tags.
-
-### Positional Parameters
-
-```go
-{{%/* columns "ratio" flattenForMobile */%}}
-First column Markdown
-<--->
-Next column Markdown
-{{%/* /columns */%}}
-```
-
-### Named Parameters
-
-```go
-{{%/* columns ratio="a:b" flattenForMobile=(true|false) */%}}
-First column Markdown
-<--->
-Next column Markdown
-{{%/* /columns */%}}
-```
+{{< memo/shortcode/syntax >}}
 
 ## Examples
 
-### 1. Positional Parameter Example
-
-#### Markdown Input { #example-positional-parameter-markdown-input }
-
-```go
-{{%/* columns "7:3" true */%}}
-This is the first column of Markdown _content_. It takes up 70% of the available
-width. Note that the Markdown in this column renders as normal.
-<--->
-This is the second column. It takes up the remaining 30% of the available width.
-{{%/* /columns */%}}
+```memo-example-shortcode { title="Minimal Example" }
+{{</* columns "example-1" */>}}
+  {{</* column  */>}}
+    This is the first of two evenly spaced columns.
+  {{</* /column */>}}
+  {{</* column */>}}
+    This is the second column, with _markup_.
+  {{</* /column */>}}
+{{</* /columns */>}}
 ```
 
-#### HTML Output { #example-positional-parameter-html-output }
-
-```html
-<div class="book-columns flex flex-wrap flatten-in-mobile">
-  <div style="flex-grow:7;" class="flex-even markdown-inner">
-    This is the first column of Markdown <em>content</em>. It takes up 70%
-    of the available width. Note that the Markdown in this column renders as
-    normal.
-  </div>
-  <div style="flex-grow:3;" class="flex-even markdown-inner">
-    This is the second column. It takes up the remaining 30% of the
-    available width.
-  </div>
-</div>
+```memo-example-shortcode { title="Full Example" }
+{{</* columns id="example-2" class="example" */>}}
+  {{</* column  grow=2 class="lead" */>}}
+    This is the first column. It's twice as wide as
+    the second column and has the `lead` class. The
+    parent shortcode adds the `example` class,
+    which may affect each column.
+  {{</* /column */>}}
+  {{</* column grow=1 */>}}
+    This is the second column, half as wide as the
+    others. It has no extra class.
+  {{</* /column */>}}
+  {{</* column grow=2 class="follow" */>}}
+    This is the third column, same size as the first.
+    It has the `follow` class.
+  {{</* /column */>}}
+{{</* /columns */>}}
 ```
-
-#### Rendered Shortcode { #example-positional-parameter-rendered-shortcode }
-
-{{% columns "7:3" true %}}
-This is the first column of Markdown _content_. It takes up 70% of the
-available width. Note that the Markdown in this column renders as normal.
-<--->
-This is the second column. It takes up the remaining 30% of the available
-width.
-{{% /columns %}}
-
-### 2. Named Parameter Example
-
-#### Markdown Input { #example-named-parameter-markdown-input }
-
-```go
-{{%/* columns ratio="5:3:2" flattenForMobile=true */%}}
-This is the first column of Markdown _content_. It takes up 50% of the
-available width. Note that the Markdown in this column renders as normal.
-<--->
-This is the second column. It takes up the 30% of the available width.
-<--->
-Final column, 20% of the width.
-{{%/* /columns */%}}
-```
-
-#### HTML Output { #example-named-parameter-html-output }
-
-```html
-<div class="book-columns flex flex-wrap flatten-in-mobile">
-  <div style="flex-grow:5;" class="flex-even markdown-inner">
-    This is the first column of Markdown <em>content</em>. It takes up 50%
-    of the available width. Note that the Markdown in this column renders
-    as normal.
-  </div>
-  <div style="flex-grow:3;" class="flex-even markdown-inner">
-    This is the second column. It takes up the 30% of the available width.
-  </div>
-  <div style="flex-grow:2;" class="flex-even markdown-inner">
-    Final column, 20% of the width.
-  </div>
-</div>
-```
-
-#### Rendered Shortcode { #example-named-parameter-rendered-shortcode }
-
-{{% columns ratio="5:3:2" flattenForMobile=true %}}
-This is the first column of Markdown _content_. It takes up 50% of the
-available width. Note that the Markdown in this column renders as normal.
-<--->
-This is the second column. It takes up the 30% of the available width.
-<--->
-Final column, 20% of the width.
-{{% /columns %}}
 
 ## Parameters
 
-### `ratio`
+### `id`
 
-Specify a string of integers separated by colons (`:`), like `2:5`. The colons separate the maximum
-width of each column in the flexible row. For more information, see the [`flex-grow`][02] CSS
-property documentation.
+Specify the unique name for this group of columns. The created `div` is given the `id` attribute
+with the prefix `columns-`. For example, if this value is `example-1`, the `id` for the containing
+`div` is `columns-example-1`.
 
-To ensure the columns are evenly sized, specify this value as an empty string (`""`).
+{{< memo/shortcode/parameter "id" >}}
 
-If you have more columns than items in the ratio string, extra columns are interpreted to have a
-maximum width of `0` and aren't visible. They're still available to screen readers.
+### `class`
 
-```yaml
-Position: 0
-Type: String
-```
+Specify any additional classes to insert into the class list for the containing `div` of this group
+of columns.
 
-### `flattenForMobile`
+By default, the containing `div` has the `platen-columns`, `flex`, and `flex-wrap` classes. For more
+information about how classes affect the styling of content in this shortcode, see
+[Styling](#styling).
 
-Specify whether the columns should collapse into a vertical stack on smaller screens to make them
-more readable. By default, the columns still display horizontally on smaller screens.
+{{< memo/shortcode/parameter "class" >}}
 
-```yaml
-Position: 1
-Type: String
-Default: false
-```
+## Inner
+
+{{< memo/shortcode/inner >}}
+
+### Nested Shortcode: `column`
+
+Each `column` shortcode you use inside a `columns` shortcode adds another column. You can control
+the size and styling for each column independently.
+
+#### Syntax
+
+{{< memo/shortcode/syntax nested=true >}}
+
+#### Parameters
+
+##### `grow`
+
+Specify the column's maximum width in the group. If this value isn't specified for any `column`, all
+columns are added with equal width. If this value is specified for any `column`, all columns without
+a width are treated as having a width of `1`.
+
+{{< memo/shortcode/parameter "Nested.grow" >}}
+
+##### `class`
+
+Specify any additional classes to insert into the class list for this column's `div`.
+
+By default, the `div` has the `flex-even` and `markdown-inner` classes. For more information about
+how classes affect the styling of content in this shortcode, see [Styling](#styling).
+
+{{< memo/shortcode/parameter "Nested.class" >}}
+
+#### Inner
+
+Specify the text you want to include in the body of this column.
+
+{{< memo/shortcode/inner nested=true >}}
 
 ## Styling
 
-The container `div` for the columns is automatically assigned the `book-columns`, `flex`, and
-`flex-wrap` classes.
+The container `div` for the columns is automatically assigned the `platen-columns`, `flex`, and
+`flex-wrap` classes. Each column's content is placed inside a child `div` with the `flex-even` and
+`markdown-inner` classes.
 
-Each column's content is placed inside a child `div` with the `flex-even` and `markdown-inner`
-classes, as well as the inline style `flex-grow:<ratio>`, where `<ratio>` is the value specified for
-that column in the shortcode tag. For example, if the ratio was defined as `3:5:2`, the second
-column has the inline style `flex-grow:5`.
+The child `div` elements also have the inline style `flex-grow:<grow>` added, where `<grow>` is the
+value specified for that column in their `grow` parameter.
 
-{{% columns %}}
-This is the first column of Markdown _content_. It takes up 50% of the
-available width. Note that the Markdown in this column renders as normal.
-<--->
-This is the second column. It takes up the 30% of the available width.
-<--->
-Final column, 20% of the width.
-{{% /columns %}}
+By default, when the site is rendered in mobile view, the columns are collapsed on top of each
+other. This turns them into rows of content in the same order they were defined in the shortcode.
+You can override this behavior, having the columns always display as columns even on small screens,
+by adding `no-flatten-for-mobile` to the value of the `class` parameter of the `columns` shortcode.
 
 <!-- Link References -->
 [01]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div

@@ -15,14 +15,20 @@
     object's properties. This value should be null for a top-level object and set for any nested
     objects, like properties of a top-level object.
 */}}
-{{- $params := . -}}
-{{- $data   := $params.property -}}
-{{- $level  := $params._level -}}
+{{- $params := .                    -}}
+{{- $data   := $params.property     -}}
+{{- $level  := add 1 $params._level -}}
 {{- with $data.examples }}
-  {{- partial "schematize/utils/headings/arbitrary" (dict "level" $level "title" "Examples") }}
+  {{- $headingParams  := dict "level" $level "title" "Examples"                               -}}
+  {{- $openCodeBlock  := "\n```json { .schematize-example-block }"                            -}}
+  {{- $closeCodeBlock := "```\n\n"                                                            -}}
+  {{- $renderStrings  := slice (partial "schematize/utils/headings/arbitrary" $headingParams) -}}
 
-  {{- range $example := . }}
-    {{- $exampleCode := $example | jsonify (dict "indent" "  ") }}
-    {{- printf "\n```json {.schematize-example-block}\n%s\n```" $exampleCode }}
-  {{ end }}
-{{ end }}
+  {{- range $example := . -}}
+    {{- $exampleCode := $example | jsonify (dict "indent" "  ")                         -}}
+    {{- $exampleCode  = printf "%s\n%s\n%s" $openCodeBlock $exampleCode $closeCodeBlock -}}
+    {{- $renderStrings = $renderStrings | append $exampleCode -}}
+  {{- end -}}
+
+  {{- delimit $renderStrings "\n\n" -}}
+{{- end -}}

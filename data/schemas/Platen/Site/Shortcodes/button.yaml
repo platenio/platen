@@ -1,0 +1,109 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Shortcodes/button.schema.yaml
+title: button
+description: Defines the settings for the button shortcode
+schematize:
+  details: |
+    Defines the map of settings for the Platen's [`button`][01] shortcode. The existing value is a
+    map that includes whether or not to enable the shortcode and the style definition for it.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all properties in your own configuration file. Only specify the values you want
+    to add or replace.
+
+    [01]: /modules/platen/shortcodes/button
+type: object
+properties:
+  Enabled:
+    title: Enable the Shortcode
+    description: Whether to enable the shortcode for the site
+    schematize:
+      weight: 1
+      details: |
+        Defines whether to enable the `button` shortcode for the site. This value defaults to
+        `true`. When this value is set to `false`, the configuration and styling for the shortcode
+        is disabled and Platen raises an error when the shortcode is used.
+    type: boolean
+    default: true
+  Style:
+    title: SCSS Style Module
+    description: Defines default styling for buttons created by the shortcode.
+    schematize:
+      weight: 100
+      skipSchemaRender: true
+      details: |
+        Defines default styling for buttons created by the shortcode.
+
+        When you use the [`button`][01] shortcode, the following SCSS is applied:
+
+        ```scss
+        .markdown a.platen-btn {
+          display: inline-block;
+          font-size: $font-size-medium;
+          color: var(--color-link);
+          line-height: $padding-large * 2;
+          padding: 0 $padding-large;
+          border: $padding-minimal solid var(--color-link);
+          border-radius: $border-radius;
+          cursor: pointer;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+        ```
+
+        The button is created as link (`a`) element with the `platen-btn` class.
+
+        It sets the display to [sref:`inline-block`] so the button can be added in the body text of
+        a paragraph. It sets the font-size to the value of
+        [sref:`Theme.Variables.BasicSCSS.font-size-medium`], the text color to
+        [sref:`Theme.Variables.LightCSS.color-link`] or
+        [sref:`Theme.Variables.DarkCSS.color-link`] depending on the value of the
+        [sref:`Theme.Config.Mode`] setting.
+
+        It sets the horizontal padding for the button to
+        [sref:`Theme.Variables.BasicSCSS.padding-large`] and the line height to twice that value.
+
+        It adds a minimal solid border with the width set to
+        [sref:`Theme.Variables.BasicSCSS.padding-minimal`], the color to either
+        [sref:`Theme.Variables.LightCSS.color-link`] or
+        [sref:`Theme.Variables.DarkCSS.color-link`], and the radius to
+        [sref:`Theme.Variables.BasicSCSS.border-radius`].
+
+        It ensures that the cursor is a normal pointer and that no text decoration is added when a
+        site visitor hovers on the button.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/shortcodes/_button.scss` in your [assets folder][02], which defaults to `assets` in
+        your project root.
+
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
+
+        For more information on authoring SCSS, see the [learning guide][03].
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/shortcodes/button
+        [02]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [03]: https://sass-lang.com/guide
+        [sref:`inline-block`]: mdn.css:display-legacy
+        [sref:`Theme.Config.Mode`]: Platen.Site.Theme.Config.Mode
+        [sref:`Theme.Variables.BasicSCSS.border-radius`]: Platen.Site.Theme.Variables.BasicSCSS.border-radius
+        [sref:`Theme.Variables.BasicSCSS.font-size-medium`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-medium
+        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`Theme.Variables.BasicSCSS.padding-minimal`]: Platen.Site.Theme.Variables.BasicSCSS.padding-minimal
+        [sref:`Theme.Variables.DarkCSS.color-link`]: Platen.Site.Theme.Variables.DarkCSS.color-link
+        [sref:`Theme.Variables.LightCSS.color-link`]: Platen.Site.Theme.Variables.LightCSS.color-link
+    type: object
+    default:
+      Name: button
+    required:
+      - Name
+    properties:
+      Name:
+        title: Style Module Name
+        description: The name of the SCSS style module without the leading `_`.
+        enum: button

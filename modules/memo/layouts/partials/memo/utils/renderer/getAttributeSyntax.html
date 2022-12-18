@@ -1,0 +1,54 @@
+{{/*
+    This partial expects a map the Memo map from a page's frontmatter.
+*/}}
+{{- $data := . -}}
+
+{{/* Initialize the return string */}}
+{{- $attributeSyntax := "" -}}
+
+{{/* Retrieve the attribute syntaxes */}}
+{{- $orderedAttributes   := slice -}}
+{{- $requiredAttributes  := slice -}}
+{{- $optionalAttributes  := slice -}}
+{{- range $attribute, $metadata := $data.attributes -}}
+  {{- $value    := default $attribute $metadata.title    -}}
+  {{- $required := default false      $metadata.required -}}
+
+  {{/* Process the attribute entry value for the syntax */}}
+  {{- if eq "Boolean" $metadata.type -}}
+    {{- $value = printf `%s=(true|false)` $value -}}
+  {{- else if (eq "Integer" $metadata.type) -}}
+    {{- $value = printf `%s=int` $value -}}
+  {{- else }}
+    {{- $value = printf `%s="%s"` $value $value -}}
+  {{- end -}}
+
+  {{/* Add to the appropriate slice for display ordering */}}
+  {{- if $required -}}
+    {{- $requiredAttributes = $requiredAttributes | append $value -}}
+  {{- else -}}
+    {{- $value = printf `[%s]` $value -}}
+    {{- $optionalAttributes = $optionalAttributes | append $value -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Add required attributes first, alphabetically sorted */}}
+{{- with $requiredAttributes -}}
+  {{- range $attribute := sort $requiredAttributes -}}
+    {{- $orderedAttributes = $orderedAttributes | append $attribute -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Add optional attributes next, alphabetically sorted */}}
+{{- with $optionalAttributes -}}
+  {{- range $attribute := sort $optionalAttributes -}}
+    {{- $orderedAttributes = $orderedAttributes | append $attribute -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* If there are any attributes, wrap in braces and delimit with spaces */}}
+{{- with $orderedAttributes -}}
+  {{- $attributeSyntax = printf " { %s }" (delimit $orderedAttributes " ") -}}
+{{- end -}}
+
+{{- return $attributeSyntax -}}

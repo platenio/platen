@@ -1,0 +1,45 @@
+{{/*
+    Docs.ShortCode: memo/shortcode/syntax
+*/}}
+{{- $input      := .                  -}}
+{{- $pageParams := $input.Page.Params -}}
+{{- $data       := $pageParams.Memo   -}}
+{{- $forNested  := default ($input.Get 0) ($input.Get "nested") -}}
+
+{{- if or (eq "nested" (lower $forNested)) (eq true $forNested) -}}
+  {{- $data = $data.innertext.nested -}}
+{{- end -}}
+
+{{- with $data.innertext -}}
+  {{- $param           := .     -}}
+  {{- $type            := $param.type -}}
+  {{- $nested          := $param.nested -}}
+  {{- $stringsToRender := slice -}}
+  {{- with $type -}}
+    {{- $type = apply (split $type ".") "title" "." -}}
+    {{- $type = delimit $type "." -}}
+  {{- else -}}
+    {{- if (ne nil $nested) -}}
+      {{- $type = "Nested" -}}
+    {{- else -}}
+      {{- $type = "Any" -}}
+    {{- end -}}
+  {{- end  -}}
+  {{- $param = merge $param (dict "type" $type) -}}
+
+  {{- $docsSuffix     := partial "memo/utils/shortcode/getDocsSuffix" $param -}}
+  {{- $stringsToRender = $stringsToRender | append $docsSuffix               -}}
+
+  {{- $metadataCodeBlock := partial "memo/utils/shortcode/getMetadataCodeBlock" $param -}}
+  {{- $stringsToRender   = $stringsToRender | append $metadataCodeBlock                -}}
+
+  {{- $stringToRender := delimit $stringsToRender "\n\n" -}}
+  {{- $input.Page.RenderString $stringToRender           -}}
+{{- else -}}
+  {{- with $data -}}
+    {{- $definition := $data | jsonify (dict "indent" "  ")                               -}}
+    {{- errorf "Couldn't find InnerText metadata in shortcode definition: %s" $definition -}}
+  {{- else -}}
+    {{- errorf "Shortcode metadata not defined." -}}
+  {{- end -}}
+{{- end -}}

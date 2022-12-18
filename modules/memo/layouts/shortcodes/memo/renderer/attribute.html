@@ -1,0 +1,41 @@
+{{/*
+    Docs.ShortCode: memo/shortcode/syntax
+*/}}
+{{- $input      := .                  -}}
+{{- $pageParams := $input.Page.Params -}}
+{{- $data       := $pageParams.Memo   -}}
+
+{{/* Process input parameters */}}
+{{- $name := default ($input.Get 0) ($input.Get "name") -}}
+
+{{- with (index $data.attributes (lower $name)) -}}
+  {{- $attribute       := .     -}}
+  {{- $type            := $attribute.type -}}
+  {{- $stringsToRender := slice -}}
+
+  {{- with $type -}}
+    {{- $type = apply (split $type ".") "title" "." -}}
+    {{- $type = delimit $type "." -}}
+  {{- else -}}
+    {{- $type = "Any" -}}
+  {{- end  -}}
+  {{- $attribute = merge $attribute (dict "type" $type) -}}
+  
+  {{- if not $attribute.nosuffix -}}
+    {{- $docsSuffix     := partial "memo/utils/shortcode/getDocsSuffix" $attribute -}}
+    {{- $stringsToRender = $stringsToRender | append $docsSuffix               -}}
+  {{- end -}}
+
+  {{- $metadataCodeBlock := partial "memo/utils/shortcode/getMetadataCodeBlock" $attribute -}}
+  {{- $stringsToRender    = $stringsToRender | append $metadataCodeBlock                   -}}
+
+  {{- $stringToRender := delimit $stringsToRender "\n\n" -}}
+  {{- $input.Page.RenderString $stringToRender           -}}
+{{- else -}}
+  {{- with $data -}}
+    {{- $definition := $data | jsonify (dict "indent" "  ")                                 -}}
+    {{- errorf "Couldn't find attribute '%s' in renderer definition: %s" $name $definition -}}
+  {{- else -}}
+    {{- errorf "Couldn't find attribute '%s'" $name -}}
+  {{- end -}}
+{{- end -}}

@@ -1,0 +1,54 @@
+{{- $params           := .                                                                -}}
+{{- $data             := $params.Data                                                     -}}
+{{- $name             := default $params.Name $data.name                                  -}}
+{{- $inner            := $data.innertext                                                  -}}
+{{- $tagType          := $data.tagtype                                                    -}}
+{{- $commentTagParams := dict "Type" $tagType                                             -}}
+{{- $closingTagParams := merge $commentTagParams (dict "Syntax" (printf "/%s" $name))     -}}
+{{- $closingTag       := partial "memo/utils/shortcode/getCommentedTag" $closingTagParams -}}
+{{- $positionalParams := dict                                                             -}}
+{{- $namedParams      := dict                                                             -}}
+{{- $syntaxData       := dict                                                             -}}
+
+{{- range $param, $definition := $data.parameters -}}
+  {{- if isset $definition "position" -}}
+    {{- $positionalParams = merge $positionalParams (dict $param $definition) -}}
+  {{- end -}}
+  {{- if isset $definition "named" -}}
+    {{- $namedParams = merge $namedParams (dict $param $definition) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $hasInner            := ne nil $inner                -}}
+{{- $hasPositionalParams := ne 0 (len $positionalParams) -}}
+{{- $hasNamedParams      := ne 0 (len $namedParams)      -}}
+
+{{- $synopsisParams := dict "Name"                $name
+                            "HasPositionalParams" $hasPositionalParams
+                            "HasNamedParams"      $hasNamedParams
+                            "InnerDef"            $inner
+-}}
+{{- $synopsis := partial "memo/utils/shortcode/getSynopsis" $synopsisParams -}}
+{{- $syntaxData = merge $syntaxData (dict "Synopsis" $synopsis)             -}}
+
+{{- if $hasPositionalParams -}}
+  {{- $syntaxParams     := dict "Name"     $name
+                                "Data"     $positionalParams
+                                "InnerDef" $inner
+                                "TagType"  $tagType
+  -}}
+  {{- $positionalSyntax := partial "memo/utils/shortcode/getPositionalSyntax" $syntaxParams -}}
+  {{- $syntaxData        = merge $syntaxData (dict "PositionalSyntax" $positionalSyntax)    -}}
+{{- end -}}
+
+{{- if $hasNamedParams -}}
+  {{- $syntaxParams := dict "Name"     $name
+                            "Data"     $namedParams
+                            "InnerDef" $inner
+                            "TagType"  $tagType
+  -}}
+  {{- $namedSyntax  := partial "memo/utils/shortcode/getNamedSyntax" $syntaxParams  -}}
+  {{- $syntaxData    = merge $syntaxData (dict "NamedSyntax" $namedSyntax)          -}}
+{{- end -}}
+
+{{- return $syntaxData -}}

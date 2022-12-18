@@ -10,7 +10,8 @@ properties:
     description: Choose whether the site is generated as a PWA.
     schematize:
       details: |
-        Choose whether the site is generated as a PWA. The default is `true`.
+        Choose whether the site is generated as a progressive web application. The default is
+        `true`.
       weight: 1
     type: boolean
     default: true
@@ -20,8 +21,12 @@ properties:
     schematize:
       details: |
         Define a map of partials for Platen to inject as needed. These partials are only
-        injected when `Enabled` is set to `true`.
+        injected when [sref:`Enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`Enabled`]: Platen.Site.Features.PWA.Enabled
       weight: 2
+      skipSchemaRender: true
     type: object
     properties:
       Header:

@@ -1,7 +1,7 @@
 ---
 name: PortableLinks
-title: Partable Links
-weight: 1
+title: Portable Links
+weight: 10
 type: schematize
 Schematize: Platen.Site.Features.PortableLinks
 outputs:

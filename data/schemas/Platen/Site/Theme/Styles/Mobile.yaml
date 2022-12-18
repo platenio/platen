@@ -41,8 +41,9 @@ properties:
         `styles/mobile/_header.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -116,7 +117,7 @@ properties:
         This applies to the site menu in mobile view, overriding the styles defined in
         [sref:`Theme.Styles.Platen.Menu`].
 
-        #### Menu Container
+        ### Menu Container
 
         ```scss
         .platen-menu {
@@ -129,7 +130,7 @@ properties:
 
         This hides the menu by default in mobile view, allowing it to be displayed when toggled.
 
-        #### Menu Control
+        ### Menu Control
 
         ```scss
         #menu-control {
@@ -147,7 +148,7 @@ properties:
 
         This adds an outline to the control when focused, as with a keyboard.
 
-        #### Menu Display
+        ### Menu Display
 
         ```scss
         #menu-control:checked ~ main {
@@ -183,7 +184,7 @@ properties:
         While the menu is open, it sets the opacity of the page content to 25% and ensures that
         clicking off the menu closes it.
 
-        #### Right to Left Overrides
+        ### Right to Left Overrides
 
         ```scss
         body[dir="rtl"] #menu-control:checked ~ main {
@@ -196,14 +197,15 @@ properties:
         This ensures that when the language mode is right-to-left the menu slides out from the
         right side of the screen instead of the left.
 
-        #### Overwriting
+        ### Overwriting
 
         You can overwrite this definition for your own site or theme by creating the file
         `styles/mobile/_menu.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -251,7 +253,7 @@ properties:
         This applies to the table of contents in mobile view, overriding the styles defined in
         [sref:`Theme.Styles.Platen.Toc`].
 
-        #### ToC Container
+        ### ToC Container
 
         ```scss
         .platen-toc {
@@ -261,7 +263,7 @@ properties:
 
         This hides the table of contents by default in mobile view.
 
-        #### ToC Control
+        ### ToC Control
 
         ```scss
         #toc-control {
@@ -279,7 +281,7 @@ properties:
 
         This adds an outline to the control when focused, as with a keyboard.
 
-        #### ToC Display
+        ### ToC Display
 
         ```scss
         #toc-control:checked ~ main {
@@ -292,14 +294,15 @@ properties:
         This applies only when the toggle is checked to display the table of contents. It displays
         the ToC at the top of the page as a `block` element before the content.
 
-        #### Overwriting
+        ### Overwriting
 
         You can overwrite this definition for your own site or theme by creating the file
         `styles/mobile/_toc.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 

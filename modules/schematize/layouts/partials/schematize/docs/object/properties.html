@@ -17,28 +17,26 @@
     object's properties. This value should be null for a top-level object and set for any nested
     objects, like properties of a top-level object.
 */}}
-{{- $params := . -}}
-{{- $level := $params._level -}}
-{{- $prefix := $params._id -}}
-{{- $data := $params.property -}}
+{{- $params := .                -}}
+{{- $level  := $params._level   -}}
+{{- $prefix := $params._id      -}}
+{{- $data   := $params.property -}}
 
 {{ with $data.properties }}
-  {{ partial "schematize/utils/headings/arbitrary" (dict
-             "level" $level
-             "title" "Properties"
-             "id" (printf "%s-properties" (strings.TrimSuffix "." $prefix | lower | urlize))
-     )
-  }}
-
-  {{ $sortedProperties := dict -}}
+  {{- $renderStrings     := slice -}}
+  {{- $sortedProperties  := dict  -}}
   {{- range $name, $info := $data.properties -}}
-    {{- $weight := default 0 $info.schematize.weight -}}
-    {{- $property := merge $info (dict "_id" (printf "%s%s" $prefix $name) "_weight" $weight) -}}
-    {{- $sortedProperties = merge $sortedProperties (dict $name $property) -}}
+    {{- $weight          := default 0                 $info.schematize.weight               -}}
+    {{- $newID           := printf  "%s%s"            $prefix $name                         -}}
+    {{- $property        := merge   $info             (dict "_id" $newID "_weight" $weight) -}}
+    {{- $sortedProperties = merge   $sortedProperties (dict $name $property)                -}}
   {{- end -}}
 
   {{- range $info := sort $sortedProperties "_weight" "asc" -}}
-    {{- $property := merge $info (dict "_level" $level) -}}
-    {{ partial "schematize/utils/typePicker" (dict "property" $property "page" $params.page) }}
-  {{ end }}
-{{ end }}
+    {{- $property         := merge   $info      (dict "_level" $level)           -}}
+    {{- $pickerParams     := dict    "property" $property "page"   $params.page  -}}
+    {{- $renderedProperty := partial "schematize/utils/typePicker" $pickerParams -}}
+    {{- $renderStrings     = $renderStrings | append $renderedProperty           -}}
+  {{- end -}}
+  {{- delimit $renderStrings "\n\n" | safeHTML -}}
+{{- end -}}

@@ -9,11 +9,27 @@ schematize:
     post's front matter.
 type: object
 properties:
+  TitleAsHeading:
+    title: Render Page Title as Heading
+    description: Specify whether the page title should be rendered as an h1 instead of strong.
+    schematize:
+      weight: 1
+      details: |
+        Use this setting to specify whether the page title should be rendered as an `<h1>`
+        element instead of the default `<strong>` element.
+
+        If this set to `true`, Platen renders the title text in an `<h1>` with the ID set to
+        the title, downcased and urlized.
+
+        When the page title is rendered as a heading, it's always visible, even when not in mobile
+        view.
+    type: boolean
+    default: false
   EnableComments:
     title: Enable Comments
     description: Whether to enable comments on the page
     schematize:
-      weight: 1
+      weight: 2
       details: |
         Specifies whether to enable comments on the page.
     type: boolean
@@ -21,7 +37,7 @@ properties:
     title: Exclude from Search
     description: Whether to exclude the page from site search results
     schematize:
-      weight: 2
+      weight: 3
       details: |
         Specifies whether to exclude the page from site search results.
     type: boolean
@@ -29,11 +45,51 @@ properties:
     title: Table of Contents
     description: Overrides the site's table of contents configuration for this page.
     schematize:
+      weight: 4
       skipSchemaRender: true
       details: |
         Defines overrides the site's table of contents configuration for this page.
     type: object
     properties:
+      UseBuiltIn:
+        title: Use Built-In
+        description: Choose whether to use Hugo's builtin table of contents.
+        schematize:
+          details: |
+            Choose whether to use Hugo's builtin table of contents or generate them with Platen,
+            overriding the site's configuration for this page. This overrides the site's [sref:`Display.TableOfContents.UseBuiltIn`]
+            setting.
+
+
+            Hugo's builtin table of contents only includes markdown headings, not HTML headings
+            added in shortcodes.
+
+            Platen's table of contents includes all headings, HTML and Markdown, as long as they're
+            within the specified values for [sref:`MinimumLevel`] and [sref:`MaximumLevel`],
+            inclusive.
+
+            [sref:`Display.TableOfContents.UseBuiltIn`]: Platen.Site.Display.Settings.TableOfContents.UseBuiltIn
+            [sref:`MinimumLevel`]: Platen.Content.Post.MinimumLevel
+            [sref:`MaximumLevel`]: Platen.Content.Post.MaximumLevel
+          weight: 1
+        type: boolean
+        default: false
+      Render:
+        title: Render the Table of Contents
+        description: Whether to render the table of contents for the page
+        schematize:
+          weight: 2
+          details: |
+            Specifies whether to render the table of contents for the page. This setting overrides
+            the site's [sref:`Display.TableOfContents.Render`], if set.
+
+            To prevent the table of contents from rendering for a page, set this value to `false`.
+            To render the table of contents for a page when it's disabled at the site level, set
+            this value to `true`.
+
+            [sref:`Display.TableOfContents.Render`]: Platen.Site.Display.Settings.TableOfContents.Render
+        type: boolean
+        default: false
       MinimumLevel:
         title: Minimum Heading Level
         description: Specify the minimum heading level to include in the page's table of contents.
@@ -98,57 +154,24 @@ properties:
             [sref:`Display.TableOfContents.OrderedList`]: Platen.Site.Display.Settings.TableOfContents.OrderedList
         type: boolean
         default: false
-      UseBuiltIn:
-        title: Use Built-In
-        description: Choose whether to use Hugo's builtin table of contents.
+  Features:
+    title: Feature Options
+    description: Control feature-specific behavior for this page, overriding site-level defaults.
+    schematize:
+      weight: 5
+      details: |
+        Specifies a map of options for Platen features, allowing you to override site-level defaults
+        for a feature on a per-page basis.
+      skipSchemaRender: true
+    type: object
+    properties:
+      Katex:
+        $ref: ./Features/Katex.yaml
         schematize:
-          details: |
-            Choose whether to use Hugo's builtin table of contents or generate them with Platen,
-            overriding the site's configuration for this page. This overrides the site's [sref:`Display.TableOfContents.UseBuiltIn`]
-            setting.
-
-
-            Hugo's builtin table of contents only includes markdown headings, not HTML headings
-            added in shortcodes.
-
-            Platen's table of contents includes all headings, HTML and Markdown, as long as they're
-            within the specified values for [sref:`MinimumLevel`] and [sref:`MaximumLevel`],
-            inclusive.
-
-            [sref:`Display.TableOfContents.UseBuiltIn`]: Platen.Site.Display.Settings.TableOfContents.UseBuiltIn
-            [sref:`MinimumLevel`]: Platen.Content.Post.MinimumLevel
-            [sref:`MaximumLevel`]: Platen.Content.Post.MaximumLevel
           weight: 1
-        type: boolean
-        default: false
-      Render:
-        title: Render the Table of Contents
-        description: Whether to render the table of contents for the page
+          skipSchemaRender: true
+      Mermaid:
+        $ref: ./Features/Mermaid.yaml
         schematize:
           weight: 2
-          details: |
-            Specifies whether to render the table of contents for the page. This setting overrides
-            the site's [sref:`Display.TableOfContents.Render`], if set.
-
-            To prevent the table of contents from rendering for a page, set this value to `false`.
-            To render the table of contents for a page when it's disabled at the site level, set
-            this value to `true`.
-
-            [sref:`Display.TableOfContents.Render`]: Platen.Site.Display.Settings.TableOfContents.Render
-        type: boolean
-        default: false
-  TitleAsHeading:
-    title: Render Page Title as Heading
-    description: Specify whether the page title should be rendered as an h1 instead of strong.
-    schematize:
-      details: |
-        Use this setting to specify whether the page title should be rendered as an `<h1>`
-        element instead of the default `<strong>` element.
-
-        If this set to `true`, Platen renders the title text in an `<h1>` with the ID set to
-        the title, downcased and urlized.
-
-        When the page title is rendered as a heading, it's always visible, even when not in mobile
-        view.
-    type: boolean
-    default: false
+          skipSchemaRender: true

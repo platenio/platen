@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Shortcodes/itchio.schema.yaml
+title: itchio
+description: Defines the settings for the itchio shortcode
+schematize:
+  details: |
+    Defines the map of settings for the Platen's [`itchio`][01] shortcode. The existing value is a
+    map that includes whether or not to enable the shortcode.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all properties in your own configuration file. Only specify the values you want
+    to add or replace.
+
+    <!-- Reference Links -->
+    [01]: /modules/platen/shortcodes/itchio
+type: object
+properties:
+  Enabled:
+    title: Enable the Shortcode
+    description: Whether to enable the shortcode for the site
+    schematize:
+      weight: 1
+      details: |
+        Defines whether to enable the `itchio` shortcode for the site. This value defaults to
+        `true`. When this value is set to `false`, Platen raises an error when the shortcode is
+        used.
+    type: boolean
+    default: true

@@ -1,9 +1,9 @@
 {{- $context           := . -}}
 {{- $theme             := $context.Site.Params.Platen.Theme -}}
-{{- $variablesPartial  := "platen/utils/styles/variables.scss" -}}
-{{- $importPartial     := "platen/utils/styles/import.scss" -}}
-{{- $fontsPartial      := "platen/utils/styles/fonts.scss" -}}
-{{- $shortcodesPartial := "platen/utils/styles/shortcodes.scss" -}}
+{{- $variablesPartial  := "platen/utils/styles/variables"  -}}
+{{- $importPartial     := "platen/utils/styles/import"     -}}
+{{- $fontsPartial      := "platen/utils/styles/fonts"      -}}
+{{- $shortcodesPartial := "platen/utils/styles/shortcodes" -}}
 // Adds the basic SCSS variables. These can be strings or maps. Values in this
 // group must not reference other values, only primitives.
 {{- range $name, $value := $theme.Variables.BasicSCSS -}}
@@ -64,21 +64,16 @@
 // Applies when the screen is particularly wide.
 {{ partial $importPartial (dict "StylesMap" $theme.Styles.Wide "RootFolder" "wide") }}
 
-// Add in all of the fonts.
-{{ partial $fontsPartial $theme.Fonts }}
-
 // Settings for when a site user tries to print a web page
 {{ partial $importPartial (dict "StylesMap" $theme.Printing.Styles "RootFolder" "printing") }}
 
 // Markdown covers article/post content, not the site-wide or structural items.
 {{ partial $importPartial (dict "StylesMap" $theme.Styles.Markdown "RootFolder" "markdown") }}
 
-{{ $builtinStyles := slice "Utils" "Base" "Platen" "Mobile" "Wide" "Markdown" }}
-{{ range $styleGroupName, $styles := $theme.Styles }}
-  {{ $rootFolder := default (lower $styleGroupName) $styles.RootFolder }}
-  {{ partial $importPartial (dict "StylesMap" $styles "RootFolder" $rootFolder) }}
-{{ end }}
+// Add in all of the fonts.
+{{ partial $fontsPartial $theme.Fonts }}
 
+// Loop over the enabled features, handling each in turn. Features must be independently styled.
 {{ range $feature, $settings := $context.Site.Params.Platen.Features -}}
   {{- if $settings.Enabled -}}
     {{- with $settings.Partials.Style }}
@@ -88,7 +83,13 @@
 {{- end -}}
 
 // Shortcodes must always load _after_ all more normal/universal items.
-{{ partial $shortcodesPartial $theme.Shortcodes }}
+{{ range $shortcode, $settings := $context.Site.Params.Platen.Shortcodes }}
+  {{ if $settings.Enabled }}
+    {{ with $settings.Style }}
+      {{ partial $shortcodesPartial (dict "Name" $shortcode "Settings" $settings) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
 
 // Custom site-maintainer defined styles.
 @import "custom";

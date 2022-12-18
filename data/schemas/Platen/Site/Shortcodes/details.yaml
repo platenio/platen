@@ -1,0 +1,83 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Shortcodes/details.schema.yaml
+title: details
+description: Defines the settings for the details shortcode
+schematize:
+  details: |
+    Defines the map of settings for the theme's [`details`][01] shortcode. The existing value is a
+    map that includes whether or not to enable the shortcode and the style definition for it.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all properties in your own configuration file. Only specify the values you want
+    to add or replace.
+
+    [01]: /modules/platen/shortcodes/details
+type: object
+properties:
+  Enabled:
+    title: Enable the Shortcode
+    description: Whether to enable the shortcode for the site
+    schematize:
+      weight: 1
+      details: |
+        Defines whether to enable the `details` shortcode for the site. This value defaults to
+        `true`. When this value is set to `false`, the configuration and styling for the shortcode
+        is disabled and Platen raises an error when the shortcode is used.
+    type: boolean
+    default: true
+  Style:
+    title: SCSS Style Module
+    description: Defines default styling for details created by the shortcode.
+    schematize:
+      weight: 100
+      skipSchemaRender: true
+      details: |
+        Defines default styling for details created by the shortcode.
+
+        When you use the [`details`][01] shortcode, the following SCSS is applied:
+
+        ```scss
+        .markdown .platen-details {
+          @each $name, $color in $details-colors {
+            &.#{$name} {
+              border-color: $color;
+              background-color: rgba($color, 0.1);
+            }
+          }
+        }
+        ```
+
+        The shortcode creates a [sref:`details`] element with the `platen-details` class.
+
+        It uses the values of [sref:`Theme.Variables.BasicSCSS.details-colors`], looping over the map
+        and adding a class for each key that sets the border color for a detail of that type to the
+        value of the key and the background color to the value of the key at 10% opacity with the
+        [sref:`rgba()`] CSS function.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/shortcodes/_details.scss` in your [assets folder][02], which defaults to `assets` in
+        your project root.
+
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
+
+        For more information on authoring SCSS, see the [learning guide][03].
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/shortcodes/details
+        [02]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [03]: https://sass-lang.com/guide
+        [sref:`rgba()`]: mdn.css:color_value/rgba
+        [sref:`Theme.Variables.BasicSCSS.details-colors`]: Platen.Site.Theme.Variables.BasicSCSS.details-colors
+    type: object
+    default:
+      Name: details
+    required:
+      - Name
+    properties:
+      Name:
+        title: Style Module Name
+        description: The name of the SCSS style module without the leading `_`.
+        enum: details

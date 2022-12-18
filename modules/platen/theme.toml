@@ -1,6 +1,6 @@
 name = "platen"
 license = "MIT"
-licenselink = "https://github.com/platenio/platen/blob/main/modules/base/LICENSE"
+licenselink = "https://github.com/platenio/platen/blob/main/modules/platen/LICENSE"
 description = "Platen base theme for Hugo: build websites for digital tabletop games"
 homepage = "https://github.com/platenio/platen"
 demosite = "https://platen.io"

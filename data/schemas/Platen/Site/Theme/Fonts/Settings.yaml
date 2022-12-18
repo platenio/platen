@@ -14,6 +14,7 @@ schematize:
 
     For more information on creating your own settings, see [sref:Defined Font Settings].
 
+    <!-- Reference Links -->
     [sref:Defined Font Settings]: Platen.Site.Theme.Fonts.Settings.pattern-any
 type: object
 properties:
@@ -25,7 +26,7 @@ properties:
       details: |
         Defines the font settings for body text on the site. By default, the selector is `body`,
         which applies the fonts to everything. The family is set to `'Roboto', sans-serif`. The
-        Roboto font ships with the theme.
+        Roboto font is bundled with Platen.
     type: object
     default:
       Selector: body
@@ -38,7 +39,7 @@ properties:
       details: |
         Defines the font settings for inline and block code on the site. By default, the selector is
         `code`, which applies the fonts to everything in that element. The family is set to
-        `'Roboto Mono', monospace`. The Roboto Mono font ships with the theme.
+        `'Roboto Mono', monospace`. The Roboto Mono font is bundled with Platen.
     type: object
     default:
       Selector: code
@@ -48,11 +49,11 @@ patternProperties:
     type: object
     title: Defined Font Settings
     description: |
-      All existing settings groups, and any settings group you add, must define the
-      [sref:`Selector`] and [sref:`Family`] properties at a minimum. This allows theme developers
-      and site maintainers to override where this setting gets applied and what font families get
-      applied.
+      All settings groups must define the [sref:`Selector`] and [sref:`Family`] properties. This
+      allows theme developers and site maintainers to override where the setting gets applied and
+      what font families get applied.
 
+      <!-- Reference Links -->
       [sref:`Family`]: Platen.Site.Theme.Fonts.Settings.pattern-any.family
       [sref:`Selector`]: Platen.Site.Theme.Fonts.Settings.pattern-any.selector
     schematize:
@@ -65,14 +66,15 @@ patternProperties:
           weight: 1
           details: |
             Specify a valid SCSS selector to set the font family for. If this value isn't specified,
-            Platen attempts to use the downcased name of the group as the selector. For example,
-            `Details` would use `details` as the SCSS selector.
+            Platen uses the downcased name of the group as the selector. For example, `Details`
+            would use `details` as the SCSS selector.
 
             We strongly encourage you to provide a value for this setting instead of relying on that
             default behavior.
 
             For more information about SCSS selectors, see [the SCSS documentation][scss-docs].
 
+            <!-- Reference Links -->
             [scss-docs]: https://sass-lang.com/guide
         type: string
       Family:
@@ -84,6 +86,7 @@ patternProperties:
             Specify a valid [sref:`font-family`] to apply to the defined selector. This value can
             include any fonts defined in [sref:`Theme.Fonts.Styles`] or a default web font.
 
+            <!-- Reference Links -->
             [sref:`font-family`]: mdn.css:font-family
             [sref:`Theme.Fonts.Styles`]: Platen.Site.Theme.Config.Fonts.Styles
         type: string
@@ -96,6 +99,7 @@ patternProperties:
             Specify the name of a [mixin] defined in [sref:`Theme.Fonts.Styles`] to include it for
             the specified selector.
 
+            <!-- Reference Links -->
             [mixin]: https://sass-lang.com/documentation/at-rules/mixin
             [sref:`Theme.Fonts.Styles`]: Platen.Site.Theme.Config.Fonts.Styles
         type: array

@@ -1,7 +1,7 @@
 ---
 name: Comments
 title: Site Comments
-weight: 1
+weight: 10
 type: schematize
 Schematize: Platen.Site.Features.Comments
 outputs:

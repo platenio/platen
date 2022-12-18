@@ -11,8 +11,9 @@
 
 {{/* Continue only if the post doesn't already have a title heading */}}
 {{- if not $hasHeading -}}
-  {{- $titleText := partial "platen/utils/getTitle" $context -}}
-  {{- $href := $context.RelPermalink -}}
+  {{- $titleParams := dict "Context" $context "ForHeading" true    -}}
+  {{- $titleText   := partial "platen/utils/getTitle" $titleParams -}}
+  {{- $href        := $context.RelPermalink                        -}}
 
   {{/* Define the attribute list for the link */}}
   {{- $attributes := slice                                                -}}

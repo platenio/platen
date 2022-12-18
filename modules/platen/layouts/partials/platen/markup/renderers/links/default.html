@@ -1,9 +1,15 @@
 {{- if .Page.Site.Params.Platen.Features.PortableLinks.Enabled -}}
   {{- template "portable-link" . -}}
 {{- else -}}
-  <a href="{{ .Destination | safeURL }}"{{ with .Title}} title="{{ . }}"{{ end }}>
-    {{ .Text | safeHTML }}
-  </a>
+  {{- $href       := printf `href="%s"` (.Destination | safeURL) -}}
+  {{- $text       := .Text | safeHTML -}}
+  {{- $attributes := slice $href -}}
+  {{- with .Title -}}
+    {{- $title := printf `title="%s"` . -}}
+    {{- $attributes = $attributes | append $title -}}
+  {{- end -}}
+  {{- $attributes = partial "platen/utils/getSafeAttributes" $attributes -}}
+  {{- printf "<a %s>%s</a>" $attributes $text | safeHTML -}}
 {{- end -}}
 
 {{- define "portable-link" -}}
@@ -26,7 +32,13 @@
       {{- warnf "Page '%s' not found in '%s'" .Destination .Page.File }}
     {{- end }}
   {{- end }}
-  <a href="{{ $destination | safeURL }}"{{ with .Title}} title="{{ . }}"{{ end }}>
-    {{ .Text | safeHTML }}
-  </a>
+  {{- $href       := printf `href="%s"` ($destination | safeURL) -}}
+  {{- $text       := .Text | safeHTML -}}
+  {{- $attributes := slice $href -}}
+  {{- with .Title -}}
+    {{- $title := printf `title="%s"` . -}}
+    {{- $attributes = $attributes | append $title -}}
+  {{- end -}}
+  {{- $attributes = partial "platen/utils/getSafeAttributes" $attributes -}}
+  {{- printf "<a %s>%s</a>" $attributes $text | safeHTML -}}
 {{- end -}}

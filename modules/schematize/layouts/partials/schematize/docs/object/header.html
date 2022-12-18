@@ -13,21 +13,19 @@
   - `_id` - Optional. The ID this property belongs to. If not specified, the object's title is
     downcased and urlized for use as the ID for nested objects.
 */}}
-{{- $params := . -}}
+{{- $params := .                -}}
 {{- $data   := $params.property -}}
-{{- $level  := $params._level -}}
+{{- $level  := $params._level   -}}
 {{- if gt 1 $level -}}
 {{- else -}}
   {{- if not (isset $data "_id") -}}
     {{- $data = merge $data (dict "_id" ($data.title | lower | urlize)) -}}
   {{- end -}}
-  {{- safeHTML "<header>" }}
-
-  {{- partial "schematize/utils/headings/property" $params }}
-
-  {{- partial "schematize/utils/summary" $params }}
-
-  {{- partial "schematize/utils/metadata/render" $params -}}
-
-  {{- safeHTML "</header>" }}
+  {{- $renderStrings := slice    "<header>"
+                        | append (partial "schematize/utils/headings/property" $params)
+                        | append (partial "schematize/utils/summary" $params)
+                        | append (partial "schematize/utils/metadata/render" $params)
+                        | append "</header>"
+  -}}
+  {{- delimit $renderStrings "\n\n" | safeHTML }}
 {{ end }}

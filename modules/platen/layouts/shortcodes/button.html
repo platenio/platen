@@ -4,29 +4,40 @@
 {{- $input  := .                   -}}
 
 {{/* Process input parameters */}}
-{{- $href   := $input.Get "href"   -}}
-{{- $relref := $input.Get "relref" -}}
-{{- $class  := $input.Get "class"  -}}
-{{- $text   := $input.Inner        -}}
+{{- $ref      := default ($input.Get 0) ($input.Get "ref")      -}}
+{{- $relative := default ($input.Get 1) ($input.Get "relative") -}}
+{{- $class    := default ($input.Get 2) ($input.Get "class")    -}}
+{{- $text     := $input.Inner                                   -}}
+
+{{- if not $input.IsNamedParams -}}
+  {{- $relativeSet  := ne nil $relative                            -}}
+  {{- $relativeBool := or (eq true $relative) (eq false $relative) -}}
+  {{- if and $relativeSet (not $relativeBool) -}}
+    {{- $class    = $relative -}}
+    {{- $relative = false     -}}
+  {{- end -}}
+{{- end -}}
 
 {{/* Build the list of attributes for the link button */}}
 {{- $attributes := slice -}}
-{{- with $href -}}
-  {{- $attributes = $attributes | append (printf `href="%s"` $href) -}}
-  {{- $attributes = $attributes | append `target="_blank"`          -}}
-  {{- $attributes = $attributes | append `rel="noopener"`           -}}
-{{ else }}
-  {{ with $relref }}
-    {{- $ref       := relref $ $relref                               -}}
+{{- with $ref -}}
+  {{- if $relative -}}
+    {{- $ref       := relref $ $ref                                  -}}
     {{- $attributes = $attributes | append (printf `href="%s"` $ref) -}}
-  {{ end }}
+  {{- else -}}
+    {{- $attributes = $attributes | append (printf `href="%s"` $ref) -}}
+    {{- $attributes = $attributes | append `target="_blank"`          -}}
+    {{- $attributes = $attributes | append `rel="noopener"`           -}}
+  {{- end -}}
 {{ end }}
 {{- with $class -}}
   {{- $attributes = $attributes | append (printf `class="platen-btn %s"` $class) -}}
 {{- else -}}
   {{- $attributes = $attributes | append `class="platen-btn"` -}}
 {{- end -}}
-{{- $attributes = partial "platen/utils/getSafeAttributes" $attributes -}}
-
+{{- $attributeParams := dict "Attributes" $attributes "IndentCount" 3                           -}}
+{{- $attributes       = partial "platen/utils/getSafeAttributes" $attributeParams               -}}
+{{- $renderParams    := dict "Page" $input.Page "Content" $text "IndentCount" 2 "AsBlock" false -}}
+{{- $innerHtml       := partial "platen/utils/getPrettyRender" $renderParams                    -}}
 {{/* Render */}}
-<a {{ $attributes }}>{{ $text | .Page.RenderString }}</a>
+{{- printf "<a %s>\n  %s\n</a>" $attributes $innerHtml | safeHTML -}}

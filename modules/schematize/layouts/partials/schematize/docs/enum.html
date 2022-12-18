@@ -11,10 +11,12 @@
   - `_id` - Optional. The ID this property belongs to.
 */}}
 {{- $params := . -}}
-{{- $property := $params.property -}}
 
-{{ partial "schematize/utils/headings/property" $params }}
+{{/* Build the list of strings to render */}}
+{{- $renderStrings := slice    (partial "schematize/utils/headings/property" $params)
+                      | append (partial "schematize/utils/summary"           $params)
+                      | append (partial "schematize/utils/metadata/render"   $params)
+-}}
 
-{{ partial "schematize/utils/summary" $params }}
-
-{{ partial "schematize/utils/metadata/render" $params }}
+{{/* Render */}}
+{{- delimit $renderStrings "\n\n" | safeHTML -}}

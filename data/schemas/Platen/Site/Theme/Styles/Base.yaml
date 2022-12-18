@@ -48,8 +48,9 @@ properties:
         `styles/base/_html.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -113,8 +114,9 @@ properties:
         `styles/base/_body.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -159,8 +161,9 @@ properties:
         `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -199,8 +202,9 @@ properties:
         `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -238,8 +242,9 @@ properties:
         `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -275,8 +280,9 @@ properties:
         `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -347,8 +353,9 @@ properties:
         `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -393,8 +400,9 @@ properties:
         `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -433,8 +441,9 @@ properties:
         `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in your
         project root.
 
-        > Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {.platen-hint .danger }
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
 
         For more information on authoring SCSS, see the [learning guide].
 

@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Shortcodes/katex.schema.yaml
+title: The katex shortcode
+description: Defines the settings for the katex shortcode
+schematize:
+  details: |
+    Defines the map of settings for the Platen's [`katex`][01] shortcode. The existing value is a
+    map that includes whether or not to enable the shortcode.
+
+    This shortcode is part of the [sref:`Katex`][s01] feature, which handles the site-wide
+    configuration. These settings apply only to the shortcode, not the overall feature.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the full
+    list of all properties in your own configuration file. Only specify the values you want to add
+    or replace.
+
+    For more information about using KaTeX with Platen, see the [sref:configuration options][s01],
+    [shortcode documentation][01], and [render hook documentation][02].
+
+    <!-- Reference Links -->
+    [01]: /modules/platen/shortcodes/katex
+    [02]: /modules/platen/renderers/katex
+    [sref01]: Platen.Site.Features.Katex
+type: object
+properties:
+  Enabled:
+    title: Enable the Shortcode
+    description: Whether to enable the shortcode for the site
+    schematize:
+      weight: 1
+      details: |
+        Defines whether to enable the `katex` shortcode for the site. This value defaults to `true`.
+        When this value is set to `false`, Platen raises an error when the shortcode is used.
+    type: boolean
+    default: true

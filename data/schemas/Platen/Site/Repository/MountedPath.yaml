@@ -14,6 +14,7 @@ schematize:
     matching a [sref:`Target`] value is munged to replace that path prefix with the one
     defined in [sref:`Source`].
 
+    <!-- Reference Links -->
     [sref:`Source`]: Platen.Site.Repository.MountedPath.Source
     [sref:`Target`]: Platen.Site.Repository.MountedPath.Target
 type: object
@@ -41,7 +42,7 @@ properties:
            option when you're including content but don't want to include editing information about
            it.
         
-        #### Mapping Content From the Same Repository
+        ### Mapping Content From the Same Repository
 
         Given the following site configuration for a site whose repository is hosted at
         `https://github.com/myOrg/myProjects`:
@@ -75,7 +76,7 @@ properties:
         To ensure platen maps the mounted content correctly, you would specify this value as
         `SuperNeat/docs` and set [sref:`Target`] to `reference/super-neat`.
 
-        #### Mapping Content From Another Repository
+        ### Mapping Content From Another Repository
 
         Given the following site configuration for a site whose repository is hosted at
         `https://github.com/myOrg/website`:
@@ -110,7 +111,7 @@ properties:
         `https://github.com/myOrg/myProjects/edit/main/SuperNeat/docs` and set [sref:`Target`] to
         `reference/super-neat`.
 
-        #### Ignoring Mounted Content
+        ### Ignoring Mounted Content
 
         Specifies the path to the file or folder relative to the content directory. Use this value
         to define the prefix to match for this mounted content.
@@ -140,6 +141,7 @@ properties:
         To ensure platen doesn't render an "Edit this page" link for this content, you would specify this value as
         `IGNORE!!` and set [sref:`Target`] to `reference/super-neat`.
 
+        <!-- Reference Links -->
         [sref:`Target`]: Platen.Site.Repository.MountedPath.Target
     type: string
   Target:
@@ -183,4 +185,5 @@ properties:
         To ensure platen maps the mounted content correctly, you would specify this value as
         `reference/super-neat` and set [sref:`Source`] to `SuperNeat/docs`.
 
+        <!-- Reference Links -->
         [sref:`Source`]: Platen.Site.Repository.MountedPath.Source

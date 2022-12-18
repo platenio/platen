@@ -5,14 +5,17 @@
 {{- $parent := $input.Parent -}}
 {{/* Process the tab */}}
 {{- if $parent -}}
-  {{- $name  := $input.Get 0                     -}}
-  {{- $group := printf "tabs-%s" ($parent.Get 0) -}}
+  {{- $name       := default ($input.Get 0)  ($input.Get "name")  -}}
+  {{- $class      := default ($input.Get 1)  ($input.Get "class") -}}
+  {{- $parentName := default ($parent.Get 0) ($parent.Get "id")   -}}
+  {{- $group      := printf "tabs-%s" $parentName                 -}}
 
   {{- if not ($parent.Scratch.Get $group) -}}
     {{- $parent.Scratch.Set $group slice -}}
   {{- end -}}
-
-  {{- $parent.Scratch.Add $group (dict "Name" $name "Content" $input.Inner) -}}
+  {{- $inner := partial "platen/utils/getLeadTrimmedText" $input.InnerDeindent -}}
+  {{- $tab   := dict "Name" $name "Class" $class "Content" $inner              -}}
+  {{- $parent.Scratch.Add $group $tab                                          -}}
 {{- else -}}
   {{- errorf "%q: 'tab' shortcode must be inside 'tabs' shortcode" $input.Page.Path -}}
 {{- end -}}

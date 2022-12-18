@@ -7,7 +7,10 @@
 <dl>
 {{ range $page := $input.Page.Pages }}
   <dt>
-    <a href="{{ $page.RelPermalink }}">{{ partial "platen/utils/getTitle" $page }}</a>
+    <a href="{{ $page.RelPermalink }}">
+      {{- $titleParams := dict "Context" $page "ForList" true -}}
+      {{- partial "platen/utils/getTitle" $titleParams -}}
+    </a>
   </dt>
   <dd class="markdown-inner">
     {{ default $page.Summary $page.Description }}

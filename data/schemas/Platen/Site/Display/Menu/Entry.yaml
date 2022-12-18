@@ -17,6 +17,7 @@ schematize:
     Entries with the [sref:`Group`] setting acommodate a nested list of entries (defined in
     [sref:`Entries`]) in the menu, using this entry as the parent container.
 
+    <!-- Reference Links -->
     [sref:`Platen.Display.Menu`]: Platen.Site.Display.Menu.Settings
     [sref:`Entries`]: Platen.Site.Display.Menu.Entry.Entries
     [sref:`Feature`]: Platen.Site.Display.Menu.Entry.Feature
@@ -37,6 +38,7 @@ anyOf:
 
         For more information, see [sref:Toroidal Entry Settings].
 
+        <!-- Reference Links -->
         [sref:Toroidal Entry Settings]: Platen.Site.Display.Menu.Toroidal 
 properties:
   Feature:
@@ -58,6 +60,7 @@ properties:
 
         This setting is mandatory if the [sref:`Group`] setting isn't specified for the entry.
 
+        <!-- Reference Links -->
         [sref:`Enabled`]: Platen.Site.Features.Defining.Enabled
         [sref:`Partials.Menu`]: Platen.Site.Features.Defining.Partials.Menu
         [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group
@@ -82,6 +85,7 @@ properties:
         You can use this setting to create a nested group of related entries at the current level.
         If you define this value, you must also specify one or more entries in [sref:`Entries`].
 
+        <!-- Reference Links -->
         [sref:`Entries`]: Platen.Site.Display.Menu.Entry.Entries
   Entries:
     title: Nested Entries
@@ -93,6 +97,7 @@ properties:
         If you define the [sref:`Group`] setting for an entry, you must define at least one nested
         entry to include in that group with this setting.
 
+        <!-- Reference Links -->
         [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group
     type: array
     items:

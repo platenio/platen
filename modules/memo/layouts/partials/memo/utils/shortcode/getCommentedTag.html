@@ -1,0 +1,31 @@
+{{- $inputSyntax  := .          -}}
+{{- $mungedSyntax := ""         -}}
+{{- $multiLine    := false      -}}
+{{- $type         := "PassThru" -}}
+{{- if reflect.IsMap $inputSyntax -}}
+  {{- $multiLine   = default $multiLine $inputSyntax.MultiLine -}}
+  {{- $type        = default $type      $inputSyntax.Type      -}}
+  {{- $inputSyntax = $inputSyntax.Syntax                       -}}
+{{- end -}}
+
+{{- $munged := "" -}}
+{{- if eq "PassThru" $type -}}
+  {{ if $multiLine -}}
+    {{- $parts  := slice `{{%/* ` $inputSyntax "\n" `*/%}}` -}}
+    {{- $munged  = delimit $parts ""                        -}}
+  {{- else -}}
+    {{- $parts  := slice `{{%/*` $inputSyntax `*/%}}` -}}
+    {{- $munged  = delimit $parts " "                 -}}
+  {{- end -}}
+{{- else -}}
+  {{ if $multiLine -}}
+    {{- $parts  := slice `{{</* ` $inputSyntax "\n" `*/>}}` -}}
+    {{- $munged  = delimit $parts ""                        -}}
+  {{- else -}}
+    {{- $parts  := slice `{{</*` $inputSyntax `*/>}}` -}}
+    {{- $munged  = delimit $parts " "                 -}}
+  {{- end -}}
+{{- end -}}
+{{- $mungedSyntax = $munged -}}
+
+{{- return $munged -}}
