@@ -1,0 +1,8 @@
+{{- $attributes := dict -}}
+
+{{- $classAttribute := dict "type" "String.Class" "required" false -}}
+{{- $idAttribute    := dict "type" "String.ID"    "required" false -}}
+
+{{- $attributes = merge $attributes (dict "class" $classAttribute "id" $idAttribute) -}}
+
+{{- return $attributes -}}

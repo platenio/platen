@@ -1,0 +1,30 @@
+{{- $for    := . | default "codeblock" | lower -}}
+{{- $inputs := dict                            -}}
+
+{{- if (eq $for "codeblock") -}}
+  {{/* No sensible defaults, leave dictionary empty. */}}
+{{- else if (eq $for "header") -}}
+  {{- $text  := dict "type" "String.Markdown.Inline" "required" true -}}
+  {{- $inputs = dict "text" $text                                    -}}
+{{- else if (eq $for "image") -}}
+  {{- $altText := dict "type"    "String.Bare"   "required" true                -}}
+  {{- $source  := dict "type"    "String.URL"    "required" true                -}}
+  {{- $title   := dict "type"    "String.Quoted" "required" false               -}}
+  {{- $inputs   = dict "alttext" $altText "source" $source "title"    $title -}}
+{{- else if (eq $for "link") -}}
+  {{- $text        := dict "type" "String.Markdown.Inline" "required" true  -}}
+  {{- $destination := dict "type" "String.URL"             "required" true  -}}
+  {{- $title       := dict "type" "String.Quoted"          "required" false -}}
+  {{- $inputs       = dict "text"        $text
+                           "destination" $destination
+                           "title"       $title
+  -}}
+{{- else -}}
+  {{- $message := slice "Invalid request for default inputs,"
+                        (printf "'%s' is not a recognized render hook." $for)
+                        "Must be one of: codeblock, header, image, or link."
+  -}}
+  {{- errorf "%s" (delimit $message " ") -}}
+{{- end -}}
+
+{{- return $inputs -}}
