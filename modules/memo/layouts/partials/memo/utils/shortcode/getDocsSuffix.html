@@ -1,6 +1,15 @@
 {{- $param      := .           -}}
 {{- $type       := $param.type -}}
 {{- $docsSuffix := ""          -}}
+{{/* Valid values: attribute, input, parameter */}}
+{{- $for        := $param.for | default "parameter" -}}
+
+{{/*
+  Quoted and bare strings are their own type, but they're also used as fall-throughs for data types
+  that don't have their own special handling.
+*/}}
+{{- $bareStringSuffix   := "Specify the text without wrapping quotes, like `this`." -}}
+{{- $quotedStringSuffix := "Specify the text wrapped in quotes, like `\"this\"`."   -}}
 
 {{- if eq "String.Markdown.Inline" $type -}}
   {{- $docsSuffix = "This value is rendered as inline Markdown." -}}
@@ -8,12 +17,23 @@
   {{- $firstSentence  := "This value is rendered as a block of Markdown."                -}}
   {{- $secondSentence := "If there's only one line, that line is wrapped in `<p>` tags." -}}
   {{- $docsSuffix      = printf "%s %s" $firstSentence $secondSentence                   -}}
-{{- else if (eq "String.Class" $type) -}}
+{{- else if (and (eq "String.Class" $type) (eq "parameter" $for)) -}}
   {{- $firstPara  := slice "To specify more than one class,"
-                          "list the classes in a single string separated by spaces."
+                           "list the classes in a single string separated by spaces."
   -}}
   {{- $firstPara   = delimit $firstPara " "                   -}}
   {{- $secondPara := slice "For example, `class=\"first second third`\""
+                            "will add the classes `first`, `second`, and `third`."
+  -}}
+  {{- $secondPara  = delimit $secondPara " "                  -}}
+  {{- $docsSuffix  = printf "%s\n\n%s" $firstPara $secondPara -}}
+{{- else if (and (eq "String.Class" $type) (eq "attribute" $for)) -}}
+  {{- $firstPara  := slice "To specify more than one class,"
+                           "list each class with a `.` prefix"
+                           "with at least one space between each class."
+  -}}
+  {{- $firstPara   = delimit $firstPara " "                   -}}
+  {{- $secondPara := slice "For example, `.first .second .third`"
                             "will add the classes `first`, `second`, and `third`."
   -}}
   {{- $secondPara  = delimit $secondPara " "                  -}}
@@ -24,8 +44,21 @@
                           "specify this value as  `\"#E6E6FA\"` to set the color to lavender."
   -}}
   {{- $docsSuffix = delimit $fragments " " -}}
+{{- else if (and (eq "String.ID" $type) (eq "attribute" $for)) -}}
+  {{- $fragments := slice "Specify the ID as a bare string without any spaces"
+                          "and with a `#` prefix, like `#my-id`"
+  -}}
+  {{- $docsSuffix = delimit $fragments " " -}}
 {{- else if (hasPrefix $type "String") -}}
-  {{- $docsSuffix = "Specify the text wrapped in quotes, like `\"this\"`." -}}
+  {{- if strings.HasSuffix $type "Quoted" -}}
+    {{- $docsSuffix = $quotedStringSuffix -}}
+  {{- else if (strings.HasSuffix $type "Bare") -}}
+    {{- $docsSuffix = $bareStringSuffix   -}}
+  {{- else if (eq $for "input") -}}
+    {{- $docsSuffix = $bareStringSuffix   -}}
+  {{- else -}}
+    {{- $docsSuffix = $quotedStringSuffix -}}
+  {{- end -}}
 {{- else if (eq "Boolean" $type) -}}
   {{- $docsSuffix  = "Specify `true` or `false` without wrapping quotes." -}}
 {{- else if (eq "Integer" $type) -}}

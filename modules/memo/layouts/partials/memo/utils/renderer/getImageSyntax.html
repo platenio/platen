@@ -1,0 +1,85 @@
+{{- $params         := .                                      -}}
+{{- $data           := $params.Data                           -}}
+{{- $name           := $params.Name                           -}}
+{{- $headingLevel   := $params.HeadingLevel                   -}}
+{{- $page           := $params.Page                           -}}
+{{- $supportsInline := $data.supportsinline | default false -}}
+{{- $destination    := $data.destination -}}
+{{- $title          := $data.title       -}}
+
+{{/* Define heading prefix, needed if the renderer has more than one mode */}}
+{{- $heading    := strings.Repeat $headingLevel         "#" -}}
+{{- $subheading := strings.Repeat (add 1 $headingLevel) "#" -}}
+
+{{/* Get the attribute syntax as a multiline set for readability */}}
+{{- $attributeParams := dict "Data" $data "Multiline" true                                -}}
+{{- $attributeSyntax := partial "memo/utils/renderer/getAttributeSyntax" $attributeParams -}}
+
+{{- $prefixes := slice $name     -}}
+{{- $aliases     := $data.aliases   -}}
+{{- with $aliases -}}
+  {{- if (reflect.IsSlice $aliases) -}}
+    {{- $prefixes = union $prefixes $aliases -}}
+  {{- else -}}
+    {{- errorf "Invalid value of 'Aliases' property for %s; %s: %#v"
+               $name
+               "must be an array of strings, but was"
+               $aliases
+    -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $renderStrings   := slice -}}
+{{- $markdownStrings := slice -}}
+
+{{- $sourceSyntax := "source" -}}
+{{- with $destination.alias -}}
+  {{- $sourceSyntax = . -}}
+{{- end -}}
+{{- if ($destination.required | default true) -}}
+  {{- $sourceSyntax = printf "%s" $sourceSyntax -}}
+{{- else -}}
+  {{- $sourceSyntax = printf "[%s]" $sourceSyntax -}}
+{{- end -}}
+
+{{- $titleSyntax := "title" -}}
+{{- with $title.alias -}}
+  {{- $titleSyntax = . -}}
+{{- end -}}
+{{- if ($title.required | default false) -}}
+  {{- $titleSyntax = printf "'%s'" $titleSyntax -}}
+{{- else -}}
+  {{- $titleSyntax = printf "['%s']" $titleSyntax -}}
+{{- end -}}
+
+
+{{/* Build syntaxes */}}
+{{- $aliasesPrefix := delimit $prefixes "|"                                                    -}}
+{{- $linkSuffix    := printf  "%s %s"                          $sourceSyntax $titleSyntax      -}}
+{{- $basicSyntax   := printf  "![%s:<AltText>](%s)"            $name $linkSuffix               -}}
+{{- $refSyntax     := printf  "![%s:<AltText>][<ReferenceID>]" $name                           -}}
+{{- $refDefSyntax  := printf  "[<ReferenceID>]: %s"            $linkSuffix                     -}}
+
+{{- if $supportsInline -}}
+  {{/* TODO: figure out options-as-title? */}}
+  {{- $markdownStrings = $markdownStrings
+      | append (printf "%s Inline Syntaxes"              $heading)
+      | append (printf "%s Basic Inline Syntax"          $subheading)
+      | append (printf "```markdown\n%s\n```"            $basicSyntax)
+      | append (printf "%s Reference Link Inline Syntax" $subheading)
+      | append (printf "```markdown\n%s\n\n%s\n```"      $refSyntax $refDefSyntax)
+  -}}
+{{- else -}}
+  {{- $markdownStrings = $markdownStrings
+      | append (printf "%s Basic Block Syntax"          $heading)
+      | append (printf "```markdown\n%s\n%s\n```"        $basicSyntax $attributeSyntax)
+      | append (printf "%s Reference Link Block Syntax" $heading)
+      | append (printf "```markdown\n%s\n%s\n\n%s\n```"  $refSyntax $attributeSyntax $refDefSyntax)
+  -}}
+{{- end -}}
+
+{{- range $markdownString := $markdownStrings -}}
+  {{- $renderStrings = $renderStrings | append ($page.RenderString $markdownString) -}}
+{{- end -}}
+
+{{- return $renderStrings -}}

@@ -9,6 +9,9 @@
   {{- $metadata  := .                                                              -}}
   {{- $name      := default $context.Name $metadata.name                           -}}
   {{- $kind      := default "Shortcode" $metadata.kind                             -}}
+  {{- if hasPrefix $kind "Renderer." -}}
+    {{ $kind = "Rendering Hook" -}}
+  {{- end -}}
   {{- $shortName := cond (in $name "/") (index (last 1 (split $name "/")) 0) $name -}}
     {{- if $params.ForMenu -}}
       {{- $title = $context.Page.RenderString (printf "`%s`" $shortName) -}}

@@ -1,0 +1,33 @@
+{{- $params           := .                                      -}}
+{{- $definition       := $params.Definition                     -}}
+{{- $supportsData     := default true  $params.SupportsData     -}}
+{{- $supportsMarkdown := default false $params.SupportsMarkdown -}}
+{{- $info             := dict                                   -}}
+{{- $data             := dict                                   -}}
+{{- $markdown         := ""                                     -}}
+
+{{- $dataPattern := `---(.|\s)+---` -}}
+
+{{- if $supportsData -}}
+  {{- if $supportsMarkdown -}}
+    {{- if hasPrefix $definition "---"}}
+      {{- $parts         := split $definition   "---"            -}}
+      {{- $count         := len   $parts                         -}}
+      {{- $markdownParts := last (sub $count 2) $parts           -}}
+      {{- $data           = index $parts 1 | transform.Unmarshal -}}
+      {{- $markdown       = delimit $markdownParts "---"         -}}
+    {{- else -}}
+      {{- $markdown = $definition -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $data = $definition | transform.Unmarshal -}}
+  {{- end -}}
+{{- else if $supportsMarkdown -}}
+  {{- $markdown = $definition -}}
+{{- else -}}
+  {{- errorf "Invalid definition for codeblock renderer; must support data and/or markdown input, but supports neither." -}}
+{{- end -}}
+
+{{- $info = dict "Data" $data "Markdown" $markdown -}}
+
+{{- return $info -}}

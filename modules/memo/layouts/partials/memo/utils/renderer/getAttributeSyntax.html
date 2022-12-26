@@ -1,7 +1,9 @@
 {{/*
     This partial expects a map the Memo map from a page's frontmatter.
 */}}
-{{- $data := . -}}
+{{- $params    := .                                 -}}
+{{- $data      := $params.Data                      -}}
+{{- $multiline := $params.Multiline | default false -}}
 
 {{/* Initialize the return string */}}
 {{- $attributeSyntax := "" -}}
@@ -10,12 +12,20 @@
 {{- $orderedAttributes   := slice -}}
 {{- $requiredAttributes  := slice -}}
 {{- $optionalAttributes  := slice -}}
-{{- range $attribute, $metadata := $data.attributes -}}
+
+{{- $commonAttributes := partial "memo/utils/renderer/getCommonAttributes" -}}
+{{- $attributes       := merge $commonAttributes $data.attributes          -}}
+
+{{- range $attribute, $metadata := $attributes -}}
   {{- $value    := default $attribute $metadata.title    -}}
   {{- $required := default false      $metadata.required -}}
 
   {{/* Process the attribute entry value for the syntax */}}
-  {{- if eq "Boolean" $metadata.type -}}
+  {{- if and (eq "String.ID" $metadata.type) (eq "id" $attribute) -}}
+    {{- $value = printf `#id` -}}
+  {{- else if and (eq "String.Class" $metadata.type) (eq "class" $attribute) -}}
+    {{- $value = printf `.class [.class]` -}}
+  {{- else if eq "Boolean" $metadata.type -}}
     {{- $value = printf `%s=(true|false)` $value -}}
   {{- else if (eq "Integer" $metadata.type) -}}
     {{- $value = printf `%s=int` $value -}}
@@ -48,7 +58,15 @@
 
 {{/* If there are any attributes, wrap in braces and delimit with spaces */}}
 {{- with $orderedAttributes -}}
-  {{- $attributeSyntax = printf " { %s }" (delimit $orderedAttributes " ") -}}
+  {{- if $multiline -}}
+    {{- $attributeSyntax = printf "{" -}}
+    {{- range $attribute := $orderedAttributes -}}
+      {{- $attributeSyntax = printf "%s\n  %s" $attributeSyntax $attribute -}}
+    {{- end -}}
+    {{- $attributeSyntax = printf "%s\n}" $attributeSyntax -}}
+  {{- else -}}
+    {{- $attributeSyntax = printf " { %s }" (delimit $orderedAttributes " ") -}}
+  {{- end -}}
 {{- end -}}
 
 {{- return $attributeSyntax -}}

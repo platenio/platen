@@ -1,0 +1,4 @@
+- id: ErrorMemoShortcodeRendererSyntaxWrongKind
+  translation: >-
+    Used renderer syntax shortcode for non-renderer at {{ .Position }}. The 'Kind' property should start
+    with 'Renderer', like 'Renderer.Image' or 'Renderer.Codeblock'.

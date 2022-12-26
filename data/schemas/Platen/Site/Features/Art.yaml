@@ -1,0 +1,87 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Features/Art.schema.yaml
+title: Art
+description: Defines the settings for the Art feature
+schematize:
+  details: |
+    Defines the map of settings for the Platen's [Art][01] feature. The existing value is a
+    map that includes whether or not to enable the shortcode and the style definition for it.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all properties in your own configuration file. Only specify the values you want
+    to add or replace.
+
+    <!-- Reference Links -->
+    [01]: /modules/platen/renderers/art
+type: object
+properties:
+  Enabled:
+    title: Enable the feature
+    description: Whether to enable the feature for the site
+    schematize:
+      weight: 1
+      details: |
+        Choose whether the site renders image links with the `art:` prefix in their alt text as art
+        or normal images. If this setting is set to `true`, any images added with the prefix are
+        rendered in figures with an optional caption and content warning. If this setting is
+        `false`, the images are rendered as normal.
+    type: boolean
+    default: true
+  Partials:
+    title: Feature Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when [sref:`Enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`Enabled`]: Platen.Site.Features.Art.Enabled
+      weight: 100
+      skipSchemaRender: true
+    type: object
+    properties:
+      Renderers:
+        title: Renderer Partials
+        description: Registers one or more partials that act as render hooks.
+        type: object
+        schematize:
+          weight: 2
+          skipSchemaRender: true
+          details: |
+            Defines a map of partials to use as Markdown render hooks. Like all partials, these are
+            only processed when `Enabled` is set to `true`.
+
+            Supported renderer partials include:
+
+            - `Codeblock`, processed for fenced code blocks with a language ID
+            - `Heading`, processed for headings
+            - `Image`, processed for image links
+            - `Link`, processed for non-image links
+
+            In all cases, all renderer partials for enabled features are checked one after the other
+            unless they return a render string. Only the first applicable partial that returns a
+            render string is processed and rendered.
+        properties:
+          Image:
+            title: Image Render Hook Partial
+            description: Adds a partial to call when processing the image render hook.
+            schematize:
+              details: |
+                Adds support for rendering images as artwork in Platen. This render hook is only
+                called if the alt text for the image (i.e. `![altText](source "title")`) has the
+                `art:` prefix. If the image does have the prefix, it's processed for adding the
+                image in a `<figure>` element with an optional caption and content warning.
+
+                For more information about how to use this render partial, see
+                [the reference documentation][01] for this render hook.
+
+                For more information about defining codeblock render hook partials, see
+                [Defining a Codeblock Render Hook Partial][01] in the [Theme Guide][02].
+
+                <!-- Reference Links -->
+                [01]: /modules/platen/renderers/art
+                [02]: /styling
+            type: string
+            default: platen/features/katex/codeblock

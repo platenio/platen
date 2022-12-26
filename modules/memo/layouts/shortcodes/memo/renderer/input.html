@@ -1,0 +1,52 @@
+{{/*
+    Docs.ShortCode: memo/shortcode/syntax
+*/}}
+{{- $input      := .                  -}}
+{{- $pageParams := $input.Page.Params -}}
+{{- $data       := $pageParams.Memo   -}}
+
+{{/* Process input parameters */}}
+{{- $name          := default ($input.Get 0) ($input.Get "name") | lower   -}}
+
+{{/* Merge default inputs with definition */}}
+{{- $kind := $data.kind -}}
+{{- if hasPrefix $kind "Renderer." -}}
+  {{- $parts := split $kind "."                           -}}
+  {{- $kind   = index $parts (sub (len $parts) 1) | lower -}}
+{{- else -}}
+  {{- $kind = "" -}}
+{{- end -}}
+{{- $defaultInputs := partial "memo/utils/renderer/getDefaultInputs" $kind -}}
+{{- $data           = merge $defaultInputs $data                           -}}
+
+{{- with (index $data $name) -}}
+  {{- $definition      := .                -}}
+  {{- $type            := $definition.type -}}
+  {{- $stringsToRender := slice            -}}
+
+  {{- with $type -}}
+    {{- $type = apply (split $type ".") "title" "." -}}
+    {{- $type = delimit $type "." -}}
+  {{- else -}}
+    {{- $type = "Any" -}}
+  {{- end  -}}
+  {{- $definition = merge $definition (dict "type" $type "for" "input") -}}
+  
+  {{- if not $definition.nosuffix -}}
+    {{- $docsSuffix     := partial "memo/utils/shortcode/getDocsSuffix" $definition -}}
+    {{- $stringsToRender = $stringsToRender | append $docsSuffix                    -}}
+  {{- end -}}
+
+  {{- $metadataCodeBlock := partial "memo/utils/shortcode/getMetadataCodeBlock" $definition -}}
+  {{- $stringsToRender    = $stringsToRender | append $metadataCodeBlock                    -}}
+
+  {{- $stringToRender := delimit $stringsToRender "\n\n" -}}
+  {{- $input.Page.RenderString $stringToRender           -}}
+{{- else -}}
+  {{- with $data -}}
+    {{- $definition := $data | jsonify (dict "indent" "  ")                                -}}
+    {{- errorf "Couldn't find key '%s' in renderer definition: %s" $name $definition -}}
+  {{- else -}}
+    {{- errorf "Couldn't find renderer definition: %s" $input.Position -}}
+  {{- end -}}
+{{- end -}}

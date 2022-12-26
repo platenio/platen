@@ -8,7 +8,10 @@
 {{/* Process input parameters */}}
 {{- $name := default ($input.Get 0) ($input.Get "name") -}}
 
-{{- with (index $data.attributes (lower $name)) -}}
+{{- $commonAttributes := partial "memo/utils/renderer/getCommonAttributes" -}}
+{{- $attributes       := merge $commonAttributes $data.attributes          -}}
+
+{{- with (index $attributes (lower $name)) -}}
   {{- $attribute       := .     -}}
   {{- $type            := $attribute.type -}}
   {{- $stringsToRender := slice -}}
@@ -19,7 +22,7 @@
   {{- else -}}
     {{- $type = "Any" -}}
   {{- end  -}}
-  {{- $attribute = merge $attribute (dict "type" $type) -}}
+  {{- $attribute = merge $attribute (dict "type" $type "for" "attribute") -}}
   
   {{- if not $attribute.nosuffix -}}
     {{- $docsSuffix     := partial "memo/utils/shortcode/getDocsSuffix" $attribute -}}

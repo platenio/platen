@@ -1,0 +1,113 @@
+{{- $params       := .                    -}}
+{{- $data         := $params.Data         -}}
+{{- $name         := $params.Name         -}}
+{{- $headingLevel := $params.HeadingLevel -}}
+{{- $page         := $params.Page         -}}
+
+{{/* Define heading prefix, needed if the renderer has more than one mode */}}
+{{- $heading         := strings.Repeat $headingLevel  "#"                   -}}
+
+{{- $attributeSyntax := partial "memo/utils/renderer/getAttributeSyntax" (dict "Data" $data) -}}
+
+{{- $languageIDs := slice $name     -}}
+{{- $aliases     := $data.aliases   -}}
+{{- with $aliases -}}
+  {{- if (reflect.IsSlice $aliases) -}}
+    {{- $languageIDs = union $languageIDs $aliases -}}
+  {{- else -}}
+    {{- errorf "Invalid value of 'Aliases' property for %s; %s: %#v"
+               $name
+               "must be an array of strings, but was"
+               $aliases
+    -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $definition       := $data.definition    -}}
+{{- $type             := $definition.type    -}}
+{{- $syntaxDefinition := printf "<%s>" $type -}}
+
+{{- if eq "data" (lower $type) -}}
+  {{/* Todo: Handle data definition types */}}
+{{- else -}}
+  {{- with $definition.syntax -}}
+    {{- $syntaxDefinition = $definition.syntax -}}
+    
+    {{- if (reflect.IsMap $syntaxDefinition) -}}
+      {{- $syntaxDefinition = slice $syntaxDefinition -}}
+    {{- end -}}
+
+    {{- if reflect.IsSlice $syntaxDefinition -}}
+      {{- range $syntax := $syntaxDefinition -}}
+        {{- $errorPrefix  := printf "Defined invalid syntax for %s."        $name        -}}
+        {{- $errorPrefix   = printf "%s When specifying multiple syntaxes," $errorPrefix -}}
+        {{- $errorSuffix  := printf "Actual value: %#v"                     $syntax      -}}
+        {{- $problem := "" -}}
+        {{- if not (reflect.IsMap $syntax) -}}
+          {{- $problem = "each must be a map with the Title and Text properties." -}}
+        {{- else -}}
+          {{- $problems := slice -}}
+          {{- with $syntax.Title -}}{{- else -}}
+            {{- $problems = $problems | append "the Title property is required" -}}
+          {{- end -}}
+          {{- with $syntax.Text -}}{{- else -}}
+            {{- $problems = $problems | append "the Text property is required" -}}
+          {{- end -}}
+          {{- with $problems -}}
+            {{- $problem = printf "%s." (delimit $problems ", " ", and ") -}}
+          {{- end -}}
+        {{- end -}}
+        {{- with $problem -}}
+          {{- errorf "%s %s %s" $errorPrefix $problem $errorSuffix -}}
+        {{- end -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $syntaxDefinition = print $syntaxDefinition -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $renderStrings := slice -}}
+{{- $openingParams := dict "ID" $name "AttributeSyntax" $attributeSyntax            -}}
+{{- $opening       := partial "memo/utils/renderer/getSyntaxOpening" $openingParams -}}
+{{- $closing       := "```\n``````"                                                 -}}
+{{- if gt (len $languageIDs) 1 -}}
+  {{- range $id := $languageIDs -}}
+    {{- $heading := printf "%s Language ID: `%s`"   $heading $id         -}}
+    {{- $openingParams  = merge $openingParams (dict "ID" $id)                          -}}
+    {{- $opening       := partial "memo/utils/renderer/getSyntaxOpening" $openingParams -}}
+    {{/*  {{- $opening  = printf "``````markdown\n```%s%s"  $id $attributeSyntax -}}  */}}
+    {{- if (reflect.IsSlice $syntaxDefinition) -}}
+      {{- range $syntax := $syntaxDefinition -}}
+        {{- $heading      := printf "%s %s" $heading $syntax.Title              -}}
+        {{- $codeBlock    := printf "%s\n%s\n%s" $opening $syntax.Text $closing -}}
+        {{- $renderStrings = $renderStrings
+                             | append ($page.RenderString $heading)
+                             | append ($page.RenderString $codeBlock)
+        -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $codeBlock    := printf "%s\n%s\n%s" $opening $syntaxDefinition $closing -}}
+      {{- $renderStrings = $renderStrings
+                          | append ($page.RenderString $heading)
+                          | append ($page.RenderString $codeBlock)
+      -}}
+    {{- end -}}
+  {{- end -}}
+{{- else if (reflect.IsSlice $syntaxDefinition) -}}
+  {{- range $syntax := $syntaxDefinition -}}
+    {{- $heading      := printf "%s %s" $heading $syntax.Title              -}}
+    {{- $codeBlock    := printf "%s\n%s\n%s" $opening $syntax.Text $closing -}}
+    {{- $renderStrings = $renderStrings
+                          | append ($page.RenderString $heading)
+                          | append ($page.RenderString $codeBlock)
+    -}}
+  {{- end -}}
+{{- else -}}
+  {{- $codeBlock    := printf "%s\n%s\n%s" $opening $syntaxDefinition $closing -}}
+  {{- $renderStrings = $renderStrings
+                      | append ($page.RenderString $codeBlock)
+  -}}
+{{- end -}}
+
+{{- return $renderStrings -}}
