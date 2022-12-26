@@ -1,25 +1,16 @@
-{{/*
-    Docs.ShortCode: art
-*/}}
-{{- $input := . -}}
+{{- $params := . -}}
 
-{{/* Process input parameters */}}
-{{- $src            := default ($input.Get 0) ($input.Get "src")            -}}
-{{- $alt            := default ($input.Get 1) ($input.Get "alt")            -}}
-{{- $class          := default ($input.Get 2) ($input.Get "class")          -}}
-{{- $contentWarning := default ($input.Get 3) ($input.Get "contentWarning") -}}
-{{- $caption        := default nil            $input.Inner                  -}}
+{{- $page           := $params.Page           -}}
+{{- $src            := $params.Source         -}}
+{{- $alt            := $params.AltText        -}}
+{{- $class          := $params.Class          -}}
+{{- $contentWarning := $params.ContentWarning -}}
+{{- $caption        := $params.Caption        -}}
+{{- $id             := $params.ID             -}}
+
 {{- with $caption -}}
   {{- $trimParams := dict "Text" $caption "TrimEOL" true                   -}}
   {{- $caption     = partial "platen/utils/getLeadTrimmedText" $trimParams -}}
-{{- end -}}
-{{/* Handle missing alt text */}}
-{{- $missingAltText := eq nil $alt                      -}}
-{{- if $missingAltText -}}
-  {{- $handlerParams := dict "Input" $input 
-                             "Suffix" "\n\tMake sure to specify alt text with the 'alt' parameter."
-  -}}
-  {{- partial "platen/handlers/missingAltText" $handlerParams -}}
 {{- end -}}
 
 {{/* Define classes for easy reference elsewhere */}}
@@ -31,6 +22,9 @@
 
 {{/* Define the attribute list for the figure element */}}
 {{- $figureAttributes := slice -}}
+{{- with $id -}}
+  {{- $figureAttributes = $figureAttributes | append (printf `id="%s"` $id) -}}
+{{- end -}}
 {{- $figureClass      := slice $artClass -}}
 {{- with $contentWarning -}}
   {{- $figureClass = $figureClass | append $cwClass -}}
@@ -68,7 +62,7 @@
 {{- $renderStrings   = $renderStrings | append (printf "  <img %s>" $imageAttributes) -}}
 
 {{- with $caption -}}
-  {{- $renderParams := dict "Page"        $input.Page
+  {{- $renderParams := dict "Page"        $page
                             "Content"     $caption
                             "IndentCount" 4
                             "AsBlock"     true
@@ -82,7 +76,8 @@
 {{- $renderStrings = $renderStrings | append "</figure>" -}}
 
 {{/* Combine render strings */}}
-{{- $renderString := delimit $renderStrings "\n" -}}
+{{- $renderString := delimit $renderStrings "\n"   -}}
+{{- $renderString  = printf  "%s\n\n" $renderString -}}
 
 {{/* Render */}}
-{{- $renderString | safeHTML -}}
+{{- return $renderString -}}

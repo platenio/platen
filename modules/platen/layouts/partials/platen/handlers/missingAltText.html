@@ -8,6 +8,9 @@
     from a shortcode and passed the shortcode's input context, it includes the name of the shortcode
     and its position in the content file.
 
+    If the handler is called from a partial and passed that partial's info, it includes the page,
+    the identifier, and potentially the position (if available).
+
     If the caller includes a suffix, that string is appended to the message.
 
     If the site's configuration has the `Platen.Accessibility.WarnOnMissingAltText` option set to
@@ -16,20 +19,27 @@
 
 {{- $params := .              -}}
 {{- $input  := $params.Input  -}}
+{{- $info   := $params.Info   -}}
 {{- $suffix := $params.Suffix -}}
 
 {{/* Retrieve site accessibility settings */}}
 {{- $a11ySettings := site.Params.Platen.Accessibility -}}
 
 {{/* Set default message without context */}}
-{{- $message      := "Missing alt text"               -}}
+{{- $message      := i18n "MissingAltText"               -}}
 
 {{/* Add context if possible */}}
 {{- with $input -}}
   {{- warnf "shortcode input: %#v" $input -}}
-  {{- $message = printf "%s for  %s shortcode at %s" $message $input.Name $input.Position -}}
+  {{- $message = printf "%s %s" $message (i18n "MissingAltTextSuffixShortcode" $input) -}}
 {{- else -}}
-  {{/* TODO: Handle missing alt text in non-shortcodes */}}
+  {{- with $info -}}
+    {{- with $info.i18nCode -}}
+      {{- $message = printf "%s %s" $message (i18n . $info) -}}
+    {{- else -}}
+      {{- $message = printf "%s %s" $message (i18n "MissingAltTextSuffixPartial" $info) -}}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}
 
 {{/* Add message suffix if provided */}}

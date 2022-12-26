@@ -12,3 +12,33 @@
 
 - id: PlatenSearchConfig
   translation: "{ cache: true }"
+
+- id: ErrorArtMissingSourceImage
+  translation: >-
+    Specified art image link in '{{ .page.File.Path }}' without a source to use. All art images must
+    specify a valid source. For more information, see the documentation at
+    https://platen.io/modules/platen/renderers/art/
+
+- id: ErrorArtInlineImage
+  translation: >-
+    Specified the image '{{ .src }}' as inline art in '{{ .page.File.Path }}'; art is only valid on
+    its own line. For more information, see the documentation at
+    https://platen.io/modules/platen/renderers/art/
+
+- id: MissingAltText
+  translation: Missing alt text
+
+- id: MissingAltTextContextShortcode
+  translation: "for  {{ .Name }} shortcode at {{ .Position }}"
+
+- id: MissingAltTextContextPartial
+  translation: "for {{ .Name }} in {{ .Page }}"
+
+- id: MissingAltTextContextCodeblock
+  translation: >-
+    for '{{ .Type }}' codeblock at {{ .Position }}.
+
+- id: MissingAltTextSuffixArt
+  translation: >-
+    Specify the 'alt' parameter as an attribute or in the data section of the definition. For more
+    information, see the documentation at https://platen.io/modules/platen/renderers/art/.

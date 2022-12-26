@@ -64,6 +64,7 @@ markup:
     renderer:
       unsafe: true
     parser:
+      wrapStandAloneImageWithinParagraph: false
       attribute:
         block: true
   tableOfContents:

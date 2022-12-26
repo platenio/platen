@@ -29,30 +29,34 @@ properties:
         control their behavior.
     type: object
     properties:
+      Art:
+        $ref: ./Features/Art.yaml
+        schematize:
+          weight: 1
       Comments:
         $ref: ./Features/Comments.yaml
         schematize:
-          weight: 1
+          weight: 2
       Katex:
         $ref: ./Features/Katex.yaml
         schematize:
-          weight: 2
+          weight: 3
       Mermaid:
         $ref: ./Features/Mermaid.yaml
         schematize:
-          weight: 3
+          weight: 4
       PortableLinks:
         $ref: ./Features/PortableLinks.yaml
         schematize:
-          weight: 4
+          weight: 5
       PWA:
         $ref: ./Features/PWA.yaml
         schematize:
-          weight: 5
+          weight: 6
       Search:
         $ref: ./Features/Search.yaml
         schematize:
-          weight: 6
+          weight: 7
     patternProperties:
       ".":
         $ref: ./Features/Defining.yaml
@@ -76,10 +80,6 @@ properties:
         Shortcodes defined in this way must not depend on each other.
     type: object
     properties:
-      art:
-        $ref: ./Shortcodes/art.yaml
-        schematize:
-          weight: 1
       button:
         $ref: ./Shortcodes/button.yaml
         schematize:

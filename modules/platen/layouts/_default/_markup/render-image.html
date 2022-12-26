@@ -6,7 +6,7 @@
 {{- range $feature := site.Params.Platen.Features -}}
   {{- if and $feature.Enabled (eq "" $renderedImage) -}}
     {{- with $feature.Partials.Renderers.Image -}}
-      {{- $renderedCode = partial . $params }}
+      {{- $renderedImage = partial . $params }}
     {{- end -}}
   {{- end -}}
 {{- end -}}

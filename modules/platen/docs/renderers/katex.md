@@ -9,11 +9,8 @@ Memo:
   Name: katex
   Aliases:
     - math
-  Kind: Renderer
+  Kind: Renderer.Codeblock
   Attributes:
-    class:
-      Type: String.Class
-      Required: false
     display:
       Type: Boolean
       Required: false
@@ -48,7 +45,7 @@ This example uses the `class` attribute to add classes to the rendered
 span. Together, these classes change how the KaTeX is displayed after
 it's rendered.
 <!--- Example Start -->
-```katex { class="docs example katex" }
+```katex { .docs .example .katex }
 x={\frac {-b\pm {\sqrt {b^{2}-4ac}}}{2a}}
 ```
 ``````

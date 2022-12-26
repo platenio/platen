@@ -126,6 +126,8 @@ Platen:
           Enabled: true
         Inner:
           Enabled: true
+        Art:
+          Enabled: true
       Utils:
         Basic:
           Enabled: true
@@ -175,6 +177,11 @@ Platen:
       Enabled: true
       Partials:
         Header: platen/features/pwa/header
+    Art:
+      Enabled: true
+      Partials:
+        Renderers:
+          Image: platen/features/art/image
     Katex:
       Enabled: true
       AlwaysLoad: false
@@ -193,10 +200,6 @@ Platen:
     PortableLinks:                            # BookPortableLinks
       Enabled: true
   Shortcodes:
-    art:
-      Enabled: true
-      Style:
-        Name: art
     button:
       Enabled: true
       Style:

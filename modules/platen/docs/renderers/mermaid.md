@@ -7,18 +7,12 @@ Platen:
   TitleAsHeading: true
 Memo:
   Name: mermaid
-  Kind: Codeblock
+  Kind: Renderer.Codeblock
   Attributes:
-    class:
-      Type: String.Class
-      Required: false
     element:
       Type: String
       Required: false
       Default: pre
-    id:
-      Type: String.ID
-      Required: false
   Definition:
     Type: Mermaid
     YAML:
