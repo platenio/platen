@@ -82,12 +82,12 @@ To get a local copy up and running follow these simple example steps. -->
 
 ### Prerequisites
 
-[![Hugo extended v0.104.0+][hugo-shield-minimum]][hugo-install]
+[![Hugo extended v0.108.0+][hugo-shield-minimum]][hugo-install]
 
 Platen relies on the extended version of Hugo. For more information, see [Hugo's notes][hugo-ext].
 For full installation instructions, see [Hugo's documentation][hugo-install].
 
-[hugo-shield-minimum]: https://img.shields.io/badge/Hugo%20Extended-%5E0.104.0-ff4088?style=for-the-badge&logo=hugo
+[hugo-shield-minimum]: https://img.shields.io/badge/Hugo%20Extended-%5E0.108.0-ff4088?style=for-the-badge&logo=hugo
 [hugo-install]: https://gohugo.io/getting-started/installing/
 [hugo-ext]: https://gohugo.io/news/0.48-relnotes/
 
