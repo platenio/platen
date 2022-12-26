@@ -1,15 +1,16 @@
 {{/*
     Docs.ShortCode: memo/shortcode/syntax
 */}}
-{{- $input      := .                  -}}
-{{- $pageParams := $input.Page.Params -}}
-{{- $data       := $pageParams.Memo   -}}
+{{- $input      := .                                 -}}
+{{- $pageParams := $input.Page.Params                -}}
+{{- $data       := $pageParams.Memo                  -}}
+{{- $attributes := $data.attributes | default (dict) -}}
 
 {{/* Process input parameters */}}
 {{- $name := default ($input.Get 0) ($input.Get "name") -}}
 
 {{- $commonAttributes := partial "memo/utils/renderer/getCommonAttributes" -}}
-{{- $attributes       := merge $commonAttributes $data.attributes          -}}
+{{- $attributes       := merge $commonAttributes $attributes               -}}
 
 {{- with (index $attributes (lower $name)) -}}
   {{- $attribute       := .     -}}
