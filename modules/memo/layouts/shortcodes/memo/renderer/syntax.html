@@ -34,15 +34,27 @@
   {{- if eq $subKind "Codeblock" -}}
     {{- $renderBlocks := partial "memo/utils/renderer/getCodeblockSyntax" $syntaxParams -}}
     {{- with $renderBlocks.LanguageIDs -}}
-      {{- range $id, $languageBlock := . -}}
-        {{- $renderStrings = $renderStrings | append $languageBlock.Heading -}}
-        {{- range $block := $languageBlock.Syntaxes -}}
-          {{- $renderStrings = $renderStrings
-                               | append ($page.RenderString $block.Attribute.Heading)
-                               | append ($page.RenderString $block.Attribute.Syntax)
-                               | append ($page.RenderString $block.Data.Heading)
-                               | append ($page.RenderString $block.Data.Syntax)
-          -}}
+      {{- $mainLang := index . $name -}}
+      {{- $renderStrings = $renderStrings | append ($page.RenderString $mainLang.Heading) -}}
+      {{- range $block := $mainLang.Syntaxes -}}
+        {{- $renderStrings = $renderStrings
+                             | append ($page.RenderString $block.Attribute.Heading)
+                             | append ($page.RenderString $block.Attribute.Syntax)
+                             | append ($page.RenderString $block.Data.Heading)
+                             | append ($page.RenderString $block.Data.Syntax)
+        -}}
+      {{- end -}}
+      {{- range $id, $langBlock := . -}}
+        {{- if ne $name $id -}}
+          {{- $renderStrings = $renderStrings | append ($page.RenderString $langBlock.Heading) -}}
+          {{- range $block := $langBlock.Syntaxes -}}
+            {{- $renderStrings = $renderStrings
+                                 | append ($page.RenderString $block.Attribute.Heading)
+                                 | append ($page.RenderString $block.Attribute.Syntax)
+                                 | append ($page.RenderString $block.Data.Heading)
+                                 | append ($page.RenderString $block.Data.Syntax)
+            -}}
+          {{- end -}}
         {{- end -}}
       {{- end -}}
     {{- else -}}

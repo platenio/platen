@@ -45,7 +45,7 @@
     {{- if eq $type "enum" -}}
       {{- $value = printf "(%s)" (delimit $enum "|") -}}
     {{- else -}}
-      {{- $value = print . -}}
+      {{- $value = . -}}
     {{- end -}}
   {{- else -}}
     {{- if eq $type "boolean" -}}
