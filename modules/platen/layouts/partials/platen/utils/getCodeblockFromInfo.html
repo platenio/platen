@@ -1,0 +1,19 @@
+{{/*
+    This partial constructs a Markdown codeblock from the info map returned by getCodeblockInfo,
+    including a map (potentially empty) of settings and the actual markdown.
+
+    You can use this to munge the settings for a codeblock and rewrite it before rendering.
+*/}}
+{{- $info     := .                           -}}
+{{- $data     := $info.Data | default (dict) -}}
+{{- $markdown := $info.Markdown              -}}
+
+{{- $codeblock := slice "---\n"
+                        ($info.Data | transform.Remarshal "yaml")
+                        "---\n"
+                        $markdown
+-}}
+
+{{- $codeblock = delimit $codeblock "" -}}
+
+{{- return $codeblock -}}

@@ -33,30 +33,34 @@ properties:
         $ref: ./Features/Art.yaml
         schematize:
           weight: 1
+      Columns:
+        $ref: ./Features/Columns.yaml
+        schematize:
+          weight: 2
       Comments:
         $ref: ./Features/Comments.yaml
         schematize:
-          weight: 2
+          weight: 3
       Katex:
         $ref: ./Features/Katex.yaml
         schematize:
-          weight: 3
+          weight: 4
       Mermaid:
         $ref: ./Features/Mermaid.yaml
         schematize:
-          weight: 4
+          weight: 5
       PortableLinks:
         $ref: ./Features/PortableLinks.yaml
         schematize:
-          weight: 5
+          weight: 6
       PWA:
         $ref: ./Features/PWA.yaml
         schematize:
-          weight: 6
+          weight: 7
       Search:
         $ref: ./Features/Search.yaml
         schematize:
-          weight: 7
+          weight: 8
     patternProperties:
       ".":
         $ref: ./Features/Defining.yaml
@@ -84,10 +88,6 @@ properties:
         $ref: ./Shortcodes/button.yaml
         schematize:
           weight: 2
-      columns:
-        $ref: ./Shortcodes/columns.yaml
-        schematize:
-          weight: 3
       details:
         $ref: ./Shortcodes/details.yaml
         schematize:

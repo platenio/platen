@@ -18,17 +18,9 @@ Memo:
     YAML:
       Required: false
       Definition: Schemas.Platen.Mermaid.Figure
-    Syntax:
-      - Title: Basic
-        Text: |-
-          [%%{ <Init Directive> }%%]
-          <Mermaid Markup>
-      - Title: Advanced
-        Text: |-
-          <Figure Options YAML>
-          ---
-          [%%{ <Init Directive> }%%]
-          <Mermaid Markup>
+    Syntax: |-
+      [%%{ <InitDirective> }%%]
+      <MermaidMarkup>
 ---
 
 With the `mermaid` language ID, you can render flowcharts and other diagrams in your content

@@ -30,7 +30,7 @@ To use KaTeX for inline markup, see the [`katex` shortcode][02] instead.
 
 ## Syntax
 
-{{< memo/renderer/syntax >}}
+{{</* memo/renderer/syntax */>}}
 
 ## Examples
 
