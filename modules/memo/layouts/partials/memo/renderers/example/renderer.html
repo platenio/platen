@@ -42,10 +42,10 @@
     Find any inner code blocks, make sure the wrapping is at least 3 backticks longer. This ensures
     that the markdown subsection renders correctly
   */}}
-  {{- $fence               := "```"                   -}}
+  {{- $fence               := "``````"                -}}
   {{- $codeblockDelimiters := findRE `\x60{3,}` $code -}}
   {{- range $delimiter := $codeblockDelimiters -}}
-    {{- if gt (len $delimiter) (len $fence) -}}
+    {{- if ge (len $delimiter) (len $fence) -}}
       {{- $fence = printf "```%s" $delimiter -}}
     {{- end -}}
   {{- end -}}

@@ -2,7 +2,7 @@
     This partial expects a map the Memo map from a page's frontmatter.
 */}}
 {{- $params    := .                                 -}}
-{{- $data      := $params.Data                      -}}
+{{- $memo      := $params.Memo                      -}}
 {{- $multiline := $params.Multiline | default false -}}
 
 {{/* Initialize the return string */}}
@@ -14,7 +14,8 @@
 {{- $optionalAttributes  := slice -}}
 
 {{- $commonAttributes := partial "memo/utils/renderer/getCommonAttributes" -}}
-{{- $attributes       := merge $commonAttributes $data.attributes          -}}
+{{- $attributes       := $memo.attributes | default (dict)                 -}}
+{{- $attributes       := merge $commonAttributes $attributes               -}}
 
 {{- range $attribute, $metadata := $attributes -}}
   {{- $value    := default $attribute $metadata.title    -}}

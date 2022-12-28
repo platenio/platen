@@ -2,18 +2,24 @@
     Docs.ShortCode: memo/shortcode/syntax
 */}}
 {{- $input      := .                  -}}
-{{- $pageParams := $input.Page.Params -}}
-{{- $data       := $pageParams.Memo   -}}
-{{- $kind       := $data.kind         -}}
+{{- $page       := $input.Page        -}}
+{{- $pageParams := $page.Params       -}}
+{{- $memo       := $pageParams.Memo   -}}
+{{- $kind       := $memo.kind         -}}
 
 {{/* Process input parameters */}}
-{{- $name := default ($input.Get 0) ($input.Get "name") 
-             | default $data.name
-             | default $input.Page.Name
--}}
+{{- $name := default ($input.Get 0) ($input.Get "name")  -}}
+{{- $nested       := $input.Get "nested" | default false -}}
 {{- $headingLevel := default ($input.Get 1) ($input.Get "headingLevel")
-                     | default 3
+                     | default (cond $nested 5 3)
 -}}
+
+{{- if $nested -}}
+  {{- $memo = $memo.definition.nested -}}
+  {{- $name = $memo.name              -}}
+{{- else -}}
+  {{- $name = $memo.name | default $input.Page.Name -}}
+{{- end -}}
 
 {{- $renderStrings := slice -}}
 
@@ -21,12 +27,34 @@
   {{- $kindParts    := split $kind      "."                                        -}}
   {{- $subKind      := index $kindParts 1                                          -}}
   {{- $syntaxParams := dict "Name"         $name
-                            "Data"         $data
+                            "Memo"         $memo
                             "HeadingLevel" $headingLevel
                             "Page"         $input.Page
   -}}
   {{- if eq $subKind "Codeblock" -}}
-    {{- $renderStrings = partial "memo/utils/renderer/getCodeblockSyntax" $syntaxParams -}}
+    {{- $renderBlocks := partial "memo/utils/renderer/getCodeblockSyntax" $syntaxParams -}}
+    {{- with $renderBlocks.LanguageIDs -}}
+      {{- range $id, $languageBlock := . -}}
+        {{- $renderStrings = $renderStrings | append $languageBlock.Heading -}}
+        {{- range $block := $languageBlock.Syntaxes -}}
+          {{- $renderStrings = $renderStrings
+                               | append ($page.RenderString $block.Attribute.Heading)
+                               | append ($page.RenderString $block.Attribute.Syntax)
+                               | append ($page.RenderString $block.Data.Heading)
+                               | append ($page.RenderString $block.Data.Syntax)
+          -}}
+        {{- end -}}
+      {{- end -}}
+    {{- else -}}
+      {{- range $block := $renderBlocks.Syntaxes -}}
+        {{- $renderStrings = $renderStrings
+                             | append ($page.RenderString $block.Attribute.Heading)
+                             | append ($page.RenderString $block.Attribute.Syntax)
+                             | append ($page.RenderString $block.Data.Heading)
+                             | append ($page.RenderString $block.Data.Syntax)
+        -}}
+      {{- end -}}
+    {{- end  -}}
   {{- else if eq $subKind "Image" -}}
     {{- $renderStrings = partial "memo/utils/renderer/getImageSyntax" $syntaxParams -}}
   {{- end -}}

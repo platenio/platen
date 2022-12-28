@@ -1,16 +1,27 @@
-{{- $params       := .                    -}}
-{{- $data         := $params.Data         -}}
-{{- $name         := $params.Name         -}}
-{{- $headingLevel := $params.HeadingLevel -}}
-{{- $page         := $params.Page         -}}
+{{- $params           := .                                                  -}}
+{{- $memo             := $params.Memo                                       -}}
+{{- $name             := $params.Name                                       -}}
+{{- $headingLevel     := $params.HeadingLevel                               -}}
+{{- $page             := $params.Page                                       -}}
+{{- $isNested         := $params.Nested | default false                     -}}
+{{- $hasNested        := false                                              -}}
+{{- $definition       := $memo.definition                                   -}}
+{{- $type             := $definition.type                                   -}}
+{{- $syntaxDefinition := $definition.syntax | default (printf "<%s>" $type) -}}
 
-{{/* Define heading prefix, needed if the renderer has more than one mode */}}
-{{- $heading         := strings.Repeat $headingLevel  "#"                   -}}
+{{/* Initialize the render strings */}}
+{{- $renderStrings := slice -}}
+{{- $renderBlocks  := dict  -}}
 
-{{- $attributeSyntax := partial "memo/utils/renderer/getAttributeSyntax" (dict "Data" $data) -}}
+{{/* Define heading prefixes */}}
+{{- $heading    := strings.Repeat $headingLevel         "#" -}}
+{{- $subheading := strings.Repeat (add 1 $headingLevel) "#" -}}
+
+{{- $attributeSyntax := partial "memo/utils/renderer/getAttributeSyntax" (dict "Memo" $memo)  -}}
+{{- $dataSyntax      := partial "memo/utils/renderer/getDataSyntax"      (dict "Memo" $memo)  -}}
 
 {{- $languageIDs := slice $name     -}}
-{{- $aliases     := $data.aliases   -}}
+{{- $aliases     := $memo.aliases   -}}
 {{- with $aliases -}}
   {{- if (reflect.IsSlice $aliases) -}}
     {{- $languageIDs = union $languageIDs $aliases -}}
@@ -23,91 +34,148 @@
   {{- end -}}
 {{- end -}}
 
-{{- $definition       := $data.definition    -}}
-{{- $type             := $definition.type    -}}
-{{- $syntaxDefinition := printf "<%s>" $type -}}
+{{- with $definition.nested -}}
+  {{- $hasNested = true -}}
+  {{- $nestedSyntaxParams := dict "Name"         $name
+                                  "Memo"         $definition.nested
+                                  "HeadingLevel" (add 1 $headingLevel)
+                                  "Page"         $page
+                                  "Nested"       true
+  -}}
+  {{- $syntaxDefinition = partial "memo/utils/renderer/getCodeblockSyntax" $nestedSyntaxParams -}}
+{{- end -}}
+
 
 {{- if eq "data" (lower $type) -}}
   {{/* Todo: Handle data definition types */}}
 {{- else -}}
-  {{- with $definition.syntax -}}
-    {{- $syntaxDefinition = $definition.syntax -}}
-    
-    {{- if (reflect.IsMap $syntaxDefinition) -}}
-      {{- $syntaxDefinition = slice $syntaxDefinition -}}
-    {{- end -}}
-
-    {{- if reflect.IsSlice $syntaxDefinition -}}
-      {{- range $syntax := $syntaxDefinition -}}
-        {{- $errorPrefix  := printf "Defined invalid syntax for %s."        $name        -}}
-        {{- $errorPrefix   = printf "%s When specifying multiple syntaxes," $errorPrefix -}}
-        {{- $errorSuffix  := printf "Actual value: %#v"                     $syntax      -}}
-        {{- $problem := "" -}}
-        {{- if not (reflect.IsMap $syntax) -}}
-          {{- $problem = "each must be a map with the Title and Text properties." -}}
-        {{- else -}}
-          {{- $problems := slice -}}
-          {{- with $syntax.Title -}}{{- else -}}
-            {{- $problems = $problems | append "the Title property is required" -}}
-          {{- end -}}
-          {{- with $syntax.Text -}}{{- else -}}
-            {{- $problems = $problems | append "the Text property is required" -}}
-          {{- end -}}
-          {{- with $problems -}}
-            {{- $problem = printf "%s." (delimit $problems ", " ", and ") -}}
-          {{- end -}}
+  {{- if (reflect.IsMap $syntaxDefinition) -}}
+    {{/* In this case, assume we're dealing with a nested syntax */}}
+  {{- else if (reflect.IsSlice $syntaxDefinition) -}}
+    {{/* In this case, assume we're dealing with a slice of title/text maps */}}
+    {{- range $syntax := $syntaxDefinition -}}
+      {{- $errorPrefix  := printf "Defined invalid syntax for %s."        $name        -}}
+      {{- $errorPrefix   = printf "%s When specifying multiple syntaxes," $errorPrefix -}}
+      {{- $errorSuffix  := printf "Actual value: %#v"                     $syntax      -}}
+      {{- $problem := "" -}}
+      {{- if not (reflect.IsMap $syntax) -}}
+        {{- $problem = "each must be a map with the Title and Text properties." -}}
+      {{- else -}}
+        {{- $problems := slice -}}
+        {{- with $syntax.Title -}}{{- else -}}
+          {{- $problems = $problems | append "the Title property is required" -}}
         {{- end -}}
-        {{- with $problem -}}
-          {{- errorf "%s %s %s" $errorPrefix $problem $errorSuffix -}}
+        {{- with $syntax.Text -}}{{- else -}}
+          {{- $problems = $problems | append "the Text property is required" -}}
+        {{- end -}}
+        {{- with $problems -}}
+          {{- $problem = printf "%s." (delimit $problems ", " ", and ") -}}
         {{- end -}}
       {{- end -}}
-    {{- else -}}
-      {{- $syntaxDefinition = print $syntaxDefinition -}}
+      {{- with $problem -}}
+        {{- errorf "%s %s %s" $errorPrefix $problem $errorSuffix -}}
+      {{- end -}}
     {{- end -}}
+  {{- else -}}
+    {{/* In this case, syntax is _probably_ a string, but cast it anyway to be safe */}}
+    {{- $syntaxDefinition = print $syntaxDefinition -}}
   {{- end -}}
 {{- end -}}
 
-{{- $renderStrings := slice -}}
-{{- $openingParams := dict "ID" $name "AttributeSyntax" $attributeSyntax            -}}
-{{- $opening       := partial "memo/utils/renderer/getSyntaxOpening" $openingParams -}}
-{{- $closing       := "```\n``````"                                                 -}}
+{{- $fenceParams   := dict "ID"              $name
+                            "AttributeSyntax" $attributeSyntax
+                            "DataSyntax"      $dataSyntax
+                            "IsNested"        $isNested
+                            "HasNested"       $hasNested
+-}}
+{{- $fences        := partial "memo/utils/renderer/getSyntaxOpening" $fenceParams -}}
+{{- $opening       := $fences.Opening                                             -}}
+{{- $closing       := $fences.Closing                                             -}}
 {{- if gt (len $languageIDs) 1 -}}
+  {{- $languageBlocks := dict -}}
   {{- range $id := $languageIDs -}}
-    {{- $heading := printf "%s Language ID: `%s`"   $heading $id         -}}
-    {{- $openingParams  = merge $openingParams (dict "ID" $id)                          -}}
-    {{- $opening       := partial "memo/utils/renderer/getSyntaxOpening" $openingParams -}}
-    {{/*  {{- $opening  = printf "``````markdown\n```%s%s"  $id $attributeSyntax -}}  */}}
-    {{- if (reflect.IsSlice $syntaxDefinition) -}}
+    {{- $heading     := printf "%s Language ID: `%s`"   $heading $id                      -}}
+    {{- $fenceParams := merge $fenceParams (dict "ID" $id)                                -}}
+    {{- $fences      := partial "memo/utils/renderer/getSyntaxOpening" $fenceParams       -}}
+    {{- $opening     := $fences.Opening                                                   -}}
+    {{- $closing     := $fences.Closing                                                   -}}
+
+    {{- if (reflect.IsMap $syntaxDefinition) -}}
+      {{- $nestedSyntax    := (index $syntaxDefinition.Syntaxes 0)                               -}}
+      {{- $nestedAttribute := $nestedSyntax.Attribute.Syntax                                     -}}
+      {{- $nestedData      := $nestedSyntax.Data.Syntax                                          -}}
+      {{- $attributeHeading := printf "%s With Attributes" $subheading                           -}}
+      {{- $attributeSyntax  := printf "%s\n%s\n%s" $opening.Attribute $nestedAttribute $closing  -}}
+      {{- $attributeBlock   := dict "Heading" $attributeHeading "Syntax" $attributeSyntax        -}}
+      {{- $dataHeading      := printf "%s With Data"       $subheading                           -}}
+      {{- $dataSyntax       := printf "%s\n%s\n%s" $opening.Data      $nestedData $closing       -}}
+      {{- $dataBlock        := dict "Heading" $dataHeading "Syntax" $dataSyntax                  -}}
+      {{- $syntaxBlocks     := slice (dict "Attribute" $attributeBlock "Data" $dataBlock)        -}}
+      {{- $languageBlock    := (dict $id (dict "Syntaxes" $syntaxBlocks "Heading" $heading))     -}}
+      {{- $languageBlocks    = merge $languageBlocks $languageBlock                              -}}
+    {{- else if (reflect.IsSlice $syntaxDefinition) -}}
+      {{- $syntaxBlocks := slice -}}
       {{- range $syntax := $syntaxDefinition -}}
-        {{- $heading      := printf "%s %s" $heading $syntax.Title              -}}
-        {{- $codeBlock    := printf "%s\n%s\n%s" $opening $syntax.Text $closing -}}
-        {{- $renderStrings = $renderStrings
-                             | append ($page.RenderString $heading)
-                             | append ($page.RenderString $codeBlock)
-        -}}
+        {{- $heading          := printf "%s %s"      $subheading           $syntax.Title      -}}
+        {{- $attributeHeading := printf "%s with Attributes" $heading                         -}}
+        {{- $attributeSyntax  := printf "%s\n%s\n%s" $opening.Attribute $syntax.Text $closing -}}
+        {{- $attributeBlock   := dict "Heading" $attributeHeading "Syntax" $attributeSyntax   -}}
+        {{- $dataHeading      := printf "%s with Data"       $heading                         -}}
+        {{- $dataSyntax       := printf "%s\n%s\n%s" $opening.Data      $syntax.Text $closing -}}
+        {{- $dataBlock        := dict "Heading" $dataHeading "Syntax" $dataSyntax             -}}
+        {{- $syntaxBlock      := dict "Attribute" $attributeBlock "Data" $dataBlock           -}}
+        {{- $syntaxBlocks      = $syntaxBlocks | append $syntaxBlock                          -}}
       {{- end -}}
+      {{- $languageBlock := (dict $id (dict "Syntaxes" $syntaxBlocks "Heading" $heading)) -}}
+      {{- $languageBlocks = merge $languageBlocks $languageBlock                          -}}
     {{- else -}}
-      {{- $codeBlock    := printf "%s\n%s\n%s" $opening $syntaxDefinition $closing -}}
-      {{- $renderStrings = $renderStrings
-                          | append ($page.RenderString $heading)
-                          | append ($page.RenderString $codeBlock)
-      -}}
+      {{- $attributeHeading := printf "%s With Attributes" $subheading                           -}}
+      {{- $attributeSyntax  := printf "%s\n%s\n%s" $opening.Attribute $syntaxDefinition $closing -}}
+      {{- $attributeBlock   := dict "Heading" $attributeHeading "Syntax" $attributeSyntax        -}}
+      {{- $dataHeading      := printf "%s With Data"       $subheading                           -}}
+      {{- $dataSyntax       := printf "%s\n%s\n%s" $opening.Data      $syntaxDefinition $closing -}}
+      {{- $dataBlock        := dict "Heading" $dataHeading "Syntax" $dataSyntax                  -}}
+      {{- $syntaxBlocks     := slice (dict "Attribute" $attributeBlock "Data" $dataBlock)        -}}
+      {{- $languageBlock    := (dict $id (dict "Syntaxes" $syntaxBlocks "Heading" $heading))     -}}
+      {{- $languageBlocks    = merge $languageBlocks $languageBlock                              -}}
     {{- end -}}
+    {{- $renderBlocks = merge $renderBlocks (dict "LanguageIDs" $languageBlocks) -}}
   {{- end -}}
+{{- else if (reflect.IsMap $syntaxDefinition) -}}
+  {{- $nestedSyntax    := (index $syntaxDefinition.Syntaxes 0)                               -}}
+  {{- $nestedAttribute := $nestedSyntax.Attribute.Syntax                                     -}}
+  {{- $nestedData      := $nestedSyntax.Data.Syntax                                          -}}
+  {{- $attributeHeading := printf "%s With Attributes" $heading                              -}}
+  {{- $attributeSyntax  := printf "%s\n%s\n%s" $opening.Attribute $nestedAttribute $closing  -}}
+  {{- $attributeBlock   := dict "Heading" $attributeHeading "Syntax" $attributeSyntax        -}}
+  {{- $dataHeading      := printf "%s With Data"       $heading                              -}}
+  {{- $dataSyntax       := printf "%s\n%s\n%s" $opening.Data      $nestedData $closing       -}}
+  {{- $dataBlock        := dict "Heading" $dataHeading "Syntax" $dataSyntax                  -}}
+  {{- $syntaxBlocks     := slice (dict "Attribute" $attributeBlock "Data" $dataBlock)        -}}
+  {{- $renderBlocks      = merge $renderBlocks (dict "Syntaxes" $syntaxBlocks)               -}}
 {{- else if (reflect.IsSlice $syntaxDefinition) -}}
+  {{- $syntaxBlocks := slice -}}
   {{- range $syntax := $syntaxDefinition -}}
-    {{- $heading      := printf "%s %s" $heading $syntax.Title              -}}
-    {{- $codeBlock    := printf "%s\n%s\n%s" $opening $syntax.Text $closing -}}
-    {{- $renderStrings = $renderStrings
-                          | append ($page.RenderString $heading)
-                          | append ($page.RenderString $codeBlock)
-    -}}
+    {{- $heading          := printf "%s %s"      $heading           $syntax.Title         -}}
+    {{- $attributeHeading := printf "%s with Attributes" $heading                         -}}
+    {{- $attributeSyntax  := printf "%s\n%s\n%s" $opening.Attribute $syntax.Text $closing -}}
+    {{- $attributeBlock   := dict "Heading" $attributeHeading "Syntax" $attributeSyntax   -}}
+    {{- $dataHeading      := printf "%s with Data"       $heading                         -}}
+    {{- $dataSyntax       := printf "%s\n%s\n%s" $opening.Data      $syntax.Text $closing -}}
+    {{- $dataBlock        := dict "Heading" $dataHeading "Syntax" $dataSyntax             -}}
+    {{- $syntaxBlock      := dict "Attribute" $attributeBlock "Data" $dataBlock           -}}
+    {{- $syntaxBlocks      = $syntaxBlocks | append $syntaxBlock                          -}}
   {{- end -}}
+  {{- $renderBlocks = merge $renderBlocks (dict "Syntaxes" $syntaxBlocks) -}}
 {{- else -}}
-  {{- $codeBlock    := printf "%s\n%s\n%s" $opening $syntaxDefinition $closing -}}
-  {{- $renderStrings = $renderStrings
-                      | append ($page.RenderString $codeBlock)
-  -}}
+  {{- $attributeHeading := printf "%s With Attributes" $heading                              -}}
+  {{- $attributeSyntax  := printf "%s\n%s\n%s" $opening.Attribute $syntaxDefinition $closing -}}
+  {{- $attributeBlock   := dict "Heading" $attributeHeading "Syntax" $attributeSyntax        -}}
+  {{- $dataHeading      := printf "%s With Data"       $heading                              -}}
+  {{- $dataSyntax       := printf "%s\n%s\n%s" $opening.Data      $syntaxDefinition $closing -}}
+  {{- $dataBlock        := dict "Heading" $dataHeading "Syntax" $dataSyntax                  -}}
+  {{- $syntaxBlocks     := slice (dict "Attribute" $attributeBlock "Data" $dataBlock)        -}}
+  {{- $renderBlocks      = merge $renderBlocks (dict "Syntaxes" $syntaxBlocks)               -}}
 {{- end -}}
 
-{{- return $renderStrings -}}
+{{- return $renderBlocks -}}

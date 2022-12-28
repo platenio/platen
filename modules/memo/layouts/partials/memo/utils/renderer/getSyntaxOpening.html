@@ -1,7 +1,77 @@
-{{- $params          := .                       -}}
-{{- $id            := $params.ID            -}}
-{{- $attributeSyntax := $params.AttributeSyntax -}}
+{{/*
+    - ID: The language ID to add to the codeblock inside of the outer markdown codeblock
+    - HasNested: Whether the codeblock renderer requires nested blocks to function. This increases
+      the number of backticks for the fences by 3
+    - AttributeSyntax: The attribute syntax to insert for the codeblock. This value must be a string
+      and is either the curly-brace or data syntax:
 
-{{- $opening := printf "``````markdown\n```%s%s"  $id $attributeSyntax -}}
+      - Curly Brace: Starts with a space: `{ .class #id ... }`
+      - Data: Starts with a newline:
+        
+        ```
+        ---
+        class: class
+        id: id
+        ---
+        ```
+*/}}
 
-{{- return $opening -}}
+{{- $params          := .                                 -}}
+{{- $id              := $params.ID                        -}}
+{{- $attributeSyntax := $params.AttributeSyntax           -}}
+{{- $dataSyntax      := $params.DataSyntax                -}}
+{{- $hasNested       := $params.HasNested | default false -}}
+{{- $isNested        := $params.IsNested  | default false -}}
+
+{{- $opening := dict -}}
+{{- $closing := ""   -}}
+
+{{/*
+  Build the fences. Codeblocks with nested blocks need an extra 3 backticks. Codeblocks that aren't
+  nested are wrapped in a markdown codeblock.
+
+  A nested codeblock without a nested codeblock inside:
+
+  ```some-id { .class #id anotherAttribute=int }
+  ...
+  ```
+
+  A nested codeblock with a nested codeblock inside:
+
+  ``````some-id { .class #id anotherAttribute=int }
+  ...
+  ``````
+
+  A non-nested codeblock without a nested codeblock inside:
+
+  ``````markdown
+  ```some-id { .class #id anotherAttribute=int }
+  ...
+  ```
+  ``````
+
+  A non-nested codeblock with a nested codeblock inside:
+
+  `````````markdown
+  ``````some-id { .class #id anotherAttribute=int }
+  ...
+  ``````
+  `````````
+*/}}
+{{- if $isNested -}}
+  {{- $fence         := cond    $hasNested "``````" "```"                  -}}
+  {{- $closing        = $fence                                             -}}
+  {{- $openAttribute := printf "%s%s%s"   $fence $id $attributeSyntax      -}}
+  {{- $openData      := printf "%s%s%s\n" $fence $id $dataSyntax           -}}
+  {{- $opening        = dict   "Attribute" $openAttribute "Data" $openData -}}
+{{- else -}}
+  {{- $outerFence    := cond   $hasNested           "`````````" "``````"                         -}}
+  {{- $innerFence    := cond   $hasNested           "``````"    "```"                            -}}
+  {{- $closing        = printf "%s\n%s"             $innerFence $outerFence                      -}}
+  {{- $openAttribute := printf "%smarkdown\n%s%s%s" $outerFence $innerFence $id $attributeSyntax -}}
+  {{- $openData      := printf "%smarkdown\n%s%s%s\n" $outerFence $innerFence $id $dataSyntax    -}}
+  {{- $opening        = dict   "Attribute" $openAttribute "Data" $openData                       -}}
+{{- end -}}
+
+{{- $fences     := dict   "Opening" $opening "Closing" $closing                             -}}
+{{- return $fences -}}

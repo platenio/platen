@@ -1,0 +1,113 @@
+{{- $param      := .           -}}
+{{- $type       := $param.type -}}
+{{- $docsSuffix := ""          -}}
+{{/* Valid values: attribute, input, parameter */}}
+{{- $for        := $param.for   | default "parameter" -}}
+{{- $name       := $param.title | default $param.name -}}
+
+{{/*
+  Quoted and bare strings are their own type, but they're also used as fall-throughs for data types
+  that don't have their own special handling.
+*/}}
+{{- $bareStringSuffix   := "Specify the text without wrapping quotes, like `this`." -}}
+{{- $quotedStringSuffix := "Specify the text wrapped in quotes, like `\"this\"`."   -}}
+
+{{- $multilineStringSuffix := slice "To write a multiline string, specify either `|` or `>` after"
+                                    "the key. Add a `-` to trim the final newline. For example:"
+                                    ""
+                                    "```yaml"
+                                    (printf "%s: |" $name)
+                                    "  This is a multiline entry. The line endings are respected,"
+                                    "  meaning this would render as two paragraphs."
+                                    ""
+                                    "  This is the second paragraph. Because there's no `-`,"
+                                    "  This would include a trailing newline."
+                                    "```"
+                                    ""
+                                    "```yaml"
+                                    (printf "%s: |-" $name)
+                                    "  This multiline entry trims the final newline."
+                                    "```"
+                                    ""
+                                    "```yaml"
+                                    (printf "%s: >" $name)
+                                    "  This entry replaces the newlines, except for the"
+                                    "  last one, with spaces. With the `-`, that final"
+                                    "  newline would be trimmed too."
+-}}
+{{- $multilineStringSuffix := delimit $multilineStringSuffix "\n" -}}
+
+{{- if eq "String.Markdown.Inline" $type -}}
+  {{- $docsSuffix = "This value is rendered as inline Markdown." -}}
+{{- else if (eq "String.Markdown.Block" $type) -}}
+  {{- $firstSentence  := "This value is rendered as a block of Markdown."                -}}
+  {{- $secondSentence := "If there's only one line, that line is wrapped in `<p>` tags." -}}
+  {{- $docsSuffix      = printf "%s %s" $firstSentence $secondSentence                   -}}
+  {{- if eq $for "option" -}}
+    {{- $docsSuffix = printf "%s\n\n%s" $docsSuffix $multilineStringSuffix -}}
+  {{- end -}}
+{{- else if (and (eq "String.Class" $type) (eq "parameter" $for)) -}}
+  {{- if (eq $for "parameter" ) -}}
+    {{- $lines := slice "To specify more than one class, list the classes in a single string"
+                        "separated by spaces."
+                        ""
+                        "For example, `class=\"first second third`\""
+                        "will add the classes `first`, `second`, and `third`."
+    -}}
+    {{- $docsSuffix = delimit $lines "\n" -}}
+  {{- else if (eq $for "option") -}}
+    {{- $lines := slice "To specify more than one class, list the classes in a single string"
+                        "separated by spaces."
+                        ""
+                        "For example, `class: first second third`"
+                        "will add the classes `first`, `second`, and `third`."
+    -}}
+    {{- $docsSuffix = delimit $lines "\n" -}}
+  {{- else if (eq $for "attribute") -}}
+    {{- $lines := slice "To specify more than one class,"
+                        "list each class with a `.` prefix"
+                        "with at least one space between each class."
+                        ""
+                        "For example, `.first .second .third`"
+                        "will add the classes `first`, `second`, and `third`."
+    -}}
+    {{- $docsSuffix = delimit $lines "\n" -}}
+  {{- end -}}
+{{- else if (eq "String.ColorHex" $type) -}}
+  {{- $fragments := slice "Specify the color as a hex value, with or without the leading `#`,"
+                          "with all six characters defined and wrapped in quotes. For example,"
+                          "specify this value as  `\"#E6E6FA\"` to set the color to lavender."
+  -}}
+  {{- $docsSuffix = delimit $fragments " " -}}
+{{- else if (and (eq "String.ID" $type) (eq "attribute" $for)) -}}
+  {{- $fragments := slice "Specify the ID as a bare string without any spaces"
+                          "and with a `#` prefix, like `#my-id`"
+  -}}
+  {{- $docsSuffix = delimit $fragments " " -}}
+{{- else if (hasPrefix $type "String") -}}
+  {{- if strings.HasSuffix $type "Quoted" -}}
+    {{- $docsSuffix = $quotedStringSuffix -}}
+  {{- else if (strings.HasSuffix $type "Bare") -}}
+    {{- $docsSuffix = $bareStringSuffix   -}}
+  {{- else if (eq $for "input") -}}
+    {{- $docsSuffix = $bareStringSuffix   -}}
+  {{- else -}}
+    {{- $docsSuffix = $quotedStringSuffix -}}
+  {{- end -}}
+{{- else if (eq "Boolean" $type) -}}
+  {{- $docsSuffix  = "Specify `true` or `false` without wrapping quotes." -}}
+{{- else if (eq "Integer" $type) -}}
+  {{- $docsSuffix = "Specify a whole number like `1` or `5` without wrapping quotes." -}}
+{{- else if (eq "Nested" $type) -}}
+  {{- $nested := $param.nested -}}
+  {{- $docsSuffix = printf "Inside the shortcode tags," -}}
+  {{- if eq true $nested.required -}}
+    {{- $docsSuffix = printf "%s you must use the `%s` shortcode at least once."
+                             $docsSuffix          $nested.name
+    -}}
+  {{- else -}}
+    {{- $docsSuffix = printf "%s you may use the `%s` shortcode." $docsSuffix $nested.name -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $docsSuffix -}}
