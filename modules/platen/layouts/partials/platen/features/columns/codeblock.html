@@ -16,7 +16,7 @@
     {{- $groupAliases := $aliases.group -}}
     {{- $entryAliases := $aliases.entry -}}
     {{- with $groupAliases -}}
-      {{- if (reflect.IsMap $groupAliases)}}
+      {{- if (reflect.IsMap $groupAliases) -}}
         {{- errorf "Invalid definition for Platen.Features.Columns.Aliases.Group; must be one or more strings." -}}
       {{- else if (reflect.IsSlice $groupAliases) -}}
         {{- $groupLanguageIDs = union $groupLanguageIDs $groupAliases -}}
@@ -25,7 +25,7 @@
       {{- end  -}}
     {{- end -}}
     {{- with $entryAliases -}}
-      {{- if (reflect.IsMap $entryAliases)}}
+      {{- if (reflect.IsMap $entryAliases) -}}
         {{- errorf "Invalid definition for Platen.Features.Columns.Aliases.Entry; must be one or more strings." -}}
       {{- else if (reflect.IsSlice $entryAliases) -}}
         {{- $entryLanguageIDs = union $entryLanguageIDs $entryAliases -}}

@@ -10,6 +10,8 @@ Schematize:
       css:
         srefBase: https://developer.mozilla.org/docs/Web/CSS
       html:
+        element:
+          srefBase: https://developer.mozilla.org/en-US/docs/Web/HTML/Element
         attribute:
           srefBase: https://developer.mozilla.org/docs/HTML/Attributes
 

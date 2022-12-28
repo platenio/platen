@@ -26,7 +26,7 @@
                                     ""
                                     "```yaml"
                                     (printf "%s: |-" $name)
-                                    "  This multiline entry trims the final newline."
+                                    " This multiline entry trims the final newline."
                                     "```"
                                     ""
                                     "```yaml"
@@ -34,6 +34,7 @@
                                     "  This entry replaces the newlines, except for the"
                                     "  last one, with spaces. With the `-`, that final"
                                     "  newline would be trimmed too."
+                                    "```"
 -}}
 {{- $multilineStringSuffix := delimit $multilineStringSuffix "\n" -}}
 
@@ -44,7 +45,7 @@
   {{- $secondSentence := "If there's only one line, that line is wrapped in `<p>` tags." -}}
   {{- $docsSuffix      = printf "%s %s" $firstSentence $secondSentence                   -}}
   {{- if eq $for "option" -}}
-    {{- $docsSuffix = printf "%s\n\n%s" $docsSuffix $multilineStringSuffix -}}
+    {{- $docsSuffix = printf "%s\n\n%s" $multilineStringSuffix $docsSuffix -}}
   {{- end -}}
 {{- else if (and (eq "String.Class" $type) (eq "parameter" $for)) -}}
   {{- if (eq $for "parameter" ) -}}
@@ -96,6 +97,11 @@
   {{- end -}}
 {{- else if (eq "Boolean" $type) -}}
   {{- $docsSuffix  = "Specify `true` or `false` without wrapping quotes." -}}
+{{- else if (eq "Enum" $type) -}}
+  {{- $docsSuffix = "Specify one of the valid values" -}}
+  {{- if not (eq $for "option") -}}
+    {{- $docsSuffix = "%s %s" $docsSuffix $quotedStringSuffix -}}
+  {{- end -}}
 {{- else if (eq "Integer" $type) -}}
   {{- $docsSuffix = "Specify a whole number like `1` or `5` without wrapping quotes." -}}
 {{- else if (eq "Nested" $type) -}}

@@ -39,6 +39,25 @@ properties:
       weight: 2
     type: string
     default: 0.16.4
+  Container:
+    title: Container Element
+    description: Specify the container element for Mermaid diagrams.
+    schematize:
+      details: |
+        Specify the container element for Mermaid diagrams to render inside. By default, diagrams
+        are rendered in a [sref:`<pre>`] element. This setting can be overridden on a per-diagram
+        basis with the `container` [attribute][01] or [YAML option][02].
+
+        Switching this value to `div` or `aside` will remove the default styling for `pre`. The
+        [sref:`<aside>`] element is useful for semantically indicating that the diagram is only
+        indirectly related to the rest of the content.
+
+        [sref:`<pre>`]: mdn.html.element:pre
+        [01]: /modules/platen/renderers/mermaid
+        [02]: /modules/platen/renderers/mermaid
+      weight: 3
+    type: string
+    default: pre
   Partials:
     title: Feature Partials
     description: Define a map of partials for Platen to inject as needed.

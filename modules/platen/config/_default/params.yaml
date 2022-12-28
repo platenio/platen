@@ -200,6 +200,7 @@ Platen:
     Mermaid:
       Enabled: true
       Version: 9.3.0
+      Container: pre
       Partials:
         Header: platen/features/mermaid/header
         Renderers:

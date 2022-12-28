@@ -20,13 +20,24 @@
 {{- range $attribute, $metadata := $attributes -}}
   {{- $value    := default $attribute $metadata.title    -}}
   {{- $required := default false      $metadata.required -}}
+  {{- $type     := $metadata.type                        -}}
+  {{- $enum     := $metadata.enum                        -}}
+  
+  {{- with $metadata.enum -}}
+    {{- $type = "Enum" -}}
+    {{- if not (reflect.IsSlice $enum) -}}
+      {{- $enum = slice $enum -}}
+    {{- end -}}
+  {{- end -}}
 
   {{/* Process the attribute entry value for the syntax */}}
-  {{- if and (eq "String.ID" $metadata.type) (eq "id" $attribute) -}}
+  {{- if and (eq "String.ID" $type) (eq "id" $attribute) -}}
     {{- $value = printf `#id` -}}
-  {{- else if and (eq "String.Class" $metadata.type) (eq "class" $attribute) -}}
+  {{- else if and (eq "String.Class" $type) (eq "class" $attribute) -}}
     {{- $value = printf `.class [.class]` -}}
-  {{- else if eq "Boolean" $metadata.type -}}
+  {{- else if eq "Enum" $type -}}
+    {{- $value = printf `%s=(%s)` $value (delimit $enum "|") -}}
+  {{- else if eq "Boolean" $type -}}
     {{- $value = printf `%s=(true|false)` $value -}}
   {{- else if (eq "Integer" $metadata.type) -}}
     {{- $value = printf `%s=int` $value -}}

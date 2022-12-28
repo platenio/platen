@@ -26,6 +26,14 @@
   {{- $value    := $key                                  -}}
   {{- $required := $metadata.required | default false    -}}
   {{- $type     := $metadata.type     | lower            -}}
+  {{- $enum     := $metadata.enum                        -}}
+  
+  {{- with $metadata.enum -}}
+    {{- $type = "Enum" -}}
+    {{- if not (reflect.IsSlice $enum) -}}
+      {{- $enum = slice $enum -}}
+    {{- end -}}
+  {{- end -}}
 
   {{- with $type -}}
     {{- $type = lower $type -}}
@@ -34,10 +42,16 @@
   {{- end -}}
 
   {{- with $metadata.default -}}
-    {{- $value = print . -}}
+    {{- if eq $type "enum" -}}
+      {{- $value = printf "(%s)" (delimit $enum "|") -}}
+    {{- else -}}
+      {{- $value = print . -}}
+    {{- end -}}
   {{- else -}}
     {{- if eq $type "boolean" -}}
       {{- $value = false -}}
+    {{- else if eq $type "enum" -}}
+      {{- $value = printf "(%s)" (delimit $enum "|") -}}
     {{- else if eq $type "integer" -}}
       {{- $value = 1 -}}
     {{- end -}}
