@@ -76,6 +76,62 @@ properties:
       weight: 2
     type: string
     default: 0.16.4
+  Aliases:
+    title: Aliases
+    description: Defines additional language IDs for the codeblock render hook.
+    schematize:
+      weight: 3
+      details: |
+        Define one or more language IDs to use in addition to the default language IDs for codeblocks
+        that render KaTeX markup. The default language IDs for math markup are `katex` and `math.
+        The default for chemistry markup is `chem`.
+
+        You can specify a string, a map, or an array of strings or maps for this value. If the value
+        is an array, each item in the array is added as an alias.
+
+        String values are added as valid language IDs for the non-chemistry codeblocks in addition to
+        `katex` and `math`.
+        
+        Map values must have either the `Math` or `Chemistry` key with a string value. If you
+        define a value for `Math`, it becomes a valid language ID for math markup codeblock. If
+        you define a value for `Chemistry`, it becomes a valid language ID for chemistry markup
+        codeblocks, which add the chemistry libraries even if you don't use a chemistry syntax. You
+        can specify both in a single map but don't have to.
+    oneOf:
+      - type: array
+        items:
+          oneOf:
+          - type: object
+            description: >-
+              A map defining either/both an alias for the math and chemistry codeblock language ID.
+            properties:
+              Chemistry:
+                title: Chemistry Alias
+                description: >-
+                  Alias for the chemistry-rendering codeblock language ID, (default is 'chem').
+                type: string
+              Math:
+                title: Math Alias
+                description: >-
+                  Alias for the math-rendering codeblock language ID, (defaults are 'katex' and
+                  `math`).
+                type: string
+          - type: string
+      - type: object
+        description: >-
+          A map defining either/both an alias for the math and chemistry codeblock language ID.
+        properties:
+          Chemistry:
+            title: Chemistry Alias
+            description: >-
+              Alias for the chemistry-rendering codeblock language ID, (default is 'chem').
+            type: string
+          Math:
+            title: Group Alias
+            description: >-
+              Alias for the math-rendering codeblock language ID, (defaults are 'katex' and `math`).
+            type: string
+      - type: string
   Partials:
     title: Feature Partials
     description: Define a map of partials for Platen to inject as needed.

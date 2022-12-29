@@ -28,6 +28,22 @@ properties:
         `false`, the images are rendered as normal.
     type: boolean
     default: true
+  Aliases:
+    title: Aliases
+    description: Defines additional prefixes for the image render hook.
+    schematize:
+      weight: 2
+      details: |
+        Define one or more prefixes to use in addition to the default prefix (`art`) for art image
+        links.
+
+        You can specify a string or an array of strings. If the value is an array, each item in the
+        array is added as an alias. Do not add a `:` suffix.
+    oneOf:
+      - type: array
+        items:
+          type: string
+      - type: string
   Partials:
     title: Feature Partials
     description: Define a map of partials for Platen to inject as needed.

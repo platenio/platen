@@ -38,7 +38,7 @@ properties:
         You can set this value to any valid released version of Mermaid. The default is `0.16.4`.
       weight: 2
     type: string
-    default: 0.16.4
+    default: 9.3.0
   Container:
     title: Container Element
     description: Specify the container element for Mermaid diagrams.
@@ -58,6 +58,22 @@ properties:
       weight: 3
     type: string
     default: pre
+  Aliases:
+    title: Aliases
+    description: Defines additional language IDs for the codeblock render hook.
+    schematize:
+      weight: 4
+      details: |
+        Define one or more language IDs to use in addition to the default language IDs for codeblocks
+        that render Mermaid diagrams. The default language ID is `mermaid`.
+
+        You can specify a string or an array of strings. If the value is an array, each item in the
+        array is added as an alias.
+    oneOf:
+      - type: array
+        items:
+          type: string
+      - type: string
   Partials:
     title: Feature Partials
     description: Define a map of partials for Platen to inject as needed.
