@@ -4,10 +4,10 @@
   flex-direction: column;
 
   @media (min-width:56rem) {
-      flex-direction: row;
+    flex-direction: row;
   }
 
-  > div {
+  >div {
     margin: $padding-large 0;
     min-width: $body-min-width / 2;
     padding: 0 $padding-large;
@@ -15,7 +15,7 @@
 
   &.no-flatten-in-mobile {
     @media (min-width:56rem) {
-        flex-direction: column;
+      flex-direction: column;
     }
   }
 }

@@ -3,14 +3,14 @@
 */}}
 {{- $input      := .                                 -}}
 {{- $pageParams := $input.Page.Params                -}}
-{{- $data       := $pageParams.Memo                  -}}
-{{- $attributes := $data.attributes | default (dict) -}}
+{{- $memo       := $pageParams.Memo                  -}}
+{{- $attributes := $memo.attributes | default (dict) -}}
 
 {{/* Process input parameters */}}
 {{- $name := default ($input.Get 0) ($input.Get "name") -}}
 
 {{- if hasPrefix $name "Nested." -}}
-  {{- $attributes  = $data.definition.nested.attributes | default (dict) -}}
+  {{- $attributes  = $memo.definition.nested.attributes | default (dict) -}}
   {{- $nameParts  := split $name "."        -}}
   {{- $nestedName := slice                  -}}
   {{ range $index, $part := $nameParts -}}
@@ -22,11 +22,13 @@
 {{- end -}}
 
 {{- $commonAttributes := partial "memo/utils/renderer/getCommonAttributes" -}}
-{{- $attributes       := merge $commonAttributes $attributes               -}}
+{{- $attributes       := $memo.attributes | default (dict)                 -}}
+{{- $data             := $memo.data       | default (dict)                 -}}
+{{- $data              = merge $commonAttributes $attributes $data         -}}
 
-{{- with (index $attributes (lower $name)) -}}
-  {{- $attribute       := .     -}}
-  {{- $type            := $attribute.type -}}
+{{- with (index $data (lower $name)) -}}
+  {{- $option       := .     -}}
+  {{- $type            := $option.type -}}
   {{- $stringsToRender := slice -}}
 
   {{- with $type -}}
@@ -35,14 +37,14 @@
   {{- else -}}
     {{- $type = "Any" -}}
   {{- end  -}}
-  {{- $attribute = merge $attribute (dict "type" $type "for" "attribute") -}}
+  {{- $option = merge $option (dict "type" $type "for" "option" "name" $name) -}}
   
-  {{- if not $attribute.nosuffix -}}
-    {{- $docsSuffix     := partial "memo/utils/getDocsSuffix" $attribute -}}
+  {{- if not $option.nosuffix -}}
+    {{- $docsSuffix     := partial "memo/utils/getDocsSuffix" $option -}}
     {{- $stringsToRender = $stringsToRender | append $docsSuffix               -}}
   {{- end -}}
 
-  {{- $metadataCodeBlock := partial "memo/utils/getMetadataCodeBlock" $attribute -}}
+  {{- $metadataCodeBlock := partial "memo/utils/getMetadataCodeBlock" $option    -}}
   {{- $stringsToRender    = $stringsToRender | append $metadataCodeBlock                   -}}
 
   {{- $stringToRender := delimit $stringsToRender "\n\n" -}}
@@ -50,8 +52,8 @@
 {{- else -}}
   {{- with $data -}}
     {{- $definition := $data | jsonify (dict "indent" "  ")                                 -}}
-    {{- errorf "Couldn't find attribute '%s' in renderer definition: %s" $name $definition -}}
+    {{- errorf "Couldn't find option '%s' in renderer definition: %s" $name $definition -}}
   {{- else -}}
-    {{- errorf "Couldn't find attribute '%s'" $name -}}
+    {{- errorf "Couldn't find option '%s'" $name -}}
   {{- end -}}
 {{- end -}}

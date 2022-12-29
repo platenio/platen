@@ -9,33 +9,36 @@ Memo:
   Name: mermaid
   Kind: Renderer.Codeblock
   Attributes:
-    element:
+    container:
       Type: String
       Required: false
       Default: pre
+    as_figure:
+      Type: Boolean
+      Required: false
+  Data:
+    caption:
+      Type: String.Markdown.Block
+      Required: false
+    caption_position:
+      Enum:
+        - top
+        - bottom
+      Required: false
+      Default: 'bottom'
   Definition:
     Type: Mermaid
     YAML:
       Required: false
       Definition: Schemas.Platen.Mermaid.Figure
-    Syntax:
-      - Title: Basic
-        Text: |-
-          [%%{ <Init Directive> }%%]
-          <Mermaid Markup>
-      - Title: Advanced
-        Text: |-
-          <Figure Options YAML>
-          ---
-          [%%{ <Init Directive> }%%]
-          <Mermaid Markup>
+    Syntax: |-
+      [%%{ <InitDirective> }%%]
+
+      <MermaidMarkup>
 ---
 
 With the `mermaid` language ID, you can render flowcharts and other diagrams in your content
 by writing [Mermaid markup][01] inside of a codeblock.
-
-By default, when your Mermaid markup is rendered with a codefence, it's rendered in display mode.
-This centers the rendered markup and adds a top and bottom margin to the block.
 
 ## Syntax
 
@@ -76,8 +79,9 @@ flowchart LR
 
 ``````memo-example-renderer { title="As Figure" }
 ```mermaid
-Caption: An example flowchart
-<!-- Mermaid -->
+---
+caption: An example flowchart
+---
 flowchart LR
   a --> b & c--> d
 ```
@@ -85,45 +89,107 @@ flowchart LR
 
 ## Attributes
 
-### `class`
+### `class` { #attribute-class }
 
-Specify any additional classes to add to the Mermaid-containing element. By default, the
-Mermaid code is placed in a `pre` element that has the `mermaid` class.
+Specify any additional classes to add to the Mermaid-containing element. By default, the Mermaid
+code is placed in its [container](#attribute-container) element that has the `mermaid` class.
 
-When you use the [advanced syntax](#advanced) to render the Mermaid as a figure, this value is also
-used for the `class` attribute of the `figure` element.
+If [`as_figure`](#attribute-as_figure) is `true`, the classes are added to both the figure and the
+container element.
 
 {{< memo/renderer/attribute "class" >}}
 
-### `element`
+### `id` { #attribute-id }
 
-Specify an alternate container element for the Mermaid-containing element. By default, the Mermaid
-code is placed in a `pre` element. The value you specify for this attribute is used as the open and
-closing tag name for the containing element. If you specify `div`, the Mermai code is placed in a
-`div` instead of `pre`.
-
-{{< memo/renderer/attribute "element" >}}
-
-### `id`
-
-Specify a page-unique ID to use as the `id` attribute of the Mermaid-containing element or, if using
-the [advanced syntax](#advanced), the `figure` element.
+Specify a page-unique ID to use as the `id` attribute of the Mermaid-containing element. If
+[`as_figure`](#attribute-as_figure) is `true`, the ID is added to the figure instead.
 
 {{< memo/renderer/attribute "id" >}}
 
+### `as_figure` { #attribute-as_figure }
+
+Specify whether to render the mermaid diagram inside a [sref:`<figure>`][s01] element. When this
+value is `true`, the mermaid diagram is added inside a figure and the `id` and `class` both apply to
+that figure. The `class` is also inherited on the container for the diagram.
+
+{{< memo/renderer/attribute "as_figure" >}}
+
+### `container` { #attribute-container }
+
+Specify an alternate container element for the Mermaid-containing element. By default, the Mermaid
+code is placed in a `pre` element. The value you specify for this attribute is used as the open and
+closing tag name for the container element. For example, if you specify `div`, the Mermaid code is
+placed in a `div` instead of `pre`.
+
+{{< memo/renderer/attribute "container" >}}
+
+## YAML Options
+
+### `as_figure` { #option-as_figure }
+
+Specify whether to render the mermaid diagram inside a [sref:`<figure>`][s01] element. When this
+value is `true`, the mermaid diagram is added inside a figure and the `id` and `class` both apply to
+that figure. The `class` is also inherited on the container for the diagram.
+
+{{< memo/renderer/option "as_figure" >}}
+
+### `caption` { #option-caption }
+
+Specify Markdown to use as the caption for the figure element. If this value is set, the Mermaid
+diagram is rendered inside a figure element even if [`as_figure`](#option-as_figure) isn't set to
+`true`.
+
+The caption's Markdown is rendered as a block without wrapping [sref:`<p>`][s02] tags inside a
+[sref:`<figcaption>`][s03] element. By default, it's added beneath the diagram.
+
+You can use the [`caption_position`](#option-caption_position) option to render the caption above
+the Mermaid diagram in the figure.
+
+{{< memo/renderer/option "caption" >}}
+
+### `caption_position` { #option-caption_position }
+
+Specify either `top` or `bottom` to render the figure's caption above or below the Mermaid diagram.
+The default value is `bottom`. This option is ignored if [`caption`](#option-caption) isn't set or
+is empty.
+
+{{< memo/renderer/option "caption_position" >}}
+
+### `class` { #option-class }
+
+Specify any additional classes to add to the Mermaid-containing element. By default, the Mermaid
+code is placed in its [container](#attribute-container) element that has the `mermaid` class.
+
+If [`as_figure`](#option-as_figure) is `true` or [`caption`](#option-caption) is set, the classes
+are added to both the figure and the container element.
+
+{{< memo/renderer/option "class" >}}
+
+### `container`{ #option-container }
+
+{{< memo/renderer/option "container" >}}
+
+### `id`{ #option-id}
+
+Specify a page-unique ID to use as the `id` attribute of the Mermaid-containing element. If
+[`as_figure`](#option-as_figure) is `true` or [`caption`](#option-caption) is set, the ID is added
+to the figure instead.
+
+{{< memo/renderer/option "id" >}}
+
 ## Definition
 
-There are three components to the definition syntax inside the codeblock: the figure options yaml,
-the Mermaid intialize directive, and the Mermaid syntax.
+There are two components to the definition syntax inside the codeblock: the Mermaid intialize
+directive and the Mermaid syntax.
 
-The only required component is the actual Mermaid diagram declaration and syntax. This defines the
+The only required component is the actual Mermaid diagram  syntax. This defines the
 diagram that Mermaid renders. For more information about creating diagrams with Mermaid, see the
-[Mermaid documentation][a].
+[Mermaid documentation][02].
 
 ### Initialize Directive
 
-Immediately before the diagram syntax, you can specify an initialize directive for Mermaid. This the
-site's Mermaid configuration for this diagram only.
+Immediately before the diagram syntax, you can specify an initialize directive for Mermaid. This
+overrides the [sref:site's Mermaid configuration][s04] for this diagram only.
 
 You can add the initialize directive on a single line:
 
@@ -141,36 +207,19 @@ Or multiline:
 }%%
 ```
 
-For more information on the initialize directive, see [foo]. For more information about the
-available settings, see [bar].
+For more information on the initialize directive, see ["Directives" in Mermaid's documentation][03].
 
-### Figure Options
+### Mermaid Markup
 
-You can also pass a map of options that render the mermaid diagram inside a `figure` element. You
-can pass these options by specifying them as YAML, JSON, TOML, or CSV, followed by the separator, `<!-- Mermaid -->`.
+The diagram syntax uses the standard Mermaid syntax for defining diagrams. For more information, see
+["Diagram Syntax" in the Mermaid documentation][04].
 
-If the separator is specified, the diagram is rendered as a figure, even if you don't specify any options.
-
-The rest of this section details the available options. For an example that uses every option, see
-[Comprehensive Figure Options](#comprehensive-figure-options) at the end of this section.
-
-#### `Caption`
-
-Specify a caption for the figure. If this value is a string, the value is rendered as markdown and
-added to the bottom of the figure after the Mermaid diagram in a `figcaption` element.
-
-If this value is a map, it must define the `Text` property and may define the `AtTop` property. The
-`Text` value is rendered as markdown and placed inside the `figcaption` element. If `AtTop` is set
-to `true`, the caption is added at the top of the figure before the Mermaid diagram.
-
-#### Comprehensive Figure Options
-
-```memo-example-data
-Caption:
-  Text: |-
-    This Markdown will be rendered in a
-    `figcaption` at the top of the figure.
-  AtTop: true
-```
-
+<!-- Link References -->
 [01]: https://mermaid-js.github.io/mermaid/#/
+[02]: https://mermaid.js.org/intro/n00b-syntaxReference.html
+[03]: https://mermaid.js.org/config/directives.html
+[04]: https://mermaid.js.org/intro/n00b-syntaxReference.html#diagram-syntax
+[s01]: mdn.html.element:figure
+[s02]: mdn.html.element:p
+[s03]: mdn.html.element:figcaption
+[s04]: Platen.Site.Features.Mermaid

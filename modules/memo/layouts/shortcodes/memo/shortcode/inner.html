@@ -27,10 +27,10 @@
   {{- end  -}}
   {{- $param = merge $param (dict "type" $type) -}}
 
-  {{- $docsSuffix     := partial "memo/utils/shortcode/getDocsSuffix" $param -}}
+  {{- $docsSuffix     := partial "memo/utils/getDocsSuffix" $param -}}
   {{- $stringsToRender = $stringsToRender | append $docsSuffix               -}}
 
-  {{- $metadataCodeBlock := partial "memo/utils/shortcode/getMetadataCodeBlock" $param -}}
+  {{- $metadataCodeBlock := partial "memo/utils/getMetadataCodeBlock" $param -}}
   {{- $stringsToRender   = $stringsToRender | append $metadataCodeBlock                -}}
 
   {{- $stringToRender := delimit $stringsToRender "\n\n" -}}

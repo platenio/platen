@@ -11,16 +11,16 @@
 {{- if $supportsData -}}
   {{- if $supportsMarkdown -}}
     {{- if hasPrefix $definition "---"}}
-      {{- $parts         := split $definition   "---"            -}}
-      {{- $count         := len   $parts                         -}}
-      {{- $markdownParts := last (sub $count 2) $parts           -}}
-      {{- $data           = index $parts 1 | transform.Unmarshal -}}
-      {{- $markdown       = delimit $markdownParts "---"         -}}
+      {{- $parts         := split $definition   "---"                             -}}
+      {{- $count         := len   $parts                                          -}}
+      {{- $markdownParts := last (sub $count 2) $parts                            -}}
+      {{- $data           = index $parts 1 | transform.Unmarshal | default (dict) -}}
+      {{- $markdown       = delimit $markdownParts "---"                          -}}
     {{- else -}}
       {{- $markdown = $definition -}}
     {{- end -}}
   {{- else -}}
-    {{- $data = $definition | transform.Unmarshal -}}
+    {{- $data = $definition | transform.Unmarshal | default (dict) -}}
   {{- end -}}
 {{- else if $supportsMarkdown -}}
   {{- $markdown = $definition -}}

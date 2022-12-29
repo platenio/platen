@@ -1,0 +1,84 @@
+{{/*
+    This partial expects a map the Memo map from a page's frontmatter.
+*/}}
+{{- $params := .            -}}
+{{- $memo   := $params.Memo -}}
+
+{{/* Initialize the return string */}}
+{{- $dataSyntax := "" -}}
+
+{{/* Retrieve the data syntaxes */}}
+{{- $requiredItems    := dict  -}}
+{{- $optionalItems    := dict  -}}
+
+{{/*
+  Build the list of canonical data, by merging the common attributes, defined attributes, and
+  then the defined data. Defined attributes can override the common attributes and defined
+  data override everything.
+*/}}
+{{- $commonAttributes := partial "memo/utils/renderer/getCommonAttributes" -}}
+{{- $attributes       := $memo.attributes | default (dict)                 -}}
+{{- $data             := $memo.data       | default (dict)                 -}}
+{{- $data              = merge $commonAttributes $attributes $data         -}}
+
+{{- range $option, $metadata := $data -}}
+  {{- $key      := $metadata.title    | default $option  -}}
+  {{- $value    := $key                                  -}}
+  {{- $required := $metadata.required | default false    -}}
+  {{- $type     := $metadata.type     | lower            -}}
+  {{- $enum     := $metadata.enum                        -}}
+  
+  {{- with $metadata.enum -}}
+    {{- $type = "Enum" -}}
+    {{- if not (reflect.IsSlice $enum) -}}
+      {{- $enum = slice $enum -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- with $type -}}
+    {{- $type = lower $type -}}
+  {{- else -}}
+    {{- errorf "Invalid definition for option or attribute `%s`: missing a Type." $option -}}
+  {{- end -}}
+
+  {{- with $metadata.default -}}
+    {{- if eq $type "enum" -}}
+      {{- $value = printf "(%s)" (delimit $enum "|") -}}
+    {{- else -}}
+      {{- $value = . -}}
+    {{- end -}}
+  {{- else -}}
+    {{- if eq $type "boolean" -}}
+      {{- $value = false -}}
+    {{- else if eq $type "enum" -}}
+      {{- $value = printf "(%s)" (delimit $enum "|") -}}
+    {{- else if eq $type "integer" -}}
+      {{- $value = 1 -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if $required -}}
+    {{- $requiredItems = merge $requiredItems (dict $key $value) -}}
+  {{- else -}}
+    {{- $optionalItems = merge $optionalItems (dict $key $value) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Add required entries first, with a leading comment */}}
+{{- with $requiredItems -}}
+  {{- $requiredYAML := $requiredItems | transform.Remarshal "yaml" -}}
+  {{- $dataSyntax    = printf "# Required\n%s" $requiredYAML         -}}
+  {{- with $optionalItems -}}
+    {{- $optionalYAML := $optionalItems | transform.Remarshal "yaml"       -}}
+    {{- $dataSyntax    = printf "%s# Optional\n%s" $dataSyntax $optionalYAML -}}
+  {{- end -}}
+{{- else -}}
+  {{- with $optionalItems -}}
+    {{- $optionalYAML := $optionalItems | transform.Remarshal "yaml" -}}
+    {{- $dataSyntax    = printf "%s" $optionalYAML                   -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $dataSyntax = printf "\n---\n%s---" $dataSyntax -}}
+
+{{- return $dataSyntax -}}

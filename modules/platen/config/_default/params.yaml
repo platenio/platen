@@ -128,6 +128,8 @@ Platen:
           Enabled: true
         Art:
           Enabled: true
+        Columns:
+          Enabled: true
       Utils:
         Basic:
           Enabled: true
@@ -182,6 +184,11 @@ Platen:
       Partials:
         Renderers:
           Image: platen/features/art/image
+    Columns:
+      Enabled: true
+      Partials:
+        Renderers:
+          Codeblock: platen/features/columns/codeblock
     Katex:
       Enabled: true
       AlwaysLoad: false
@@ -193,6 +200,7 @@ Platen:
     Mermaid:
       Enabled: true
       Version: 9.3.0
+      Container: pre
       Partials:
         Header: platen/features/mermaid/header
         Renderers:
@@ -204,10 +212,6 @@ Platen:
       Enabled: true
       Style:
         Name: button
-    columns:
-      Enabled: true
-      Style:
-        Name: columns
     details:
       Enabled: true
       Style:

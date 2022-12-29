@@ -1,14 +1,45 @@
-{{- $params     := .                  -}}
-{{- $definition := $params.Inner      -}}
-{{- $type       := $params.Type       -}}
-{{- $attributes := $params.Attributes -}}
+{{- $params     := .                                   -}}
+{{- $config     := site.Params.Platen.Features.Mermaid -}}
+{{- $aliases    := $config.aliases                     -}}
+{{- $page       := $params.Page                        -}}
+{{- $position   := $params.Position                    -}}
+{{- $definition := $params.Inner                       -}}
+{{- $type       := $params.Type | lower                -}}
+{{- $attributes := $params.Attributes                  -}}
 
 {{- $renderedCode := "" -}}
 
-{{- if eq "mermaid" (lower $type) -}}
-  {{/* Handle attributes */}}
-  {{- $class := $attributes.class -}}
-  {{- $id    := $attributes.id    -}}
+{{- $validLanguageIDs := slice "mermaid" -}}
+{{- with $aliases -}}
+  {{- if (reflect.IsSlice $aliases) -}}
+    {{- $validLanguageIDs = union $validLanguageIDs $aliases -}}
+  {{- else -}}
+    {{- $validLanguageIDs = $validLanguageIDs | append (print $aliases) -}}
+  {{- end  -}}
+{{- end -}}
+
+{{- if in $validLanguageIDs $type -}}
+  {{/* Parse the definition for data and markdown */}}
+  {{- $infoParams := dict "Definition" $definition "SupportsData" true "SupportsMarkdown" true -}}
+  {{- $info       := partial "platen/utils/getCodeblockInfo" $infoParams                       -}}
+
+  {{/* Handle attributes and data */}}
+  {{- $caption    := $info.Data.caption                                                 -}}
+  {{- $asFigure   := $info.Data.asFigure | default $attributes.asFigure | default false -}}
+  {{- $class      := $info.Data.class    | default $attributes.class                    -}}
+  {{- $id         := $info.Data.id       | default $attributes.id                       -}}
+  {{- $container  := $info.Data.container
+                     | default $attributes.container
+                     | default $config.container
+  -}}
+
+  {{/* Retrieve and trim the actual definition */}}
+  {{- $trimParams  := dict "Text" $info.Markdown "TrimEOL" true             -}}
+  {{- $mermaidCode := partial "platen/utils/getLeadTrimmedText" $trimParams -}}
+
+  {{- with $caption -}}
+    {{- $asFigure = true -}}
+  {{- end -}}
 
   {{/* Ensure Mermaid script gets added to this page */}}
   {{- $params.Page.Store.Set "hasMermaid" true -}}
@@ -19,23 +50,10 @@
     {{- $mermaidClasses = $mermaidClasses | append $class -}}
   {{- end -}}
 
-  {{/* Handle leading explanatory text, if any */}}
-  {{- $parts        := split $definition "<!-- Mermaid -->" -}}
-  {{- $figureParams := ""                                   -}}
-  {{- $mermaidCode  := ""                                   -}}
-  {{- if eq 2 (len $parts) -}}
-    {{- $figureParams = index $parts 0 | transform.Unmarshal -}}
-    {{- $mermaidCode  = index $parts 1 -}}
-  {{- else -}}
-    {{- $mermaidCode = $definition -}}
-  {{- end  -}}
-  {{- $trimParams       := dict "Text" $mermaidCode "TrimEOL" true                           -}}
-  {{- $mermaidCode       = partial "platen/utils/getLeadTrimmedText" $trimParams             -}}
   {{- $mermaidClasses    = delimit $mermaidClasses " "                                       -}}
   {{- $mermaidAttributes = $mermaidAttributes | append (printf `class="%s"` $mermaidClasses) -}}
 
-  {{- with $figureParams -}}
-    {{- $caption          := $figureParams.Caption -}}
+  {{- if $asFigure -}}
     {{- $figureAttributes := slice                 -}}
     {{- with $id -}}
       {{- $figureAttributes = $figureAttributes | append (printf `id="%s"` $id) -}}
@@ -45,7 +63,8 @@
     {{- end -}}
     {{- $attributeParams := dict "Attributes" $figureAttributes "IndentCount" 8       -}}
     {{- $figureAttributes = partial "platen/utils/getSafeAttributes" $attributeParams -}}
-    {{- $renderedCode     = printf "<figure %s>" $figureAttributes -}}
+    {{- $renderedCode     = printf "<figure %s>" $figureAttributes                    -}}
+
     {{- with $caption -}}
       {{- $atTop             := false    -}}
       {{- $text              := $caption -}}
@@ -53,11 +72,15 @@
         {{- $atTop = default $atTop $caption.AtTop -}}
         {{- $text  = $caption.Text                 -}}
       {{- end -}}
-      {{- $mermaidParams     := dict "Attributes" $mermaidAttributes "IndentCount" 7            -}}
+
+      {{- $indentCount       := add 4 (len $container)                                          -}}
+      {{- $mermaidParams     := dict "Attributes" $mermaidAttributes "IndentCount" $indentCount -}}
       {{- $mermaidAttributes := partial "platen/utils/getSafeAttributes" $mermaidParams         -}}
       {{- $mermaidCode       := printf "    %s" (delimit (split $mermaidCode "\n") "\n    ")    -}}
-      {{- $mermaidCode       := printf "<pre %s>\n%s\n  </pre>" $mermaidAttributes $mermaidCode -}}
-      {{- $renderParams      := dict "Page"        $params.Page
+      {{- $mermaidCode       := printf "<%s %s>\n%s\n  </%s>"
+                                       $container $mermaidAttributes $mermaidCode $container
+      -}}
+      {{- $renderParams      := dict "Page"        $page
                                      "Content"     $text
                                      "IndentCount" 4
       -}}

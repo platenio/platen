@@ -836,7 +836,7 @@ properties:
       details: |
         Defines default styling for figures created by the art render hook for images.
 
-        When you add [an image with the `art:` prefix][01], the following SCSS is applied:
+        When you add [an image with the [`art:` prefix][01], the following SCSS is applied:
 
         ```scss
         figure.platen-art {
@@ -949,7 +949,7 @@ properties:
         shortcode's `class` parameter, the figure's width is set to the appropriate percent. Used
         in combination with the `float-left` or `float-right` [sref:basic utility classes], authors
         can include their artwork beside the rest of their content without having to use the
-        [`columns`][02] shortcode for the same effect.
+        [`columns`][02] codeblock for the same effect.
 
         ### Content Warning
 
@@ -1016,11 +1016,79 @@ properties:
 
         <!-- Reference Links -->
         [01]: /modules/platen/renderers/art
-        [02]: /modules/platen/shortcodes/columns
+        [02]: /modules/platen/renderers/columns
         [03]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
         [04]: https://sass-lang.com/guide
         [sref:`object-fit`]: mdn.css:object-fit
         [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+    type: object
+  Columns:
+    title: Columns Style Module
+    description: Defines the style for column-rendering codeblocks.
+    schematize:
+      details: |
+        Defines default styling for columns created by the codeblock.
+
+        When you use the [`columns`][01] codeblock, the following SCSS is applied:
+
+        ```scss
+        .markdown .platen-columns {
+          margin-left: -$padding-large;
+          margin-right: -$padding-large;
+          flex-direction: column;
+
+          @media (min-width:56rem) {
+            flex-direction: row;
+          }
+
+          >div {
+            margin: $padding-large 0;
+            min-width: $body-min-width / 2;
+            padding: 0 $padding-large;
+          }
+
+          &.no-flatten-in-mobile {
+            @media (min-width:56rem) {
+              flex-direction: column;
+            }
+          }
+        }
+        ```
+
+        The content is placed in a div with the `platen-columns`, `flex`, and classes. Each column's
+        content is then placed in another div with the `flex-even` and `markdown-inner` classes.
+
+        By default, this style:
+        
+        - Sets the outer container's horizontal margins to the negative value of
+          [sref:`$padding-large`]
+        - Sets the [sref:`flex-direction`] to column, ensuring the child divs are rendered as
+          columns instead of rows. On smaller screens, like phones, it sets the `flex-direction` to
+          row for readability.
+        - Sets each column to have a vertical margin and horizontal padding to
+          [sref:`$padding-large`], and sets the minimum width to half the value of
+          [sref:`$body-min-width`].
+
+        If the `no-flatten-in-mobile` class is added to the columns codeblock, it keeps the
+        `flex-direction` as `column` even on smaller screens.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/markdown/_columns.scss` in your [assets folder][02], which defaults to `assets` in
+        your project root.
+
+        {{< details title="Careful!"  class="danger" open=true >}}
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        {{< /details >}}
+
+        For more information on authoring SCSS, see the [learning guide][03].
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/renderers/columns
+        [02]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [03]: https://sass-lang.com/guide
+        [sref:`flex-direction`]: mdn.css:flex-direction
+        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`$body-min-width`]: Platen.Site.Theme.Variables.BasicSCSS.body-min-width
     type: object
 patternProperties:
   ".":

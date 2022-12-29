@@ -38,10 +38,22 @@
   {{- $trimParams := dict "Text" $code "TrimEOL" true                      -}}
   {{- $mungedCode := partial "platen/utils/getLeadTrimmedText" $trimParams -}}
 
+  {{/*
+    Find any inner code blocks, make sure the wrapping is at least 3 backticks longer. This ensures
+    that the markdown subsection renders correctly
+  */}}
+  {{- $fence               := "``````"                -}}
+  {{- $codeblockDelimiters := findRE `\x60{3,}` $code -}}
+  {{- range $delimiter := $codeblockDelimiters -}}
+    {{- if ge (len $delimiter) (len $fence) -}}
+      {{- $fence = printf "```%s" $delimiter -}}
+    {{- end -}}
+  {{- end -}}
+
   {{/* Render the input subsection */}}
   {{- $inputHeading := printf "%s Markdown Input { #%s-markdown-input }" $subHeadingMarker $id -}}
   {{- $inputHeading  = $page.RenderString $inputHeading                                        -}}
-  {{- $inputContent :=  printf "``````markdown\n%s\n``````" $mungedCode                        -}}
+  {{- $inputContent :=  printf "%smarkdown\n%s\n%s" $fence $mungedCode $fence                  -}}
   {{- $inputContent  = $page.RenderString $inputContent                                        -}}
   {{- $renderedCode  = printf "%s\n\n%s\n\n%s" $renderedCode $inputHeading $inputContent       -}}
 

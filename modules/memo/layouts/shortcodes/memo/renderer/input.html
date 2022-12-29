@@ -33,11 +33,11 @@
   {{- $definition = merge $definition (dict "type" $type "for" "input") -}}
   
   {{- if not $definition.nosuffix -}}
-    {{- $docsSuffix     := partial "memo/utils/shortcode/getDocsSuffix" $definition -}}
+    {{- $docsSuffix     := partial "memo/utils/getDocsSuffix" $definition -}}
     {{- $stringsToRender = $stringsToRender | append $docsSuffix                    -}}
   {{- end -}}
 
-  {{- $metadataCodeBlock := partial "memo/utils/shortcode/getMetadataCodeBlock" $definition -}}
+  {{- $metadataCodeBlock := partial "memo/utils/getMetadataCodeBlock" $definition -}}
   {{- $stringsToRender    = $stringsToRender | append $metadataCodeBlock                    -}}
 
   {{- $stringToRender := delimit $stringsToRender "\n\n" -}}

@@ -14,7 +14,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/platenio/platen">
-    <img src="static/images/logo.svg" alt="Logo" width="240" height="80">
+    <img src="site/static/images/logo.svg" alt="Logo" width="240" height="80">
   </a>
 
   <h3 align="center">Platen</h3>

@@ -6,7 +6,7 @@ description: Defines the settings for the Art feature
 schematize:
   details: |
     Defines the map of settings for the Platen's [Art][01] feature. The existing value is a
-    map that includes whether or not to enable the shortcode and the style definition for it.
+    map that includes whether or not to enable the image render hook and its style definition.
 
     You can add new keys or replace the values for existing ones. You don't need to keep the
     full list of all properties in your own configuration file. Only specify the values you want
@@ -28,6 +28,22 @@ properties:
         `false`, the images are rendered as normal.
     type: boolean
     default: true
+  Aliases:
+    title: Aliases
+    description: Defines additional prefixes for the image render hook.
+    schematize:
+      weight: 2
+      details: |
+        Define one or more prefixes to use in addition to the default prefix (`art`) for art image
+        links.
+
+        You can specify a string or an array of strings. If the value is an array, each item in the
+        array is added as an alias. Do not add a `:` suffix.
+    oneOf:
+      - type: array
+        items:
+          type: string
+      - type: string
   Partials:
     title: Feature Partials
     description: Define a map of partials for Platen to inject as needed.
@@ -84,4 +100,4 @@ properties:
                 [01]: /modules/platen/renderers/art
                 [02]: /styling
             type: string
-            default: platen/features/katex/codeblock
+            default: platen/features/art/image
