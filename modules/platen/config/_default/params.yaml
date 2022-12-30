@@ -189,6 +189,11 @@ Platen:
       Partials:
         Renderers:
           Codeblock: platen/features/columns/codeblock
+    Details:
+      Enabled: true
+      Partials:
+        Renderers:
+          Codeblock: platen/features/details/codeblock
     Katex:
       Enabled: true
       AlwaysLoad: false
