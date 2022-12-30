@@ -20,17 +20,20 @@
     {{- $path := strings.TrimSuffix "/_index.md" $url.Path }}
     {{- $path  = strings.TrimSuffix "/_index"    $path     }}
     {{- $path  = strings.TrimSuffix ".md"        $path     }}
-    {{- $page := .Page.GetPage $path                       }}
-    {{- if $page }}
-      {{- $destination = $page.RelPermalink }}
-      {{- if $url.Fragment }}
-        {{- $destination = print $destination "#" $url.Fragment }}
+    {{/* If there's no path, assume its a fragment for the current page */}}
+    {{- if ne "" $path -}}
+      {{- $page := .Page.GetPage $path }}
+      {{- if $page }}
+        {{- $destination = $page.RelPermalink }}
+        {{- if $url.Fragment }}
+          {{- $destination = print $destination "#" $url.Fragment }}
+        {{- end }}
+      {{- else if fileExists (print .Page.File.Dir .Destination) }}
+        <!-- Nothing -->
+      {{- else -}}
+        {{- warnf "Page '%s' not found in '%s'" .Destination .Page.File }}
       {{- end }}
-    {{- else if fileExists (print .Page.File.Dir .Destination) }}
-      <!-- Nothing -->
-    {{- else -}}
-      {{- warnf "Page '%s' not found in '%s'" .Destination .Page.File }}
-    {{- end }}
+    {{- end -}}
   {{- end }}
   {{- $href       := printf `href="%s"` ($destination | safeURL) -}}
   {{- $text       := .Text | safeHTML -}}

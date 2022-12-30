@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Platen/Site/Features/Katex.schema.yaml
+$id: /schemas/Platen/Site/Features/Mermaid.schema.yaml
 title: Mermaid Diagrams
 description: Settings that control the site's Mermaid diagrams rendering feature.
 schematize:

@@ -52,7 +52,7 @@ Or paragraphs.
 ```
 
 ```memo-example-shortcode { title="Full Positional Example" }
-{{</* button "details" true "internal" */>}}
+{{</* button "katex" true "internal" */>}}
   Relative link to the details page with the `internal` class.
 {{</* /button */>}}
 ```

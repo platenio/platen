@@ -189,6 +189,11 @@ Platen:
       Partials:
         Renderers:
           Codeblock: platen/features/columns/codeblock
+    Details:
+      Enabled: true
+      Partials:
+        Renderers:
+          Codeblock: platen/features/details/codeblock
     Katex:
       Enabled: true
       AlwaysLoad: false
@@ -212,10 +217,6 @@ Platen:
       Enabled: true
       Style:
         Name: button
-    details:
-      Enabled: true
-      Style:
-        Name: details
     itchio:
       Enabled: true
     katex:

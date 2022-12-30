@@ -367,7 +367,7 @@ properties:
 
         For more information on valid values, see [sref:`<color>`].
 
-        [01]: /modules/platen/shortcodes/details
+        [01]: /modules/platen/renderers/details
         [sref:`<color>`]: mdn.css:color_value
     type: object
     patternProperties:

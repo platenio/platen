@@ -14,5 +14,12 @@
     &[open] summary {
       margin-bottom: 0;
     }
+
+    @each $name, $color in $details-colors {
+      &.#{$name} {
+        border-color: $color;
+        background-color: rgba($color, 0.1);
+      }
+    }
   }
 }
