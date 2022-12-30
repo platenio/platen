@@ -92,10 +92,6 @@ properties:
         $ref: ./Shortcodes/button.yaml
         schematize:
           weight: 2
-      details:
-        $ref: ./Shortcodes/details.yaml
-        schematize:
-          weight: 4
       itchio:
         $ref: ./Shortcodes/itchio.yaml
         schematize:

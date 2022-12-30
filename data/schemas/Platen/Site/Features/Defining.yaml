@@ -108,10 +108,10 @@ properties:
                1. Ensure that the first element inside the list item is an input (`<input>`) element
                   with the type set to `checkbox`, a unique id, and the `toggle` class.
 
-                  {{< details title="Note"  class="info" open=true >}}
+                  ```details { .info summary="Note" }
                   To generate a unique id, you can use the `md5` function in your partial to create
                   a string unlikely to collide with any others.
-                  {{< /details >}}
+                  ```
 
                1. Ensure that the second element inside the list item is a label (`<label>`) element
                   with the `for` attribute set to the unique id of the input and the classes `flex`

@@ -44,9 +44,9 @@ properties:
         `styles/markdown/_page.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -154,9 +154,9 @@ properties:
         `styles/markdown/_headings.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -200,9 +200,9 @@ properties:
         `styles/markdown/_links.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -240,9 +240,9 @@ properties:
         `styles/markdown/_bold.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -278,9 +278,9 @@ properties:
         `styles/markdown/_paragraphs.scss` in your [assets folder], which defaults to `assets`
         in your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -317,9 +317,9 @@ properties:
         `styles/markdown/_images.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -423,9 +423,9 @@ properties:
         `styles/markdown/_code.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -471,9 +471,9 @@ properties:
         `styles/markdown/_blockquotes.scss` in your [assets folder], which defaults to `assets`
         in your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -554,9 +554,9 @@ properties:
         `styles/markdown/_tables.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -631,9 +631,9 @@ properties:
         `styles/markdown/_lists.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -670,9 +670,9 @@ properties:
         `styles/markdown/_rulers.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -721,9 +721,9 @@ properties:
         `styles/markdown/_details.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -767,9 +767,9 @@ properties:
         `styles/markdown/_figure.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -817,9 +817,9 @@ properties:
         `styles/markdown/_inner.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -1008,9 +1008,9 @@ properties:
         `styles/markdown/_art.scss` in your [assets folder][03], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide][04].
 
@@ -1076,9 +1076,9 @@ properties:
         `styles/markdown/_columns.scss` in your [assets folder][02], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide][03].
 

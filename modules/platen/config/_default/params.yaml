@@ -217,10 +217,6 @@ Platen:
       Enabled: true
       Style:
         Name: button
-    details:
-      Enabled: true
-      Style:
-        Name: details
     itchio:
       Enabled: true
     katex:

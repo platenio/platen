@@ -46,9 +46,9 @@ properties:
         `styles/platen/_icon.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -98,9 +98,9 @@ properties:
         `styles/platen/_brand.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -338,9 +338,9 @@ properties:
         `styles/platen/_menu.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -389,9 +389,9 @@ properties:
         `styles/platen/_page.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -428,9 +428,9 @@ properties:
         `styles/platen/_post.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -479,9 +479,9 @@ properties:
         `styles/platen/_header.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -647,9 +647,9 @@ properties:
         `styles/platen/_search.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -722,9 +722,9 @@ properties:
         `styles/platen/_toc.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -775,9 +775,9 @@ properties:
         `styles/platen/_footer.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -815,9 +815,9 @@ properties:
         `styles/platen/_comments.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -869,9 +869,9 @@ properties:
         `styles/platen/_languages.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
@@ -913,9 +913,9 @@ properties:
         `styles/platen/_responsiveness.scss` in your [assets folder], which defaults to `assets` in
         your project root.
 
-        {{< details title="Careful!"  class="danger" open=true >}}
+        ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
-        {{< /details >}}
+        ```
 
         For more information on authoring SCSS, see the [learning guide].
 
