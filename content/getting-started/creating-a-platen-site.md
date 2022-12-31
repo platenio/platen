@@ -36,159 +36,136 @@ A text editor
 : You need an application to write and edit your content and site configuration with. You can use
   any tool you like for this, but we recommend [VS Code][06].
 
-{{% tabs "install-per-platform" %}}
+````````````tabs { #install-per-platform }
+  `````````tab { name="Windows" }
+    The simplest way to install software on Windows is to use a package manager,
+    like [Chocolatey] or [Scoop]. We recommend Chocolatey as the best all-around
+    tool for managing software on your Windows machine.
+    
+    You can also install these tools manually.
+    
+    [Chocolatey]: https://docs.chocolatey.org/
+    [Scoop]: https://scoop.sh/
+  
+    ``````tabs { #install-windows }
+      ````tab { name="Chocolatey" }
+      These commands assume Chocolatey is installed. They must be run from an
+      elevated command line prompt. To learn how to install Chocolatey, see
+      [Installing Chocolatey][a0].
+      
+      [a0]: https://chocolatey.org/install
+      
+      ```powershell
+      choco install hugo-extended git golang vscode -y
+      ```
+      ````
+      
+      ````tab { name="Scoop" }
+      These commands assume Scoop is installed. To learn how to install Scoop,
+      see [Installation][b0] in the official documentation.
+      
+      [b0]: https://github.com/ScoopInstaller/Install#installation
+      
+      ```powershell
+      scoop install hugo-extended git go vscode
+      ```
+      ````
+      
+      ```tab { name="Manual Install" }
+      Use the following links to each tool's installation documentation.
+      
+      1. [Hugo][c0]
+      1. [Git][c1]
+      1. [Go][c2]
+      1. [VS Code][c3]
+      
+      [c0]: https://gohugo.io/getting-started/installing/#windows
+      [c1]: https://git-scm.com/download/win
+      [c2]: https://go.dev/doc/install
+      [c3]: https://code.visualstudio.com/docs/setup/windows
+      ```
+    ``````
+  `````````
 
-{{% tab "Windows" %}}
+  `````````tab { name="macOS" }
+    The simplest way to install software on macOS is to use a package manager,
+    like [Homebrew].
+    
+    You can also install these tools manually.
+    
+    [Homebrew]: https://brew.sh/
+    
+    ``````tabs { #install-macos }
+      ````tab { name="homebrew" }
+      
+      These commands assume Homebrew is installed. To learn how to install
+      Homebrew, see [Installation][d0] in the official documentation.
+      
+      [d0]: https://docs.brew.sh/Installation
+      
+      ```sh
+      brew install hugo git go
+      brew install --cask visual-studio-code
+      ```
+      ````
+      
+      ```tab { name="Manual Install" }
+      Use the following links to each tool's installation documentation.
+      
+      1. [Hugo][e0]
+      1. [Git][e1]
+      1. [Go][e2]
+      1. [VS Code][e3]
+      
+      [e0]: https://gohugo.io/getting-started/installing/#macos
+      [e1]: https://git-scm.com/download/mac
+      [e2]: https://go.dev/doc/install
+      [e3]: https://code.visualstudio.com/docs/setup/mac
+      ```
+    ``````
+  `````````
 
-The simplest way to install software on Windows is to use a package manager, like [Chocolatey]
-or [Scoop]. We recommend Chocolatey as the best all-around tool for managing software on your
-Windows machine.
-
-You can also install these tools manually.
-
-[Chocolatey]: https://docs.chocolatey.org/
-[Scoop]: https://scoop.sh/
-
-{{% tabs "install-windows" %}}
-
-{{% tab "Chocolatey" %}}
-
-These commands assume Chocolatey is installed. They must be run from an elevated command line
-prompt. To learn how to install Chocolatey, see [Installing Chocolatey][a0].
-
-[a0]: https://chocolatey.org/install
-
-```powershell
-choco install hugo-extended git golang vscode -y
-```
-
-{{% /tab %}}
-
-{{% tab "Scoop" %}}
-
-These commands assume Scoop is installed. To learn how to install Scoop, see [Installation][b0] in
-the official documentation.
-
-[b0]: https://github.com/ScoopInstaller/Install#installation
-
-```powershell
-scoop install hugo-extended git go vscode
-```
-
-{{% /tab %}}
-
-{{% tab "Manual Install" %}}
-
-Use the following links to each tool's installation documentation.
-
-1. [Hugo][c0]
-1. [Git][c1]
-1. [Go][c2]
-1. [VS Code][c3]
-
-[c0]: https://gohugo.io/getting-started/installing/#windows
-[c1]: https://git-scm.com/download/win
-[c2]: https://go.dev/doc/install
-[c3]: https://code.visualstudio.com/docs/setup/windows
-
-{{% /tab %}}
-
-{{% /tabs %}}
-
-{{% /tab %}}
-
-{{% tab "macOS" %}}
-
-The simplest way to install software on macOS is to use a package manager, like [Homebrew].
-
-You can also install these tools manually.
-
-[Homebrew]: https://brew.sh/
-
-{{% tabs "install-macos" %}}
-
-{{% tab "homebrew" %}}
-
-These commands assume Homebrew is installed. To learn how to install Homebrew, see
-[Installation][d0] in the official documentation.
-
-[d0]: https://docs.brew.sh/Installation
-
-```sh
-brew install hugo git go
-brew install --cask visual-studio-code
-```
-
-{{% /tab %}}
-
-{{% tab "Manual Install" %}}
-
-Use the following links to each tool's installation documentation.
-
-1. [Hugo][e0]
-1. [Git][e1]
-1. [Go][e2]
-1. [VS Code][e3]
-
-[e0]: https://gohugo.io/getting-started/installing/#macos
-[e1]: https://git-scm.com/download/mac
-[e2]: https://go.dev/doc/install
-[e3]: https://code.visualstudio.com/docs/setup/mac
-
-{{% /tab %}}
-
-{{% /tabs %}}
-
-{{% /tab %}}
-
-{{% tab "Linux" %}}
-
-The simplest way to install software on Linux is to use a package manager, like [snap].
-
-You can also install these tools manually. For OS-specific package managers and instructions, see
-the manual install tab.
-
-[snap]: https://snapcraft.io/docs/installing-snapd
-
-{{% tabs "install-linux" %}}
-
-{{% tab "Snap" %}}
-
-If your distro supports snaps, you can install the tools with these commands:
-
-```sh
-snap install hugo --channel=extended
-snap install go --channel=latest/stable
-snap install code --channel=latest/stable
-```
-
-```details { .info summary="Note" }
-Most Linux distros already have git installed.
-```
-
-{{% /tab %}}
-
-{{% tab "Manual Install" %}}
-
-Use the following links to each tool's installation documentation.
-
-1. [Hugo][f0]
-1. [Git][f1]
-1. [Go][f2]
-1. [VS Code][f3]
-
-[f0]: https://gohugo.io/getting-started/installing/
-[f1]: https://git-scm.com/download/linux
-[f2]: https://go.dev/doc/install
-[f3]: https://code.visualstudio.com/docs/setup/linux
-
-{{% /tab %}}
-
-{{% /tabs %}}
-
-{{% /tab %}}
-
-{{% /tabs %}}
+  `````````tab { name="Linux" }
+  The simplest way to install software on Linux is to use a package manager,
+  like [snap].
+  
+  You can also install these tools manually. For OS-specific package managers
+  and instructions, see the manual install tab.
+  
+  [snap]: https://snapcraft.io/docs/installing-snapd
+  
+  ``````tabs { #install-linux }
+  
+    ````tab { name="Snap" }
+    If your distro supports snaps, you can install the tools with these commands:
+    
+    ```sh
+    snap install hugo --channel=extended
+    snap install go --channel=latest/stable
+    snap install code --channel=latest/stable
+    ```
+    
+    ```details { .info summary="Note" }
+    Most Linux distros already have git installed.
+    ```
+    ````
+  
+    ```tab { name="Manual Install" }
+    Use the following links to each tool's installation documentation.
+    
+    1. [Hugo][f0]
+    1. [Git][f1]
+    1. [Go][f2]
+    1. [VS Code][f3]
+    
+    [f0]: https://gohugo.io/getting-started/installing/
+    [f1]: https://git-scm.com/download/linux
+    [f2]: https://go.dev/doc/install
+    [f3]: https://code.visualstudio.com/docs/setup/linux
+    ```
+  ``````
+  `````````
+````````````
 
 ## Create a Platen Site
 
