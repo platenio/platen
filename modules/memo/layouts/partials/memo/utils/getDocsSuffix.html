@@ -76,8 +76,9 @@
   {{- end -}}
 {{- else if (eq "String.ColorHex" $type) -}}
   {{- $fragments := slice "Specify the color as a hex value, with or without the leading `#`,"
-                          "with all six characters defined and wrapped in quotes. For example,"
-                          "specify this value as  `\"#E6E6FA\"` to set the color to lavender."
+                          "with all six characters defined and wrapped in quotes. This value is"
+                          "case insensitive. For example, specify this value as `\"#E6E6FA\"`"
+                          "to set the color to lavender."
   -}}
   {{- $docsSuffix = delimit $fragments " " -}}
 {{- else if (and (eq "String.ID" $type) (eq "attribute" $for)) -}}

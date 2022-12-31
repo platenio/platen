@@ -7,10 +7,10 @@
   {{- $text  := dict "type" "String.Markdown.Inline" "required" true -}}
   {{- $inputs = dict "text" $text                                    -}}
 {{- else if (eq $for "image") -}}
-  {{- $altText := dict "type"    "String.Bare"   "required" true                -}}
-  {{- $source  := dict "type"    "String.URL"    "required" true                -}}
-  {{- $title   := dict "type"    "String.Quoted" "required" false               -}}
-  {{- $inputs   = dict "alttext" $altText "source" $source "title"    $title -}}
+  {{- $altText := dict "type"     "String.Bare"   "required" true                   -}}
+  {{- $source  := dict "type"     "String.URL"    "required" true                   -}}
+  {{- $title   := dict "type"     "String.Quoted" "required" false                  -}}
+  {{- $inputs   = dict "alt_text" $altText        "source"   $source "title" $title -}}
 {{- else if (eq $for "link") -}}
   {{- $text        := dict "type" "String.Markdown.Inline" "required" true  -}}
   {{- $destination := dict "type" "String.URL"             "required" true  -}}
