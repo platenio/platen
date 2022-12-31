@@ -25,6 +25,19 @@
     its own line. For more information, see the documentation at
     https://platen.io/modules/platen/renderers/art/
 
+- id: ErrorItchioInvalidBorderWidth
+  translation: >-
+    Invalid border width ({{ . }}) specified for itchio embed: must be between 0 and 5, inclusive.
+
+- id: ErrorItchioMissingID
+  translation: >-
+    Missing mandatory id in the itchio embed. Did you specify one as a destination in the syntax?
+
+- id: ErrorItchioMissingTitle
+  translation: >-
+    Missing title for itchio iframe. This can affect accessibility for site visitors. Make sure to
+    specify the alt text for the image link.
+
 - id: MissingAltText
   translation: Missing alt text
 

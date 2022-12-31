@@ -20,37 +20,40 @@
 {{- range $attribute, $metadata := $attributes -}}
   {{- $value    := default $attribute $metadata.title    -}}
   {{- $required := default false      $metadata.required -}}
+  {{- $ignore   := default false      $metadata.ignore   -}}
   {{- $type     := $metadata.type                        -}}
   {{- $enum     := $metadata.enum                        -}}
-  
-  {{- with $metadata.enum -}}
-    {{- $type = "Enum" -}}
-    {{- if not (reflect.IsSlice $enum) -}}
-      {{- $enum = slice $enum -}}
+
+  {{- if not $ignore -}}
+    {{- with $metadata.enum -}}
+      {{- $type = "Enum" -}}
+      {{- if not (reflect.IsSlice $enum) -}}
+        {{- $enum = slice $enum -}}
+      {{- end -}}
     {{- end -}}
-  {{- end -}}
 
-  {{/* Process the attribute entry value for the syntax */}}
-  {{- if and (eq "String.ID" $type) (eq "id" $attribute) -}}
-    {{- $value = printf `#id` -}}
-  {{- else if and (eq "String.Class" $type) (eq "class" $attribute) -}}
-    {{- $value = printf `.class [.class]` -}}
-  {{- else if eq "Enum" $type -}}
-    {{- $value = printf `%s=(%s)` $value (delimit $enum "|") -}}
-  {{- else if eq "Boolean" $type -}}
-    {{- $value = printf `%s=(true|false)` $value -}}
-  {{- else if (eq "Integer" $metadata.type) -}}
-    {{- $value = printf `%s=int` $value -}}
-  {{- else }}
-    {{- $value = printf `%s="%s"` $value $value -}}
-  {{- end -}}
+    {{/* Process the attribute entry value for the syntax */}}
+    {{- if and (eq "String.ID" $type) (eq "id" $attribute) -}}
+      {{- $value = printf `#id` -}}
+    {{- else if and (eq "String.Class" $type) (eq "class" $attribute) -}}
+      {{- $value = printf `.class [.class]` -}}
+    {{- else if eq "Enum" $type -}}
+      {{- $value = printf `%s=(%s)` $value (delimit $enum "|") -}}
+    {{- else if eq "Boolean" $type -}}
+      {{- $value = printf `%s=(true|false)` $value -}}
+    {{- else if (eq "Integer" $metadata.type) -}}
+      {{- $value = printf `%s=int` $value -}}
+    {{- else }}
+      {{- $value = printf `%s="%s"` $value $value -}}
+    {{- end -}}
 
-  {{/* Add to the appropriate slice for display ordering */}}
-  {{- if $required -}}
-    {{- $requiredAttributes = $requiredAttributes | append $value -}}
-  {{- else -}}
-    {{- $value = printf `[%s]` $value -}}
-    {{- $optionalAttributes = $optionalAttributes | append $value -}}
+    {{/* Add to the appropriate slice for display ordering */}}
+    {{- if $required -}}
+      {{- $requiredAttributes = $requiredAttributes | append $value -}}
+    {{- else -}}
+      {{- $value = printf `[%s]` $value -}}
+      {{- $optionalAttributes = $optionalAttributes | append $value -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 
@@ -71,9 +74,29 @@
 {{/* If there are any attributes, wrap in braces and delimit with spaces */}}
 {{- with $orderedAttributes -}}
   {{- if $multiline -}}
+    {{- $padTo := 0 -}}
+    {{- range $attribute := $orderedAttributes -}}
+      {{- if in $attribute "=" -}}
+        {{- $padLength := index (split $attribute "=") 0 | len | add 1 -}}
+        {{- if gt $padLength $padTo -}}
+          {{- $padTo = $padLength -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+
     {{- $attributeSyntax = printf "{" -}}
     {{- range $attribute := $orderedAttributes -}}
-      {{- $attributeSyntax = printf "%s\n  %s" $attributeSyntax $attribute -}}
+      {{- if in $attribute "=" -}}
+        {{- $parts     := split $attribute "="                                  -}}
+        {{- $prefix    := index $parts 0                                        -}}
+        {{- $padLength := sub $padTo (len $prefix)                              -}}
+        {{- $padded    := printf "%s%s" $prefix (strings.Repeat $padLength " ") -}}
+        {{- $padded     = replace $attribute $prefix $padded                    -}}
+        {{- $padded     = replace $padded    "="     "= "                       -}}
+        {{- $attributeSyntax = printf "%s\n  %s" $attributeSyntax $padded       -}}
+      {{- else -}}
+        {{- $attributeSyntax = printf "%s\n  %s" $attributeSyntax $attribute -}}
+      {{- end -}}
     {{- end -}}
     {{- $attributeSyntax = printf "%s\n}" $attributeSyntax -}}
   {{- else -}}

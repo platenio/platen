@@ -1,22 +1,23 @@
 {{- $params         := .                                      -}}
-{{- $data           := $params.Data                           -}}
+{{- $memo           := $params.Memo                           -}}
 {{- $name           := $params.Name                           -}}
 {{- $headingLevel   := $params.HeadingLevel                   -}}
 {{- $page           := $params.Page                           -}}
-{{- $supportsInline := $data.supportsinline | default false -}}
-{{- $destination    := $data.destination -}}
-{{- $title          := $data.title       -}}
+{{- $supportsInline := $memo.supportsinline | default false   -}}
+{{- $altText        := $memo.alt_text                         -}}
+{{- $source         := $memo.source                           -}}
+{{- $title          := $memo.title                            -}}
 
 {{/* Define heading prefix, needed if the renderer has more than one mode */}}
 {{- $heading    := strings.Repeat $headingLevel         "#" -}}
 {{- $subheading := strings.Repeat (add 1 $headingLevel) "#" -}}
 
 {{/* Get the attribute syntax as a multiline set for readability */}}
-{{- $attributeParams := dict "Data" $data "Multiline" true                                -}}
+{{- $attributeParams := dict "Memo" $memo "Multiline" true                                -}}
 {{- $attributeSyntax := partial "memo/utils/renderer/getAttributeSyntax" $attributeParams -}}
 
 {{- $prefixes := slice $name     -}}
-{{- $aliases     := $data.aliases   -}}
+{{- $aliases  := $memo.aliases   -}}
 {{- with $aliases -}}
   {{- if (reflect.IsSlice $aliases) -}}
     {{- $prefixes = union $prefixes $aliases -}}
@@ -32,33 +33,42 @@
 {{- $renderStrings   := slice -}}
 {{- $markdownStrings := slice -}}
 
+{{- $altTextSyntax := "alt_text" -}}
+{{- with $altText.alias -}}
+  {{- $altTextSyntax = . -}}
+{{- end -}}
+
 {{- $sourceSyntax := "source" -}}
-{{- with $destination.alias -}}
+{{- with $source.alias -}}
   {{- $sourceSyntax = . -}}
 {{- end -}}
-{{- if ($destination.required | default true) -}}
+{{- if ($source.required | default true) -}}
   {{- $sourceSyntax = printf "%s" $sourceSyntax -}}
 {{- else -}}
   {{- $sourceSyntax = printf "[%s]" $sourceSyntax -}}
 {{- end -}}
 
-{{- $titleSyntax := "title" -}}
-{{- with $title.alias -}}
-  {{- $titleSyntax = . -}}
-{{- end -}}
-{{- if ($title.required | default false) -}}
-  {{- $titleSyntax = printf "'%s'" $titleSyntax -}}
+{{- $titleSyntax := " title" -}}
+{{- if eq $title.ignore true -}}
+  {{- $titleSyntax = "" -}}
 {{- else -}}
-  {{- $titleSyntax = printf "['%s']" $titleSyntax -}}
+  {{- with $title.alias -}}
+    {{- $titleSyntax = . -}}
+  {{- end -}}
+  {{- if ($title.required | default false) -}}
+    {{- $titleSyntax = printf " '%s'" $titleSyntax -}}
+  {{- else -}}
+    {{- $titleSyntax = printf " ['%s']" $titleSyntax -}}
+  {{- end -}}
 {{- end -}}
 
 
 {{/* Build syntaxes */}}
-{{- $aliasesPrefix := delimit $prefixes "|"                                                    -}}
-{{- $linkSuffix    := printf  "%s %s"                          $sourceSyntax $titleSyntax      -}}
-{{- $basicSyntax   := printf  "![%s:<AltText>](%s)"            $name $linkSuffix               -}}
-{{- $refSyntax     := printf  "![%s:<AltText>][<ReferenceID>]" $name                           -}}
-{{- $refDefSyntax  := printf  "[<ReferenceID>]: %s"            $linkSuffix                     -}}
+{{- $aliasesPrefix := delimit $prefixes "|"                                                      -}}
+{{- $linkSuffix    := printf  "%s%s"                    $sourceSyntax $titleSyntax               -}}
+{{- $basicSyntax   := printf  "![%s:%s](%s)"            $name         $altTextSyntax $linkSuffix -}}
+{{- $refSyntax     := printf  "![%s:%s][<ReferenceID>]" $name         $altTextSyntax             -}}
+{{- $refDefSyntax  := printf  "[<ReferenceID>]: %s"     $linkSuffix                              -}}
 
 {{- if $supportsInline -}}
   {{/* TODO: figure out options-as-title? */}}

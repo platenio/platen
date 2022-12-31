@@ -63,7 +63,7 @@
         {{- $renderParams = merge $renderParams (dict "Class" .) -}}
       {{- end -}}
       
-      {{- with $attributes.contentwarning -}}
+      {{- with $attributes.content_warning -}}
         {{- $renderParams = merge $renderParams (dict "ContentWarning" .) -}}
       {{- end -}}
       

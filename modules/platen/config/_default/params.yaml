@@ -194,6 +194,11 @@ Platen:
       Partials:
         Renderers:
           Codeblock: platen/features/details/codeblock
+    Itch:
+      Enabled: true
+      Partials:
+        Renderers:
+          Image: platen/features/itch/image
     Katex:
       Enabled: true
       AlwaysLoad: false
@@ -217,8 +222,6 @@ Platen:
       Enabled: true
       Style:
         Name: button
-    itchio:
-      Enabled: true
     katex:
       Enabled: true
     section:
