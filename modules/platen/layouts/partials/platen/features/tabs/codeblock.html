@@ -1,0 +1,223 @@
+{{- $params     := .                                   -}}
+{{- $config     := site.Params.Platen.Features.Tabs -}}
+{{- $aliases    := $config.aliases                     -}}
+{{- $page       := $params.Page                        -}}
+{{- $position   := $params.Position                    -}}
+{{- $definition := $params.Inner                       -}}
+{{- $type       := $params.Type | lower                -}}
+{{- $attributes := $params.Attributes                  -}}
+
+{{- $renderedCode := "" -}}
+
+{{- $groupLanguageIDs := slice "tabs" -}}
+{{- $entryLanguageIDs := slice "tab"  -}}
+{{- with $aliases -}}
+  {{- if reflect.IsMap $aliases -}}
+    {{- $groupAliases := $aliases.group -}}
+    {{- $entryAliases := $aliases.entry -}}
+    {{- with $groupAliases -}}
+      {{- if (reflect.IsMap $groupAliases) -}}
+        {{- errorf "Invalid definition for Platen.Features.Tabs.Aliases.Group; must be one or more strings." -}}
+      {{- else if (reflect.IsSlice $groupAliases) -}}
+        {{- $groupLanguageIDs = union $groupLanguageIDs $groupAliases -}}
+      {{- else -}}
+        {{- $groupLanguageIDs = $groupLanguageIDs | append (print $groupAliases) -}}
+      {{- end  -}}
+    {{- end -}}
+    {{- with $entryAliases -}}
+      {{- if (reflect.IsMap $entryAliases) -}}
+        {{- errorf "Invalid definition for Platen.Features.Tabs.Aliases.Entry; must be one or more strings." -}}
+      {{- else if (reflect.IsSlice $entryAliases) -}}
+        {{- $entryLanguageIDs = union $entryLanguageIDs $entryAliases -}}
+      {{- else -}}
+        {{- $entryLanguageIDs = $entryLanguageIDs | append (print $entryAliases) -}}
+      {{- end  -}}
+    {{- end -}}
+  {{- else if (reflect.IsSlice $aliases) -}}
+    {{- $groupLanguageIDs = union $groupLanguageIDs $aliases -}}
+  {{- else -}}
+    {{- $groupLanguageIDs = $groupLanguageIDs | append (print $aliases) -}}
+  {{- end  -}}
+{{- end -}}
+
+{{- if in $groupLanguageIDs $type -}}
+  {{/* Parse the definition for data and markdown */}}
+  {{- $infoParams := dict "Definition" $definition "SupportsData" true "SupportsMarkdown" true -}}
+  {{- $info       := partial "platen/utils/getCodeblockInfo" $infoParams                       -}}
+
+  {{/* Handle attributes and data */}}
+  {{- $class     := $info.Data.class | default $attributes.class -}}
+  {{- $id        := $info.Data.id    | default $attributes.id    -}}
+  {{- $group     := printf "%s-%s"     $type $id                 -}}
+  {{- $definition = $info.Markdown                               -}}
+
+  {{/* Check for group ID, error if it isn't set */}}
+  {{- with $id -}}
+  {{- else -}}
+    {{- errorf "Missing mandatory ID for %s block at %s" $type $position -}}
+  {{- end -}}
+
+  {{/* Process the actual definition, error if it's empty */}}
+  {{- with $definition -}}
+    {{/*
+      This matches 3 or more backticks (\x60) followed by any valid column entry language id and
+      optionally followed by a single-line attribute list with at least one space before the opening
+      curly brace. It then matches all of the text inside the codeblock and the first closing fence.
+    */}}
+    {{- $findTabPattern := printf `\x60{3,}(%s)(\s+{(.+)})?(.|\s)+?\x60{3,}`
+                                  (delimit $entryLanguageIDs "|")
+    -}}
+
+    {{/* Find and munge the definitions for the columns, adding the group ID to their YAML data */}}
+    {{- $inputTabs := findRE $findTabPattern $definition -}}
+    {{- range $index, $tab := $inputTabs -}}
+      {{- $tabLines      := split $tab "\n"                                        -}}
+      {{- $tabOpen       := index (first 1 $tabLines) 0                            -}}
+      {{- $tabClose      := index (last  1 $tabLines) 0                            -}}
+      {{- $tabLines       = first (sub (len $tabLines) 1) $tabLines                -}}
+      {{- $tabLines       = last  (sub (len $tabLines) 1) $tabLines                -}}
+      {{- $tabDefinition := delimit $tabLines "\n"                                 -}}
+      {{- $tabInfoParams := merge $infoParams (dict "Definition" $tabDefinition)   -}}
+      {{- $tabInfo       := partial "platen/utils/getCodeblockInfo" $tabInfoParams -}}
+      {{- $tabData       := merge $tabInfo.Data (dict "groupID" $group)            -}}
+      {{- if eq $index 0 -}}
+        {{- $tabData = merge $tabData (dict "checked" true) -}}
+      {{- end -}}
+      {{- $tabInfo        = merge $tabInfo (dict "Data" $tabData)                  -}}
+      {{- $tabDefinition  = partial "platen/utils/getCodeblockFromInfo" $tabInfo   -}}
+      {{- $tabDefinition  = printf "%s\n%s\n%s" $tabOpen $tabDefinition $tabClose  -}}
+      {{- $definition     = replace $definition $tab $tabDefinition                -}}
+    {{- else -}}
+      {{- errorf "No tab specified in tabs block at %s" $position -}}
+    {{- end -}}
+
+    {{/* Render the inner markdown for the tabs */}}
+    {{- $renderedTabs := $definition | $page.RenderString (dict "display" "block") -}}
+    {{- $renderedTabs  = trim $renderedTabs "\n" -}}
+
+    {{/* Define the default classes for the container div. */}}
+    {{- $groupClasses := "platen-tabs" -}}
+
+    {{/* Define the tab group attributes */}}
+    {{- $groupAttributes := slice (printf `id="%s"` $group) -}}
+    {{- with $class -}}
+      {{- $groupClasses = printf "%s %s" $groupClasses $class -}}
+    {{- end -}}
+    {{ $groupAttributes = $groupAttributes
+                              | append (printf `class="%s"` $groupClasses)
+    -}}
+    {{- $attributeParams := dict    "Attributes" $groupAttributes    "IndentCount" 5   -}}
+    {{- $groupAttributes  = partial "platen/utils/getSafeAttributes" $attributeParams  -}}
+
+    {{/* Render the tab group */}}
+    {{- $renderStrings := slice (printf `<div %s>` $groupAttributes) -}}
+    {{- $renderStrings  = $renderStrings | append $renderedTabs      -}}
+    {{- $renderStrings  = $renderStrings | append `</div>`           -}}
+    {{- $renderedCode   = delimit $renderStrings "\n"                -}}
+  {{- else -}}
+    {{- errorf "No content in definition for columns block at %s" $position -}}
+  {{- end -}}
+{{- else if in $entryLanguageIDs $type -}}
+  {{/* Parse the definition for data and markdown */}}
+  {{- $infoParams := dict "Definition" $definition "SupportsData" true "SupportsMarkdown" true -}}
+  {{- $info       := partial "platen/utils/getCodeblockInfo" $infoParams -}}
+  {{- $definition  = $info.Markdown -}}
+
+  {{/* Handle attributes and data */}}
+  {{- $class   := $info.Data.class   | default $attributes.class -}}
+  {{- $id      := $info.Data.id      | default $attributes.id    -}}
+  {{- $name    := $info.Data.name    | default $attributes.name  -}}
+  {{- $checked := $info.Data.checked | default false             -}}
+  {{- $group   := "" }}
+
+  {{/* Handle group ID */}}
+  {{- with $info.Data.groupID -}}
+    {{- $group = . -}}
+  {{- else -}}
+    {{- errorf "Missing group ID for tab at '%s'. Is it inside a `tabs` block?" $position -}}
+  {{- end -}}
+
+  {{/*
+    If name is specified without ID, make an ID from the name. If the ID is specified without a
+    name, reuse the ID as the name.
+  */}}
+  {{- with $name -}}
+    {{- with $id -}}
+    {{- else -}}
+      {{/* Automatic Group */}}
+      {{- $id = printf "%s-%s" $group (lower $name | urlize) -}}
+    {{- end -}}
+  {{- else -}}
+    {{- with $id -}}
+      {{/* Automatic Name */}}
+      {{- $name = title $id -}}
+    {{- else -}}
+      {{- errorf "Missing name and id for tab. Must specify at least one." $position -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/* Initialize slice of strings for rendered HTML */}}
+  {{- $renderStrings := slice -}}
+
+  {{/* Initialize attribute slices for tab elements */}}
+  {{- $inputAttributes := slice -}}
+  {{- $labelAttributes := slice -}}
+  {{- $divAttributes   := slice -}}
+
+  {{/* Define leading whitespace for multiline attributes */}}
+  {{- $inputIndent := 9 -}}
+  {{- $labelIndent := 9 -}}
+  {{- $divIndent   := 7 -}}
+
+  {{/* Append the tab's classes to the element class lists if needed */}}
+  {{- $inputClass := "toggle" -}}
+  {{- $labelClass := ""       -}}
+  {{- $divClass   := "platen-tabs-content markdown-inner" -}}
+  {{- with $class -}}
+    {{- $inputClass = printf "%s %s" $inputClass $class -}}
+    {{- $labelClass = $class                            -}}
+    {{- $divClass   = printf "%s %s" $divClass $class   -}}
+  {{- end -}}
+
+  {{/* Build the attributes list for the input element */}}
+  {{- $inputAttributes = $inputAttributes | append `type="radio"`                    -}}
+  {{- $inputAttributes = $inputAttributes | append (printf `class="%s"` $inputClass) -}}
+  {{- $inputAttributes = $inputAttributes | append (printf `name="%s"` $group)       -}}
+  {{- $inputAttributes = $inputAttributes | append (printf `id="%s"`   $id)          -}}
+  {{- if $checked -}} {{/* Ensure the first tab is checked by default */}}
+    {{- $inputAttributes  = $inputAttributes | append `checked="checked"` -}}
+  {{- end -}}
+  {{- $attributeParams := dict "Attributes" $inputAttributes "IndentCount" $inputIndent -}}
+  {{- $inputAttributes  = partial "platen/utils/getSafeAttributes" $attributeParams     -}}
+  {{- $renderStrings    = $renderStrings | append (printf "  <input %s/>" $inputAttributes) -}}
+
+  {{/* Build the attributes for the label element */}}
+  {{- $labelAttributes = $labelAttributes | append (printf `for="%s"` $id) -}}
+  {{- with $labelClass -}}
+    {{- $labelAttributes = $labelAttributes | append (printf `class="%s"` $labelClass) -}}
+  {{- end -}}
+  {{- $attributeParams = dict "Attributes" $labelAttributes "IndentCount" $labelIndent   -}}
+  {{- $labelAttributes = partial "platen/utils/getSafeAttributes" $attributeParams       -}}
+  {{- $renderStrings   = $renderStrings
+                         | append (printf "  <label %s>" $labelAttributes)
+                         | append (printf "    %s"       ($page.RenderString $name))
+                         | append (print  "  </label>")
+  -}}
+
+  {{/* Build the attributes for the div element containing the tab content */}}
+  {{- $divAttributes   = $divAttributes | append (printf `class="%s"` $divClass)   -}}
+  {{- $attributeParams = dict "Attributes" $divAttributes "IndentCount" $divIndent -}}
+  {{- $divAttributes   = partial "platen/utils/getSafeAttributes" $attributeParams -}}
+  {{- $contentParams  := dict "Page" $page "Content" $definition "IndentCount" 4 "AsBlock" true -}}
+  {{- $content        := partial "platen/utils/getPrettyRender" $contentParams -}}
+  {{- $renderStrings   = $renderStrings
+                         | append (printf "  <div %s>" $divAttributes)
+                         | append (printf "    %s"     $content)
+                         | append (print  "  </div>")
+  -}}
+
+  {{/* Concatenate the render strings for the tab entry */}}
+  {{- $renderedCode = delimit $renderStrings "\n" -}}
+{{- end -}}
+
+{{- return $renderedCode -}}

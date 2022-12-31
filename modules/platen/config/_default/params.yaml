@@ -130,6 +130,8 @@ Platen:
           Enabled: true
         Columns:
           Enabled: true
+        Tabs:
+          Enabled: true
       Utils:
         Basic:
           Enabled: true
@@ -215,6 +217,11 @@ Platen:
         Header: platen/features/mermaid/header
         Renderers:
           Codeblock: platen/features/mermaid/codeblock
+    Tabs:
+      Enabled: true
+      Partials:
+        Renderers:
+          Codeblock: platen/features/tabs/codeblock
     PortableLinks:                            # BookPortableLinks
       Enabled: true
   Shortcodes:
@@ -226,10 +233,10 @@ Platen:
       Enabled: true
     section:
       Enabled: true
-    tabs:
-      Enabled: true
-      Style:
-        Name: tabs
+    # tabs:
+    #   Enabled: true
+    #   Style:
+    #     Name: tabs
   Repository:
     CommitPath: commit                        # BookCommitPath
     EditPath: edit/main                       # BookEditPath

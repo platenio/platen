@@ -36,7 +36,7 @@
 
 {{- with $definition.nested -}}
   {{- $hasNested = true -}}
-  {{- $nestedSyntaxParams := dict "Name"         $name
+  {{- $nestedSyntaxParams := dict "Name"         $definition.nested.name
                                   "Memo"         $definition.nested
                                   "HeadingLevel" (add 1 $headingLevel)
                                   "Page"         $page

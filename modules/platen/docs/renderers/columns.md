@@ -9,8 +9,7 @@ Memo:
   Name: columns
   Kind: Renderer.Codeblock
   Attributes:
-    example:
-      Type: string
+    id:
       Required: true
   Definition:
     Nested:
@@ -28,8 +27,8 @@ Memo:
 The `columns` codeblock renderer makes it possible for you to convert Markdown content into columns
 with a flexible ratio.
 
-When used, it creates a [`div`][01] HTML container with each column of content is inserted in their
-own `div`. The Markdown content in each column is rendered as normal.
+When used, it creates a [sref:`<div>`][s01] HTML container with each column of content is inserted
+in their own `div`. The Markdown content in each column is rendered as normal.
 
 ## Syntax
 
@@ -38,7 +37,7 @@ the start of the codeblock. If you're using the attribute syntax, the options mu
 on the same line that the codeblock opens on. If you're using the data syntax, the options must be
 specified as valid YAML wrapped with three dashes (`---`) before the rest of the definition.
 
-For more information, see [Using Codeblocks][02] in the [User Guide][03].
+For more information, see [Using Codeblocks][01] in the [User Guide][02].
 
 {{< memo/renderer/syntax >}}
 
@@ -145,7 +144,7 @@ how classes affect the styling of content in this shortcode, see [Styling](#styl
 ##### `grow`
 
 Specify the column's maximum width in the group. Each column is given an inline style specifying a
-value for the [`flex-grow`][04] attribute, which controls how the columns are displayed in the
+value for the [sref:`flex-grow`][s02] attribute, which controls how the columns are displayed in the
 group.
 
 If this value isn't specified for any `column`, all columns are added with equal width. If this
@@ -156,7 +155,7 @@ value is specified for any `column`, all columns without a width are treated as 
 
 ##### `id`
 
-Specify an optional ID to give this column's div. Be default, individual columns do not have an ID.
+Specify an optional ID to give this column's div. By default, individual columns do not have an ID.
 If you set this value, the column is given its own ID, enabling anyone to link directly to it.
 
 {{< memo/renderer/attribute "Nested.id" >}}
@@ -181,7 +180,7 @@ You can override this behavior, having the columns always display as columns eve
 by adding `no-flatten-for-mobile` to the value of the `class` parameter of the `columns` shortcode.
 
 <!-- Link References -->
-[01]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div
+[01]: /using
 [02]: /using
-[03]: /using
-[04]: https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow
+[s02]: mdn.css:flex-grow
+[s01]: mdn.html.element:div

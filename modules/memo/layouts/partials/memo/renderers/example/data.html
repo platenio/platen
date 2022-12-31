@@ -10,13 +10,15 @@
   {{- $id        := default (sha1 $definition) $attributes.id -}}
   {{- $title     := $attributes.title                         -}}
   {{- $data      := $definition | transform.Unmarshal         -}}
-  {{- $openTabs  := printf `%s tabs "%s" %s` "{{<" $id ">}}"  -}}
-  {{- $closeTabs := printf `%s /tabs %s`     "{{<" ">}}"      -}}
+  {{- $fence     := strings.Repeat 9 "`"                     -}}
+  {{- $subFence  := strings.Repeat 6 "`"                     -}}
+  {{- $openTabs  := printf `%stabs { #%s }` $fence $id    -}}
+  {{- $closeTabs := $fence -}}
   {{- $languages := slice "yaml" "toml" "json"                -}}
   {{- $tabsDefinition := slice $openTabs -}}
   {{- range $language := $languages -}}
-    {{- $openTab  := printf `%s tab "%s" %s` "{{<" (upper $language) ">}}" -}}
-    {{- $closeTab := printf `%s /tab %s`     "{{<" ">}}"                   -}}
+    {{- $openTab  := printf `%stab { name="%s" }` $subFence (upper $language) -}}
+    {{- $closeTab := $subFence -}}
     {{- $code     := $data | transform.Remarshal $language                 -}}
     {{- $tabsDefinition = $tabsDefinition
                           | append $openTab

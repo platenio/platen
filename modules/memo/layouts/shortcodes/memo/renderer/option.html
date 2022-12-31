@@ -5,12 +5,14 @@
 {{- $pageParams := $input.Page.Params                -}}
 {{- $memo       := $pageParams.Memo                  -}}
 {{- $attributes := $memo.attributes | default (dict) -}}
+{{- $data       := $memo.data       | default (dict) -}}
 
 {{/* Process input parameters */}}
 {{- $name := default ($input.Get 0) ($input.Get "name") -}}
 
 {{- if hasPrefix $name "Nested." -}}
   {{- $attributes  = $memo.definition.nested.attributes | default (dict) -}}
+  {{- $data        = $memo.definition.nested.data       | default (dict) -}}
   {{- $nameParts  := split $name "."        -}}
   {{- $nestedName := slice                  -}}
   {{ range $index, $part := $nameParts -}}
@@ -22,8 +24,6 @@
 {{- end -}}
 
 {{- $commonAttributes := partial "memo/utils/renderer/getCommonAttributes" -}}
-{{- $attributes       := $memo.attributes | default (dict)                 -}}
-{{- $data             := $memo.data       | default (dict)                 -}}
 {{- $data              = merge $commonAttributes $attributes $data         -}}
 
 {{- with (index $data (lower $name)) -}}
