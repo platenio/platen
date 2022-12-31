@@ -9,19 +9,19 @@ Memo:
   Kind: Renderer.Image
   Aliases: []
   Attributes:
-    contentWarning:
-      Title: contentWarning
+    content_warning:
+      Title: content_warning
       Type: String.Markdown.Inline
       Required: false
     caption:
       Type: String.Markdown.Inline
       Required: false
   SupportsInline: false
-  AltText:
-    Typ: String.Markdown.Inline
-  Source:
+  alt_text:
     Required: true
-  Title:
+  source:
+    Required: true
+  title:
     Alias: caption
     Required: false
 ---
@@ -63,7 +63,7 @@ the flow.
 
 ```memo-example-renderer { title="Example with Content Warning" }
 ![art:Platen Logo](/images/logo.svg "The caption gets blurred too.")
-{ contentWarning="bright colors" }
+{ content_warning = "bright colors" }
 ```
 
 ```memo-example-renderer { title="Example with Link Reference" }
@@ -82,12 +82,18 @@ Images use this syntax for their inputs:
 ![altText](source 'title')
 ```
 
-### `altText`
+### `alt_text`
 
-Specify that [alt text][02] for the artwork. This value must start with the prefix `art:`. The alt
-text is used to contextualize the art for readers using assistive technologies like screen readers.
+Specify that [alt text][02] for the artwork. The alt text is used to contextualize the art for
+readers using assistive technologies like screen readers.
 
-{{< memo/renderer/input "altText" >}}
+This value must start with the prefix `art:`. The text after the prefix is used for the alt text.
+For example, with `![art:Platen Logo](/images/logo.svg)`, the alt text would be `Platen Logo`.
+
+Don't use any markup for this value. The text is added to an HTML attribute, not rendered from
+Markdown.
+
+{{< memo/renderer/input "alt_text" >}}
 
 ### `source`
 
@@ -107,7 +113,7 @@ If Platen can't find your image from the specified source, it raises an error.
 
 {{< memo/renderer/input "source" >}}
 
-### `title`
+### `title` (as `caption`)
 
 If you specify a title in your Markdown syntax for an art image link, Platen uses the title as the
 figure caption.
@@ -119,7 +125,7 @@ figure caption.
 ### `class`
 
 Specify any additional [classes][03] to add to the `figure` containing the artwork. By default, the
-figure has the `platen-art` class. If you specify a value for `contentWarning`, the figure also has
+figure has the `platen-art` class. If you specify a value for `content_warning`, the figure also has
 the `platen-content-warning` class.
 
 You can use these additional classes to further style your artwork on a page. In addition to any
@@ -145,7 +151,7 @@ For instance, an example on this page used the `id` attribute to set its ID to `
 
 {{< memo/renderer/attribute "id" >}}
 
-### `contentWarning`
+### `content_warning`
 
 Specify a content warning for this artwork, if needed. If you specify any value for this attribute,
 Platen loads the image blurred out with this value over it as a content warning.
@@ -154,7 +160,7 @@ Readers can click on the image or use their keyboard to select and activate the 
 artwork's visibility if they're okay with the content. When they do, the image is unblurred and the
 content warning is hidding. Clicking on or activating the image again returns the blur and content warning.
 
-{{< memo/renderer/attribute "contentWarning" >}}
+{{< memo/renderer/attribute "content_warning" >}}
 
 ## Styling
 
@@ -208,7 +214,7 @@ You can override these behaviors by adding SCSS that uses the following selector
 - `input.platen-content-warning + label` - use this to style the label. By default it has its
   position set to [`absolute`][09] and sets the `top`, `bottom`, `left`, and `right` properties to
   `0` to ensure it stretches to fill the entire figure. It uses the [`::before`][10] pseudo-property
-  to add the prefix `Content Warning` before the value of the `contentWarning` attribute.
+  to add the prefix `Content Warning` before the value of the `content_warning` attribute.
 - `input[type="checkbox"]:checked + label` - use this to style the label when the reader has toggled
   the content warning off. By default, the only style applied is to set the [`opacity`][11] of the
   label to `0`, making it invisible.
