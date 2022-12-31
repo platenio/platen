@@ -1,0 +1,109 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /schemas/Platen/Site/Features/Itch.schema.yaml
+title: Itch
+description: Defines the settings for the Itch feature
+schematize:
+  details: |
+    Defines the map of settings for the Platen's [Itch][01] feature. The existing value is a
+    map that includes whether or not to enable the image render hook and its style definition.
+
+    This feature makes it easier to embed [itch.io widgets][02] into your site with an image link.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all properties in your own configuration file. Only specify the values you want
+    to add or replace.
+
+    <!-- Reference Links -->
+    [01]: /modules/platen/renderers/itch
+    [02]: https://itch.io/docs/creators/widget
+type: object
+properties:
+  Enabled:
+    title: Enable the feature
+    description: Whether to enable the feature for the site
+    schematize:
+      weight: 1
+      details: |
+        Choose whether the site renders image links with the `itch:` prefix in their alt text as
+        embedded itch widgets. If this setting is set to `true`, any image links added with the prefix
+        are rendered as [sref:`<iframe>`] elements using the URL of the link as the widget's ID.
+        
+        If this setting is `false`, the image links are treated as normal.
+    type: boolean
+    default: true
+  Aliases:
+    title: Aliases
+    description: Defines additional prefixes for the image render hook.
+    schematize:
+      weight: 2
+      details: |
+        Define one or more prefixes to use in addition to the default prefix (`itch`) for embedded
+        itch widgets.
+
+        You can specify a string or an array of strings. If the value is an array, each item in the
+        array is added as an alias. Do not add a `:` suffix.
+    oneOf:
+      - type: array
+        items:
+          type: string
+      - type: string
+  Partials:
+    title: Feature Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when [sref:`Enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`Enabled`]: Platen.Site.Features.Itch.Enabled
+      weight: 100
+      skipSchemaRender: true
+    type: object
+    properties:
+      Renderers:
+        title: Renderer Partials
+        description: Registers one or more partials that act as render hooks.
+        type: object
+        schematize:
+          weight: 2
+          skipSchemaRender: true
+          details: |
+            Defines a map of partials to use as Markdown render hooks. Like all partials, these are
+            only processed when `Enabled` is set to `true`.
+
+            Supported renderer partials include:
+
+            - `Codeblock`, processed for fenced code blocks with a language ID
+            - `Heading`, processed for headings
+            - `Image`, processed for image links
+            - `Link`, processed for non-image links
+
+            In all cases, all renderer partials for enabled features are checked one after the other
+            unless they return a render string. Only the first applicable partial that returns a
+            render string is processed and rendered.
+        properties:
+          Image:
+            title: Image Render Hook Partial
+            description: Adds a partial to call when processing the image render hook.
+            schematize:
+              details: |
+                Adds support for rendering image links as embedded itch widgets in Platen. This
+                render hook is only called if the alt text for the image (i.e.
+                `![alt_text](source "title")`) has the `itch:` prefix. If an image link does have
+                the prefix, it's processed for adding an embedded itch widget as an
+                [sref:`<iframe>`] element, using the `source` as the widget's ID.
+
+                For more information about how to use this render partial, see
+                [the reference documentation][01] for this render hook.
+
+                For more information about defining codeblock render hook partials, see
+                [Defining a Codeblock Render Hook Partial][02] in the [Theme Guide][03].
+
+                <!-- Reference Links -->
+                [01]: /modules/platen/renderers/itch
+                [02]: /styling
+                [03]: /styling
+            type: string
+            default: platen/features/itch/image

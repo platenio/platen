@@ -45,26 +45,30 @@ properties:
         $ref: ./Features/Details.yaml
         schematize:
           weight: 4
+      Itch:
+        $ref: ./Features/Itch.yaml
+        schematize:
+          weight: 5
       Katex:
         $ref: ./Features/Katex.yaml
         schematize:
-          weight: 5
+          weight: 6
       Mermaid:
         $ref: ./Features/Mermaid.yaml
         schematize:
-          weight: 6
+          weight: 7
       PortableLinks:
         $ref: ./Features/PortableLinks.yaml
         schematize:
-          weight: 7
+          weight: 8
       PWA:
         $ref: ./Features/PWA.yaml
         schematize:
-          weight: 8
+          weight: 9
       Search:
         $ref: ./Features/Search.yaml
         schematize:
-          weight: 9
+          weight: 10
     patternProperties:
       ".":
         $ref: ./Features/Defining.yaml
@@ -92,10 +96,6 @@ properties:
         $ref: ./Shortcodes/button.yaml
         schematize:
           weight: 2
-      itchio:
-        $ref: ./Shortcodes/itchio.yaml
-        schematize:
-          weight: 5
       katex:
         $ref: ./Shortcodes/katex.yaml
         schematize:
