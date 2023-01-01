@@ -25,6 +25,12 @@
     its own line. For more information, see the documentation at
     https://platen.io/modules/platen/renderers/art/
 
+- id: ErrorButtonMissingDestination
+  translation: >-
+    Specified button image link in '{{ .Page.File.Path }}' without a destination to use
+    (`![{{ .PlainText }}]()`). All button image links must specify a URL for the button. For more
+    information, see the documentation at https://platen.io/modules/platen/renderers/button/
+
 - id: ErrorItchioInvalidBorderWidth
   translation: >-
     Invalid border width ({{ . }}) specified for itchio embed: must be between 0 and 5, inclusive.
