@@ -150,7 +150,7 @@
   {{- else -}}
     {{- with $id -}}
       {{/* Automatic Name */}}
-      {{- $name = title $id -}}
+      {{- $name = replaceRE `(-|_)` " " $id | title -}}
     {{- else -}}
       {{- errorf "Missing name and id for tab. Must specify at least one." $position -}}
     {{- end -}}

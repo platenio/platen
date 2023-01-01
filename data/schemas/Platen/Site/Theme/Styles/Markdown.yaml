@@ -1140,8 +1140,8 @@ properties:
         ```
 
         When you use the tabs codeblock, the content is placed in a `div` container with the
-        `platen-tabs` class. Each tab uses a [radio input] with its [label] used as the selectable
-        tab. Each tab's content is placed in a div with the `platen-tabs-content` and
+        `platen-tabs` class. Each tab uses a [sref:radio input] with its [sref:label] used as the
+        selectable tab. Each tab's content is placed in a div with the `platen-tabs-content` and
         `markdown-inner` classes.
 
         ### Tab Container
@@ -1159,9 +1159,8 @@ properties:
         flex-wrap: wrap;
         ```
 
-        The container is uses [sref:`Theme.Variables.BasicSCSS.padding-large`] to set the vertical
-        margins. It adds a solid border with the width set to
-        [sref:`Theme.Variables.BasicSCSS.padding-minimal`], the border radius to
+        The container is uses [sref:`$padding-large`] to set the vertical margins. It adds a solid
+        border with the width set to [sref:`$padding-minimal`], the border radius to
         [sref:`Theme.Variables.LightCSS.color-link`], and the color to
         [sref:`Theme.Variables.LightCSS.gray-200`] or [sref:`Theme.Variables.LightCSS.gray-200`]
         depending on the value of the [sref:`Theme.Config.Mode`] setting.
@@ -1189,15 +1188,15 @@ properties:
         ```
 
         The labels are added as inline blocks, allowing them to display side-by-side. They're use
-        the value of [sref:`Theme.Variables.BasicSCSS.padding-medium`] for the vertical padding
-        and [sref:`Theme.Variables.BasicSCSS.padding-large`] for the horizontal padding.
+        the value of [sref:`$padding-medium`] for the vertical padding
+        and [sref:`$padding-large`] for the horizontal padding.
 
-        They get a transparent bottom border with the width set to [sref:`Theme.Variables.BasicSCSS.padding-minimal`]
+        They get a transparent bottom border with the width set to [sref:`$padding-minimal`]
         and have their cursor always display as a normal pointer.
 
         When the input for a label is checked, the label's border color switches from being
-        transparent to the value of [sref:`Theme.Variables.LightCSS.color-link`] or [sref:`Theme.Variables.LightCSS.color-link`]
-        depending on the [sref:`Theme.Config.Mode`].
+        transparent to the value of [sref:`Theme.Variables.LightCSS.color-link`] or
+        [sref:`Theme.Variables.LightCSS.color-link`] depending on the [sref:`Theme.Config.Mode`].
 
         When the input for a label is focused, the label uses the [sref:`Theme.Styles.Utils.Outline`]
         mixin to add a full box outline to the label.
@@ -1218,11 +1217,12 @@ properties:
         }
         ```
 
-        The tabs are all set to have an [sref:`order`] of 999, putting them together at the end of the
-        flex box. They're set to have a width of 100% of their container and given a solid top
-        border with a width of [sref:`Theme.Variables.BasicSCSS.padding-minimal`] and their color set to
-        either [sref:`Theme.Variables.LightCSS.gray-200`] or [sref:`Theme.Variables.DarkCSS.gray-200`]
-        depending on the [sref:`Theme.Config.Mode`]. Their padding is set to [sref:`Theme.Variables.BasicSCSS.padding-large`].
+        The tabs are all set to have an [sref:`order`] of 999, putting them together at the end of
+        the flex box. They're set to have a width of 100% of their container and given a solid top
+        border with a width of [sref:`$padding-minimal`] and their color set to either
+        [sref:`Theme.Variables.LightCSS.gray-200`] or [sref:`Theme.Variables.DarkCSS.gray-200`]
+        depending on the [sref:`Theme.Config.Mode`]. Their padding is set to
+        [sref:`$padding-large`].
 
         Finally, their display is set to `none` so they're hidden until selected. When a tab is
         selected, the display is changed `block`, making it visible.
@@ -1230,8 +1230,8 @@ properties:
         ### Overriding
 
         You can overwrite this definition for your own site or theme by creating the file
-        `styles/shortcodes/_tabs.scss` in your [assets folder][02], which defaults to `assets` in
-        your project root.
+        `styles/markdown/_tabs.scss` in your [assets folder][02], which defaults to `assets` in your
+        project root.
 
         ```details { .danger summary="Careful!" }
         Note that if you create this file, it _entirely overwrites_ the default from the theme.
@@ -1248,15 +1248,84 @@ properties:
         [sref:`overflow`]: mdn.css:overflow
         [sref:`Theme.Config.Mode`]: Platen.Site.Theme.Config.Mode
         [sref:`Theme.Styles.Utils.Outline`]: Platen.Site.Theme.Styles.Utils.Outline
-        [sref:`Theme.Variables.BasicSCSS.border-radius`]: Platen.Site.Theme.Variables.BasicSCSS.border-radius
-        [sref:`Theme.Variables.BasicSCSS.padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
-        [sref:`Theme.Variables.BasicSCSS.padding-medium`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
-        [sref:`Theme.Variables.BasicSCSS.padding-minimal`]: Platen.Site.Theme.Variables.BasicSCSS.padding-minimal
+        [sref:`$border-radius`]: Platen.Site.Theme.Variables.BasicSCSS.border-radius
+        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`$padding-medium`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`$padding-minimal`]: Platen.Site.Theme.Variables.BasicSCSS.padding-minimal
         [sref:`Theme.Variables.DarkCSS.gray-200`]: Platen.Site.Theme.Variables.DarkCSS.gray-200
         [sref:`Theme.Variables.DarkCSS.link-color`]: Platen.Site.Theme.Variables.DarkCSS.link-color
         [sref:`Theme.Variables.LightCSS.gray-200`]: Platen.Site.Theme.Variables.LightCSS.gray-200
         [sref:`Theme.Variables.LightCSS.link-color`]: Platen.Site.Theme.Variables.LightCSS.link-color
         [sref:flex box]: mdn.css:CSS_Flexible_Box_Layout
+        [sref:radio input]: mdn.html.element:input/radio
+        [sref:label]: mdn.html.element:label
+    type: object
+  Button:
+    title: Button Style Module
+    description: Defines the style for button render hooks.
+    schematize:
+      details: |
+        Defines default styling for buttons created by render hooks.
+
+        When you use a [`button`][01] render hook, the following SCSS is applied:
+
+        ```scss
+        .markdown a.platen-btn {
+          display: inline-block;
+          font-size: $font-size-medium;
+          color: var(--color-link);
+          line-height: $padding-large * 2;
+          padding: 0 $padding-large;
+          border: $padding-minimal solid var(--color-link);
+          border-radius: $border-radius;
+          cursor: pointer;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+        ```
+
+        The button is created as an anchor ([sref:`<a>`]) element with the `platen-btn` class.
+
+        It sets the display to [sref:`inline-block`] so the button can be added in the body text of
+        a paragraph. It sets the font-size to the value of [sref:`$font-size-medium`], the text
+        color to [sref:`LightCSS.color-link`] or [sref:`DarkCSS.color-link`] depending on the value
+        of the [sref:`Theme.Config.Mode`] setting.
+
+        It sets the horizontal padding for the button to [sref:`$padding-large`] and the line height
+        to twice that value.
+
+        It adds a minimal solid border with the width set to [sref:`$padding-minimal`], the color to
+        either [sref:`LightCSS.color-link`] or [sref:`DarkCSS.color-link`], and the radius to
+        [sref:`$border-radius`].
+
+        It ensures that the cursor is a normal pointer and that no text decoration is added when a
+        site visitor hovers on the button.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/markdown/_button.scss` in your [assets folder][02], which defaults to `assets` in
+        your project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide][03].
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/shortcodes/button
+        [02]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [03]: https://sass-lang.com/guide
+        [sref:`<a>`]: mdn.html.element:a
+        [sref:`inline-block`]: mdn.css:display-legacy
+        [sref:`Theme.Config.Mode`]: Platen.Site.Theme.Config.Mode
+        [sref:`$border-radius`]: Platen.Site.Theme.Variables.BasicSCSS.border-radius
+        [sref:`$font-size-medium`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-medium
+        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`$padding-minimal`]: Platen.Site.Theme.Variables.BasicSCSS.padding-minimal
+        [sref:`DarkCSS.color-link`]: Platen.Site.Theme.Variables.DarkCSS.color-link
+        [sref:`LightCSS.color-link`]: Platen.Site.Theme.Variables.LightCSS.color-link
     type: object
 patternProperties:
   ".":

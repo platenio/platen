@@ -33,46 +33,50 @@ properties:
         $ref: ./Features/Art.yaml
         schematize:
           weight: 1
+      Button:
+        $ref: ./Features/Button.yaml
+        schematize:
+          weight: 2
       Columns:
         $ref: ./Features/Columns.yaml
         schematize:
-          weight: 2
+          weight: 3
       Comments:
         $ref: ./Features/Comments.yaml
         schematize:
-          weight: 3
+          weight: 4
       Details:
         $ref: ./Features/Details.yaml
         schematize:
-          weight: 4
+          weight: 5
       Itch:
         $ref: ./Features/Itch.yaml
         schematize:
-          weight: 5
+          weight: 6
       Katex:
         $ref: ./Features/Katex.yaml
         schematize:
-          weight: 6
+          weight: 7
       Mermaid:
         $ref: ./Features/Mermaid.yaml
         schematize:
-          weight: 7
+          weight: 8
       PortableLinks:
         $ref: ./Features/PortableLinks.yaml
         schematize:
-          weight: 8
+          weight: 9
       PWA:
         $ref: ./Features/PWA.yaml
         schematize:
-          weight: 9
+          weight: 10
       Search:
         $ref: ./Features/Search.yaml
         schematize:
-          weight: 10
+          weight: 11
       Tabs:
         $ref: ./Features/Tabs.yaml
         schematize:
-          weight: 11
+          weight: 12
     patternProperties:
       ".":
         $ref: ./Features/Defining.yaml
@@ -96,10 +100,6 @@ properties:
         Shortcodes defined in this way must not depend on each other.
     type: object
     properties:
-      button:
-        $ref: ./Shortcodes/button.yaml
-        schematize:
-          weight: 2
       katex:
         $ref: ./Shortcodes/katex.yaml
         schematize:

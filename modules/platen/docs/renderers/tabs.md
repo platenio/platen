@@ -119,7 +119,7 @@ the `example` class for the tab group still applies.
 ```tab
 ---
 id: deprecated-yaml
-name: Tab with 'deprecated' Class
+name: Tab with Class
 class: deprecated
 ---
 

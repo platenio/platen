@@ -132,6 +132,8 @@ Platen:
           Enabled: true
         Tabs:
           Enabled: true
+        Button:
+          Enabled: true
       Utils:
         Basic:
           Enabled: true
@@ -186,6 +188,11 @@ Platen:
       Partials:
         Renderers:
           Image: platen/features/art/image
+    Button:
+      Enabled: true
+      Partials:
+        Renderers:
+          Image: platen/features/button/image
     Columns:
       Enabled: true
       Partials:
@@ -225,18 +232,10 @@ Platen:
     PortableLinks:                            # BookPortableLinks
       Enabled: true
   Shortcodes:
-    button:
-      Enabled: true
-      Style:
-        Name: button
     katex:
       Enabled: true
     section:
       Enabled: true
-    # tabs:
-    #   Enabled: true
-    #   Style:
-    #     Name: tabs
   Repository:
     CommitPath: commit                        # BookCommitPath
     EditPath: edit/main                       # BookEditPath

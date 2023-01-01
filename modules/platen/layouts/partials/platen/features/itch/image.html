@@ -19,8 +19,8 @@
 
 {{- range $prefix := $prefixes -}}
   {{- if and (not $hasPrefix) (hasPrefix $text $prefix) -}}
-    {{- $hasPrefix = true -}}
-    {{- $alt       = strings.TrimPrefix $prefix $text }}
+    {{- $hasPrefix = true                             -}}
+    {{- $alt       = strings.TrimPrefix $prefix $text -}}
   {{- end -}}
 {{- end -}}
 

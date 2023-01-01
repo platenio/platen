@@ -60,7 +60,7 @@ This example uses the `class` attribute to add classes to the rendered
 div. Together, these classes change how the KaTeX is displayed after
 it's rendered.
 <!--- Example Start -->
-```katex { .docs .example .katex }
+```katex { .example .katex }
 x={\frac {-b\pm {\sqrt {b^{2}-4ac}}}{2a}}
 ```
 ``````
