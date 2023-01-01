@@ -88,12 +88,12 @@ don't have to remember how the embed URL is constructed or how to use an `<ifram
 
 ## Inputs
 
-This section describes how the normal markdown input for images works with the art render hook.
+This section describes how the normal markdown input for images works with the itch render hook.
 
 Images use this syntax for their inputs:
 
 ```markdown
-![alt_text](source 'title')
+![alt_text](source)
 ```
 
 ### `alt_text` (as `title`)

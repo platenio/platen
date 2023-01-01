@@ -22,3 +22,53 @@ div.platen-menu-content nav > ul:not([class^="platen"]) {
   // margin-bottom: 1em;
   margin-top: 2.5em;
 }
+
+a.platen-btn.example.flagrant {
+  border-color: pink;
+  background-color: rgba(pink, 0.1);
+  color: var(--body-font-color);
+}
+
+div.platen-columns.example {
+  color: pink;
+  background-color: rgba(pink, 0.1);
+  color: var(--body-font-color);
+
+  div.lead {
+    border-color: cyan;
+    background-color: rgba(cyan, 0.1);
+    color: var(--body-font-color);
+  }
+
+  div.follow {
+    border-color: yellow;
+    background-color: rgba(yellow, 0.1);
+    color: var(--body-font-color);
+  }
+}
+
+div.example.katex {
+  background-color: rgba(cyan, 0.1);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+div.platen-tabs.example {
+  border-color: pink;
+  background-color: rgba(pink, 0.1);
+
+  input[type="radio"]:checked + label {
+    border-bottom-color: magenta;
+  }
+
+  label.deprecated::after {
+    content: "(Deprecated!)";
+  }
+
+  div.deprecated {
+    color: (grayscale($color: cyan));
+    @media(prefers-color-scheme: dark) {
+      color: rgba(cyan, 0.5);
+    }
+  }
+}
