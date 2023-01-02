@@ -134,6 +134,8 @@ Platen:
           Enabled: true
         Button:
           Enabled: true
+        Section:
+          Enabled: true
       Utils:
         Basic:
           Enabled: true
@@ -229,6 +231,11 @@ Platen:
       Partials:
         Renderers:
           Codeblock: platen/features/tabs/codeblock
+    Section:
+      Enabled: true
+      Partials:
+        Renderers:
+          Codeblock: platen/features/section/codeblock
     PortableLinks:                            # BookPortableLinks
       Enabled: true
   Shortcodes:

@@ -16,7 +16,8 @@ For more information on each set of style modules, see their documentation. For 
 about defining a new style module or group of style modules, see [sref:Defined Style Module] and the
 [Theme Guide][01].
 
-{{< section >}}
+```section
+```
 
 <!-- Link References -->
 [01]: /styling

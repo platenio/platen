@@ -56,7 +56,8 @@ x={\frac {-b\pm {\sqrt {b^{2}-4ac}}}{2a}}
 
 For more information about a specific renderer, see its documentation.
 
-{{< section >}}
+```section
+```
 
 <!-- Link References -->
 [01]: {{% ref "/using/concepts/shortcodes.md" %}}

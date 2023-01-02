@@ -19,7 +19,8 @@ The [sref:Dark] and [sref:Light] custom CSS properties are used for the site's [
 other style modules to reference a shared set of property names depending on the site configuration
 or, if the site's mode is set to `auto`, their own operating system preferences.
 
-{{< section >}}
+```section
+```
 
 <!-- Reference Links -->
 [sref:Basic SCSS variables]: Platen.Site.Theme.Variables.BasicSCSS

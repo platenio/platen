@@ -13,4 +13,5 @@ in any style module, these settings provide an easier and more discoverable way 
 For more information, see the detailed documentation for adding a mapped font style and defining
 site-wide font settings.
 
-{{< section >}}
+```section
+```

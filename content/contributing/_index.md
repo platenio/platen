@@ -7,4 +7,5 @@ Platen:
     CollapseSection: true
 ---
 
-{{< section >}}
+This section is a handbook for contributing to Platen's development. It will explain how you can
+submit bug and feature requests, add new features, help provide translations, and more.

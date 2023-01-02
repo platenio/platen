@@ -73,10 +73,14 @@ properties:
         $ref: ./Features/Search.yaml
         schematize:
           weight: 11
+      Section:
+        $ref: ./Features/Section.yaml
+        schematize:
+          weight: 12
       Tabs:
         $ref: ./Features/Tabs.yaml
         schematize:
-          weight: 12
+          weight: 13
     patternProperties:
       ".":
         $ref: ./Features/Defining.yaml
@@ -104,10 +108,6 @@ properties:
         $ref: ./Shortcodes/katex.yaml
         schematize:
           weight: 6
-      section:
-        $ref: ./Shortcodes/section.yaml
-        schematize:
-          weight: 7
     patternProperties:
       ".":
         $ref: ./Shortcodes/Valid.yaml
