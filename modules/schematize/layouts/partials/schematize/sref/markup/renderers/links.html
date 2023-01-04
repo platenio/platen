@@ -1,6 +1,11 @@
-{{- $params := . -}}
-{{- $prefix := "sref:" -}}
-{{- $linkText := "" -}}
+{{- $params      := .                                    -}}
+{{- $config      := site.Params.Platen.Markup.Schematize -}}
+{{- $page        := $params.Page                         -}}
+{{- $destination := $params.Destination                  -}}
+{{- $title       := $params.Title                        -}}
+{{- $text        := $params.PlainText                    -}}
+{{- $prefix      := "sref:"                              -}}
+{{- $linkText    := ""                                   -}}
 
 {{/*
   Given the page has Schematize: Platen.Content.Post
@@ -9,8 +14,9 @@
   [sref:`color`](mdn.css:color) => [`color`] => [`color](https://mozilla.dev/web/css/color)
   [sref: `Baz`](Baz) => [`Baz`](/Schemas/Platen/Content/Post#baz)
 */}}
-{{- if hasPrefix $params.Text $prefix -}}
-  {{- $destinationInfo  := split $params.Destination ":" -}}
+
+{{- if hasPrefix $text $prefix -}}
+  {{- $destinationInfo  := split $destination ":" -}}
   {{- $reference := "" -}}
   {{- $refTarget := "schematize" -}}
   {{- if eq 1 (len $destinationInfo) -}}

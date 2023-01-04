@@ -222,4 +222,4 @@ The diagram syntax uses the standard Mermaid syntax for defining diagrams. For m
 [s01]: mdn.html.element:figure
 [s02]: mdn.html.element:p
 [s03]: mdn.html.element:figcaption
-[s04]: Platen.Site.Features.Mermaid
+[s04]: Platen.Site.Markup.Mermaid

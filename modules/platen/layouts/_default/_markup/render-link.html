@@ -6,21 +6,23 @@
 {{- range $feature := site.Params.Platen.Features -}}
   {{- if and $feature.Enabled (eq "" $renderedLink) -}}
     {{- with $feature.Partials.Renderers.Link -}}
-      {{- $renderedCode = partial . $params }}
-    {{- end -}}
-  {{- end -}}
-{{- end -}}
-
-{{- range $renderer := .Page.Site.Params.Platen.Markup.LinkRenderers -}}
-  {{- if and $renderer.Enabled (eq "" $renderedLink) -}}
-    {{- with $renderer.Partial -}}
       {{- $renderedLink = partial . $params }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
+{{/* Use arbitrary renderers if no feature applied */}}
+{{- range $markup := site.Params.Platen.Markup -}}
+  {{- if and $markup.Enabled (eq "" $renderedLink) -}}
+    {{- with $markup.Partials.Renderers.Link -}}
+      {{- $renderedLink = partial . $params }}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Render the link or use the default renderer if needed */}}
 {{- with $renderedLink -}}
   {{- safeHTML $renderedLink -}}
 {{- else -}}
-  {{- partial "platen/markup/renderers/links/default" $params -}}
+  {{- partial "platen/markup/_default/link" $params -}}
 {{- end -}}

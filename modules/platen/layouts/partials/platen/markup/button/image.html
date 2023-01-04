@@ -1,0 +1,64 @@
+{{- $params      := .                                  -}}
+{{- $config      := site.Params.Platen.Markup.Button   -}}
+{{- $page        := $params.Page                       -}}
+{{- $destination := $params.Destination                -}}
+{{- $title       := $params.Title                      -}}
+{{- $text        := $params.PlainText                  -}}
+{{- $isBlock     := $params.IsBlock                    -}}
+{{- $ordinal     := $params.Ordinal                    -}}
+
+{{- $renderedImage := "" -}}
+
+{{- $prefixes := slice "button:" "btn:" -}}
+{{- range $alias := $config.aliases -}}
+  {{- $prefixes = $prefixes | append (printf "%s:" $alias) -}}
+{{- end -}}
+
+{{- $hasPrefix := false -}}
+{{- $alt       := $text -}}
+
+{{- range $prefix := $prefixes -}}
+  {{- if and (not $hasPrefix) (hasPrefix $text $prefix) -}}
+    {{- $hasPrefix = true                             -}}
+    {{- $alt       = strings.TrimPrefix $prefix $text -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $hasPrefix -}}
+  {{- with $destination -}}
+    {{/*
+      Handle the alt text. If it's provided, render as inner HTML. Otherwise, assume the use of a
+      preset which should define the text.
+    */}}
+    {{- $innerHTML := "" -}}
+    {{- with $alt -}}
+      {{- $renderParams := dict "Page" $page "Content" $alt "IndentCount" 2 "AsBlock" false -}}
+      {{- $innerHTML     = partial "platen/utils/getPrettyRender" $renderParams             -}}
+    {{- else -}}
+      {{/* Assume preset, implement later */}}
+      {{- warnf "Finding button preset %s" $destination -}}
+    {{- end -}}
+
+    {{/* Initialize the list of button classes */}}
+    {{- $classes := slice "platen-btn" -}}
+
+    {{/* If the image is a block, handle the attributes. */}}
+    {{- if $isBlock -}}
+      {{- with $params.Attributes.class -}}
+        {{- $classes = $classes | append (split . " ") -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- $buttonAttributes := slice (printf `href="%s"` $destination)
+                                   (printf `class="%s"` (delimit $classes " "))
+    -}}
+
+    {{- $attributeParams := dict "Attributes" $buttonAttributes "IndentCount" 3       -}}
+    {{- $buttonAttributes = partial "platen/utils/getSafeAttributes" $attributeParams -}}
+    {{- $renderedImage    = printf "<a %s>\n  %s\n</a>" $buttonAttributes $innerHTML  -}}
+  {{- else -}}
+    {{- errorf (i18n "ErrorButtonMissingDestination" .) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $renderedImage -}}

@@ -189,24 +189,24 @@ properties:
             [sref:`Display.TableOfContents.OrderedList`]: Platen.Site.Display.Settings.TableOfContents.OrderedList
         type: boolean
         default: false
-  Features:
-    title: Feature Options
-    description: Control feature-specific behavior for this page, overriding site-level defaults.
+  Markup:
+    title: Markup Options
+    description: Control markup-specific behavior for this page, overriding site-level defaults.
     schematize:
       weight: 6
       details: |
-        Specifies a map of options for Platen features, allowing you to override site-level defaults
-        for a feature on a per-page basis.
+        Specifies a map of options for Platen markup, allowing you to override site-level defaults
+        for a markup on a per-page basis.
       skipSchemaRender: true
     type: object
     properties:
       Katex:
-        $ref: ./Features/Katex.yaml
+        $ref: ./Markup/Katex.yaml
         schematize:
           weight: 1
           skipSchemaRender: true
       Mermaid:
-        $ref: ./Features/Mermaid.yaml
+        $ref: ./Markup/Mermaid.yaml
         schematize:
           weight: 2
           skipSchemaRender: true

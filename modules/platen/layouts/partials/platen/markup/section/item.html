@@ -1,0 +1,59 @@
+{{- $params  := .                               -}}
+{{- $page    := $params.Page                    -}}
+{{- $recurse := $params.Recurse | default false -}}
+{{- $depth   := $params.Depth   | default 0     -}}
+
+{{/* Determine leading whitespace */}}
+{{- $lead := strings.Repeat 4 " " -}}
+{{- if gt $depth 0 -}}
+  {{- $lead = strings.Repeat (mul (add 3 $depth) 2) " " -}}
+{{- end -}}
+{{- $lineDelimiter := printf "\n%s" $lead -}}
+
+{{/* Define term values */}}
+{{- $termUrl   := $page.RelPermalink                                                    -}}
+{{- $termTitle := partial "platen/utils/getTitle" (dict "Context" $page "ForList" true) -}}
+{{/*
+  We use the with/else here and access $page.Params.summary instead of $page.Summary in the default
+  function to avoid infinite recursion for pages with a section codeblock where the page is included
+  in the root section; in those cases, the .Summary has to render the page, then truncate it, which
+  means that the codeblock is called again from inside itself forever.
+
+  Despite the documentation, setting `summary` in the front matter or specifying the magic more
+  comment before the summary block doesn't fix this.
+*/}}
+{{- $termText  := $page.Description | default $page.Params.summary -}}
+{{- with $termText -}}
+  {{- $termText = $page.RenderString $termText -}}
+{{- else -}}
+  {{- $termText = $page.Summary -}}
+{{- end -}}
+
+{{/* Handle recursion for child pages that are folders by adding a nested description list */}}
+{{- if and (eq true $recurse) (gt (len $page.Pages) 0) -}}
+  {{- $childEntries := slice -}}
+  {{- range $child := $page.Pages -}}
+    {{- $childParams := dict "Page" $child "Recurse" $recurse "Depth" (add 1 $depth) -}}
+    {{- $childEntry  := partial "platen/markup/section/item" $childParams          -}}
+    {{- $childEntries = $childEntries | append $childEntry                           -}}
+  {{- end -}}
+  {{- $childEntries = delimit $childEntries "\n"                                               -}}
+  {{- $termText     = printf "%s\n%s  <dl>\n%s\n%s  </dl>" $termText $lead $childEntries $lead -}}
+{{- end -}}
+
+{{/* Build list of render strings */}}
+{{- $renderStrings := slice "<dt>"
+                            (printf `  <a href="%s">` $termUrl)
+                            (printf "    %s"          $termTitle)
+                            "  </a>"
+                            "</dt>"
+                            `<dd class="markdown-inner">`
+                            (printf "  %s" $termText)
+                            "</dd>"
+-}}
+
+{{/* Delimit then re-split for pre-existing newlines */}}
+{{- $renderedItem  := printf "%s%s" $lead (delimit $renderStrings $lineDelimiter) -}}
+
+{{/* return the block */}}
+{{- return $renderedItem -}}

@@ -6,23 +6,23 @@
 {{- range $feature := site.Params.Platen.Features -}}
   {{- if and $feature.Enabled (eq "" $renderedHeading) -}}
     {{- with $feature.Partials.Renderers.Heading -}}
-      {{- $renderedCode = partial . $params }}
-    {{- end -}}
-  {{- end -}}
-{{- end -}}
-
-{{/* Use arbitrary renderers if no feature applied */}}
-{{- range $renderer := .Page.Site.Params.Platen.Markup.HeadingRenderers -}}
-  {{- if and $renderer.Enabled (eq "" $renderedHeading) -}}
-    {{- with $renderer.Partial -}}
       {{- $renderedHeading = partial . $params }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
-{{/* Render the link or use the default renderer if needed */}}
+{{/* Use arbitrary renderers if no feature applied */}}
+{{- range $markup := site.Params.Platen.Markup -}}
+  {{- if and $markup.Enabled (eq "" $renderedHeading) -}}
+    {{- with $markup.Partials.Renderers.Heading -}}
+      {{- $renderedHeading = partial . $params }}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Render the heading or use the default renderer if needed */}}
 {{- with $renderedHeading -}}
   {{- safeHTML $renderedHeading -}}
 {{- else -}}
-  {{- partial "platen/markup/renderers/headings/default" $params -}}
+  {{- partial "platen/markup/_default/heading" $params -}}
 {{- end -}}

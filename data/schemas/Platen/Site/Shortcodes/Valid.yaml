@@ -68,7 +68,7 @@ properties:
         You can define any other key-value pairs here, which can then used in the
         shortcode's style module when rendered as a template.
 
-        [sref:`Name`]: Platen.Site.Theme.Config.Shortcodes
+        [sref:`Name`]: Platen.Site.Config.Shortcodes
     type: object
     required:
       - Name

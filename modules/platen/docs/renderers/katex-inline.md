@@ -121,15 +121,15 @@ By default, any text wrapped in the following tag pairs is rendered:
 
 You can also use configuration to define how KaTeX behaves on your Platen site. If you want to use
 KaTeX rendering inside of a codeblock, no special configuration is required as long as you haven't
-set [sref:`Platen.Features.Katex.Enabled`][s02] to `false` in your site configuration.
+set [sref:`Platen.Markup.Katex.Enabled`][s02] to `false` in your site configuration.
 
 If you want to ensure you can use math or chemistry markup on a page without using a codeblock or
-shortcode, you'll need to add [sref:`Platen.Features.Katex`][s03] to your page's front matter and
+shortcode, you'll need to add [sref:`Platen.Markup.Katex`][s03] to your page's front matter and
 set `AlwaysLoad` to `true` or set [sref:`AlwaysLoad` in your site configuration][s04] to `true`.
 
 ```memo-example-data
 Platen:
-  Features:
+  Markup:
     Katex:
       AlwaysLoad: true
 ```
@@ -146,7 +146,7 @@ For more information about the available options for configuring KaTeX site wide
 [03]: https://katex.org/docs/supported.html
 [04]: https://mhchem.github.io/MathJax-mhchem/
 [s01]: mdn.html.element:span
-[s02]: Platen.Site.Features.Katex.Enabled
-[s03]: Platen.Content.Features.Katex
-[s04]: Platen.Site.Features.Katex.AlwaysLoad
-[s05]: Platen.Site.Features.Katex
+[s02]: Platen.Site.Markup.Katex.Enabled
+[s03]: Platen.Content.Markup.Katex
+[s04]: Platen.Site.Markup.Katex.AlwaysLoad
+[s05]: Platen.Site.Markup.Katex
