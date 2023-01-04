@@ -11,7 +11,8 @@ This section documents the available shortcodes that Platen provides. For more i
 shortcodes in general, see [Shortcodes][01]. For more information about a specific shortcode, see
 the specific documentation for each shortcode.
 
-{{< section >}}
+```section
+```
 
 <!-- Link References -->
 [01]: {{% ref "/using/concepts/shortcodes.md" %}}

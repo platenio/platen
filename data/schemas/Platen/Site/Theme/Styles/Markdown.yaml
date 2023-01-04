@@ -1327,6 +1327,53 @@ properties:
         [sref:`DarkCSS.color-link`]: Platen.Site.Theme.Variables.DarkCSS.color-link
         [sref:`LightCSS.color-link`]: Platen.Site.Theme.Variables.LightCSS.color-link
     type: object
+  Section:
+    title: Section Style Module
+    description: Defines the style for section render hooks.
+    schematize:
+      details: |
+        Defines default styling for section blocks created by render hooks.
+
+        When you use a [`section`][01] render hook, the following SCSS is applied:
+
+        ```scss
+        .markdown div.platen-section {
+          dd dl {
+            padding-left: $padding-large;
+          }
+        }
+        ```
+
+        The section block is created as an div ([sref:`<div>`]) element with the `platen-section`
+        class. It contains optional leading rendered Markdown and a description list ([sref:`<dl>`])
+        where each term ([sref:`<dt>`]) has the page's title as an anchor ([sref:`<a>`]) element
+        inside it and each definition ([sref:`<dd>`]) is the page's summary, rendered as inline
+        Markdown (without wrapping [sref:`<p>`] tags if the summary isn't more than one paragraph).
+
+        The only styling added is to ensure that nested description lists are indented by
+        [sref:`$padding-large`] so they're visually distinct from their parent item.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/markdown/_section.scss` in your [assets folder][02], which defaults to `assets` in
+        your project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide][03].
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/renderers/section
+        [02]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [03]: https://sass-lang.com/guide
+        [sref:`<a>`]: mdn.html.element:a
+        [sref:`<div>`]: mdn.html.element:div
+        [sref:`<dl>`]: mdn.html.element:dl
+        [sref:`<dt>`]: mdn.html.element:dt
+        [sref:`<dd>`]: mdn.html.element:dd
+        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+    type: object
 patternProperties:
   ".":
     $ref: ./Defined.yaml

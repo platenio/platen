@@ -11,6 +11,7 @@ Platen is built with a collection of [Hugo modules][01] to make authoring your d
 and more interactive than with Markdown alone. Each module provides functionality you might find
 useful.
 
-{{< section >}}
+```section
+```
 
 [01]: https://gohugo.io/hugo-modules/

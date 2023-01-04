@@ -9,4 +9,5 @@ Platen:
 
 Filler text.
 
-{{< section >}}
+```section
+```

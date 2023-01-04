@@ -16,7 +16,8 @@ The settings in this section represent Platen's built-in shortcodes.
 For more information about defining a valid shortcode style module entry, see
 [sref:Valid Definitions]
 
-{{< section >}}
+```section
+```
 
 <!-- Link References -->
 [sref:Valid Definitions]: Platen.Site.Shortcodes.Valid

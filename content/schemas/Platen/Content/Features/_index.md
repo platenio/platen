@@ -7,4 +7,5 @@ Platen:
     CollapseSection: true
 ---
 
-{{< section >}}
+```section
+```
