@@ -217,8 +217,7 @@ Platen doesn't use this rendering inside of inline code.
 Be mindful when using a display mode syntax outside of a codeblock that the display mode rendering
 breaks normal paragraph flow.
 
-By default, any
-text wrapped in the following tag pairs is rendered:
+By default, any text wrapped in the following tag pairs is rendered:
 
 - Inline Mode Syntaxes:
   - `\\(...\\)`

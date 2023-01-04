@@ -103,11 +103,6 @@ properties:
 
         Shortcodes defined in this way must not depend on each other.
     type: object
-    properties:
-      katex:
-        $ref: ./Shortcodes/katex.yaml
-        schematize:
-          weight: 6
     patternProperties:
       ".":
         $ref: ./Shortcodes/Valid.yaml

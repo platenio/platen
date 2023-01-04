@@ -1,0 +1,75 @@
+{{- $params      := .                                 -}}
+{{- $config      := site.Params.Platen.Features.Katex -}}
+{{- $aliases     := $config.aliases                   -}}
+{{- $page        := $params.Page                      -}}
+{{- $destination := $params.Destination               -}}
+{{- $title       := $params.Title                     -}}
+{{- $text        := $params.PlainText                 -}}
+{{- $isBlock     := $params.IsBlock                   -}}
+{{- $ordinal     := $params.Ordinal                   -}}
+
+{{- $renderedImage := "" -}}
+
+{{- $prefixes := slice "button:" "btn:" -}}
+{{- $mathPrefixes := slice "katex" "math" -}}
+{{- $chemPrefixes  := slice "chem"         -}}
+{{- with $aliases -}}
+  {{- if (reflect.IsSlice $aliases) -}}
+    {{- $mathPrefixes = union $mathPrefixes $aliases -}}
+  {{- else if (reflect.IsMap $aliases) -}}
+    {{- $mathAliases := $aliases.math -}}
+    {{- $chemAliases := $aliases.chem -}}
+    {{- with $mathAliases -}}
+      {{- if (reflect.IsMap $mathAliases) -}}
+        {{- errorf "Invalid definition for Platen.Features.Katex.Aliases.Group; must be one or more strings." -}}
+      {{- else if (reflect.IsSlice $mathAliases) -}}
+        {{- $mathPrefixes = union $mathPrefixes $mathAliases -}}
+      {{- else -}}
+        {{- $mathPrefixes = $mathPrefixes | append (print $mathAliases) -}}
+      {{- end  -}}
+    {{- end -}}
+    {{- with $chemAliases -}}
+      {{- if (reflect.IsMap $chemAliases) -}}
+        {{- errorf "Invalid definition for Platen.Features.Katex.Aliases.Entry; must be one or more strings." -}}
+      {{- else if (reflect.IsSlice $chemAliases) -}}
+        {{- $chemPrefixes = union $chemPrefixes $chemAliases -}}
+      {{- else -}}
+        {{- $chemPrefixes = $chemPrefixes | append (print $chemAliases) -}}
+      {{- end  -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $mathPrefixes = $mathPrefixes | append (print $aliases) -}}
+  {{- end  -}}
+{{- end -}}
+
+{{- $validPrefixes := apply (union $mathPrefixes $chemPrefixes) "printf" "%s:" "." -}}
+{{- $chemPattern   := `\\ce\{(.|\s)+?\}`                                           -}}
+
+{{- $hasPrefix := false -}}
+{{- $alt       := $text -}}
+
+{{- range $prefix := $validPrefixes -}}
+  {{- if and (not $hasPrefix) (hasPrefix $text $prefix) -}}
+    {{- $hasPrefix     = true                                                  -}}
+    {{- $alt           = strings.TrimPrefix $prefix $text                      -}}
+    {{- $params.Page.Store.Set "hasKatex" true                                 -}}
+    {{- $chemUsages   := findRE $chemPattern     $alt                          -}}
+    {{- $isChemPrefix := in     $chemPrefixes (strings.TrimSuffix ":" $prefix) -}}
+    {{- if or $isChemPrefix (gt $chemUsages 0) -}}
+      {{- $params.Page.Store.Set "hasChem" true -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $hasPrefix -}}
+  {{- with $alt -}}
+    {{- $formula      := printf "\\(%s\\)"        $alt     -}}
+    {{- $renderedImage = printf "<span>%s</span>" $formula -}}
+  {{- else -}}
+    {{- with $destination -}}
+      {{/* Assume preset, define later */}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $renderedImage -}}

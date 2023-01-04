@@ -5,10 +5,11 @@ title: KaTeX Options
 description: Optional settings for overriding KaTeX configuration on a content page.
 schematize:
   details: |
-    Defines optional settings for overriding [sref:site configuration] for the KaTeX rendering feature,
-    which enables you to use [KaTeX][01] markup in your content with the [`katex` shortcode][02],
-    the `chem`, `katex`, and `math` [codeblock rendering hooks][03], and even with KaTeX's own
-    open/closing tags in normal Markdown content if [sref:`AlwaysLoad`] is set to `true`.
+    Defines optional settings for overriding [sref:site configuration] for the KaTeX rendering
+    feature, which enables you to use [KaTeX][01] markup in your content with an [image link][02]
+    (that has the `chem:`, `katex:`, or `math:` prefix), [codeblock][03] (whose language ID is
+    `chem`, `katex`, and `math`), and even with KaTeX's own open/closing tags in normal Markdown
+    content if [sref:`AlwaysLoad`] is set to `true`.
 
     With KaTeX, you can write mathematical and chemical formulae in plaintext and render them as
     beautiful formula on your site.
@@ -16,7 +17,7 @@ schematize:
     [sref:`AlwaysLoad`]: Platen.Content.Features.Katex.AlwaysLoad
     [sref:site configuration]: Platen.Site.Features.Katex
     [01]:  https://katex.org/
-    [02]: /modules/platen/shortcodes/katex
+    [02]: /modules/platen/renderers/katex-inline
     [03]: /modules/platen/renderers/katex
 type: object
 properties:
@@ -27,8 +28,8 @@ properties:
       details: |
         Specifies whether this content should always load the KaTeX style and script modules and
         auto-render any valid KaTeX markup. By default, the modules and style code are only added to
-        pages where KaTeX markup is used with the codeblock render hook or the `katex` shortcode, or
-        when the site has `Platen.Features.Katex.AlwaysLoad` set to `true`.
+        pages where KaTeX markup is used with the codeblock render hook, image render hook, or when
+        the site has `Platen.Features.Katex.AlwaysLoad` set to `true`.
 
         When this setting is set to `true`, the modules are added to this content and will always
         be called to auto-render any valid KaTeX found in the content. This is useful when you want
