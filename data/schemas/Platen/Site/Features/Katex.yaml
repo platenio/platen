@@ -6,9 +6,10 @@ description: Settings that control the site's KaTeX feature.
 schematize:
   details: |
     These settings control Platen's KaTeX rendering feature. When this feature is enabled, you can
-    use [KaTeX][01] markup in your content with the [`katex` shortcode][02], the `chem`, `katex`,
-    and `math` [codeblock rendering hooks][03], and even with KaTeX's own open/closing tags in
-    normal Markdown content if [sref:`AlwaysLoad`] is set to `true`.
+    use [KaTeX][01] markup in your content with an [image link][02] (that has the `chem:`, `katex:`,
+    or `math:` prefix), [codeblock][03] (whose language ID is `chem`, `katex`, and `math`), and even
+    with KaTeX's own open/closing tags in normal Markdown content if [sref:`AlwaysLoad`] is set to
+    `true`.
 
     With KaTeX, you can write mathematical and chemical formulae in plaintext and render them as
     beautiful formula on your site.
@@ -17,7 +18,7 @@ schematize:
 
     <!-- Reference Links -->
     [01]:  https://katex.org/
-    [02]: /modules/platen/shortcodes/katex
+    [02]: /modules/platen/renderers/katex-inline
     [03]: /modules/platen/renderers/katex
     [sref:`AlwaysLoad`]: Platen.Site.Features.Katex.AlwaysLoad
     [sref:content-level]: Platen.Content.Features.Katex
@@ -43,7 +44,7 @@ properties:
       details: |
         Choose whether the KaTeX style and library modules are always added to site pages. By
         default, the modules and style code are only added to pages where KaTeX markup is used
-        with the codeblock render hook or the `katex` shortcode, or where the page's front matter
+        with the codeblock render hook, the image render hook, or where the page's front matter
         has [sref:`Platen.Features.Katex.AlwaysLoad`] set to `true`.
 
         When this setting is set to `true`, the modules are added to every page and will always
@@ -82,54 +83,65 @@ properties:
     schematize:
       weight: 3
       details: |
-        Define one or more language IDs to use in addition to the default language IDs for codeblocks
-        that render KaTeX markup. The default language IDs for math markup are `katex` and `math.
-        The default for chemistry markup is `chem`.
+        Define one or more aliases to use in addition to the default language IDs for codeblocks and
+        alt text prefixes for image links
+        that render KaTeX markup.
+
+        The default language IDs for codeblocks are `katex` and `math` for math markup and `chem`
+        for chemistry markup. The default prefixes for image links are `katex:` and `math:` for math
+        markup and `chem:` for chemistry markup.
 
         You can specify a string, a map, or an array of strings or maps for this value. If the value
-        is an array, each item in the array is added as an alias.
+        is an array, each item in the array is added as an alias. Do not add a `:` suffix to any
+        value.
 
-        String values are added as valid language IDs for the non-chemistry codeblocks in addition to
-        `katex` and `math`.
+        String values are added as valid language IDs/prefixes for the non-chemistry codeblocks in
+        addition to `katex` and `math`.
         
-        Map values must have either the `Math` or `Chemistry` key with a string value. If you
-        define a value for `Math`, it becomes a valid language ID for math markup codeblock. If
-        you define a value for `Chemistry`, it becomes a valid language ID for chemistry markup
-        codeblocks, which add the chemistry libraries even if you don't use a chemistry syntax. You
-        can specify both in a single map but don't have to.
+        Map values must have either the `Math` or `Chemistry` key with a string value. If you define
+        a value for `Math`, it becomes a valid language ID and prefix for math markup codeblocks and
+        image links respectively. If you define a value for `Chemistry`, it becomes a valid language
+        ID and prefix for chemistry markup codeblocks and image links respectively, which add the
+        chemistry libraries even if you don't use a chemistry syntax. You can specify both in a
+        single map but don't have to.
     oneOf:
       - type: array
         items:
           oneOf:
           - type: object
             description: >-
-              A map defining either/both an alias for the math and chemistry codeblock language ID.
+              A map defining either/both an alias for the math and chemistry codeblock language ID
+              and image link alt text prefix.
             properties:
               Chemistry:
                 title: Chemistry Alias
                 description: >-
-                  Alias for the chemistry-rendering codeblock language ID, (default is 'chem').
+                  Alias for the chemistry-rendering codeblock language ID and image link prefix,
+                  (default is 'chem').
                 type: string
               Math:
                 title: Math Alias
                 description: >-
-                  Alias for the math-rendering codeblock language ID, (defaults are 'katex' and
-                  `math`).
+                  Alias for the math-rendering codeblock language ID and image link prefix,
+                  (defaults are 'katex' and `math`).
                 type: string
           - type: string
       - type: object
         description: >-
-          A map defining either/both an alias for the math and chemistry codeblock language ID.
+          A map defining either/both an alias for the math and chemistry codeblock language ID
+          and image link alt text prefix.
         properties:
           Chemistry:
             title: Chemistry Alias
             description: >-
-              Alias for the chemistry-rendering codeblock language ID, (default is 'chem').
+              Alias for the chemistry-rendering codeblock language ID and image link prefix,
+              (default is 'chem').
             type: string
           Math:
             title: Group Alias
             description: >-
-              Alias for the math-rendering codeblock language ID, (defaults are 'katex' and `math`).
+              Alias for the math-rendering codeblock language ID and image link prefix, (defaults
+              are 'katex' and `math`).
             type: string
       - type: string
   Partials:
@@ -228,3 +240,33 @@ properties:
                 [02]: /styling
             type: string
             default: platen/features/katex/codeblock
+          Image:
+            title: Image Render Hook Partial
+            description: Adds a partial to call when processing the image link render hook.
+            schematize:
+              details: |
+                Adds support for KaTeX and mhchem markup rendering for content. This render hook is
+                only processed when the alt text for an image link has the `chem:`, `katex:`, or
+                `math:` prefix.
+
+                It registers the current page as having KaTeX, which ensures the library and style
+                modules are loaded for automatic rendering. If the codeblock uses the `\ce{...}` tag
+                or has the `chem:` prefix, it registers the current page as having chemistry markup
+                and ensures the mhchem KaTeX plugin is loaded as well.
+
+                It renders the alt text (with the prefix trimmed away) as a `span` element, denoting it as
+                inline-mode KaTeX.
+
+                This value defaults to `platen/features/katex/image`. You can replace it with a
+                different value, defining a new partial, or override the existing partial by
+                creating the file `layouts/partials/platen/features/katex/image.html` in your own
+                site or module.
+
+                For more information about defining image link render hook partials, see
+                [Defining an Image Link Render Hook Partial][01] in the [Theme Guide][02].
+
+                <!-- Reference Links -->
+                [01]: /styling
+                [02]: /styling
+            type: string
+            default: platen/features/katex/image

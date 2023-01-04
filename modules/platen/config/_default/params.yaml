@@ -218,6 +218,7 @@ Platen:
         Header: platen/features/katex/header
         Renderers:
           Codeblock: platen/features/katex/codeblock
+          Image: platen/features/katex/image
     Mermaid:
       Enabled: true
       Version: 9.3.0
