@@ -13,7 +13,7 @@ schematize:
     to add or replace.
 
     <!-- Reference Links -->
-    [01]: /modules/platen/renderers/button
+    [01]: /modules/platen/markup/buttons
 type: object
 properties:
   Enabled:
@@ -104,7 +104,7 @@ properties:
                 [Defining a Codeblock Render Hook Partial][02] in the [Theme Guide][03].
 
                 <!-- Reference Links -->
-                [01]: /modules/platen/renderers/button
+                [01]: /modules/platen/markup/buttons
                 [02]: /styling
                 [03]: /styling
             type: string
@@ -170,7 +170,7 @@ properties:
         For more information on authoring SCSS, see the [learning guide][03].
 
         <!-- Reference Links -->
-        [01]: /modules/platen/shortcodes/button
+        [01]: /modules/platen/markup/buttons
         [02]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
         [03]: https://sass-lang.com/guide
         [sref:`<a>`]: mdn.html.element:a

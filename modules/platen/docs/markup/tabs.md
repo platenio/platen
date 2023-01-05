@@ -1,5 +1,6 @@
 ---
-title: tabs
+title: Tabs
+weight: 210
 summary: >-
   Documentation on the `tabs` language ID for codeblocks, which enables you to format content as
   tabs in a card pane on a page.
@@ -7,6 +8,7 @@ Platen:
   TitleAsHeading: true
 Memo:
   Name: tabs
+  MungeTitle: false
   Kind: Renderer.Codeblock
   Attributes:
     id:
@@ -24,7 +26,7 @@ Memo:
         Syntax: Markdown to _render_ for the tab
 ---
 
-The `tabs` codeblock renderer makes it possible for you to convert Markdown content into tabs, where
+The `tabs` codeblock markup makes it possible for you to convert Markdown content into tabs, where
 users see different content depending on which tab is active.
 
 When used, it creates a [sref:`<div>`][s01] HTML container. Each tab is added as an

@@ -1,5 +1,6 @@
 ---
-title: KaTeX Codeblocks
+title: Block KaTeX
+weight: 10
 summary: >-
   Documentation on the `katex` language ID for codeblocks, which renders math markup on a content
   page, allowing you to include formulas and other advanced representations.
@@ -7,6 +8,7 @@ Platen:
   TitleAsHeading: true
 Memo:
   Name: katex
+  MungeTitle: false
   Aliases:
     - math
     - chem
@@ -206,68 +208,8 @@ codeblock the `chem` language ID, Platen loads the [mhchem library][04] for you.
 The `math` and `chem` language IDs are included for readability and convenience. All three language
 IDs work the same way.
 
-## Non-Codeblock Rendering
-
-Platen also supports rendering of KaTeX without using the [shortcode][02] or a codeblock. While this
-usage can be concise and convenient, it isn't always obvious what's happening when someone is
-reading the source.
-
-Platen doesn't use this rendering inside of inline code.
-
-Be mindful when using a display mode syntax outside of a codeblock that the display mode rendering
-breaks normal paragraph flow.
-
-By default, any text wrapped in the following tag pairs is rendered:
-
-- Inline Mode Syntaxes:
-  - `\\(...\\)`
-
-    ```markdown
-    This is \\(x^{2}\\), which is also written as \\(x \times x\\).
-    ```
-
-    This is \\(x^{2}\\), which is also written as \\(x \times x\\).
-- Display Mode Syntaxes:
-  - `\\[...\\]`
-
-    ```markdown
-    \\[x={\frac {-b\pm {\sqrt {b^{2}-4ac}}}{2a}}\\]
-    ```
-
-    \\[x={\frac {-b\pm {\sqrt {b^{2}-4ac}}}{2a}}\\]
-  - `$$...$$`
-
-    ```markdown
-    $$x={\frac {-b\pm {\sqrt {b^{2}-4ac}}}{2a}}$$
-    ```
-
-    $$x={\frac {-b\pm {\sqrt {b^{2}-4ac}}}{2a}}$$
-
-## Configuration
-
-You can also use configuration to define how KaTeX behaves on your Platen site. If you want to use
-KaTeX rendering inside of a codeblock, no special configuration is required as long as you haven't
-set [sref:`Platen.Markup.Katex.Enabled`][s06] to `false` in your site configuration.
-
-If you want to ensure you can use math or chemistry markup on a page without using a codeblock or
-shortcode, you'll need to add [sref:`Platen.Markup.Katex`][s07] to your page's front matter and
-set `AlwaysLoad` to `true` or set [sref:`AlwaysLoad` in your site configuration][s08] to `true`.
-
-```memo-example-data
-Platen:
-  Markup:
-    Katex:
-      AlwaysLoad: true
-```
-
-With `AlwaysLoad` set to `true`, the KaTeX modules added to the page and automatically renders any
-[valid tags](#non-codeblock-rendering) outside of codeblocks and inline code declarations.
-
-For more information about the available options for configuring KaTeX site wide, see
-[sref:the configuration documentation][s09].
-
 [01]: https://katex.org/
-[02]: ../shortcodes/katex.md
+[02]: inline.md
 [03]: https://katex.org/docs/supported.html
 [04]: https://mhchem.github.io/MathJax-mhchem/
 [s01]: mdn.html.element:div
@@ -275,7 +217,3 @@ For more information about the available options for configuring KaTeX site wide
 [s03]: mdn.html.element:figure
 [s04]: mdn.html.element:p
 [s05]: mdn.html.element:figcaption
-[s06]: Platen.Site.Markup.Katex.Enabled
-[s07]: Platen.Content.Markup.Katex
-[s08]: Platen.Site.Markup.Katex.AlwaysLoad
-[s09]: Platen.Site.Markup.Katex

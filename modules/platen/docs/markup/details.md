@@ -1,5 +1,6 @@
 ---
 title: Details
+weight: 40
 summary: >-
   Documentation on the `details` language ID for codeblocks, which adds a details and summary HTML
   tag to a Markdown page for semantically collapsible content.
@@ -7,19 +8,21 @@ Platen:
   TitleAsHeading: true
 Memo:
   Name: details
+  MungeTitle: false
   Kind: Renderer.Codeblock
   Attributes:
     summary:
       Type: String.Markdown.Inline
       Required: false
-      Default: true
   Data:
     linkable:
       Type: Boolean
       Required: false
+      Default: true
     open:
       Type: Boolean
       Required: false
+      Default: true
   Definition:
     Required: true
     Syntax: Markdown Content.
@@ -27,7 +30,7 @@ Memo:
     TrimsLeadingWhiteSpace: true
 ---
 
-The `details` codeblock renderer makes it possible for you to add an accessible and semantically
+The `details` codeblock markup makes it possible for you to add an accessible and semantically
 accurate form of collapsible content to a page.
 
 When used, it inserts a [sref:`<details>`][01] element with a [`<summary>`][02] element containing

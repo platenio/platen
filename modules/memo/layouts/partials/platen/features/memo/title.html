@@ -6,21 +6,24 @@
   {{- $context = $params.Context -}}
   {{/* Only process this title for pages that define the memo params in their frontmatter */}}
   {{- with $context.Params.Memo -}}
-  {{- $metadata  := .                                                              -}}
-  {{- $name      := default $context.Name $metadata.name                           -}}
-  {{- $kind      := default "Shortcode" $metadata.kind                             -}}
+  {{- $metadata   := .                                          -}}
+  {{- $name       := default $context.Name $metadata.name       -}}
+  {{- $kind       := default "Shortcode"   $metadata.kind       -}}
+  {{- $mungeTitle := default true          $metadata.mungetitle -}}
   {{- if hasPrefix $kind "Renderer." -}}
     {{ $kind = "Rendering Hook" -}}
   {{- end -}}
-  {{- $shortName := cond (in $name "/") (index (last 1 (split $name "/")) 0) $name -}}
-    {{- if $params.ForMenu -}}
-      {{- $title = $context.Page.RenderString (printf "`%s`" $shortName) -}}
-    {{- else if $params.ForList -}}
-      {{- $title = $context.Page.RenderString (printf "`%s`" $name) -}}
-    {{- else if $params.ForHeader -}}
-      {{- $title = $context.Page.RenderString (printf "`%s` %s" $name $kind) -}}
-    {{- else if $params.ForHeading -}}
-      {{- $title = $context.Page.RenderString (printf "`%s` %s" $name $kind) -}}
+  {{- if $mungeTitle -}}
+    {{- $shortName := cond (in $name "/") (index (last 1 (split $name "/")) 0) $name -}}
+      {{- if $params.ForMenu -}}
+        {{- $title = $context.Page.RenderString (printf "`%s`" $shortName) -}}
+      {{- else if $params.ForList -}}
+        {{- $title = $context.Page.RenderString (printf "`%s`" $name) -}}
+      {{- else if $params.ForHeader -}}
+        {{- $title = $context.Page.RenderString (printf "`%s` %s" $name $kind) -}}
+      {{- else if $params.ForHeading -}}
+        {{- $title = $context.Page.RenderString (printf "`%s` %s" $name $kind) -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}

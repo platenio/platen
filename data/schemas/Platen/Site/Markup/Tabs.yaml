@@ -16,7 +16,7 @@ schematize:
     or replace.
 
     <!-- Reference Links -->
-    [01]: /modules/platen/renderers/tabs
+    [01]: /modules/platen/markup/tabs
 type: object
 properties:
   Enabled:
@@ -144,7 +144,7 @@ properties:
                 [Defining a Codeblock Render Hook Partial][02] in the [Theme Guide][02].
 
                 <!-- Reference Links -->
-                [01]: /modules/platen/renderers/tabs
+                [01]: /modules/platen/markup/tabs
                 [02]: /styling
             type: string
             default: platen/markup/tabs/codeblock
@@ -305,7 +305,7 @@ properties:
         For more information on authoring SCSS, see the [learning guide][03].
 
         <!-- Reference Links -->
-        [01]: /modules/platen/renderers/tabs
+        [01]: /modules/platen/markup/tabs
         [02]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
         [03]: https://sass-lang.com/guide
         [sref:`flex-wrap`]: mdn.css:flex-wrap

@@ -17,7 +17,7 @@ schematize:
 
     <!-- Reference Links -->
     [01]: https://itch.io/docs/creators/widget
-    [02]: /modules/platen/renderers/itch
+    [02]: /modules/platen/markup/itch
 type: object
 properties:
   Enabled:
@@ -111,7 +111,7 @@ properties:
                 [Defining a Codeblock Render Hook Partial][02] in the [Theme Guide][03].
 
                 <!-- Reference Links -->
-                [01]: /modules/platen/renderers/itch
+                [01]: /modules/platen/markup/itch
                 [02]: /styling
                 [03]: /styling
             type: string

@@ -1,12 +1,14 @@
 ---
-title: itch Embeds
+title: Itch Embeds
+weight: 100
 summary: >-
-  Documentation on the `itch` image link renderer, which embeds an iframe linking to the itch page
+  Documentation on the `itch` image link markup, which embeds an iframe linking to the itch page
   for a project.
 Platen:
   TitleAsHeading: true
 Memo:
   Name: itch
+  MungeTitle: false
   Kind: Renderer.Image
   Aliases: []
   Attributes:

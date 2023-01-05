@@ -1,11 +1,13 @@
 ---
 title: Art
+weight: 10
 summary: >-
   Documentation on adding artwork to your content with an image link. 
 Platen:
   TitleAsHeading: true
 Memo:
   Name: art
+  MungeTitle: false
   Kind: Renderer.Image
   Aliases: []
   Attributes:

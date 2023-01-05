@@ -1,5 +1,6 @@
 ---
 title: Columns
+weight: 30
 summary: >-
   Documentation on the `columns` language ID for codeblocks, which enables you to format content in
   multiple columns on a page.
@@ -7,6 +8,7 @@ Platen:
   TitleAsHeading: true
 Memo:
   Name: columns
+  MungeTitle: false
   Kind: Renderer.Codeblock
   Attributes:
     id:
@@ -24,7 +26,7 @@ Memo:
         Syntax: Markdown to _render_ for the column
 ---
 
-The `columns` codeblock renderer makes it possible for you to convert Markdown content into columns
+The `columns` codeblock markup makes it possible for you to convert Markdown content into columns
 with a flexible ratio.
 
 When used, it creates a [sref:`<div>`][s01] HTML container with each column of content is inserted

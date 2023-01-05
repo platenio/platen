@@ -1,13 +1,14 @@
 ---
-title: Section
+title: Section Lists
+weight: 200
 summary: >-
-  Documentation on the `section` language ID for codeblocks, which makes it possible for you to add
-  a list of links to pages in a content section with their summary to provide context for those
-  pages.
+  Documentation on the `section` language ID for codeblocks, which adds a list of links to pages in
+  a content section with their summary to provide context for those pages.
 Platen:
   TitleAsHeading: true
 Memo:
   Name: section
+  MungeTitle: false
   Kind: Renderer.Codeblock
   Data:
     root:
@@ -28,7 +29,7 @@ Memo:
     TrimsLeadingWhiteSpace: true
 ---
 
-The `section` codeblock renderer makes it possible for you to add a list of links to pages in a
+The `section` codeblock markup makes it possible for you to add a list of links to pages in a
 content section with their summary to provide context for those pages.
 
 When used, it inserts a [sref:`<div>`][s01] element containing a description list ([`<dl>`][s02])
@@ -57,19 +58,19 @@ set the section so they'll actually render something.
 <!--- Example Start -->
 ```section
 ---
-root: /modules/platen/renderers
+root: /modules/platen/markup
 ---
 ```
 ``````
 
 ``````memo-example-renderer { title="Recursive Section" }
-This example renders the list of pages for the Toroidal module recursively,
-adding a nested description list for each folder.
+This example renders the list of pages for the Platen's markup recursively,
+adding a nested description list for each folder, like the KaTeX markup folder.
 
 <!--- Example Start -->
 ```section
 ---
-root:    /modules/toroidal
+root:    /modules/platen/markup
 recurse: true
 ---
 ```
@@ -82,7 +83,7 @@ own summary as leading text before the list of child pages.
 <!--- Example Start -->
 ```section
 ---
-root:        /modules/platen/renderers
+root:        /modules/platen/markup
 use_summary: true
 ---
 ```
@@ -95,7 +96,7 @@ defined after the options block as leading text before the list of child pages.
 <!--- Example Start -->
 ```section
 ---
-root: /modules/platen/renderers
+root: /modules/platen/markup
 ---
 
 The Markdown render hooks enable you to write more normal Markdown to

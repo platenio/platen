@@ -705,7 +705,7 @@ properties:
         ```
 
         This applies to `figure` elements in page content, as added by the built-in `figure`
-        shortcode or the `art` shortcode.
+        shortcode or Platen's [Art markup].
 
         It adds vertical padding to the figure, using the value defined in
         [sref:`Theme.Variables.BasicSCSS.padding-large`] and sets the horizontal padding to `0`.
@@ -722,6 +722,7 @@ properties:
 
         For more information on authoring SCSS, see the [learning guide].
 
+        [Art markup]: /modules/platen/markup/art
         [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
         [learning guide]: https://sass-lang.com/guide
         [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled
@@ -752,12 +753,13 @@ properties:
         }
         ```
 
-        This applies to markdown nested in normal markdown content through shortcodes, such as:
+        This applies to markdown nested in normal markdown content through Platen's special markup,
+        such as:
 
-        - Content in the `columns` shortcode
-        - Content in the `tabs` shortcode
-        - The body content in the `details` shortcode
-        - The definition item in the `section` shortcode that holds the summary for a page
+        - The [columns markup]'s codeblock definition
+        - The [tabs markup]'s codeblock definition
+        - The [details markup]'s codeblock definition
+        - The [section list markup]'s' codeblock definition for the section's summary
 
         It removes the top margin from the first element and the bottom margin from the last element
         to let that content fit better inside the containers.
@@ -772,6 +774,10 @@ properties:
 
         For more information on authoring SCSS, see the [learning guide].
 
+        [columns markup]: /modules/platen/markup/columns
+        [tabs markup]: /modules/platen/markup/tabs
+        [details markup]: /modules/platen/markup/details
+        [section list markup]: /modules/platen/markup/section
         [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
         [learning guide]: https://sass-lang.com/guide
         [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled

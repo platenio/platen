@@ -25,8 +25,8 @@ schematize:
 
     <!-- Reference Links -->
     [01]:  https://katex.org/
-    [02]: /modules/platen/renderers/katex-inline
-    [03]: /modules/platen/renderers/katex
+    [02]: /modules/platen/markup/katex/inline
+    [03]: /modules/platen/markup/katex/block
     [sref:`AlwaysLoad`]: Platen.Site.Markup.Katex.AlwaysLoad
     [sref:content-level]: Platen.Content.Markup.Katex
 type: object
@@ -56,7 +56,7 @@ properties:
 
         When this setting is set to `true`, the modules are added to every page and will always
         be called to auto-render any valid KaTeX found on the page. This is useful for sites that
-        make heavy use of inline KaTeX without the shortcode.
+        make heavy use of inline KaTeX without the image link markup.
 
         The default value is `false`.
 
@@ -179,7 +179,8 @@ properties:
             The default partial pulls the KaTeX style and library modules from a CDN if any of the
             following conditions are met:
             
-            1. The page content includes the `katex` shortcode
+            1. The page content includes any image links with the `chem:`, `katex:`, or `math:`
+               prefix.
             1. The page content includes any codeblocks with `chem`, `katex`, or `math` as the
                language ID.
             1. The page front matter has [sref:`Platen.Markup.Katex.AlwaysLoad`] set to `true`

@@ -17,8 +17,8 @@ schematize:
     [sref:`AlwaysLoad`]: Platen.Content.Markup.Katex.AlwaysLoad
     [sref:site configuration]: Platen.Site.Markup.Katex
     [01]:  https://katex.org/
-    [02]: /modules/platen/renderers/katex-inline
-    [03]: /modules/platen/renderers/katex
+    [02]: /modules/platen/markup/katex/inline
+    [03]: /modules/platen/markup/katex/block
 type: object
 properties:
   AlwaysLoad:

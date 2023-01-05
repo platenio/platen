@@ -1,11 +1,13 @@
 ---
-title: button links
+title: Buttons
+weight: 20
 summary: >-
-  Documentation on the `button` image link renderer, which renders an image link as a button.
+  Documentation on the `button` image link markup, which renders an image link as a button.
 Platen:
   TitleAsHeading: true
 Memo:
   Name: button
+  MungeTitle: false
   Kind: Renderer.Image
   Aliases:
     - btn
@@ -24,6 +26,8 @@ Memo:
 ---
 
 Platen uses special notation for rendering links styled as buttons with an image link.
+
+![button:Flagrant Garden](https://flagrant.garden)
 
 When used, it inserts an [sref:`<a>` (anchor)][s01] HTML element styled as a button.
 

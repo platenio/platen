@@ -16,7 +16,7 @@ schematize:
     or replace.
 
     <!-- Reference Links -->
-    [01]: /modules/platen/renderers/details
+    [01]: /modules/platen/markup/details
 type: object
 properties:
   Enabled:
@@ -108,7 +108,7 @@ properties:
                 [Defining a Codeblock Render Hook Partial][02] in the [Theme Guide][03].
 
                 <!-- Reference Links -->
-                [01]: /modules/platen/renderers/details
+                [01]: /modules/platen/markup/details
                 [02]: /styling
                 [03]: /styling
                 [s01]: mdn.html.element:details
@@ -151,7 +151,7 @@ properties:
         ```
 
         This applies to the `details` element and its children in Markdown content, as added with
-        the `details` shortcode.
+        the `details` codeblock markup.
 
         You can overwrite this definition for your own site or theme by creating the file
         `styles/markup/_details.scss` in your [assets folder][02], which defaults to `assets` in

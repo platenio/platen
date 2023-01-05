@@ -14,7 +14,7 @@ schematize:
 
     [sref:site configuration]: Platen.Site.Markup.Mermaid
     [01]: https://mermaid-js.github.io/mermaid/
-    [02]: /modules/platen/renderers/mermaid
+    [02]: /modules/platen/markup/mermaid
 type: object
 properties:
   AlwaysLoad:
