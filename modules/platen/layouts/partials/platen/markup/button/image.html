@@ -3,7 +3,7 @@
 {{- $page        := $params.Page                       -}}
 {{- $destination := $params.Destination                -}}
 {{- $title       := $params.Title                      -}}
-{{- $text        := $params.PlainText                  -}}
+{{- $text        := $params.Text                       -}}
 {{- $isBlock     := $params.IsBlock                    -}}
 {{- $ordinal     := $params.Ordinal                    -}}
 
@@ -32,8 +32,7 @@
     */}}
     {{- $innerHTML := "" -}}
     {{- with $alt -}}
-      {{- $renderParams := dict "Page" $page "Content" $alt "IndentCount" 2 "AsBlock" false -}}
-      {{- $innerHTML     = partial "platen/utils/getPrettyRender" $renderParams             -}}
+      {{- $innerHTML = $alt -}}
     {{- else -}}
       {{/* Assume preset, implement later */}}
       {{- warnf "Finding button preset %s" $destination -}}
