@@ -1,0 +1,68 @@
+{
+  "title": "Katex (Block)",
+  "description": "Insert katex to render math formulas.",
+  "body": [
+    "```katex",
+    "---",
+    "as_figure: [[as_figure]]",
+    "caption: [[&caption]]",
+    "caption_position: [[caption_position]]",
+    "class: [[class]]",
+    "display: [[display]]",
+    "id: [[id]]",
+    "---",
+    "",
+    "[[&selection]]",
+    "```"
+  ],
+  "fields": [
+    {
+      "name": "selection",
+      "title": "Katex: Specify your math or chemistry markup here.",
+      "type": "string",
+      "default": "FM_SELECTED_TEXT"
+    },
+    {
+      "name": "as_figure",
+      "title": "Render as Figure: Whether the rendered KaTeX should be added in a figure element.",
+      "type": "choice",
+      "choices": ["true", "false"],
+      "default": "false"
+    },
+    {
+      "name": "caption",
+      "title": "Caption: Specify Markdown for the figure's caption. Implies `as_figure` is true.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "caption_position",
+      "title": "Caption Position: Whether the figure caption should be added above or below the rendered markup. Ignored if no caption is specified.",
+      "type": "choice",
+      "choices": ["top", "bottom"],
+      "default": "bottom"
+    },
+    {
+      "name": "class",
+      "title": "Class List: Specify any classes to add to the block in a space separated list.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "display",
+      "title": "Display Mode: Whether KaTeX should render the markup in display mode.",
+      "type": "choice",
+      "choices": ["true", "false"],
+      "default": "true"
+    },
+    {
+      "name": "id",
+      "title": "ID: Specify an ID to add to the rendered markup so the formula is directly linkable.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    }
+  ]
+}

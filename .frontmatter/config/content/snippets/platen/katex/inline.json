@@ -1,0 +1,13 @@
+{
+  "title": "Katex (Block)",
+  "description": "Insert katex to render math formulas.",
+  "body": "![katex:[[&selection]]()",
+  "fields": [
+    {
+      "name": "selection",
+      "title": "Formula: Specify your math or chemistry markup here.",
+      "type": "string",
+      "default": "FM_SELECTED_TEXT"
+    }
+  ]
+}

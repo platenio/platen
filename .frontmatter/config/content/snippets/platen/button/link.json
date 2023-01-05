@@ -1,14 +1,17 @@
 {
   "title": "Button",
   "description": "Add a button linking to another page or external site.",
-  "body": "{{< button [[ref-type]]=\"[[&url]]\" class=\"[[classes]]\" >}}[[text]]{{< /button >}}",
+  "body": [
+    "![button:[[&selection]]]([[&url]])",
+    "{ [[&class]] }"
+  ],
   "fields": [
     {
-      "name": "text",
+      "name": "selection",
       "title": "Button Text: This displays on the button itself.",
       "type": "string",
       "single": true,
-      "default": ""
+      "default": "FM_SELECTED_TEXT"
     },
     {
       "name": "url",
@@ -18,15 +21,8 @@
       "default": ""
     },
     {
-      "name": "ref-type",
-      "title": "Link Reference Type: Choose relref if the link is site relative, href if external.",
-      "type": "choice",
-      "choices": ["relref", "href"],
-      "default": "relref"
-    },
-    {
-      "name": "classes",
-      "title": "CSS Classes: Specify a space separated list of classes.",
+      "name": "class",
+      "title": "Class List: Specify any classes to add to the button in a space-separated list. Each class must have a period (`.`) prefix.",
       "type": "string",
       "single": true,
       "default": ""
