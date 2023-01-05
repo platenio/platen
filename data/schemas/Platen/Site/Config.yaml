@@ -29,58 +29,22 @@ properties:
         control their behavior.
     type: object
     properties:
-      Art:
-        $ref: ./Features/Art.yaml
-        schematize:
-          weight: 1
-      Button:
-        $ref: ./Features/Button.yaml
-        schematize:
-          weight: 2
-      Columns:
-        $ref: ./Features/Columns.yaml
-        schematize:
-          weight: 3
       Comments:
         $ref: ./Features/Comments.yaml
         schematize:
-          weight: 4
-      Details:
-        $ref: ./Features/Details.yaml
-        schematize:
-          weight: 5
-      Itch:
-        $ref: ./Features/Itch.yaml
-        schematize:
-          weight: 6
-      Katex:
-        $ref: ./Features/Katex.yaml
-        schematize:
-          weight: 7
-      Mermaid:
-        $ref: ./Features/Mermaid.yaml
-        schematize:
-          weight: 8
+          weight: 1
       PortableLinks:
         $ref: ./Features/PortableLinks.yaml
         schematize:
-          weight: 9
+          weight: 2
       PWA:
         $ref: ./Features/PWA.yaml
         schematize:
-          weight: 10
+          weight: 3
       Search:
         $ref: ./Features/Search.yaml
         schematize:
-          weight: 11
-      Section:
-        $ref: ./Features/Section.yaml
-        schematize:
-          weight: 12
-      Tabs:
-        $ref: ./Features/Tabs.yaml
-        schematize:
-          weight: 13
+          weight: 4
     patternProperties:
       ".":
         $ref: ./Features/Defining.yaml
@@ -109,9 +73,68 @@ properties:
         schematize:
           href: pattern-any
   Markup:
-    $ref: ./Markup/Config.yaml
+    title: Markup Options
+    description: Configure custom markdown for Platen.
     schematize:
+      details: |
+        Platen site and theme developers sometimes need to override how codeblocks, images, links, and
+        headers are rendered into HTML for a page. These settings allow developers to add new syntax
+        for converting Markdown into HTML in a standard, discoverable, configurable way. This makes
+        the new syntax usable for others without requiring modifying the base theme's files.
+
+        Platen modules use this configuration to extend the available markup options. Markup options
+        added this way must not depend on each other.
+
+        For more information on defining a markup option, see [Defining Markup Renderers][01] in the
+        [Theme Guide][02].
+
+        <!-- Reference Links -->
+        [01]: /styling
+        [02]: /styling
       weight: 5
+    type: object
+    properties:
+      Art:
+        $ref: ./Markup/Art.yaml
+        schematize:
+          weight: 1
+      Buttons:
+        $ref: ./Markup/Buttons.yaml
+        schematize:
+          weight: 2
+      Columns:
+        $ref: ./Markup/Columns.yaml
+        schematize:
+          weight: 3
+      Details:
+        $ref: ./Markup/Details.yaml
+        schematize:
+          weight: 4
+      Itch:
+        $ref: ./Markup/Itch.yaml
+        schematize:
+          weight: 5
+      Katex:
+        $ref: ./Markup/Katex.yaml
+        schematize:
+          weight: 6
+      Mermaid:
+        $ref: ./Markup/Mermaid.yaml
+        schematize:
+          weight: 7
+      Section:
+        $ref: ./Markup/Section.yaml
+        schematize:
+          weight: 8
+      Tabs:
+        $ref: ./Markup/Tabs.yaml
+        schematize:
+          weight: 9
+    patternProperties:
+      ".":
+        $ref: ./Markup/Defining.yaml
+        schematize:
+          href: pattern-any
   Multilingual:
     $ref: ./Multilingual.yaml
     schematize:

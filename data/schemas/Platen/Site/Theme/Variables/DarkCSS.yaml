@@ -28,13 +28,14 @@ properties:
         - The background color of unhighlighted blocks of code
         - The background color of even rows in tables
         - The background dcolor of the site search box
-        - The border separating the tabs and content in the `tabs` shortcode
+        - The border separating the tabs and content added with Platen's [tabs markup]
 
         For more information on valid values, see {{% sref "color_value" "mdn.css" %}}`color`{{% /sref %}}.
 
         [sref:valid color]: mdn.css:color_value
         [sref:`Theme.Variables.BasicSCSS`]: Platen.Site.Theme.Variables.BasicSCSS
         [sref:`Theme.Variables.CalculatedSCSS`]: Platen.Site.Theme.Variables.CalculatedSCSS
+        [tabs markup]: /modules/platen/markup/tabs
     type: string
     default: "rgba(255, 255, 255, 0.1)"
   gray-200:
@@ -54,13 +55,14 @@ properties:
         - The border for the `details` element
         - The color of the `hr` element
         - The border separating rows in tables
-        - The border for the container of the `tabs` shortcode
+        - The border for [tabs] containers
 
         For more information on valid values, see {{% sref "color_value" "mdn.css" %}}`color`{{% /sref %}}.
 
         [sref:valid color]: mdn.css:color_value
         [sref:`Theme.Variables.BasicSCSS`]: Platen.Site.Theme.Variables.BasicSCSS
         [sref:`Theme.Variables.CalculatedSCSS`]: Platen.Site.Theme.Variables.CalculatedSCSS
+        [tabs]: /modules/platen/markup/tabs
     type: string
     default: "rgba(255, 255, 255, 0.2)"
   gray-500:
@@ -97,14 +99,16 @@ properties:
 
         - Normal links in the body
         - The active page link in the site menu
-        - The text and border in the `button` shortcode
-        - The bottom border of the open tab in the `tabs` shortcode
+        - The text and border for [buttons]
+        - The bottom border of the open tab for a group added with the [tabs markup]
 
         For more information on valid values, see {{% sref "color_value" "mdn.css" %}}`color`{{% /sref %}}.
 
         [sref:valid color]: mdn.css:color_value
         [sref:`Theme.Variables.BasicSCSS`]: Platen.Site.Theme.Variables.BasicSCSS
         [sref:`Theme.Variables.CalculatedSCSS`]: Platen.Site.Theme.Variables.CalculatedSCSS
+        [buttons]: /modules/platen/markup/buttons
+        [tabs markup]: /modules/platen/markup/tabs
     type: string
     default: "#84b2ff"
   color-visited-link:

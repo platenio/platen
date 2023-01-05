@@ -25,10 +25,13 @@ properties:
         - The height of the `hr` element
         - The border for `th` and `td` elements
         - The border for the search box
-        - The border for the button shortcode
-        - The borders for the tabs shortcode
+        - The border for [buttons]
+        - The borders for the [tabs]
 
         For more information on valid values, see {{% sref "length" "mdn.css" /%}}.
+
+        [buttons]: /modules/platen/markup/buttons
+        [tabs]: /modules/platen/markup/tabs
     type: string
     pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
     default: 1px
@@ -73,11 +76,12 @@ properties:
         - The padding around the search input box
         - The margin around the search spinner, when visible
         - The width of scrollbars, when visible
-        - The vertical padding for tab labels in the tabs shortcode
+        - The vertical padding for tab labels added by the [tabs markup]
 
         For more information on valid values, see {{% sref "length" "mdn.css" /%}}.
 
         [sref:`padding-small`]: Platen.Site.Theme.Variables.BasicSCSS.padding-small
+        [tabs markup]: /modules/platen/markup/tabs
     type: string
     pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
     default: 0.5rem
@@ -118,15 +122,17 @@ properties:
         - The margin around the search section of the site menu
         - The height and width of the search spinner when visible
         - The padding around the main TOC content
-        - The height of the button shortcode and the horizontal padding for the button
-        - The horizontal margins for columns created by the column shortcode
-        - The vertical margin for the tabs shortcode, the horizontal padding for tab labels, and the
-          padding around tab contents
+        - The height and horizontal padding for [buttons]
+        - The horizontal margins for [columns]
+        - The vertical margin for [tabs], the horizontal padding for their labels, and the
+          padding around their contents
         - The padding for containers in wide view mode
 
         For more information on valid values, see {{% sref "length" "mdn.css" /%}}
 
         [sref:`padding-medium`]: Platen.Site.Theme.Variables.BasicSCSS.padding-medium
+        [buttons]: /modules/platen/markup/buttons
+        [tabs]: /modules/platen/markup/tabs
     type: string
     pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
     default: 1rem
@@ -176,12 +182,13 @@ properties:
         the value of the [sref:`font-size-base`] variable. This value must be defined in
         [sref:`rem`].
 
-        This value is used for the text in the site menu, page footers, and button shortcode.
+        This value is used for the text in the site menu, page footers, and [buttons].
 
         For more information, see {{% sref "font-size" "mdn.css" /%}}.
 
         [sref:`font-size-base`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-base
         [sref:`rem`]: mdn.css:font-size#rems
+        [buttons]: /modules/platen/markup/buttons
     type: string
     pattern: "^[0-9]+\\.?[0-9]*rem$"
     default: 0.875rem
@@ -238,7 +245,7 @@ properties:
         is defined by the value of the [sref:`font-size-base`] variable.
 
         This value is used to set the [sref:`min-width`] value for the the `body` element, the
-        `platen-page` container, and the columns created by the `columns` shortcode.
+        `platen-page` container, and [columns].
 
         While this variable can be set to any valid length, we recommend you use [sref:`rem`] to
         keep it relative to the base font size.
@@ -248,6 +255,7 @@ properties:
         [sref:`font-size-base`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-base
         [sref:`min-width`]: mdn.css:min-width
         [sref:`rem`]: mdn.css:font-size#rems
+        [columns]: /modules/platen/markup/columns
     type: string
     pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
     default: 20rem
@@ -336,12 +344,12 @@ properties:
     default: 16rem
   details-colors:
     title: Details Colors
-    description: Defines colors for details elements created by the details shortcode.
+    description: Defines colors for details elements.
     schematize:
       skipSchemaRender: true
       weight: 15
       details: |
-        Defines colors for details elements created by the [`details`][01] shortcode. The existing
+        Defines colors for details elements created by Platen's [details markup][01]. The existing
         value is a map of variables, named `info`, `warning`, and `danger`. Theme authors and site
         maintainers can replace these values and add their own new keys to the map. These keys are
         automatically incorporated into the theme.
@@ -367,7 +375,7 @@ properties:
 
         For more information on valid values, see [sref:`<color>`].
 
-        [01]: /modules/platen/renderers/details
+        [01]: /modules/platen/markup/details
         [sref:`<color>`]: mdn.css:color_value
     type: object
     patternProperties:

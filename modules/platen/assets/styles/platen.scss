@@ -3,6 +3,7 @@
 {{- $variablesPartial  := "platen/utils/styles/variables"  -}}
 {{- $importPartial     := "platen/utils/styles/import"     -}}
 {{- $fontsPartial      := "platen/utils/styles/fonts"      -}}
+{{- $markupPartial     := "platen/utils/styles/markup"     -}}
 {{- $shortcodesPartial := "platen/utils/styles/shortcodes" -}}
 // Adds the basic SCSS variables. These can be strings or maps. Values in this
 // group must not reference other values, only primitives.
@@ -79,6 +80,18 @@
     {{- with $settings.Partials.Style }}
       {{ partial . $context }}
     {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+// Loop over the enabled markup extensions, handling each in turn. They may be independently styled.
+{{ range $markup, $settings := $context.Site.Params.Platen.Markup -}}
+  {{- if $settings.Enabled -}}
+    {{- with $settings.Partials.Style }}
+      {{ partial . $context }}
+    {{- end -}}
+    {{ with $settings.Style }}
+      {{ partial $markupPartial (dict "Name" $markup "Settings" $settings) }}
+    {{ end }}
   {{- end -}}
 {{- end -}}
 

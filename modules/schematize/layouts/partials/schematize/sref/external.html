@@ -1,16 +1,16 @@
 {{/*
   This partial returns the link reference to a specified external header
 */}}
-{{- $params := . -}}
+{{- $params    := .                 -}}
 {{- $reference := $params.reference -}}
-{{- $target := $params.target -}}
-{{- $href := "" -}}
+{{- $target    := $params.target    -}}
+{{- $href      := ""                -}}
 
 {{- with site.Params.Schematize.ReferenceMap -}}
   {{- $srefTarget := printf "%s.srefBase" $target -}}
-  {{- $indices := split $srefTarget "." -}}
-  {{- $srefMap := . -}}
-  {{- $srefBase := "" -}}
+  {{- $indices    := split $srefTarget "."        -}}
+  {{- $srefMap    := .                            -}}
+  {{- $srefBase   := ""                           -}}
 
   {{- range $index := $indices -}}
     {{- if eq "srefBase" $index -}}

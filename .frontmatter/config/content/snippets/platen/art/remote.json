@@ -1,0 +1,49 @@
+{
+  "title": "Art (from remote source)",
+  "description": "Add art as a figure with an optional content warning.",
+  "body": [
+    "![art:[[&alt]]]([[&src]] '[[&caption]]')",
+    "{",
+    "  [[&class]]",
+    "  [[&id]]",
+    "  content_warning = \"[[&content_warning]]\"]",
+    "}"
+  ],
+  "fields": [
+    {
+      "name": "src",
+      "title": "Source: Specify the URL for the image.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "alt",
+      "title": "Alt Text: Specify the image's description for accessibility. Don't use any Markdown in this value.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "caption",
+      "title": "Caption: Specify Markdown for the figure's caption.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "class",
+      "title": "Class List: Specify any classes to add to the figure in a space-separated list. Each class must have a period (`.`) prefix.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    },
+    {
+      "name": "id",
+      "title": "ID: Specify an ID to add to the figure so it's directly linkable. The ID must have a hash (`#`) prefix.",
+      "type": "string",
+      "single": true,
+      "default": ""
+    }
+  ]
+}

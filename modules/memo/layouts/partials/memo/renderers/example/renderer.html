@@ -8,10 +8,13 @@
 {{- $renderedCode := "" -}}
 
 {{- with $definition -}}
-  {{- $title := default "Example"               $attributes.title -}}
-  {{- $title  = printf  "%v. %s"                $number $title    -}}
-  {{- $id    := default (lower $title | urlize) $attributes.id    -}}
-  {{- $level := default 3                       $attributes.level -}}
+  {{- $title      := default "Example"               $attributes.title       -}}
+  {{- $skipNumber := default false                   $attributes.skip_number -}}
+  {{- $id         := default (lower $title | urlize) $attributes.id          -}}
+  {{- $level      := default 3                       $attributes.level       -}}
+  {{- if not $skipNumber -}}
+    {{- $title = printf "%v. %s" $number $title -}}
+  {{- end -}}
   {{/* Handle leading explanatory text, if any */}}
   {{- $parts := split $definition "<!--- Example Start -->"       -}}
   {{- $info  := ""                                                -}}

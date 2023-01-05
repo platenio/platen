@@ -18,7 +18,8 @@ params:
           Style:
             Name: schematize
     Markup:
-      LinkRenderers:
-        Schematize:
-          Enabled: true
-          Partial: schematize/sref/markup/renderers/links.html
+      Schematize:
+        Enabled: true
+        Partials:
+          Renderers:
+            Link: schematize/sref/markup/renderers/links

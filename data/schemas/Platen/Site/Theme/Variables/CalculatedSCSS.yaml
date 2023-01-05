@@ -29,13 +29,15 @@ properties:
         - `pre`
         - `details`
         - The `input` for the site search
-        - The `button` shortcode
-        - The container for the `tabs` shortcode
+        - The `a` added by Platen's [buttons markup]
+        - The container for [tabs]
 
         For more information, see {{% sref "border-radius" "mdn.css" /%}}.
 
         [sref:`$padding-small`]: Platen.Site.Theme.Variables.BasicSCSS.padding-small
         [sref:`Theme.Variables.BasicSCSS`]: Platen.Site.Theme.Variables.BasicSCSS
+        [buttons markup]: /modules/platen/markup/buttons
+        [tabs]: /modules/platen/markup/tabs
     type: string
     default: $padding-small
   mobile-breakpoint:

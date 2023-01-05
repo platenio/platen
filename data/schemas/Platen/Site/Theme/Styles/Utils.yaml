@@ -132,7 +132,7 @@ properties:
         - collapsible items in the navigation menu
         - the site menu and table of contents buttons in mobile view
         - the multilingual language picker
-        - the `tabs` shortcode
+        - the [tabs markup]
 
         It sets the height, width, and transparency to `0`, hides the overflow, and uses absolute
         positioning by default.
@@ -147,6 +147,7 @@ properties:
 
         For more information on authoring SCSS, see the [learning guide].
 
+        [tabs markup]: /modules/platen/markup/tabs
         [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
         [learning guide]: https://sass-lang.com/guide
         [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled

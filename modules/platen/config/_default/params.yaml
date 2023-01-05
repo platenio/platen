@@ -120,21 +120,9 @@ Platen:
           Enabled: true
         Rulers:
           Enabled: true
-        Details:
-          Enabled: true
         Figure:
           Enabled: true
         Inner:
-          Enabled: true
-        Art:
-          Enabled: true
-        Columns:
-          Enabled: true
-        Tabs:
-          Enabled: true
-        Button:
-          Enabled: true
-        Section:
           Enabled: true
       Utils:
         Basic:
@@ -185,65 +173,67 @@ Platen:
       Enabled: true
       Partials:
         Header: platen/features/pwa/header
+    PortableLinks:                            # BookPortableLinks
+      Enabled: true
+  Markup:
     Art:
       Enabled: true
       Partials:
         Renderers:
-          Image: platen/features/art/image
+          Image: platen/markup/art/image
+      Style: art
     Button:
       Enabled: true
       Partials:
         Renderers:
-          Image: platen/features/button/image
+          Image: platen/markup/button/image
+      Style: button
     Columns:
       Enabled: true
       Partials:
         Renderers:
-          Codeblock: platen/features/columns/codeblock
+          Codeblock: platen/markup/columns/codeblock
+      Style: columns
     Details:
       Enabled: true
       Partials:
         Renderers:
-          Codeblock: platen/features/details/codeblock
+          Codeblock: platen/markup/details/codeblock
+      Style: details
     Itch:
       Enabled: true
       Partials:
         Renderers:
-          Image: platen/features/itch/image
+          Image: platen/markup/itch/image
     Katex:
       Enabled: true
       AlwaysLoad: false
       Version: 0.16.4
       Partials:
-        Header: platen/features/katex/header
+        Header: platen/markup/katex/header
         Renderers:
-          Codeblock: platen/features/katex/codeblock
-          Image: platen/features/katex/image
+          Codeblock: platen/markup/katex/codeblock
+          Image: platen/markup/katex/image
     Mermaid:
       Enabled: true
       Version: 9.3.0
       Container: pre
       Partials:
-        Header: platen/features/mermaid/header
+        Header: platen/markup/mermaid/header
         Renderers:
-          Codeblock: platen/features/mermaid/codeblock
-    Tabs:
-      Enabled: true
-      Partials:
-        Renderers:
-          Codeblock: platen/features/tabs/codeblock
+          Codeblock: platen/markup/mermaid/codeblock
     Section:
       Enabled: true
       Partials:
         Renderers:
-          Codeblock: platen/features/section/codeblock
-    PortableLinks:                            # BookPortableLinks
+          Codeblock: platen/markup/section/codeblock
+      Style: section
+    Tabs:
       Enabled: true
-  Shortcodes:
-    katex:
-      Enabled: true
-    section:
-      Enabled: true
+      Partials:
+        Renderers:
+          Codeblock: platen/markup/tabs/codeblock
+      Style: tabs
   Repository:
     CommitPath: commit                        # BookCommitPath
     EditPath: edit/main                       # BookEditPath
