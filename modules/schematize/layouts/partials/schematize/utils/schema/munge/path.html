@@ -47,7 +47,10 @@
         {{- $munged = replace $munged $current $mungedRef -}}
       {{- end -}}
     {{- end -}}
-    {{- $return = $munged -}} }}
+    {{/* Munge IDs, replacing the leading slash in `"$id": "/..."` with the base url */}}
+    {{- $idPattern := "$id\": \"/"                                                 -}}
+    {{- $munged     = replace $munged $idPattern (printf `$id": "%s` site.BaseURL) -}}
+    {{- $return     = $munged                                                      -}}
   {{- end -}}
 {{- else -}}
   {{- errorf "schema/munge/path called but no value specified" -}}

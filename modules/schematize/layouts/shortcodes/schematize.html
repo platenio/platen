@@ -33,6 +33,8 @@
   {{- else if eq $schemaData.type "array" -}}
     {{- $property := merge $schemaData (dict "_level" 0) -}}
     {{ partial "schematize/docs/array" (dict "property" $property "page" $page) }}
+  {{- else if eq $schemaData.type nil -}}
+    {{- warnf "Couldn't find schema for path '%s' on page '%s'" $schema_path $page.Title -}}
   {{- else -}}
     {{- warnf "Unhandled base schema type %s: %#v" $schemaData.type $schemaData -}}
     {{- highlight ($schemaData | jsonify (dict "indent" "  ")) "json" -}}
