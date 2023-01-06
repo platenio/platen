@@ -23,3 +23,5 @@ params:
         Partials:
           Renderers:
             Link: schematize/sref/markup/renderers/links
+  Schematize:
+    SchemaRoot: schemas

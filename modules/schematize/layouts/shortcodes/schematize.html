@@ -1,27 +1,40 @@
 {{/*
-  This partial returns the nav list for a member of a webring. It expects to
-  receive an instance of scratch with the params already set; the only logic
-  this performs is to arrange and format the information. All retrieval must
-  be done first.
+  This partial writes the documentation for a JSON schema defined using the schematize helper
+  properties as Data for a Hugo site.
 */}}
-{{- $schema_path := "" -}}
-{{- with .Get 0 -}}
-  {{- $schema_path = . -}}
-{{- else -}}
-  {{- $schema_path = $.Page.Params.Schematize -}}
-{{- end -}}
-{{- $id := index (split $schema_path "." | last 1) 0 -}}
-{{- $schemaData := .Site.Data.schemas }}
-{{- range $level := split $schema_path "." -}}
-  {{- $schemaData = index $schemaData $level -}}
-{{- end -}}
-{{- $schemaData = merge $schemaData (dict "_id" $id) -}}
-{{- if eq $schemaData.type "object" -}}
-  {{ partial "schematize/docs/object" (dict "property" $schemaData "page" .Page) }}
-{{- else if eq $schemaData.type "array" -}}
-  {{- $property := merge $schemaData (dict "_level" 0) -}}
-  {{ partial "schematize/docs/array" (dict "property" $property "page" .Page) }}
-{{- else -}}
-{{- warnf "Unhandled base schema type %s: %#v" $schemaData.type $schemaData -}}
-<h1>{{ $schemaData }}</h1>
+{{- $params := . -}}
+{{- $page   := $params.Page -}}
+
+{{- $schema_path := $params.Get "path"
+                    | default ($params.Get 0)
+                    | default $page.Params.Schematize
+-}}
+{{- $schema_root := $params.Get "root"
+                    | default ($params.Get 1)
+                    | default $page.Params.SchematizeRoot
+                    | default site.Params.Schematize.SchemaRoot
+-}}
+
+{{- with $schema_path -}}
+  {{/* Use the last segment in the schema path as the schema's id */}}
+  {{- $id         := index (split $schema_path "." | last 1) 0 -}}
+  {{/* Retrieve the schema data by iterating through the dot path of the combined root and path */}}
+  {{- with $schema_root -}}
+    {{- $schema_path = printf "%s.%s" $schema_root $schema_path  -}}
+  {{- end -}}
+  {{- $schemaData := site.Data -}}
+  {{- range $level := split $schema_path "." -}}
+    {{- $schemaData = index $schemaData $level -}}
+  {{- end -}}
+  {{/* Merge the id into the schema data for the docs partials to use */}}
+  {{- $schemaData = merge $schemaData (dict "_id" $id) -}}
+  {{- if eq $schemaData.type "object" -}}
+    {{ partial "schematize/docs/object" (dict "property" $schemaData "page" $page) }}
+  {{- else if eq $schemaData.type "array" -}}
+    {{- $property := merge $schemaData (dict "_level" 0) -}}
+    {{ partial "schematize/docs/array" (dict "property" $property "page" $page) }}
+  {{- else -}}
+    {{- warnf "Unhandled base schema type %s: %#v" $schemaData.type $schemaData -}}
+    {{- highlight ($schemaData | jsonify (dict "indent" "  ")) "json" -}}
+  {{- end -}}
 {{- end -}}
