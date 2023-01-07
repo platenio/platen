@@ -1,0 +1,152 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: Toroidal.schema.yaml
+title: Toroidal Entry Settings
+description: Defines an entry for a Toroidal webring in the site menu.
+schematize:
+  details: |
+    In the position settings for [sref:`Platen.Display.Menu`], you can add entries to the site menu.
+    These settings define an entry using the Toroidal feature to add a webring's navigation to the
+    site menu without having to redefine each part of the navigation manually.
+
+    If you're hosting the webring, you can use the [sref:`PagePath`] setting to add navigation for a
+    member using the site's styling. To add navigation for a webring hosted on another site, or if
+    you want more control over how the webring's navigation is rendered, use the
+    [sref:`PartialPath`] setting.
+
+    In both cases, you must define the [sref:`Feature`] setting for the entry as `Toroidal` and may
+    define the [sref:`Weight`] setting to control the ordering of the webring in the site menu.
+
+    Navigation entries using [sref:`PagePath`] or [sref:`PartialPath`] with the default partial you
+    can copy from your webring's administration page follow the same format:
+
+    - They're added inside a grouping entry and have the navigation items nested inside it, matching
+      the definition for the webring member's navigation page as normal, except they follow the
+      styling for the Platen site menu.
+    - You can use the [sref:`DisplayName`] setting to override the name of the containing item in
+      the site menu for the webring's navigation. If you don't specify a display name, the webring's
+      name is used instead.
+    - You can use the [sref:`Collapse`] or [sref:`Flatten`] settings to override how the webring's
+      navigation is displayed in the site menu.
+    - You can use the [sref:`Class`] setting to add extra CSS classes to the webring navigation in
+      the site menu.
+    - If you're using the [sref:`PartialPath`] setting, you can add arbitrary settings to this entry
+      that your partial is aware of. The entire entry is passed to the partial when it's rendered
+      along with the context for the page the menu is being rendered on.
+
+    <!-- Reference Links -->
+    [sref:`Platen.Display.Menu`]: Platen.Site.Display.Menu.Settings
+    [sref:`Feature`]: Platen.Site.Display.Menu.Entry.Feature
+    [sref:`Weight`]: Platen.Site.Display.Menu.Entry.Weight
+    [sref:`PagePath`]: Platen.Site.Display.Menu.Toroidal.PagePath
+    [sref:`PartialPath`]: Platen.Site.Display.Menu.Toroidal.PartialPath
+    [sref:`DisplayName`]: Platen.Site.Display.Menu.Toroidal.DisplayName
+    [sref:`Collapse`]: Platen.Site.Display.Menu.Toroidal.Collapse
+    [sref:`Flatten`]: Platen.Site.Display.Menu.Toroidal.Flatten
+    [sref:`Class`]: Platen.Site.Display.Menu.Toroidal.Class
+type: object
+properties:
+  Feature:
+    title: Feature Name
+    description: >-
+      Specifies the name of the Platen feature this entry should use to write HTML in the menu.
+    schematize:
+      weight: 1
+      details: |
+        Specifies the name of the Platen feature this entry should use to write HTML in the menu.
+        To add a Toroidal webring nav, this value must be `Toroidal`.
+    enum: Toroidal
+  PagePath:
+    title: Page Path
+    description: >-
+      Specifies the path from the site's base URL for the member page to add navigation for.
+    schematize:
+      weight: 2
+      details: |
+        Specifies the path from the site's base URL for the member page to add navigation for.
+
+        For example, if you're hosting a webring in the `content/neat-sites` folder and your site's
+        member page in the webring is at `content/neat-sites/very-cool.md`, you would specify this
+        value as `neat-sites/very-cool`.
+
+        If it specifies an invalid value, such as a page that doesn't exist or isn't a Toroidal
+        webring member page, Hugo raises an error.
+
+        If neither this setting nor [sref:`PartialPath`] are defined, Hugo raises an error.
+
+        <!-- Reference Links -->
+        [sref:`PartialPath`]: Platen.Site.Display.Menu.Toroidal.PartialPath
+    type: string
+  PartialPath:
+    title: Partial Path
+    description: >-
+      Specifies the path to a partial to render for the webring navigation in the menu.
+    schematize:
+      weight: 3
+      details: |
+        Specifies the path to a partial to render for the webring navigation in the menu.
+
+        You can get a partial for this purpose by following these steps:
+        
+        1. Navigate to the administration page for the webring on the host's site.
+        1. Find the section for your member page.
+        1. Use the "Copy Platen menu partial" button to copy the partial HTML to your clipboard.
+        1. Create a new file in the `partials` folder for your site, like `partials/webring.html`.
+        1. Paste the partial HTML into the new file.
+        1. Save the file.
+
+        For example, if you copied the Platen menu partial for your site from the webring's
+        administration page to `partials/super-neat-webring/nav.html`, you would specify
+        `super-neat-webring/nav` for this value.
+
+        If you specify a value that Hugo can't resolve to a partial, Hugo raises an error.
+
+        If neither this setting nor [sref:`PagePath`] are defined, Hugo raises an error.
+
+        <!-- Reference Links -->
+        [sref:`PagePath`]: Platen.Site.Display.Menu.Toroidal.PagePath
+    type: string
+  DisplayName:
+    title: Display Name
+    description: >-
+      Specifies a display name for the containing element in the site menu.
+    schematize:
+      weight: 4
+      details: |
+        Specifies a display name for the containing element in the site menu. If this value isn't
+        specified, the webring's name is used instead.
+    type: string
+  Collapse:
+    title: Collapse Webring Entry
+    description: >-
+      Specifies whether to collapse the webring entry in the site menu.
+    schematize:
+      weight: 5
+      details: |
+        Specifies whether to collapse the webring entry in the site menu. Collapsed entries are
+        displayed with a clickable arrow that expands and collapses the webring's entries,
+        defaulting to collapsed.
+
+        This setting is incompatible with [sref:`Flatten`]. A webring entry can be collapsed or
+        flattened, but not both.
+
+        <!-- Reference Links -->
+        [sref:`Flatten`]: Platen.Site.Display.Menu.Toroidal.Flatten
+    type: boolean
+  Flatten:
+    title: Flatten Webring Entry
+    description: >-
+      Specifies whether to flatten the webring entry in the site menu.
+    schematize:
+      weight: 6
+      details: |
+        Specifies whether to flatten the webring entry in the site menu. Flattened entries are
+        displayed with the grouping entry bolded above a the webring's entries without additional
+        spacing or indenting for those entries.
+
+        This setting is incompatible with [sref:`Collapse`]. A webring entry can be collapsed or
+        flattened, but not both.
+
+        <!-- Reference Links -->
+        [sref:`Collapse`]: Platen.Site.Display.Menu.Toroidal.Collapse
+    type: boolean

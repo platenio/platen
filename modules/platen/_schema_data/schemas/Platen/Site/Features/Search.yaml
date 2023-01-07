@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: Search.schema.yaml
+title: Site Search Feature
+description: Settings that control the site's search feature.
+type: object
+properties:
+  Enabled:
+    title: Enable Site Search
+    description: Choose whether site search is turned on.
+    schematize:
+      details: |
+        Choose whether the site search feature is turned on. The default is `true`.
+      weight: 1
+    type: boolean
+    default: true
+  Partials:
+    title: Feature Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when [sref:`Enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`Enabled`]: Platen.Site.Features.Search.Enabled
+      weight: 2
+    type: object
+    properties:
+      Header:
+        title: Header Partial
+        description: Injects a partial into the HTML header.
+        schematize:
+          weight: 1
+          details: |
+            If specified, this partial is processed in the HTML header with the current page's
+            context. The default value is `platen/features/search/header`. You can overwrite
+            this value, replacing it with another partial entirely, or you can add the same file to
+            your own theme or site, effectively replacing it.
+
+            The default partial creates a per-language javascript file for searching the site and
+            executes `scripts/features/search/index.js` as a templated resource. It adds a link to
+            the search scripts into the HTML header, allowing a user to search the site from the
+            menu.
+        type: string
+        default: platen/features/search/header

@@ -53,12 +53,17 @@ module:
           target: static
     - path: github.com/platenio/platen/modules/platen
       mounts:
+        - source: _docs/config
+          target: content/schemas/Platen
+          excludeFiles: /_index.md
+        - source: _docs
+          target: content/modules/platen
+        - source: _schema_data
+          target: data
         - source: archetypes
           target: archetypes
         - source: assets
           target: assets
-        - source: docs
-          target: content/modules/platen
         - source: i18n
           target: i18n
         - source: layouts

@@ -50,7 +50,7 @@ Platen:
     EditPath: edit/main                       # BookEditPath
     ContentRoot: 'content'
     MountedPaths:
-      - Source: modules/platen/docs
+      - Source: modules/platen/_docs
         Target: modules/platen
       - Source: modules/toroidal/_docs
         Target: modules/toroidal
