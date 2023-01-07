@@ -12,9 +12,9 @@
 {{- end -}}
 
 {{/* Use arbitrary renderers if no feature applied */}}
-{{- range $markup := site.Params.Platen.Markup -}}
-  {{- if and $markup.Enabled (eq "" $renderedImage) -}}
-    {{- with $markup.Partials.Renderers.Image -}}
+{{- range $markup := site.Params.Platen.markup -}}
+  {{- if and $markup.enabled (eq "" $renderedImage) -}}
+    {{- with $markup.partials.renderers.image -}}
       {{- $renderedImage = partial . $params }}
     {{- end -}}
   {{- end -}}

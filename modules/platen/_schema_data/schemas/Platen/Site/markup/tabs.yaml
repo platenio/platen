@@ -1,0 +1,327 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: tabs.schema.yaml
+title: Tabs
+description: Defines the options for Platen's tabs markup
+schematize:
+  details: |
+    Defines the map of options for Platen's [tabs markup][01]. The existing value is a map that
+    includes whether or not to enable the codeblock render hook and the style definition for it.
+
+    When this markup is enabled, you can create tabbed content on a page with a [codeblock][01].
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the full
+    list of all properties in your own configuration file. Only specify the values you want to add
+    or replace.
+
+    <!-- Reference Links -->
+    [01]: /modules/platen/markup/tabs
+type: object
+properties:
+  enabled:
+    title: Enable the markup
+    description: Choose whether tabs codeblock rendering is available for the site.
+    schematize:
+      weight: 1
+      details: |
+        Choose whether the site renders codeblocks with the `tabs` language ID as a group of tabs.
+        If this setting is set to `true`, content inside the codeblock is added inside a `<div>`
+        that renders child divs as tabs. If this setting is `false`, the content is rendered as an
+        unhighlighted codeblock.
+    type: boolean
+    default: true
+  aliases:
+    title: Aliases
+    description: Defines additional language IDs for the codeblock render hook.
+    schematize:
+      weight: 2
+      details: |
+        Define one or more language IDs to use in addition to the default language IDs for
+        codeblocks that render their content in a group of divs as tabs. The default for the
+        top-level codeblock for the column group is `tabs`. The default for the nested codeblock
+        defining a single column is `tab`.
+
+        You can specify a string, a map, or an array of strings or maps for this value. If the value
+        is an array, each item in the array is added as an alias.
+
+        String values are added as valid language IDs for the top-level codeblock in addition to
+        `tabs`.
+
+        Map values must have either the `group` or `entry` key with a string value. If you
+        define a value for `group`, it becomes a valid language ID for the top-level codeblock. If
+        you define a value for `entry`, it becomes a valid language ID for the nested codeblock. You
+        can specify both in a single map but don't have to.
+    oneOf:
+      - type: array
+        items:
+          oneOf:
+          - type: object
+            description: >-
+              A map defining either/both an alias for the grouping and entry codeblock language ID.
+            properties:
+              entry:
+                title: Entry Alias
+                description: Alias for the nested codeblock language ID, (default is 'tab').
+                type: string
+              group:
+                title: Group Alias
+                description: Alias for the top-level codeblock language ID, (default is 'tabs').
+                type: string
+          - type: string
+      - type: object
+        description: >-
+          A map defining either/both an alias for the grouping and entry codeblock language ID.
+        properties:
+          entry:
+            title: Entry Alias
+            description: Alias for the nested codeblock language ID, (default is 'tab').
+            type: string
+          group:
+            title: Group Alias
+            description: Alias for the top-level codeblock language ID, (default is 'tabs').
+            type: string
+      - type: string
+  partials:
+    title: Markup Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when [sref:`enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`enabled`]: Platen.Site.markup.tabs.enabled
+      weight: 100
+      skipSchemaRender: true
+    type: object
+    properties:
+      renderers:
+        title: Renderer Partials
+        description: Registers one or more partials that act as render hooks.
+        type: object
+        schematize:
+          weight: 2
+          skipSchemaRender: true
+          details: |
+            Defines a map of partials to use as Markdown render hooks. Like all partials, these are
+            only processed when [sref:`enabled`] is set to `true`.
+
+            Supported renderer partials include:
+
+            - `codeblock`, processed for fenced code blocks with a language ID
+            - `heading`, processed for headings
+            - `image`, processed for image links
+            - `link`, processed for non-image links
+
+            In all cases, all renderer partials for enabled features and markup options are checked
+            one after the other unless they return a render string. Only the first applicable
+            partial that returns a render string is processed and rendered.
+
+            <!-- Reference Links -->
+            [sref:`enabled`]: Platen.Site.markup.tabs.enabled
+        properties:
+          codeblock:
+            title: Codeblock Render Hook Partial
+            description: Adds a partial to call when processing the codeblock render hook.
+            schematize:
+              details: |
+                Adds support for rendering codeblocks as tabs in Platen. This render hook is only
+                called if the language ID for the codeblock (i.e. `` ```languageID ``) is
+                `tabs`. If a codeblock does include the language ID, the renderer looks for any
+                nested codeblocks with the `tab` language ID to render as tabs in a shared
+                group.
+
+                For more information about using the codeblock to add tabbed content, see
+                [the reference documentation][01].
+
+                This value defaults to `platen/markup/tabs/codeblock`. You can replace it with a
+                different value and defining a new partial, or override the existing partial by
+                creating the file `layouts/partials/platen/markup/tabs/codeblock.html` in your
+                own site or module.
+
+                For more information about defining codeblock render hook partials, see
+                [Defining a Codeblock Render Hook Partial][02] in the [Theme Guide][02].
+
+                <!-- Reference Links -->
+                [01]: /modules/platen/markup/tabs
+                [02]: /styling
+            type: string
+            default: platen/markup/tabs/codeblock
+  style:
+    title: Markup Simple Style Module
+    description: Defines the art markup's simple style module
+    schematize:
+      weight: 100
+      skipSchemaRender: true
+      details: |
+        Defines default styling for tabs created by the codeblock.
+
+        When you use the [`tabs`][01] codeblock, the following SCSS is applied:
+
+        ```scss
+        .markdown .platen-tabs {
+          margin-top: $padding-large;
+          margin-bottom: $padding-large;
+
+          border: $padding-minimal solid var(--gray-200);
+          border-radius: $border-radius;
+
+          overflow: hidden;
+
+          display: flex;
+          flex-wrap: wrap;
+
+          label {
+            display: inline-block;
+            padding: $padding-medium $padding-large;
+            border-bottom: $padding-minimal transparent;
+            cursor: pointer;
+          }
+
+          .platen-tabs-content {
+            order: 999; //Move content blocks to the end
+            width: 100%;
+            border-top: $padding-minimal solid var(--gray-100);
+            padding: $padding-large;
+            display: none;
+          }
+
+          input[type="radio"]:checked + label {
+            border-bottom: $padding-minimal solid var(--color-link);
+          }
+          input[type="radio"]:checked + label + .platen-tabs-content {
+            display: block;
+          }
+          input[type="radio"]:focus + label {
+            @include outline;
+          }
+        }
+        ```
+
+        When you use the tabs codeblock, the content is placed in a `div` container with the
+        `platen-tabs` class. Each tab uses a [sref:radio input] with its [sref:label] used as the
+        selectable tab. Each tab's content is placed in a div with the `platen-tabs-content` and
+        `markdown-inner` classes.
+
+        ### Tab Container
+
+        ```scss
+        margin-top: $padding-large;
+        margin-bottom: $padding-large;
+
+        border: $padding-minimal solid var(--gray-200);
+        border-radius: $border-radius;
+
+        overflow: hidden;
+
+        display: flex;
+        flex-wrap: wrap;
+        ```
+
+        The container is uses [sref:`$padding-large`] to set the vertical margins. It adds a solid
+        border with the width set to [sref:`$padding-minimal`], the border radius to
+        [sref:`Theme.Variables.LightCSS.color-link`], and the color to
+        [sref:`Theme.Variables.LightCSS.gray-200`] or [sref:`Theme.Variables.LightCSS.gray-200`]
+        depending on the value of the [sref:`Theme.Config.Mode`] setting.
+
+        Is sets the [sref:`overflow`] attribute to hidden, which keeps any content that doesn't fit
+        the container from displaying.
+
+        It uses [sref:flex box] to display the tabs and their labels and uses [sref:`flex-wrap`].
+
+        ### Tab Labels
+
+        ```scss
+        label {
+          display: inline-block;
+          padding: $padding-medium $padding-large;
+          border-bottom: $padding-minimal transparent;
+          cursor: pointer;
+        }
+        input[type="radio"]:checked + label {
+          border-bottom: $padding-minimal solid var(--color-link);
+        }
+        input[type="radio"]:focus + label {
+          @include outline;
+        }
+        ```
+
+        The labels are added as inline blocks, allowing them to display side-by-side. They're use
+        the value of [sref:`$padding-medium`] for the vertical padding
+        and [sref:`$padding-large`] for the horizontal padding.
+
+        They get a transparent bottom border with the width set to [sref:`$padding-minimal`]
+        and have their cursor always display as a normal pointer.
+
+        When the input for a label is checked, the label's border color switches from being
+        transparent to the value of [sref:`Theme.Variables.LightCSS.color-link`] or
+        [sref:`Theme.Variables.LightCSS.color-link`] depending on the [sref:`Theme.Config.Mode`].
+
+        When the input for a label is focused, the label uses the [sref:`Theme.Styles.Utils.Outline`]
+        mixin to add a full box outline to the label.
+
+        ### Tab Content
+
+        ```scss
+        .platen-tabs-content {
+          order: 999; //Move content blocks to the end
+          width: 100%;
+          border-top: $padding-minimal solid var(--gray-100);
+          padding: $padding-large;
+          display: none;
+        }
+
+        input[type="radio"]:checked + label + .platen-tabs-content {
+          display: block;
+        }
+        ```
+
+        The tabs are all set to have an [sref:`order`] of 999, putting them together at the end of
+        the flex box. They're set to have a width of 100% of their container and given a solid top
+        border with a width of [sref:`$padding-minimal`] and their color set to either
+        [sref:`Theme.Variables.LightCSS.gray-200`] or [sref:`Theme.Variables.DarkCSS.gray-200`]
+        depending on the [sref:`Theme.Config.Mode`]. Their padding is set to
+        [sref:`$padding-large`].
+
+        Finally, their display is set to `none` so they're hidden until selected. When a tab is
+        selected, the display is changed `block`, making it visible.
+
+        ### Overriding
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/markup/_tabs.scss` in your [assets folder][02], which defaults to `assets` in your
+        project root.
+        
+        You can also create a new style module in the `styles/markup` folder and set this value to
+        that module's name. If you do, omit the leading `_` and trailing `.scss`. For example, the
+        name for the style module `assets/styles/markup/_foo.scss` is `foo`.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you override the style module or this setting,you
+        _entirely overwrite_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide][03].
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/tabs
+        [02]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [03]: https://sass-lang.com/guide
+        [sref:`flex-wrap`]: mdn.css:flex-wrap
+        [sref:`order`]: mdn.css:order
+        [sref:`overflow`]: mdn.css:overflow
+        [sref:`Theme.Config.Mode`]: Platen.Site.Theme.Config.Mode
+        [sref:`Theme.Styles.Utils.Outline`]: Platen.Site.Theme.Styles.Utils.Outline
+        [sref:`$border-radius`]: Platen.Site.Theme.Variables.BasicSCSS.border-radius
+        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`$padding-medium`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`$padding-minimal`]: Platen.Site.Theme.Variables.BasicSCSS.padding-minimal
+        [sref:`Theme.Variables.DarkCSS.gray-200`]: Platen.Site.Theme.Variables.DarkCSS.gray-200
+        [sref:`Theme.Variables.DarkCSS.link-color`]: Platen.Site.Theme.Variables.DarkCSS.link-color
+        [sref:`Theme.Variables.LightCSS.gray-200`]: Platen.Site.Theme.Variables.LightCSS.gray-200
+        [sref:`Theme.Variables.LightCSS.link-color`]: Platen.Site.Theme.Variables.LightCSS.link-color
+        [sref:flex box]: mdn.css:CSS_Flexible_Box_Layout
+        [sref:radio input]: mdn.html.element:input/radio
+        [sref:label]: mdn.html.element:label
+    type: string
+    default: tabs

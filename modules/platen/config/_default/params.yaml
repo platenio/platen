@@ -175,65 +175,65 @@ Platen:
         Header: platen/features/pwa/header
     PortableLinks:                            # BookPortableLinks
       Enabled: true
-  Markup:
-    Art:
-      Enabled: true
-      Partials:
-        Renderers:
-          Image: platen/markup/art/image
-      Style: art
-    Button:
-      Enabled: true
-      Partials:
-        Renderers:
-          Image: platen/markup/button/image
-      Style: button
-    Columns:
-      Enabled: true
-      Partials:
-        Renderers:
-          Codeblock: platen/markup/columns/codeblock
-      Style: columns
-    Details:
-      Enabled: true
-      Partials:
-        Renderers:
-          Codeblock: platen/markup/details/codeblock
-      Style: details
-    Itch:
-      Enabled: true
-      Partials:
-        Renderers:
-          Image: platen/markup/itch/image
-    Katex:
-      Enabled: true
-      AlwaysLoad: false
-      Version: 0.16.4
-      Partials:
-        Header: platen/markup/katex/header
-        Renderers:
-          Codeblock: platen/markup/katex/codeblock
-          Image: platen/markup/katex/image
-    Mermaid:
-      Enabled: true
-      Version: 9.3.0
-      Container: pre
-      Partials:
-        Header: platen/markup/mermaid/header
-        Renderers:
-          Codeblock: platen/markup/mermaid/codeblock
-    Section:
-      Enabled: true
-      Partials:
-        Renderers:
-          Codeblock: platen/markup/section/codeblock
-      Style: section
-    Tabs:
-      Enabled: true
-      Partials:
-        Renderers:
-          Codeblock: platen/markup/tabs/codeblock
-      Style: tabs
+  markup:
+    art:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/art/image
+      style: art
+    buttons:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/buttons/image
+      style: buttons
+    columns:
+      enabled: true
+      partials:
+        renderers:
+          codeblock: platen/markup/columns/codeblock
+      style: columns
+    details:
+      enabled: true
+      partials:
+        renderers:
+          codeblock: platen/markup/details/codeblock
+      style: details
+    itch:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/itch/image
+    katex:
+      enabled:     true
+      always_load: false
+      version:     0.16.4
+      partials:
+        header: platen/markup/katex/header
+        renderers:
+          codeblock: platen/markup/katex/codeblock
+          image: platen/markup/katex/image
+    mermaid:
+      enabled: true
+      version: 9.3.0
+      container: pre
+      partials:
+        header: platen/markup/mermaid/header
+        renderers:
+          codeblock: platen/markup/mermaid/codeblock
+    section:
+      enabled: true
+      partials:
+        renderers:
+          codeblock: platen/markup/section/codeblock
+      style: section
+    tabs:
+      enabled: true
+      partials:
+        renderers:
+          codeblock: platen/markup/tabs/codeblock
+      style: tabs
   Repository:
     CommitPath: commit                        # BookCommitPath
     EditPath: edit/main                       # BookEditPath

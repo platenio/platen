@@ -1,0 +1,175 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: details.schema.yaml
+title: Details
+description: Defines the options for Platen's details markup
+schematize:
+  details: |
+    Defines the map of options for Platen's [details markup][01]. The existing value is a map that
+    includes whether or not to enable the codeblock render hook and its style definition.
+
+    When this markup is enabled, you can add semantically collapsible content to a page with a
+    [codeblock][01].
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the full
+    list of all properties in your own configuration file. Only specify the values you want to add
+    or replace.
+
+    <!-- Reference Links -->
+    [01]: /modules/platen/markup/details
+type: object
+properties:
+  enabled:
+    title: Enable Details
+    description: Choose whether details block rendering is available for the site.
+    schematize:
+      details: |
+        Choose whether the site renders codeblocks as [sref:`<details>`] elements, making the
+        content semantically collapsible. The default is `true`.
+
+        [sref:`<details>`]: mdn.html.element:details
+      weight: 1
+    type: boolean
+    default: true
+  aliases:
+    title: Aliases
+    description: Defines additional language IDs for the codeblock render hook.
+    schematize:
+      weight: 4
+      details: |
+        Define one or more language IDs to use in addition to the default language IDs for codeblocks
+        that render details blocks. The default language ID is `details`.
+
+        You can specify a string or an array of strings. If the value is an array, each item in the
+        array is added as an alias.
+    oneOf:
+      - type: array
+        items:
+          type: string
+      - type: string
+  partials:
+    title: Markup Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when [sref:`enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`enabled`]: Platen.Site.markup.details.enabled
+      weight: 100
+      skipSchemaRender: true
+    type: object
+    properties:
+      renderers:
+        title: Renderer Partials
+        description: Registers one or more partials that act as render hooks.
+        type: object
+        schematize:
+          skipSchemaRender: true
+          details: |
+            Defines a map of partials to use as Markdown render hooks. Like all partials, these are
+            only processed when [sref:`enabled`] is set to `true`.
+
+            Supported renderer partials include:
+
+            - `codeblock`, processed for fenced code blocks with a language ID
+            - `heading`, processed for headings
+            - `image`, processed for image links
+            - `link`, processed for non-image links
+
+            In all cases, all renderer partials for enabled features and markup options are checked
+            one after the other unless they return a render string. Only the first applicable
+            partial that returns a render string is processed and rendered.
+
+            <!-- Reference Links -->
+            [sref:`enabled`]: Platen.Site.markup.details.enabled
+        properties:
+          codeblock:
+            title: Codeblock Render Hook Partial
+            description: Adds a partial to call when processing the codeblock render hook.
+            schematize:
+              details: |
+                Adds support for rendering content as collapsible blocks with a summary. This render
+                hook is only processed when the language ID for a codeblock is `details`.
+
+                It renders the codeblock's definition inside a [sref:<`details`>][s01] element with
+                a [sref:`<summary>`][s02] and the content rendered in a [sref:`<div`][s03].
+
+                For more information about using codeblocks to add collapsible details, see
+                [the reference documentation][01].
+
+                This value defaults to `platen/markup/details/codeblock`. You can replace it with a
+                different value, defining a new partial, or override the existing partial by creating
+                the file `layouts/partials/platen/markup/mermaid/codeblock.html` in your own site or
+                module.
+
+                For more information about defining codeblock render hook partials, see
+                [Defining a Codeblock Render Hook Partial][02] in the [Theme Guide][03].
+
+                <!-- Reference Links -->
+                [01]: /modules/platen/markup/details
+                [02]: /styling
+                [03]: /styling
+                [s01]: mdn.html.element:details
+                [s02]: mdn.html.element:summary
+                [s03]: mdn.html.element:div
+            type: string
+            default: platen/markup/details/codeblock
+  style:
+    title: Markup Simple Style Module
+    description: Defines the markup's simple style module
+    schematize:
+      weight: 100
+      skipSchemaRender: true
+      details: |
+        Defines the style for details in Markdown content. By default, the only setting for this
+        property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .markdown {
+          details {
+            padding: $padding-large;
+            border: $padding-minimal solid var(--gray-200);
+            border-radius: $border-radius;
+
+            summary {
+              line-height: 1;
+              padding: $padding-large;
+              margin: -$padding-large;
+              cursor: pointer;
+            }
+
+            &[open] summary {
+              margin-bottom: 0;
+            }
+          }
+        }
+        ```
+
+        This applies to the `details` element and its children in Markdown content, as added with
+        the `details` codeblock markup.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/markup/_details.scss` in your [assets folder][02], which defaults to `assets` in
+        your project root.
+        
+        You can also create a new style module in the `styles/markup` folder and set this value to
+        that module's name. If you do, omit the leading `_` and trailing `.scss`. For example, the
+        name for the style module `assets/styles/markup/_foo.scss` is `foo`.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you override the style module or this setting,you
+        _entirely overwrite_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide][03].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`enabled`]: Platen.Site.Theme.Styles.Defined.enabled
+    type: string
+    default: details

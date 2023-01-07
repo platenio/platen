@@ -12,9 +12,9 @@
 {{- end -}}
 
 {{/* Use arbitrary renderers if no feature applied */}}
-{{- range $markup := site.Params.Platen.Markup -}}
-  {{- if and $markup.Enabled (eq "" $renderedLink) -}}
-    {{- with $markup.Partials.Renderers.Link -}}
+{{- range $markup := site.Params.Platen.markup -}}
+  {{- if and $markup.enabled (eq "" $renderedLink) -}}
+    {{- with $markup.partials.renderers.link -}}
       {{- $renderedLink = partial . $params }}
     {{- end -}}
   {{- end -}}

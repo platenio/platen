@@ -26,9 +26,9 @@
   {{- end -}}
 {{- end -}}
 
-{{ range $feature, $settings := site.Params.Platen.Markup -}}
-  {{- if $settings.Enabled -}}
-    {{- with $settings.Partials.Header -}}
+{{ range $feature, $settings := site.Params.Platen.markup -}}
+  {{- if $settings.enabled -}}
+    {{- with $settings.partials.header -}}
       {{ partial . $context }}
     {{- end -}}
   {{- end -}}

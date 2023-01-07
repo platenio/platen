@@ -1,55 +1,55 @@
-{{- $context := . -}}
+{{- $Context := . -}}
 
-{{- $loadKatex := $context.Store.Get "hasKatex"
-                  | default $context.Params.Platen.Markup.Katex.AlwaysLoad
-                  | default site.Params.Platen.Markup.Katex.AlwaysLoad
+{{- $loadKatex := $Context.Store.Get "_hasKatex"
+    | default $Context.Params.Platen.markup.katex.always_load
+    | default site.Params.Platen.markup.katex.always_load
 -}}
 
 {{- if $loadKatex -}}
   {{/* Determine if mhchem should be loaded too */}}
-  {{- $loadChem := $context.Store.Get "hasChem"
-                   | default (gt (findRE `\\ce\{(.|\s)+?\}` $context.RawContent) 0)
+  {{- $loadChem := $Context.Store.Get "_hasChem"
+                   | default (gt (findRE `\\ce\{(.|\s)+?\}` $Context.RawContent) 0)
   -}}
   {{/* Get the KaTeX URLs to use */}}
-  {{- $version      := default "0.16.4" site.Params.Platen.Markup.Katex.Version           -}}
-  {{- $urlPrefix    := "https://cdn.jsdelivr.net/npm/katex"                               -}}
-  {{- $styleUrl     := printf "%s@%s/dist/katex.min.css"              $urlPrefix $version -}}
-  {{- $libraryUrl   := printf "%s@%s/dist/katex.min.js"               $urlPrefix $version -}}
-  {{- $chemistryUrl := printf "%s@%s/dist/contrib/mhchem.min.js"      $urlPrefix $version -}}
-  {{- $renderUrl    := printf "%s@%s/dist/contrib/auto-render.min.js" $urlPrefix $version -}}
+  {{- $Version      := site.Params.Platen.markup.katex.version | default "0.16.4"         -}}
+  {{- $UrlPrefix    := "https://cdn.jsdelivr.net/npm/katex"                               -}}
+  {{- $StyleUrl     := printf "%s@%s/dist/katex.min.css"              $UrlPrefix $Version -}}
+  {{- $LibraryUrl   := printf "%s@%s/dist/katex.min.js"               $UrlPrefix $Version -}}
+  {{- $ChemistryUrl := printf "%s@%s/dist/contrib/mhchem.min.js"      $UrlPrefix $Version -}}
+  {{- $RenderUrl    := printf "%s@%s/dist/contrib/auto-render.min.js" $UrlPrefix $Version -}}
 
   {{/* Initialize the slice of strings to render */}}
   {{- $renderStrings := slice -}}
 
   {{/* Get the KaTeX style definitions */}}
-  {{- $style           := resources.GetRemote $styleUrl
-                          | resources.Copy "katex/katex.min.css"
-                          | resources.Fingerprint
+  {{- $style           := resources.GetRemote $StyleUrl
+      | resources.Copy "katex/katex.min.css"
+      | resources.Fingerprint
   -}}
   {{- $styleIntegrity  := partial "platen/utils/getIntegrityAttributes" $style  -}}
   {{- $styleAttributes := slice `rel="stylesheet"`
-                          | append (printf `href="%s"` $style.RelPermalink)
-                          | append $styleIntegrity
+      | append (printf `href="%s"` $style.RelPermalink)
+      | append $styleIntegrity
   -}}
   {{- $styleAttributes  = delimit $styleAttributes " "          -}}
   {{- $style           := printf "<link %s />" $styleAttributes -}}
   {{- $renderStrings    = $renderStrings | append $style        -}}
   {{/* Get the KaTeX API library script */}}
-  {{- $library           := resources.GetRemote $libraryUrl
-                            | resources.Copy "katex/katex.min.js"
-                            | resources.Fingerprint
+  {{- $library           := resources.GetRemote $LibraryUrl
+      | resources.Copy "katex/katex.min.js"
+      | resources.Fingerprint
   -}}
   {{- $libraryIntegrity  := partial "platen/utils/getIntegrityAttributes" $library  -}}
   {{- $libraryAttributes := slice "defer"
-                            | append (printf `src="%s"` $library.RelPermalink)
-                            | append $libraryIntegrity
+      | append (printf `src="%s"` $library.RelPermalink)
+      | append $libraryIntegrity
   -}}
   {{- $libraryAttributes  = delimit $libraryAttributes " "                   -}}
   {{- $library           := printf "<script %s></script>" $libraryAttributes -}}
   {{- $renderStrings      = $renderStrings | append $library                 -}}
   {{/* Get the mhchem library script, if needed */}}
   {{- if $loadChem -}}
-    {{- $chemistry           := resources.GetRemote $chemistryUrl
+    {{- $chemistry           := resources.GetRemote $ChemistryUrl
         | resources.Copy "katex/mhchem.min.js"
         | resources.Fingerprint
     -}}
@@ -63,15 +63,15 @@
     {{- $renderStrings    = $renderStrings | append $chemistry                     -}}
   {{- end -}}
   {{/* Get the KaTeX render script */}}
-  {{- $render           := resources.GetRemote $renderUrl
-                           | resources.Copy "katex/auto-render.min.js"
-                           | resources.Fingerprint
+  {{- $render           := resources.GetRemote $RenderUrl
+      | resources.Copy "katex/auto-render.min.js"
+      | resources.Fingerprint
   -}}
   {{- $renderIntegrity  := partial "platen/utils/getIntegrityAttributes" $render  -}}
   {{- $renderAttributes := slice "defer"
-                           | append (printf `src="%s"` $render.RelPermalink)
-                           | append $renderIntegrity
-                           | append `onload="renderMathInElement(document.body);"`
+      | append (printf `src="%s"` $render.RelPermalink)
+      | append $renderIntegrity
+      | append `onload="renderMathInElement(document.body);"`
   -}}
   {{- $renderAttributes  = delimit $renderAttributes " "                   -}}
   {{- $render           := printf "<script %s></script>" $renderAttributes -}}

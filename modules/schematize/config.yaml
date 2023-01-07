@@ -17,11 +17,11 @@ params:
           Enabled: true
           Style:
             Name: schematize
-    Markup:
-      Schematize:
-        Enabled: true
-        Partials:
-          Renderers:
-            Link: schematize/sref/markup/renderers/links
+    markup:
+      schematize:
+        enabled: true
+        partials:
+          renderers:
+            link: schematize/sref/markup/renderers/links
   Schematize:
     SchemaRoot: schemas

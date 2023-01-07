@@ -12,9 +12,9 @@
 {{- end -}}
 
 {{/* Use arbitrary renderers if no feature applied */}}
-{{- range $markup := site.Params.Platen.Markup -}}
-  {{- if and $markup.Enabled (eq "" $renderedHeading) -}}
-    {{- with $markup.Partials.Renderers.Heading -}}
+{{- range $markup := site.Params.Platen.markup -}}
+  {{- if and $markup.enabled (eq "" $renderedHeading) -}}
+    {{- with $markup.partials.renderers.heading -}}
       {{- $renderedHeading = partial . $params }}
     {{- end -}}
   {{- end -}}

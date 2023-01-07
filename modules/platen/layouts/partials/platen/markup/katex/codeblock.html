@@ -1,25 +1,25 @@
-{{- $params     := .                                   -}}
-{{- $config     := site.Params.Platen.Markup.Katex   -}}
-{{- $aliases    := $config.aliases                     -}}
-{{- $page       := $params.Page                        -}}
-{{- $position   := $params.Position                    -}}
-{{- $definition := $params.Inner                       -}}
-{{- $type       := $params.Type | lower                -}}
-{{- $attributes := $params.Attributes                  -}}
+{{- $Params     := .                                   -}}
+{{- $Config     := site.Params.Platen.markup.katex     -}}
+{{- $Aliases    := $Config.aliases                     -}}
+{{- $Page       := $Params.Page                        -}}
+{{- $Position   := $Params.Position                    -}}
+{{- $definition := $Params.Inner                       -}}
+{{- $type       := $Params.Type | lower                -}}
+{{- $Attributes := $Params.Attributes                  -}}
 
 {{- $renderedCode := "" -}}
 
 {{- $mathLanguageIDs := slice "katex" "math" -}}
 {{- $chemLanguageIDs  := slice "chem"         -}}
-{{- with $aliases -}}
-  {{- if (reflect.IsSlice $aliases) -}}
-    {{- $mathLanguageIDs = union $mathLanguageIDs $aliases -}}
-  {{- else if (reflect.IsMap $aliases) -}}
-    {{- $mathAliases := $aliases.math -}}
-    {{- $chemAliases := $aliases.chem -}}
+{{- with $Aliases -}}
+  {{- if (reflect.IsSlice $Aliases) -}}
+    {{- $mathLanguageIDs = union $mathLanguageIDs $Aliases -}}
+  {{- else if (reflect.IsMap $Aliases) -}}
+    {{- $mathAliases := $Aliases.math -}}
+    {{- $chemAliases := $Aliases.chem -}}
     {{- with $mathAliases -}}
       {{- if (reflect.IsMap $mathAliases) -}}
-        {{- errorf "Invalid definition for Platen.Markup.Katex.Aliases.Group; must be one or more strings." -}}
+        {{- errorf "Invalid definition for Platen.markup.katex.aliases.math; must be one or more strings." -}}
       {{- else if (reflect.IsSlice $mathAliases) -}}
         {{- $mathLanguageIDs = union $mathLanguageIDs $mathAliases -}}
       {{- else -}}
@@ -28,7 +28,7 @@
     {{- end -}}
     {{- with $chemAliases -}}
       {{- if (reflect.IsMap $chemAliases) -}}
-        {{- errorf "Invalid definition for Platen.Markup.Katex.Aliases.Entry; must be one or more strings." -}}
+        {{- errorf "Invalid definition for Platen.markup.katex.aliases.chemistry; must be one or more strings." -}}
       {{- else if (reflect.IsSlice $chemAliases) -}}
         {{- $chemLanguageIDs = union $chemLanguageIDs $chemAliases -}}
       {{- else -}}
@@ -36,36 +36,46 @@
       {{- end  -}}
     {{- end -}}
   {{- else -}}
-    {{- $mathLanguageIDs = $mathLanguageIDs | append (print $aliases) -}}
+    {{- $mathLanguageIDs = $mathLanguageIDs | append (print $Aliases) -}}
   {{- end  -}}
 {{- end -}}
 
 {{- $validLanguageIDs := union $mathLanguageIDs $chemLanguageIDs -}}
 
-{{- $chemPattern      := `\\ce\{(.|\s)+?\}` -}}
+{{- $ChemPattern      := `\\ce\{(.|\s)+?\}` -}}
 
 {{- if in $validLanguageIDs $type -}}
-  {{- $params.Page.Store.Set "hasKatex" true             -}}
-  {{- $chemUsages := findRE $chemPattern     $definition -}}
+  {{- $Params.Page.Store.Set "_hasKatex" true            -}}
+  {{- $chemUsages := findRE $ChemPattern     $definition -}}
   {{- $isChemType := in     $chemLanguageIDs $type       -}}
   {{- if or $isChemType (gt $chemUsages 0) -}}
-    {{- $params.Page.Store.Set "hasChem" true -}}
+    {{- $Params.Page.Store.Set "_hasChem" true -}}
   {{- end -}}
 
   {{/* Parse the definition for data and markdown */}}
   {{- $infoParams := dict "Definition" $definition "SupportsData" true "SupportsMarkdown" true -}}
   {{- $info       := partial "platen/utils/getCodeblockInfo" $infoParams                       -}}
 
-  {{- $caption     := $info.Data.caption                                                 -}}
-  {{- $asFigure    := $info.Data.asFigure | default $attributes.asFigure | default false -}}
-  {{- $class       := $info.Data.class    | default $attributes.class                    -}}
-  {{- $id          := $info.Data.id       | default $attributes.id                       -}}
-  {{- $displayMode := $info.Data.display  | default $attributes.display  | default true  -}}
-  {{- $trimParams  := dict "Text" $info.Markdown "TrimEOL" true                         -}}
-  {{- $definition  := partial "platen/utils/getLeadTrimmedText" $trimParams             -}}
+  {{- $caption         := $info.Data.caption                                                   -}}
+  {{- $captionPosition := $info.Data.caption_position | default "bottom"                       -}}
+  {{- $asFigure        := $info.Data.as_figure | default $Attributes.as_figure | default false -}}
+  {{- $class           := $info.Data.class     | default $Attributes.class                     -}}
+  {{- $id              := $info.Data.id        | default $Attributes.id                        -}}
+  {{- $displayMode     := $info.Data.display   | default $Attributes.display  | default true   -}}
+  {{- $trimParams      := dict "Text" $info.Markdown "TrimEOL" true                            -}}
+  {{- $definition      := partial "platen/utils/getLeadTrimmedText" $trimParams                -}}
 
   {{- with $caption -}}
     {{- $asFigure = true -}}
+  {{- end -}}
+
+  {{- with $captionPosition -}}
+    {{- $ValidPositions := slice "top" "bottom" -}}
+    {{- if not (in $ValidPositions $captionPosition) -}}
+      {{- errorf "%s: Specified caption position '%s' is invalid. Must be one of: '%s'"
+                 $Position $captionPosition (delimit $ValidPositions "', '" "', or '")
+      -}}
+    {{- end -}}
   {{- end -}}
 
   {{- $spanAttributes := slice -}}
@@ -108,23 +118,16 @@
     {{- with $figureAttributes -}}
       {{- $figureAttributes = printf " %s" $figureAttributes -}}
     {{- end -}}
-    {{- $renderedCode     = printf "<figure%s>" $figureAttributes                    -}}
+    {{- $renderedCode     = printf "<figure%s>" $figureAttributes -}}
 
     {{- with $caption -}}
-      {{- $atTop             := false    -}}
-      {{- $text              := $caption -}}
-      {{- if reflect.IsMap $caption -}}
-        {{- $atTop = default $atTop $caption.AtTop -}}
-        {{- $text  = $caption.Text                 -}}
-      {{- end -}}
-
-      {{- $renderParams      := dict "Page"        $page
-                                     "Content"     $text
+      {{- $renderParams      := dict "Page"        $Page
+                                     "Content"     $caption
                                      "IndentCount" 4
       -}}
       {{- $renderedcaption := partial "platen/utils/getPrettyRender" $renderParams              -}}
       {{- $captionCode     := printf "  <figcaption>\n    %s\n  </figcaption>" $renderedcaption -}}
-      {{- if $atTop -}}
+      {{- if eq "top" $captionPosition -}}
         {{- $renderedCode = printf "%s\n  %s\n%s" $renderedCode $captionCode $renderedSpan -}}
       {{- else -}}
         {{- $renderedCode = printf "%s\n  %s\n%s" $renderedCode $renderedSpan $captionCode -}}

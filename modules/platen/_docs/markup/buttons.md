@@ -27,8 +27,6 @@ Memo:
 
 Platen uses special notation for rendering links styled as buttons with an image link.
 
-![button:Flagrant Garden](https://flagrant.garden)
-
 When used, it inserts an [sref:`<a>` (anchor)][s01] HTML element styled as a button.
 
 ## Syntax

@@ -1,27 +1,26 @@
-{{- $params      := .                                 -}}
-{{- $config      := site.Params.Platen.Markup.Katex   -}}
-{{- $aliases     := $config.aliases                   -}}
-{{- $page        := $params.Page                      -}}
-{{- $destination := $params.Destination               -}}
-{{- $title       := $params.Title                     -}}
-{{- $text        := $params.PlainText                 -}}
-{{- $isBlock     := $params.IsBlock                   -}}
-{{- $ordinal     := $params.Ordinal                   -}}
+{{- $Params      := .                                 -}}
+{{- $Config      := site.Params.Platen.markup.katex   -}}
+{{- $Aliases     := $Config.aliases                   -}}
+{{- $Page        := $Params.Page                      -}}
+{{- $destination := $Params.Destination               -}}
+{{- $title       := $Params.Title                     -}}
+{{- $text        := $Params.PlainText                 -}}
+{{- $IsBlock     := $Params.IsBlock                   -}}
+{{- $Prdinal     := $Params.Ordinal                   -}}
 
 {{- $renderedImage := "" -}}
 
-{{- $prefixes := slice "button:" "btn:" -}}
-{{- $mathPrefixes := slice "katex" "math" -}}
-{{- $chemPrefixes  := slice "chem"         -}}
-{{- with $aliases -}}
-  {{- if (reflect.IsSlice $aliases) -}}
-    {{- $mathPrefixes = union $mathPrefixes $aliases -}}
-  {{- else if (reflect.IsMap $aliases) -}}
-    {{- $mathAliases := $aliases.math -}}
-    {{- $chemAliases := $aliases.chem -}}
+{{- $mathPrefixes  := slice "katex"   "math" -}}
+{{- $chemPrefixes  := slice "chem"           -}}
+{{- with $Aliases -}}
+  {{- if (reflect.IsSlice $Aliases) -}}
+    {{- $mathPrefixes = union $mathPrefixes $Aliases -}}
+  {{- else if (reflect.IsMap $Aliases) -}}
+    {{- $mathAliases := $Aliases.math -}}
+    {{- $chemAliases := $Aliases.chem -}}
     {{- with $mathAliases -}}
       {{- if (reflect.IsMap $mathAliases) -}}
-        {{- errorf "Invalid definition for Platen.Markup.Katex.Aliases.Group; must be one or more strings." -}}
+        {{- errorf "Invalid definition for Platen.markup.katex.aliases.math; must be one or more strings." -}}
       {{- else if (reflect.IsSlice $mathAliases) -}}
         {{- $mathPrefixes = union $mathPrefixes $mathAliases -}}
       {{- else -}}
@@ -30,7 +29,7 @@
     {{- end -}}
     {{- with $chemAliases -}}
       {{- if (reflect.IsMap $chemAliases) -}}
-        {{- errorf "Invalid definition for Platen.Markup.Katex.Aliases.Entry; must be one or more strings." -}}
+        {{- errorf "Invalid definition for Platen.markup.katex.aliases.chemistry; must be one or more strings." -}}
       {{- else if (reflect.IsSlice $chemAliases) -}}
         {{- $chemPrefixes = union $chemPrefixes $chemAliases -}}
       {{- else -}}
@@ -38,12 +37,12 @@
       {{- end  -}}
     {{- end -}}
   {{- else -}}
-    {{- $mathPrefixes = $mathPrefixes | append (print $aliases) -}}
+    {{- $mathPrefixes = $mathPrefixes | append (print $Aliases) -}}
   {{- end  -}}
 {{- end -}}
 
 {{- $validPrefixes := apply (union $mathPrefixes $chemPrefixes) "printf" "%s:" "." -}}
-{{- $chemPattern   := `\\ce\{(.|\s)+?\}`                                           -}}
+{{- $ChemPattern   := `\\ce\{(.|\s)+?\}`                                           -}}
 
 {{- $hasPrefix := false -}}
 {{- $alt       := $text -}}
@@ -52,11 +51,11 @@
   {{- if and (not $hasPrefix) (hasPrefix $text $prefix) -}}
     {{- $hasPrefix     = true                                                  -}}
     {{- $alt           = strings.TrimPrefix $prefix $text                      -}}
-    {{- $params.Page.Store.Set "hasKatex" true                                 -}}
-    {{- $chemUsages   := findRE $chemPattern     $alt                          -}}
+    {{- $Params.Page.Store.Set "_hasKatex" true                                -}}
+    {{- $chemUsages   := findRE $ChemPattern     $alt                          -}}
     {{- $isChemPrefix := in     $chemPrefixes (strings.TrimSuffix ":" $prefix) -}}
     {{- if or $isChemPrefix (gt $chemUsages 0) -}}
-      {{- $params.Page.Store.Set "hasChem" true -}}
+      {{- $Params.Page.Store.Set "_hasChem" true -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}

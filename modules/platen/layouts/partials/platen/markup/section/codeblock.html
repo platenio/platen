@@ -1,20 +1,20 @@
-{{- $params     := .                                   -}}
-{{- $config     := site.Params.Platen.Markup.Section   -}}
-{{- $aliases    := $config.aliases                     -}}
-{{- $page       := $params.Page                        -}}
-{{- $position   := $params.Position                    -}}
-{{- $definition := $params.Inner                       -}}
-{{- $type       := $params.Type | lower                -}}
-{{- $attributes := $params.Attributes                  -}}
+{{- $Params     := .                                   -}}
+{{- $Config     := site.Params.Platen.markup.section   -}}
+{{- $Aliases    := $Config.aliases                     -}}
+{{- $Page       := $Params.Page                        -}}
+{{- $Position   := $Params.Position                    -}}
+{{- $definition := $Params.Inner                       -}}
+{{- $type       := $Params.Type | lower                -}}
+{{- $Attributes := $Params.Attributes                  -}}
 
 {{- $renderedCode := "" -}}
 
 {{- $validLanguageIDs := slice "section" -}}
-{{- with $aliases -}}
-  {{- if (reflect.IsSlice $aliases) -}}
-    {{- $validLanguageIDs = union $validLanguageIDs $aliases -}}
+{{- with $Aliases -}}
+  {{- if (reflect.IsSlice $Aliases) -}}
+    {{- $validLanguageIDs = union $validLanguageIDs $Aliases -}}
   {{- else -}}
-    {{- $validLanguageIDs = $validLanguageIDs | append (print $aliases) -}}
+    {{- $validLanguageIDs = $validLanguageIDs | append (print $Aliases) -}}
   {{- end  -}}
 {{- end -}}
 
@@ -24,18 +24,18 @@
   {{- $info       := partial "platen/utils/getCodeblockInfo" $infoParams                       -}}
 
   {{/* Handle attributes and data */}}
-  {{- $class      := $info.Data.class        | default $attributes.class                       -}}
-  {{- $id         := $info.Data.id           | default $attributes.id                          -}}
-  {{- $root       := $info.Data.root         | default $attributes.root                        -}}
-  {{- $recurse    := $info.Data.recurse      | default $attributes.recurse     | default false -}}
-  {{- $useSummary := $info.Data.use_summary  | default $attributes.use_summary | default false -}}
+  {{- $class      := $info.Data.class        | default $Attributes.class                       -}}
+  {{- $id         := $info.Data.id           | default $Attributes.id                          -}}
+  {{- $root       := $info.Data.root         | default $Attributes.root                        -}}
+  {{- $recurse    := $info.Data.recurse      | default $Attributes.recurse     | default false -}}
+  {{- $useSummary := $info.Data.use_summary  | default $Attributes.use_summary | default false -}}
 
   {{/* Resolve the root section*/}}
   {{- $section := dict -}}
   {{- with $root -}}
-    {{- $section = $page.GetPage $root -}}
+    {{- $section = $Page.GetPage $root -}}
   {{- else -}}
-    {{- $section = $page -}}
+    {{- $section = $Page -}}
   {{- end -}}
 
   {{/* Retrieve and trim the actual definition or summary for the section, if any */}}
@@ -43,13 +43,13 @@
   {{- with $info.Markdown -}}
     {{- $trimParams   := dict "Text" $info.Markdown "TrimEOL" true                           -}}
     {{- $content       = partial "platen/utils/getLeadTrimmedText" $trimParams               -}}
-    {{- $renderParams := dict "Page" $page "Content" $content "IndentCount" 2 "AsBlock" true -}}
+    {{- $renderParams := dict "Page" $Page "Content" $content "IndentCount" 2 "AsBlock" true -}}
     {{- $content       = partial "platen/utils/getPrettyRender" $renderParams                -}}
     {{- $content       = printf "  %s" $content                                              -}}
   {{- else -}}
     {{- if $useSummary -}}
       {{/*
-        We use the with/else here and access $page.Params.summary instead of $page.Summary in the
+        We use the with/else here and access $Page.Params.summary instead of $Page.Summary in the
         default function to avoid infinite recursion for pages with a section codeblock where the
         page is included in the root section; in those cases, the .Summary has to render the page,
         then truncate it, which means that the codeblock is called again from inside itself forever.
@@ -58,7 +58,7 @@
         more comment before the summary block doesn't fix this.
       */}}
       {{- $content       = $section.Description | default $section.Params.summary              -}}
-      {{- $renderParams := dict "Page" $page "Content" $content "IndentCount" 2 "AsBlock" true -}}
+      {{- $renderParams := dict "Page" $Page "Content" $content "IndentCount" 2 "AsBlock" true -}}
       {{- $content       = partial "platen/utils/getPrettyRender" $renderParams                -}}
       {{- $content       = printf "  %s" $content                                              -}}
       {{- with $content -}}

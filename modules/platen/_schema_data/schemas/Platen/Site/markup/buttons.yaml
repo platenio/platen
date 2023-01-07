@@ -1,0 +1,186 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: buttons.schema.yaml
+title: Buttons
+description: Defines the options for Platen's buttons markup
+schematize:
+  details: |
+    Defines the map of options for Platen's [buttons markup][01]. The existing value is a map that
+    includes whether or not to enable the image render hook and its style definition.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all properties in your own configuration file. Only specify the values you want
+    to add or replace.
+
+    <!-- Reference Links -->
+    [01]: /modules/platen/markup/buttons
+type: object
+properties:
+  enabled:
+    title: Enable the markup option
+    description: Whether to enable the Buttons markup option for the site
+    schematize:
+      weight: 1
+      details: |
+        Choose whether the site renders image links with the `button:` or `btn:` prefix in their alt
+        text as buttons or normal image links. If this setting is set to `true`, any image links
+        added with the prefix are rendered as anchor ([sref:`<a>`]) elements styled like a button.
+        If this setting is `false`, the image links are rendered as normal.
+
+        <!-- Reference Links -->
+        [sref:`<a>`]: mdn.html.element:a
+    type: boolean
+    default: true
+  aliases:
+    title: Aliases
+    description: Defines additional prefixes for the image render hook.
+    schematize:
+      weight: 2
+      details: |
+        Define one or more prefixes to use in addition to the default prefixes (`button` and `btn`)
+        for button image links.
+
+        You can specify a string or an array of strings. If the value is an array, each item in the
+        array is added as an alias. Do not add a `:` suffix.
+    oneOf:
+      - type: array
+        items:
+          type: string
+      - type: string
+  partials:
+    title: Markup Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when [sref:`enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`enabled`]: Platen.Site.markup.buttons.enabled
+      weight: 100
+      skipSchemaRender: true
+    type: object
+    properties:
+      renderers:
+        title: Renderer Partials
+        description: Registers one or more partials that act as render hooks.
+        type: object
+        schematize:
+          weight: 2
+          skipSchemaRender: true
+          details: |
+            Defines a map of partials to use as Markdown render hooks. Like all partials, these are
+            only processed when [sref:`enabled`] is set to `true`.
+
+            Supported renderer partials include:
+
+            - `codeblock`, processed for fenced code blocks with a language ID
+            - `heading`, processed for headings
+            - `image`, processed for image links
+            - `link`, processed for non-image links
+
+            In all cases, all renderer partials for enabled features and markup options are checked
+            one after the other unless they return a render string. Only the first applicable
+            partial that returns a render string is processed and rendered.
+
+            <!-- Reference Links -->
+            [sref:`enabled`]: Platen.Site.markup.buttons.enabled
+        properties:
+          image:
+            title: Image Render Hook Partial
+            description: Adds a partial to call when processing the image render hook.
+            schematize:
+              details: |
+                Adds support for rendering image links as buttons in Platen. This render hook is
+                only called if the alt text for the image (i.e. `![altText](source "title")`) has
+                the `button:` or `btn` prefix. If the image link does have the prefix, it's
+                processed for adding an anchor ([sref:`<a>`]) element styled as a button. Activating
+                the button takes the site visitor to the page defined by the `source` input.
+
+                For more information about how to use this render partial, see
+                [the reference documentation][01] for this render hook.
+
+                For more information about defining codeblock render hook partials, see
+                [Defining a Codeblock Render Hook Partial][02] in the [Theme Guide][03].
+
+                <!-- Reference Links -->
+                [01]: /modules/platen/markup/buttons
+                [02]: /styling
+                [03]: /styling
+            type: string
+            default: platen/markup/buttons/image
+  style:
+    title: Markup Simple Style Module
+    description: Defines the art markup's simple style module
+    schematize:
+      weight: 100
+      skipSchemaRender: true
+      details: |
+        Defines default styling for buttons created by render hooks.
+
+        When you use a [`button`][01] render hook, the following SCSS is applied:
+
+        ```scss
+        .markdown a.platen-btn {
+          display: inline-block;
+          font-size: $font-size-medium;
+          color: var(--color-link);
+          line-height: $padding-large * 2;
+          padding: 0 $padding-large;
+          border: $padding-minimal solid var(--color-link);
+          border-radius: $border-radius;
+          cursor: pointer;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+        ```
+
+        The button is created as an anchor ([sref:`<a>`]) element with the `platen-btn` class.
+
+        It sets the display to [sref:`inline-block`] so the button can be added in the body text of
+        a paragraph. It sets the font-size to the value of [sref:`$font-size-medium`], the text
+        color to [sref:`LightCSS.color-link`] or [sref:`DarkCSS.color-link`] depending on the value
+        of the [sref:`Theme.Config.Mode`] setting.
+
+        It sets the horizontal padding for the button to [sref:`$padding-large`] and the line height
+        to twice that value.
+
+        It adds a minimal solid border with the width set to [sref:`$padding-minimal`], the color to
+        either [sref:`LightCSS.color-link`] or [sref:`DarkCSS.color-link`], and the radius to
+        [sref:`$border-radius`].
+
+        It ensures that the cursor is a normal pointer and that no text decoration is added when a
+        site visitor hovers on the button.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/markup/_buttons.scss` in your [assets folder][02], which defaults to `assets` in
+        your project root.
+        
+        You can also create a new style module in the `styles/markup` folder and set this value to
+        that module's name. If you do, omit the leading `_` and trailing `.scss`. For example, the
+        name for the style module `assets/styles/markup/_foo.scss` is `foo`.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you override the style module or this setting,you
+        _entirely overwrite_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide][03].
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/buttons
+        [02]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [03]: https://sass-lang.com/guide
+        [sref:`<a>`]: mdn.html.element:a
+        [sref:`inline-block`]: mdn.css:display-legacy
+        [sref:`Theme.Config.Mode`]: Platen.Site.Theme.Config.Mode
+        [sref:`$border-radius`]: Platen.Site.Theme.Variables.BasicSCSS.border-radius
+        [sref:`$font-size-medium`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-medium
+        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`$padding-minimal`]: Platen.Site.Theme.Variables.BasicSCSS.padding-minimal
+        [sref:`DarkCSS.color-link`]: Platen.Site.Theme.Variables.DarkCSS.color-link
+        [sref:`LightCSS.color-link`]: Platen.Site.Theme.Variables.LightCSS.color-link
+    type: string
+    default: buttons

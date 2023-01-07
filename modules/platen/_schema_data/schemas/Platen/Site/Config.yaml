@@ -72,7 +72,7 @@ properties:
         $ref: ./Shortcodes/Valid.yaml
         schematize:
           href: pattern-any
-  Markup:
+  markup:
     title: Markup Options
     description: Configure custom markdown for Platen.
     schematize:
@@ -94,45 +94,45 @@ properties:
       weight: 5
     type: object
     properties:
-      Art:
-        $ref: ./Markup/Art.yaml
+      art:
+        $ref: ./markup/art.yaml
         schematize:
           weight: 1
-      Buttons:
-        $ref: ./Markup/Buttons.yaml
+      buttons:
+        $ref: ./markup/buttons.yaml
         schematize:
           weight: 2
-      Columns:
-        $ref: ./Markup/Columns.yaml
+      columns:
+        $ref: ./markup/columns.yaml
         schematize:
           weight: 3
-      Details:
-        $ref: ./Markup/Details.yaml
+      details:
+        $ref: ./markup/details.yaml
         schematize:
           weight: 4
-      Itch:
-        $ref: ./Markup/Itch.yaml
+      itch:
+        $ref: ./markup/itch.yaml
         schematize:
           weight: 5
-      Katex:
-        $ref: ./Markup/Katex.yaml
+      katex:
+        $ref: ./markup/katex.yaml
         schematize:
           weight: 6
-      Mermaid:
-        $ref: ./Markup/Mermaid.yaml
+      mermaid:
+        $ref: ./markup/mermaid.yaml
         schematize:
           weight: 7
-      Section:
-        $ref: ./Markup/Section.yaml
+      section:
+        $ref: ./markup/section.yaml
         schematize:
           weight: 8
-      Tabs:
-        $ref: ./Markup/Tabs.yaml
+      tabs:
+        $ref: ./markup/tabs.yaml
         schematize:
           weight: 9
     patternProperties:
       ".":
-        $ref: ./Markup/Defining.yaml
+        $ref: ./markup/defining.yaml
         schematize:
           href: pattern-any
   Multilingual:

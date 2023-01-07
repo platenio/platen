@@ -1,0 +1,308 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: art.schema.yaml
+title: Art
+description: Defines the options for Platen's art markup
+schematize:
+  details: |
+    Defines the map of options for Platen's [art markup][01]. The existing value is a map that
+    includes whether or not to enable the image render hook and its style definition.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all properties in your own configuration file. Only specify the values you want
+    to add or replace.
+
+    <!-- Reference Links -->
+    [01]: /modules/platen/markup/art
+type: object
+properties:
+  enabled:
+    title: Enable the markup
+    description: Choose whether art image link rendering is available for the site.
+    schematize:
+      weight: 1
+      details: |
+        Choose whether the site renders image links with the `art:` prefix in their alt text as art
+        or normal images. If this setting is set to `true`, any images added with the prefix are
+        rendered in figures with an optional caption and content warning. If this setting is
+        `false`, the images are rendered as normal.
+    type: boolean
+    default: true
+  aliases:
+    title: Aliases
+    description: Defines additional prefixes for the image render hook.
+    schematize:
+      weight: 2
+      details: |
+        Define one or more prefixes to use in addition to the default prefix (`art`) for art image
+        links.
+
+        You can specify a string or an array of strings. If the value is an array, each item in the
+        array is added as an alias. Do not add a `:` suffix.
+    oneOf:
+      - type: array
+        items:
+          type: string
+      - type: string
+  partials:
+    title: Markup Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when [sref:`enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`enabled`]: Platen.Site.markup.art.enabled
+      weight: 100
+      skipSchemaRender: true
+    type: object
+    properties:
+      renderers:
+        title: Renderer Partials
+        description: Registers one or more partials that act as render hooks.
+        type: object
+        schematize:
+          weight: 2
+          skipSchemaRender: true
+          details: |
+            Defines a map of partials to use as Markdown render hooks. Like all partials, these are
+            only processed when [sref:`enabled`] is set to `true`.
+
+            Supported renderer partials include:
+
+            - `codeblock`, processed for fenced code blocks with a language ID
+            - `heading`, processed for headings
+            - `image`, processed for image links
+            - `link`, processed for non-image links
+
+            In all cases, all renderer partials for enabled features and markup options are checked
+            one after the other unless they return a render string. Only the first applicable
+            partial that returns a render string is processed and rendered.
+
+            <!-- Reference Links -->
+            [sref:`enabled`]: Platen.Site.markup.art.enabled
+        properties:
+          image:
+            title: Image Render Hook Partial
+            description: Adds a partial to call when processing the image render hook.
+            schematize:
+              details: |
+                Adds support for rendering images as artwork in Platen. This render hook is only
+                called if the alt text for the image (i.e. `![altText](source "title")`) has the
+                `art:` prefix. If the image does have the prefix, it's processed for adding the
+                image in a `<figure>` element with an optional caption and content warning.
+
+                For more information about how to use this render partial, see
+                [the reference documentation][01] for this render hook.
+
+                For more information about defining codeblock render hook partials, see
+                [Defining a Codeblock Render Hook Partial][01] in the [Theme Guide][02].
+
+                <!-- Reference Links -->
+                [01]: /modules/platen/markup/art
+                [02]: /styling
+            type: string
+            default: platen/markup/art/image
+  style:
+    title: Markup Simple Style Module
+    description: Defines the art markup's simple style module
+    schematize:
+      weight: 100
+      skipSchemaRender: true
+      details: |
+        Defines default styling for figures created by the art render hook for images.
+
+        When you add [an image with the [`art:` prefix][01], the following SCSS is applied:
+
+        ```scss
+        figure.platen-art {
+          width: 100%
+          img {
+            object-fit: contain;
+            width: 100%;
+          }
+          figcaption {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: smaller;
+          }
+
+          &.half {
+            width: 50%;
+          }
+          &.third {
+            width: 33%
+          }
+          &.quarter {
+            width: 25%
+          }
+
+          &.platen-content-warning {
+            img {
+              z-index: 10;
+              filter: blur(30px);
+            }
+            figcaption {
+              visibility: hidden;
+            }
+            input.platen-content-warning {
+              visibility: hidden;
+            }
+            input.platen-content-warning + label {
+              position: absolute;
+              z-index: 1;
+              bottom: 0;
+              top: 0;
+              left: 0;
+              right: 0;
+              margin: 1px ;
+              text-align: center;
+              &::before {
+                content: "Content Warning:";
+                display: block;
+                font-weight: bolder;
+                font-size: larger;
+                margin-bottom: 1em;
+                margin-top: 1em;
+              }
+            }
+            input[type="checkbox"]:checked + label {
+              opacity: 0;
+            }
+            input[type="checkbox"]:checked + label + img {
+              filter: blur(0);
+            }
+            input[type="checkbox"]:checked + label + img + figcaption {
+              visibility: visible;
+            }
+          }
+        }
+        ```
+
+        The markup creates a `<figure>` element with an `<img>` element containing the artwork.
+        If the markup specifies a caption, it's added in a `figcaption` element beneath the
+        image. By default, the `<figure>` element has the `platen-art` class.
+
+        ### Defaults
+
+        ```scss
+        width: 100%
+        img {
+          object-fit: contain;
+          width: 100%;
+        }
+        figcaption {
+          margin-top: 1rem;
+          text-align: center;
+          font-size: smaller;
+        }
+        ```
+
+        By default, the figure's width is set to take up the entirety of its available space.
+        Similarly, the image is always set to take up the full width of the figure itself and uses
+        the [sref:`object-fit`] property to keep the object's aspect ratio while fitting into the
+        available space.
+
+        If the figure includes a caption, the caption is added with a top margin of
+        [sref:`$padding-large`] with the text centered beneath the image and the font size decreased
+        on step.
+
+        ### Sizing Classes
+
+        ```scss
+        &.half {
+          width: 50%;
+        }
+        &.third {
+          width: 33%
+        }
+        &.quarter {
+          width: 25%
+        }
+        ```
+
+        When an author adds the `half`, `third`, or `quarter` class to the figure with the markup's
+        `class` attribute, the figure's width is set to the appropriate percent. Used in combination
+        with the `float-left` or `float-right` [sref:basic utility classes], authors can include
+        their artwork beside the rest of their content without having to use the [`columns`][02]
+        codeblock for the same effect.
+
+        ### Content Warning
+
+        ```scss
+        img {
+          z-index: 10;
+          filter: blur(30px);
+        }
+        figcaption {
+          visibility: hidden;
+        }
+        input.platen-content-warning {
+          visibility: hidden;
+        }
+        input.platen-content-warning + label {
+          position: absolute;
+          z-index: 1;
+          bottom: 0;
+          top: 0;
+          left: 0;
+          right: 0;
+          margin: 1px ;
+          text-align: center;
+          &::before {
+            content: "Content Warning:";
+            display: block;
+            font-weight: bolder;
+            font-size: larger;
+            margin-bottom: 1em;
+            margin-top: 1em;
+          }
+        }
+        input[type="checkbox"]:checked + label {
+          opacity: 0;
+        }
+        input[type="checkbox"]:checked + label + img {
+          filter: blur(0);
+        }
+        input[type="checkbox"]:checked + label + img + figcaption {
+          visibility: visible;
+        }
+        ```
+
+        When the markup is used with the [`content_warning` attribute][03], it adds
+        the `platen-content-warning` class to the figure and inserts a checkbox input and label
+        before the image element.
+
+        The styling blurs the image and super-imposes the content warning label over it, stretching
+        the label to fill the entire figure. This allows a site visitor to click anywhere in the
+        figure to unblur the image and hide the content warning instead, clicking again to reverse
+        the process.
+
+        ### Overriding
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/markup/_art.scss` in your [assets folder][04], which defaults to `assets` in your
+        project root.
+        
+        You can also create a new style module in the `styles/markup` folder and set this value to
+        that module's name. If you do, omit the leading `_` and trailing `.scss`. For example, the
+        name for the style module `assets/styles/markup/_foo.scss` is `foo`.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you override the style module or this setting,you
+        _entirely overwrite_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide][05].
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/art
+        [02]: /modules/platen/markup/columns
+        [03]: /modules/platen/markup/art#attribute-content_warning
+        [04]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [05]: https://sass-lang.com/guide
+        [sref:`object-fit`]: mdn.css:object-fit
+        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+    type: string
+    default: art

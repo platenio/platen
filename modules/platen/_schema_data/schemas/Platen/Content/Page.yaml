@@ -189,7 +189,7 @@ properties:
             [sref:`Display.TableOfContents.OrderedList`]: Platen.Site.Display.Settings.TableOfContents.OrderedList
         type: boolean
         default: false
-  Markup:
+  markup:
     title: Markup Options
     description: Control markup-specific behavior for this page, overriding site-level defaults.
     schematize:
@@ -200,13 +200,13 @@ properties:
       skipSchemaRender: true
     type: object
     properties:
-      Katex:
-        $ref: ./Markup/Katex.yaml
+      katex:
+        $ref: ./markup/katex.yaml
         schematize:
           weight: 1
           skipSchemaRender: true
-      Mermaid:
-        $ref: ./Markup/Mermaid.yaml
+      mermaid:
+        $ref: ./markup/mermaid.yaml
         schematize:
           weight: 2
           skipSchemaRender: true

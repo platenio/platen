@@ -1,12 +1,12 @@
 {{- $context := . -}}
 
-{{- if $context.Store.Get "hasMermaid" -}}
+{{- if $context.Store.Get "_hasMermaid" -}}
   {{/* Get the Mermaid URL */}}
-  {{- $version       := default site.Params.Platen.Markup.Mermaid.Version
-                                $context.Params.Platen.Markup.Mermaid.Version
+  {{- $Version       := default site.Params.Platen.markup.mermaid.version
+                                $context.Params.Platen.markup.mermaid.version
   -}}
-  {{- $urlPrefix     := "https://cdn.jsdelivr.net/npm"                                 -}}
-  {{- $libraryURL    := printf "%s/mermaid@%v/dist/mermaid.esm.min.mjs" $urlPrefix $version -}}
+  {{- $UrlPrefix     := "https://cdn.jsdelivr.net/npm"                                 -}}
+  {{- $libraryURL    := printf "%s/mermaid@%v/dist/mermaid.esm.min.mjs" $UrlPrefix $Version -}}
   {{- $library       := resources.GetRemote $libraryURL
                         | resources.Copy "mermaid/mermaid.esm.mjs"
                         | resources.Minify
@@ -24,7 +24,7 @@
 
   {{/*  Mindmap is deactivated for now; it doesn't work as documented.  */}}
   {{/*  {{- $mindmapURL := printf "%s/@mermaid-js/mermaid-mindmap@%v/dist/mermaid-mindmap.esm.min.mjs"
-                            $urlPrefix $version 
+                            $UrlPrefix $Version 
   -}}
   {{- $mindmap := resources.GetRemote $mindmapURL
                   | resources.Copy "mermaid/mermaid-mindmap.esm.min.mjs"

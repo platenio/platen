@@ -1,23 +1,23 @@
-{{- $params     := .                                   -}}
-{{- $config     := site.Params.Platen.Markup.Tabs      -}}
-{{- $aliases    := $config.aliases                     -}}
-{{- $page       := $params.Page                        -}}
-{{- $position   := $params.Position                    -}}
-{{- $definition := $params.Inner                       -}}
-{{- $type       := $params.Type | lower                -}}
-{{- $attributes := $params.Attributes                  -}}
+{{- $Params     := .                                   -}}
+{{- $Config     := site.Params.Platen.markup.tabs      -}}
+{{- $Aliases    := $Config.aliases                     -}}
+{{- $Page       := $Params.Page                        -}}
+{{- $Position   := $Params.Position                    -}}
+{{- $definition := $Params.Inner                       -}}
+{{- $type       := $Params.Type | lower                -}}
+{{- $Attributes := $Params.Attributes                  -}}
 
 {{- $renderedCode := "" -}}
 
 {{- $groupLanguageIDs := slice "tabs" -}}
 {{- $entryLanguageIDs := slice "tab"  -}}
-{{- with $aliases -}}
-  {{- if reflect.IsMap $aliases -}}
-    {{- $groupAliases := $aliases.group -}}
-    {{- $entryAliases := $aliases.entry -}}
+{{- with $Aliases -}}
+  {{- if reflect.IsMap $Aliases -}}
+    {{- $groupAliases := $Aliases.group -}}
+    {{- $entryAliases := $Aliases.entry -}}
     {{- with $groupAliases -}}
       {{- if (reflect.IsMap $groupAliases) -}}
-        {{- errorf "Invalid definition for Platen.Markup.Tabs.Aliases.Group; must be one or more strings." -}}
+        {{- errorf "Invalid definition for Platen.markup.tabs.aliases.group; must be one or more strings." -}}
       {{- else if (reflect.IsSlice $groupAliases) -}}
         {{- $groupLanguageIDs = union $groupLanguageIDs $groupAliases -}}
       {{- else -}}
@@ -26,17 +26,17 @@
     {{- end -}}
     {{- with $entryAliases -}}
       {{- if (reflect.IsMap $entryAliases) -}}
-        {{- errorf "Invalid definition for Platen.Markup.Tabs.Aliases.Entry; must be one or more strings." -}}
+        {{- errorf "Invalid definition for Platen.markup.tabs.aliases.entry; must be one or more strings." -}}
       {{- else if (reflect.IsSlice $entryAliases) -}}
         {{- $entryLanguageIDs = union $entryLanguageIDs $entryAliases -}}
       {{- else -}}
         {{- $entryLanguageIDs = $entryLanguageIDs | append (print $entryAliases) -}}
       {{- end  -}}
     {{- end -}}
-  {{- else if (reflect.IsSlice $aliases) -}}
-    {{- $groupLanguageIDs = union $groupLanguageIDs $aliases -}}
+  {{- else if (reflect.IsSlice $Aliases) -}}
+    {{- $groupLanguageIDs = union $groupLanguageIDs $Aliases -}}
   {{- else -}}
-    {{- $groupLanguageIDs = $groupLanguageIDs | append (print $aliases) -}}
+    {{- $groupLanguageIDs = $groupLanguageIDs | append (print $Aliases) -}}
   {{- end  -}}
 {{- end -}}
 
@@ -46,15 +46,15 @@
   {{- $info       := partial "platen/utils/getCodeblockInfo" $infoParams                       -}}
 
   {{/* Handle attributes and data */}}
-  {{- $class     := $info.Data.class | default $attributes.class -}}
-  {{- $id        := $info.Data.id    | default $attributes.id    -}}
+  {{- $class     := $info.Data.class | default $Attributes.class -}}
+  {{- $id        := $info.Data.id    | default $Attributes.id    -}}
   {{- $group     := printf "%s-%s"     $type $id                 -}}
   {{- $definition = $info.Markdown                               -}}
 
   {{/* Check for group ID, error if it isn't set */}}
   {{- with $id -}}
   {{- else -}}
-    {{- errorf "Missing mandatory ID for %s block at %s" $type $position -}}
+    {{- errorf "Missing mandatory ID for %s block at %s" $type $Position -}}
   {{- end -}}
 
   {{/* Process the actual definition, error if it's empty */}}
@@ -88,11 +88,11 @@
       {{- $tabDefinition  = printf "%s\n%s\n%s" $tabOpen $tabDefinition $tabClose  -}}
       {{- $definition     = replace $definition $tab $tabDefinition                -}}
     {{- else -}}
-      {{- errorf "No tab specified in tabs block at %s" $position -}}
+      {{- errorf "No tab specified in tabs block at %s" $Position -}}
     {{- end -}}
 
     {{/* Render the inner markdown for the tabs */}}
-    {{- $renderedTabs := $definition | $page.RenderString (dict "display" "block") -}}
+    {{- $renderedTabs := $definition | $Page.RenderString (dict "display" "block") -}}
     {{- $renderedTabs  = trim $renderedTabs "\n" -}}
 
     {{/* Define the default classes for the container div. */}}
@@ -115,7 +115,7 @@
     {{- $renderStrings  = $renderStrings | append `</div>`           -}}
     {{- $renderedCode   = delimit $renderStrings "\n"                -}}
   {{- else -}}
-    {{- errorf "No content in definition for columns block at %s" $position -}}
+    {{- errorf "No content in definition for columns block at %s" $Position -}}
   {{- end -}}
 {{- else if in $entryLanguageIDs $type -}}
   {{/* Parse the definition for data and markdown */}}
@@ -124,9 +124,9 @@
   {{- $definition  = $info.Markdown -}}
 
   {{/* Handle attributes and data */}}
-  {{- $class   := $info.Data.class   | default $attributes.class -}}
-  {{- $id      := $info.Data.id      | default $attributes.id    -}}
-  {{- $name    := $info.Data.name    | default $attributes.name  -}}
+  {{- $class   := $info.Data.class   | default $Attributes.class -}}
+  {{- $id      := $info.Data.id      | default $Attributes.id    -}}
+  {{- $name    := $info.Data.name    | default $Attributes.name  -}}
   {{- $checked := $info.Data.checked | default false             -}}
   {{- $group   := "" }}
 
@@ -134,7 +134,7 @@
   {{- with $info.Data.groupID -}}
     {{- $group = . -}}
   {{- else -}}
-    {{- errorf "Missing group ID for tab at '%s'. Is it inside a `tabs` block?" $position -}}
+    {{- errorf "Missing group ID for tab at '%s'. Is it inside a `tabs` block?" $Position -}}
   {{- end -}}
 
   {{/*
@@ -152,7 +152,7 @@
       {{/* Automatic Name */}}
       {{- $name = replaceRE `(-|_)` " " $id | title -}}
     {{- else -}}
-      {{- errorf "Missing name and id for tab. Must specify at least one." $position -}}
+      {{- errorf "Missing name and id for tab. Must specify at least one." $Position -}}
     {{- end -}}
   {{- end -}}
 
@@ -200,7 +200,7 @@
   {{- $labelAttributes = partial "platen/utils/getSafeAttributes" $attributeParams       -}}
   {{- $renderStrings   = $renderStrings
                          | append (printf "  <label %s>" $labelAttributes)
-                         | append (printf "    %s"       ($page.RenderString $name))
+                         | append (printf "    %s"       ($Page.RenderString $name))
                          | append (print  "  </label>")
   -}}
 
@@ -208,7 +208,7 @@
   {{- $divAttributes   = $divAttributes | append (printf `class="%s"` $divClass)   -}}
   {{- $attributeParams = dict "Attributes" $divAttributes "IndentCount" $divIndent -}}
   {{- $divAttributes   = partial "platen/utils/getSafeAttributes" $attributeParams -}}
-  {{- $contentParams  := dict "Page" $page "Content" $definition "IndentCount" 4 "AsBlock" true -}}
+  {{- $contentParams  := dict "Page" $Page "Content" $definition "IndentCount" 4 "AsBlock" true -}}
   {{- $content        := partial "platen/utils/getPrettyRender" $contentParams -}}
   {{- $renderStrings   = $renderStrings
                          | append (printf "  <div %s>" $divAttributes)

@@ -84,12 +84,12 @@
 {{- end -}}
 
 // Loop over the enabled markup extensions, handling each in turn. They may be independently styled.
-{{ range $markup, $settings := $context.Site.Params.Platen.Markup -}}
-  {{- if $settings.Enabled -}}
-    {{- with $settings.Partials.Style }}
+{{ range $markup, $settings := $context.Site.Params.Platen.markup -}}
+  {{- if $settings.enabled -}}
+    {{- with $settings.partials.style }}
       {{ partial . $context }}
     {{- end -}}
-    {{ with $settings.Style }}
+    {{ with $settings.style }}
       {{ partial $markupPartial (dict "Name" $markup "Settings" $settings) }}
     {{ end }}
   {{- end -}}

@@ -1,20 +1,20 @@
-{{- $params     := .                                   -}}
-{{- $config     := site.Params.Platen.Markup.Details   -}}
-{{- $aliases    := $config.aliases                     -}}
-{{- $page       := $params.Page                        -}}
-{{- $position   := $params.Position                    -}}
-{{- $definition := $params.Inner                       -}}
-{{- $type       := $params.Type | lower                -}}
-{{- $attributes := $params.Attributes                  -}}
+{{- $Params     := .                                   -}}
+{{- $Config     := site.Params.Platen.markup.details   -}}
+{{- $Aliases    := $Config.aliases                     -}}
+{{- $Page       := $Params.Page                        -}}
+{{- $Position   := $Params.Position                    -}}
+{{- $definition := $Params.Inner                       -}}
+{{- $type       := $Params.Type | lower                -}}
+{{- $Attributes := $Params.Attributes                  -}}
 
 {{- $renderedCode := "" -}}
 
 {{- $validLanguageIDs := slice "details" -}}
-{{- with $aliases -}}
-  {{- if (reflect.IsSlice $aliases) -}}
-    {{- $validLanguageIDs = union $validLanguageIDs $aliases -}}
+{{- with $Aliases -}}
+  {{- if (reflect.IsSlice $Aliases) -}}
+    {{- $validLanguageIDs = union $validLanguageIDs $Aliases -}}
   {{- else -}}
-    {{- $validLanguageIDs = $validLanguageIDs | append (print $aliases) -}}
+    {{- $validLanguageIDs = $validLanguageIDs | append (print $Aliases) -}}
   {{- end  -}}
 {{- end -}}
 
@@ -24,23 +24,23 @@
   {{- $info       := partial "platen/utils/getCodeblockInfo" $infoParams                       -}}
 
   {{/* Handle attributes and data */}}
-  {{- $class      := $info.Data.class    | default $attributes.class                        -}}
-  {{- $summary    := $info.Data.summary  | default $attributes.summary  | default "Details" -}}
-  {{- $linkable   := $info.Data.linkable | default $attributes.linkable | default true      -}}
-  {{- $open       := $info.Data.open     | default $attributes.open     | default true      -}}
+  {{- $class      := $info.Data.class    | default $Attributes.class                        -}}
+  {{- $summary    := $info.Data.summary  | default $Attributes.summary  | default "Details" -}}
+  {{- $linkable   := $info.Data.linkable | default $Attributes.linkable | default true      -}}
+  {{- $open       := $info.Data.open     | default $Attributes.open     | default true      -}}
   {{- $id         := $info.Data.id
-                     | default $attributes.id
+                     | default $Attributes.id
                      | default (lower $summary | urlize)
   -}}
 
   {{/* Retrieve and trim the actual definition */}}
   {{- $trimParams   := dict "Text" $info.Markdown "TrimEOL" true                           -}}
   {{- $content      := partial "platen/utils/getLeadTrimmedText" $trimParams               -}}
-  {{- $renderParams := dict "Page" $page "Content" $content "IndentCount" 4 "AsBlock" true -}}
+  {{- $renderParams := dict "Page" $Page "Content" $content "IndentCount" 4 "AsBlock" true -}}
   {{- $content       = partial "platen/utils/getPrettyRender" $renderParams                -}}
 
   {{/* Pre-render the summary */}}
-  {{- $summary = $summary | $page.RenderString -}}
+  {{- $summary = $summary | $Page.RenderString -}}
 
   {{/* Build the list of attributes for the container element */}}
   {{- $detailsAttributes := slice -}}

@@ -705,7 +705,7 @@ properties:
         ```
 
         This applies to `figure` elements in page content, as added by the built-in `figure`
-        shortcode or Platen's [Art markup].
+        shortcode or Platen's [art markup].
 
         It adds vertical padding to the figure, using the value defined in
         [sref:`Theme.Variables.BasicSCSS.padding-large`] and sets the horizontal padding to `0`.
@@ -722,7 +722,7 @@ properties:
 
         For more information on authoring SCSS, see the [learning guide].
 
-        [Art markup]: /modules/platen/markup/art
+        [art markup]: /modules/platen/markup/art
         [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
         [learning guide]: https://sass-lang.com/guide
         [sref:`Enabled`]: Platen.Site.Theme.Styles.Defined.Enabled

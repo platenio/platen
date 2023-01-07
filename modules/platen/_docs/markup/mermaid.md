@@ -30,9 +30,6 @@ Memo:
       Default: 'bottom'
   Definition:
     Type: Mermaid
-    YAML:
-      Required: false
-      Definition: Schemas.Platen.Mermaid.Figure
     Syntax: |-
       [%%{ <InitDirective> }%%]
 
@@ -224,4 +221,4 @@ The diagram syntax uses the standard Mermaid syntax for defining diagrams. For m
 [s01]: mdn.html.element:figure
 [s02]: mdn.html.element:p
 [s03]: mdn.html.element:figcaption
-[s04]: Platen.Site.Markup.Mermaid
+[s04]: Platen.Site.markup.mermaid
