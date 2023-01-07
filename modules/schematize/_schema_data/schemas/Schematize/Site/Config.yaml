@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Schematize/Site/Config.schema.yaml
+$id: Config.schema.yaml
 title: Site Configuration
 description: Settings and options for the Schematize module at the site level.
 schematize:

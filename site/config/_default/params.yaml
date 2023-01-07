@@ -54,7 +54,7 @@ Platen:
         Target: modules/platen
       - Source: modules/toroidal/_docs
         Target: modules/toroidal
-      - Source: modules/schematize/docs
+      - Source: modules/schematize/_docs
         Target: modules/schematize
   Multilingual:                               # BookTranslatedOnly
     TranslatedOnly: false

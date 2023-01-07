@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Schematize/Content/Page.schema.yaml
+$id: Page.schema.yaml
 title: Page Front Matter
 description: Optional settings for the schematize module on a content page.
 schematize:

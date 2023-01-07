@@ -34,12 +34,17 @@ module:
           target: static
     - path: github.com/platenio/platen/modules/schematize
       mounts:
+        - source: _docs/config
+          target: content/schemas/Schematize
+          excludeFiles: /_index.md
+        - source: _docs
+          target: content/modules/schematize
+        - source: _schema_data
+          target: data
         - source: archetypes
           target: archetypes
         - source: assets
           target: assets
-        - source: docs
-          target: content/modules/schematize
         - source: i18n
           target: i18n
         - source: layouts
