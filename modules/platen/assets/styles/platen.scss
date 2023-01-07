@@ -96,9 +96,9 @@
 {{- end -}}
 
 // Shortcodes must always load _after_ all more normal/universal items.
-{{ range $shortcode, $settings := $context.Site.Params.Platen.Shortcodes }}
-  {{ if $settings.Enabled }}
-    {{ with $settings.Style }}
+{{ range $shortcode, $settings := $context.Site.Params.Platen.shortcodes }}
+  {{ if $settings.enabled }}
+    {{ with $settings.style }}
       {{ partial $shortcodesPartial (dict "Name" $shortcode "Settings" $settings) }}
     {{ end }}
   {{ end }}

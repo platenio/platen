@@ -14,9 +14,9 @@ schematize:
     site authors and theme developers to discover, enable, disable, and configure shortcodes in a
     friendlier way than Hugo's default, without preventing Hugo's built-in behavior.
 
-    At a minimum, every registered shortcode must define the [sref:`Enabled`] setting. If the
-    shortcode has specific styling needs, it must define the [sref:`Style`] setting with the
-    [sref:`Name`] property set to the name of the style module in `assets/styles/shortcodes`, like
+    At a minimum, every registered shortcode must define the [sref:`enabled`] setting. If the
+    shortcode has specific styling needs, it must define the [sref:`style`] setting with the
+    [sref:`name`] property set to the name of the style module in `assets/styles/shortcodes`, like
     `tabs` for the style module at `assets/styles/shortcodes/_tabs.scss`.
 
     A registered shortcode's style asset **must** be placed in the `assets/styles/shortcodes`
@@ -32,14 +32,14 @@ schematize:
     <!-- Link References -->
     [01]: /styling
     [02]: /styling
-    [sref:`Enabled`]: Platen.Site.Shortcodes.Valid.Enabled
-    [sref:`Style`]: Platen.Site.Shortcodes.Valid.Style
-    [sref:`Name`]: Platen.Site.Shortcodes.Valid.Style.Name
+    [sref:`enabled`]: Platen.Site.shortcodes.valid.enabled
+    [sref:`style`]: Platen.Site.shortcodes.valid.style
+    [sref:`name`]: Platen.Site.shortcodes.valid.style.name
 type: object
 required:
-  - Enabled
+  - enabled
 properties:
-  Enabled:
+  enabled:
     title: Enable the Shortcode
     description: Whether to enable the shortcode for the site
     schematize:
@@ -62,18 +62,18 @@ properties:
         defined CSS or SCSS values to style its output).
 
         If it needs its own SCSS, add the module to the `assets/styles/shortcodes` folder
-        and set [sref:`Name`] to the SCSS module's name, like `foo` for
+        and set [sref:`name`] to the SCSS module's name, like `foo` for
         `assets/styles/shortcodes/_foo.scss`.
 
         You can define any other key-value pairs here, which can then used in the
         shortcode's style module when rendered as a template.
 
-        [sref:`Name`]: Platen.Site.Config.Shortcodes
+        [sref:`name`]: Platen.Site.Config.shortcodes
     type: object
     required:
-      - Name
+      - name
     properties:
-      Name:
+      name:
         title: Shortcode Style Module Name
         description: Specifies the name of the shortcode's style module
         schematize:

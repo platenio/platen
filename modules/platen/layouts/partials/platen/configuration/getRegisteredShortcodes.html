@@ -1,7 +1,7 @@
 {{- $params       := .                                  -}}
 {{- $disabledOnly := default false $params.DisabledOnly -}}
 
-{{- $registeredShortcodes := site.Params.Platen.Shortcodes -}}
+{{- $registeredShortcodes := site.Params.Platen.shortcodes -}}
 
 {{- if $disabledOnly -}}
   {{- $disabledShortcodes := dict -}}

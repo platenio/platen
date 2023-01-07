@@ -20,4 +20,4 @@ For more information about defining a valid shortcode style module entry, see
 ```
 
 <!-- Link References -->
-[sref:Valid Definitions]: Platen.Site.Shortcodes.Valid
+[sref:Valid Definitions]: Platen.Site.shortcodes.valid

@@ -11,12 +11,11 @@ outputFormats:
 
 params:
   Platen:
-    Theme:
-      Shortcodes:
-        Schematize:
-          Enabled: true
-          Style:
-            Name: schematize
+    shortcodes:
+      schematize:
+        enabled: true
+        style:
+          name: schematize
     markup:
       schematize:
         enabled: true

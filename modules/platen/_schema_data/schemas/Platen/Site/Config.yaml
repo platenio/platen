@@ -50,7 +50,7 @@ properties:
         $ref: ./Features/Defining.yaml
         schematize:
           href: pattern-any
-  Shortcodes:
+  shortcodes:
     title: Shortcode Options
     description: Configure registered shortcodes
     schematize:
@@ -69,7 +69,7 @@ properties:
     type: object
     patternProperties:
       ".":
-        $ref: ./Shortcodes/Valid.yaml
+        $ref: ./shortcodes/valid.yaml
         schematize:
           href: pattern-any
   markup:
