@@ -1,0 +1,145 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: Renderers.schema.yaml
+title: Renderer Partials
+description: Registers one or more partials that act as render hooks.
+type: object
+schematize:
+  details: |
+    Defines a map of partials to use as Markdown render hooks. Like all partials, these are only
+    processed when `Enabled` is set to `true`.
+
+    Supported renderer partials include:
+
+    - [sref:`Codeblock`], processed for fenced code blocks with a language ID
+    - [sref:`Heading`], processed for headings
+    - [sref:`Image`], processed for image links
+    - [sref:`Link`], processed for non-image links
+
+    In all cases, all renderer partials for enabled features are checked one after the other unless
+    they return a render string. Once an applicable partial returns a render string, no further
+    render hook partials are processed for that specific content.
+
+    <!-- Reference Links -->
+    [sref:`Codeblock`]: Platen.Site.Features.Renderers.Codeblock
+    [sref:`Heading`]: Platen.Site.Features.Renderers.Heading
+    [sref:`Image`]: Platen.Site.Features.Renderers.Image
+    [sref:`Link`]: Platen.Site.Features.Renderers.Link
+properties:
+  Codeblock:
+    title: Codeblock Render Hook Partial
+    description: Adds a partial to call when processing the codeblock render hook.
+    schematize:
+      weight: 1
+      details: |
+        If specified, this partial is processed when a fenced codeblock with a language ID is
+        rendered from Markdown. This support is in addition to Hugo's normal method for adding
+        [codeblock render hooks][01] per language.
+        
+        In Platen, codeblock render hook partials registered by features are processed one at a time
+        for each enabled feature with a defined codeblock render hook partial until one of them
+        returns a non-empty string representing the rendered content.
+
+        If no codeblock render hook partial returns a rendered string, the default codeblock render
+        hook is called instead. The first codeblock render hook partial to return a non-empty string
+        ends the render hook processing. Any remaining render hook partials are never processed for
+        that codeblock.
+
+        A feature can only define one codeblock render hook partial.
+
+        For more information about defining codeblock render hook partials, see
+        [Defining a Codeblock Render Hook Partial][02] in the [Theme Guide][03].
+
+        <!-- Reference Links -->
+        [01]: https://gohugo.io/templates/render-hooks/#render-hooks-for-code-blocks
+        [02]: /styling
+        [03]: /styling
+    type: string
+  Heading:
+    title: Heading Render Hook Partial
+    description: Adds a partial to call when processing the heading render hook.
+    schematize:
+      weight: 2
+      details: |
+        If specified, this partial is processed when a heading is rendered from Markdown. This
+        support allows you to extend the default heading render hook without replacing it. You can
+        still [define additional heading render hooks][01] on a per-output-format basis, like a
+        custom heading output for content in an RSS feed.
+        
+        In Platen, heading render hook partials registered by features are processed one at a time
+        for each enabled feature with a defined heading render hook partial until one of them
+        returns a non-empty string representing the rendered content.
+
+        If no heading render hook partial returns a rendered string, the default heading render hook
+        is called instead. The first heading render hook partial to return a non-empty string ends
+        the render hook processing. Any remaining render hook partials are never processed for that
+        heading.
+
+        A feature can only define one heading render hook partial.
+
+        For more information about defining heading render hook partials, see
+        [Defining a Heading Render Hook Partial][02] in the [Theme Guide][03].
+
+        [01]: https://gohugo.io/templates/render-hooks/#render-hooks-for-headings-links-and-images
+        [02]: /styling
+        [03]: /styling
+    type: string
+  Image:
+    title: Image Render Hook Partial
+    description: Adds a partial to call when processing the image render hook.
+    schematize:
+      weight: 3
+      details: |
+        If specified, this partial is processed when a image is rendered from Markdown. This support
+        allows you to extend the default image render hook without replacing it. You can still
+        [define additional image render hooks][01] on a per-output-format basis, like a custom image
+        output for content in an RSS feed.
+        
+        In Platen, image render hook partials registered by features are processed one at a time for
+        each enabled feature with a defined image render hook partial until one of them returns a
+        non-empty string representing the rendered content.
+
+        If no image render hook partial returns a rendered string, the default image render hook is
+        called instead. The first image render hook partial to return a non-empty string ends the
+        render hook processing. Any remaining render hook partials are never processed for that
+        image.
+
+        A feature can only define one image render hook partial.
+
+        For more information about defining image render hook partials, see
+        [Defining a Heading Render Hook Partial][02] in the [Theme Guide][03].
+
+        <!-- Reference Links -->
+        [01]: https://gohugo.io/templates/render-hooks/#render-hooks-for-headings-links-and-images
+        [02]: /styling
+        [03]: /styling
+    type: string
+  Link:
+    title: Link Render Hook Partial
+    description: Adds a partial to call when processing the link render hook.
+    schematize:
+      weight: 4
+      details: |
+        If specified, this partial is processed when a link is rendered from Markdown. This support
+        allows you to extend the default link render hook without replacing it. You can still
+        [define additional link render hooks][01] on a per-output-format basis, like a custom link
+        output for content in an RSS feed.
+        
+        In Platen, link render hook partials registered by features are processed one at a time for
+        each enabled feature with a defined link render hook partial until one of them returns a
+        non-empty string representing the rendered content.
+
+        If no link render hook partial returns a rendered string, the default link render hook is
+        called instead. The first link render hook partial to return a non-empty string ends the
+        render hook processing. Any remaining render hook partials are never processed for that
+        link.
+
+        A feature can only define one link render hook partial.
+
+        For more information about defining link render hook partials, see
+        [Defining a Heading Render Hook Partial][02] in the [Theme Guide][03].
+
+        [01]: https://gohugo.io/templates/render-hooks/#render-hooks-for-headings-links-and-images
+        [02]: /styling
+        [03]: /styling
+    type: string

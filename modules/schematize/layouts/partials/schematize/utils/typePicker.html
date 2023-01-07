@@ -23,6 +23,8 @@
 {{- else if isset $property "enum" -}}
   {{- partial "schematize/docs/enum" $params -}}
 {{- else if isset $property "$ref" -}}
+  {{- $refPath  := replaceRE "\\.yaml" "" (index $property "$ref")    -}}
+  {{- $refPath   = relref $params.page (dict "path" $refPath) | print -}}
   {{- $refData := partial "schematize/utils/references/resolve/data" $params -}}
   {{- $refData = merge $refData (dict "_id" $property._id) -}}
   {{/*
@@ -34,7 +36,7 @@
     {{- $refSchematize  = merge $refSchematize (dict "details" .)           -}}
     {{- $refData        = merge $refData (dict "schematize" $refSchematize) -}}
   {{- end -}}
-  {{- $options := dict "property" $refData "page" $params.page -}}
+  {{- $options := dict "property" $refData "page" $params.page "refPath" $refPath -}}
   {{- with $property.schematize.skipMoreInfo -}}
     {{- $options = merge $options (dict "_skipMoreInfo" .) -}}
   {{- end -}}

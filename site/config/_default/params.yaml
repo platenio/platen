@@ -50,11 +50,11 @@ Platen:
     EditPath: edit/main                       # BookEditPath
     ContentRoot: 'content'
     MountedPaths:
-      - Source: modules/platen/docs
+      - Source: modules/platen/_docs
         Target: modules/platen
-      - Source: modules/toroidal/docs
+      - Source: modules/toroidal/_docs
         Target: modules/toroidal
-      - Source: modules/schematize/docs
+      - Source: modules/schematize/_docs
         Target: modules/schematize
   Multilingual:                               # BookTranslatedOnly
     TranslatedOnly: false

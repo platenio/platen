@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: ReferenceMap.schema.yaml
+title: Schematize Reference Map
+description: Defines a map of reference targets for schematized documentation.
+schematize:
+  details: |
+    Schematize includes the `sref` shortcode and link renderer, which you can use to more easily
+    reference documentation. An entry in the `sref_map` defines information for the shortcode
+    and renderer to use when referencing external documentation.
+
+    The [sref:`srefBase`] setting defines the base URL for the reference. The
+    [sref:`srefSuffix`] setting defines an optional automatic postix to add to the link text
+    when using the shortcode and is ignored by the link renderer.
+
+    You can arbitrarily nest maps within each other to keep references from the same source but
+    with different base URLs together in a usable way.
+
+    For example, you could define a map for Mozilla's web documentation like this:
+
+    ```yaml
+    Schematize:
+      ReferenceMap:
+        mdn:
+          srefSuffix: in the MDN documentation
+          srefBase: https://developer.mozilla.org/docs
+          css:
+            srefBase: https://developer.mozilla.org/docs/Web/CSS
+    ```
+
+    And then access it with in the link reference:
+
+    ```markdown
+    Checkout [sref:`text-decoration`] in the MDN documentation.
+
+    [sref:`text-decoration`]: mdn.css:text-decoration
+    ```
+
+    Which turns into:
+
+    > Checkout [sref:`text-decoration`] in the MDN documentation.
+
+    [sref:`text-decoration`]: mdn.css:text-decoration
+type: object
+properties:
+  srefSuffix:
+    title: Postfix
+    description: Markdown text to add after input text when rendering an sref shortcode
+    schematize:
+      details: |
+        Specifies Markdown text to add after input text when rendering an sref shortcode.
+    type: string
+  srefBase:
+    title: Base URL
+    description: The base URL to prefix sref values with for this target.
+    schematize:
+      details: |
+        Specifies the base URL to prefix sref values with for this target. Leaf nodes in the map
+        (ones that don't define a nested map) **must** define this value or they can't be used
+        to reference external documentation.
+    type: string
+patternProperties:
+  "^[^sref].*$":
+    title: Nested Schema Reference Map
+    description: Defines a nested schema reference map
+    schematize:
+      href: pattern-not-builtin
+    $ref: ./ReferenceMap.yaml

@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: Page.schema.yaml
+title: Page Front Matter
+description: Optional settings for the schematize module on a content page.
+schematize:
+  details: |
+    Defines optional settings for the schematize module on a page using values in the page's front
+    matter.
+type: object
+properties:
+  Schematize:
+    title: Schematize Path
+    description: Specifies the dot-path to the schema data in the site's data map.
+    schematize:
+      weight: 1
+      details: |
+        Specifies the dot-path to the schema data in the site's data map. Schematize is designed
+        to handle schema definitions in a site's `data/schemas` folder, and uses dot-pathing to
+        find schemas in that map. For example, to access the data in `data/schemas/foo/bar/baz`,
+        the dot-path for this value would be `foo.bar.baz`.
+
+        If this value is defined on a page and no dot path is specified for the `schematize`
+        shortcode, this value is used to find, parse, and render the documentation.
+    type: string
+  outputs:
+    title: Output Formats
+    description: Define output formats for a page
+    schematize:
+      weight: 2
+      details: |
+        Uses Hugo's [output formats] to ensure that the schematize module can convert the data
+        specified in [sref:`Schematize`] and publish it as a cleaned JSON schema. If this value isn't
+        set to include `schematize` in the array of outputs, the JSON Schema won't be published.
+
+        If this value doesn't include `html`, _only_ the JSON Schema will be published, not the
+        accompanying HTML page with the documentation added through the `schematize` shortcode.
+
+        [output formats]: https://gohugo.io/templates/output-formats/#configure-output-formats
+        [sref:`Schematize`]: Schematize.Content.Page.Schematize
+    type: array
+    default:
+      - html
+      - schematize
+    items:
+      type: string

@@ -1,0 +1,112 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: Member.schema.yaml
+title: Member Front Matter
+description: Optional settings for the Toroidal module on a content page.
+schematize:
+  details: |
+    Defines settings for a Toroidal webring member using values in the page's front matter.
+type: object
+required:
+  - name
+  - description
+  - weight
+  - ToroidalHomePage
+properties:
+  name:
+    title: Member Display Name
+    description: Specifies the display name of the member site.
+    schematize:
+      weight: 1
+      details: |
+        Specifies the display name of the member site. This value is used in the member list,
+        the title for the member's iframe page, and the webring's administration page.
+    type: string
+  description:
+    title: Member Description
+    description: Specifies a short description of the member site.
+    schematize:
+      weight: 2
+      details: |
+        Specifies a short description of the member site. This value is used as the synopsis
+        for the member in the member list and in the the metadata for the member's iframe page.
+    type: string
+  weight:
+    title: Weight
+    description: Specifies the member's position in the webring.
+    schematize:
+      weight: 3
+      details: |
+        Specifies the member's position in the webring. This value is used to determine the
+        order to display the member in the member list and the webring's administration page.
+        It's also used to determine which members of the webring are adjacent, ensuring a
+        deterministic and validly looping webring.
+    type: integer
+    minimum: 0
+  ToroidalHomePage:
+    title: Member HomePage
+    description: The URL to the webring member's home page.
+    schematize:
+      weight: 4
+      details: |
+        The URL to the webring member's home page. If this value isn't specified for a member, Hugo
+        raises an error.
+    type: string
+  ToroidalRandomMemberLink:
+    title: Display Random Member
+    description: Whether the navigation for a member should include a link to a random member
+    schematize:
+      weight: 5
+      details: |
+        Specifies whether the navigation for a member should include a link to a random member of
+        the webring. This setting can be defined at the site, webring, and member level, with the
+        webring overriding the site and the member overriding both.
+
+        Set this value to `true` to enable the random member link and `false` to disable it. The
+        default is `true`.
+    type: boolean
+    default: true
+  ToroidalClass:
+    title: Additional Class
+    description: Specifies one or more classes to append to the generated HTML for the webring
+    schematize:
+      weight: 6
+      details: |
+        Specifies one or more classes to append to the generated HTML for the webring. To specify
+        multiple classes, separate each class with a space. You can use this value with the defined
+        themes to style a webring more specifically.
+    type: string
+    default: ""
+  ToroidalWebringName:
+    title: Webring Name
+    description: Specifies the name of the webring
+    schematize:
+      weight: 7
+      details: |
+        Specifies the name of the webring. This setting can be defined at the site, webring, and
+        member level, with the webring overriding the site and the member overriding both. If this
+        value isn't specified, the default name `Webring` is used.
+    type: string
+  ToroidalMemberName:
+    title: Member Name
+    description: Specifies the name of the member
+    schematize:
+      weight: 8
+      details: |
+        Specifies the name of the member. This setting overrides the value used in `name`. Use this
+        when you want the page name and the member name to be different.
+    type: string
+  ToroidalHideHeader:
+    title: Hide Header on Member Pages
+    description: Specifies whether to hide the h2 header on this member page
+    schematize:
+      weight: 9
+      details: |
+        This setting specifies whether to hide the `h2` element on member pages. By default, every
+        member page includes the webring's name as an `h2` at the top of the member's navigation.
+
+        Set this value to `true` to hide the element on member pages for the page. This setting
+        overrides both [sref`Toroidal.HideHeader`] in the site's configuration and
+        [sref`ToroidalHeader`] in the webring's section page front matter, if set.
+    type: boolean
+    default: false

@@ -13,6 +13,7 @@
     included.
 */}}
 {{- $params            := .                                                   -}}
+{{- $refPath           := $params.refPath                                     -}}
 {{- $referenceProperty := merge   $params.property (dict "_asReference" true) -}}
 {{- $skipMoreInfo      := default false $params._skipMoreInfo                 -}}
 {{- $current_level     := add     $referenceProperty._level 1                 -}}
@@ -25,9 +26,7 @@
 {{/* By default, add a link to the referenced schema docs for more information */}}
 {{- if not $skipMoreInfo -}}
   {{- $title        := $referenceProperty.title                                       -}}
-  {{- $refValue     := index   $referenceProperty  "$id"                              -}}
-  {{- $refParams    := dict    "page" $params.page "target" "page" "ref" $refValue    -}}
-  {{- $reference    := partial "schematize/utils/references/resolve/path" $refParams  -}}
+  {{- $reference    := printf "%s.md" (strings.TrimSuffix "/" $params.refPath)        -}}
   {{- $moreInfo     := printf  "For more information, see [%s](%s)" $title $reference -}}
   {{- $renderStrings = $renderStrings | append $moreInfo                              -}}
 {{- end -}}

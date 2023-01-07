@@ -1,0 +1,175 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: Section.schema.yaml
+title: Section
+description: Defines the settings for the Section markup option
+schematize:
+  details: |
+    Defines the map of settings for the Platen's Section markup option. The existing value is
+    a map that includes whether or not to enable the codeblock render hook and its style definition.
+
+    When this markup is enabled, you can create a description list for pages in a section of your
+    site with a [codeblock][01].
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the full
+    list of all properties in your own configuration file. Only specify the values you want to add
+    or replace.
+
+    <!-- Reference Links -->
+    [01]: /modules/platen/markup/section
+type: object
+properties:
+  Enabled:
+    title: Enable the markup
+    description: Choose whether section codeblock rendering is available for the site.
+    schematize:
+      details: |
+        Choose whether the site renders codeblocks with the `section` language ID as description
+        lists of pages with their summaries. The default is `true`.
+      weight: 1
+    type: boolean
+    default: true
+  Aliases:
+    title: Aliases
+    description: Defines additional language IDs for the codeblock render hook.
+    schematize:
+      weight: 4
+      details: |
+        Define one or more language IDs to use in addition to the default language ID for codeblocks
+        that render section description lists. The default language ID is `section`.
+
+        You can specify a string or an array of strings. If the value is an array, each item in the
+        array is added as an alias.
+    oneOf:
+      - type: array
+        items:
+          type: string
+      - type: string
+  Partials:
+    title: Markup Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when [sref:`Enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`Enabled`]: Platen.Site.Markup.Section.Enabled
+      weight: 100
+      skipSchemaRender: true
+    type: object
+    properties:
+      Renderers:
+        title: Renderer Partials
+        description: Registers one or more partials that act as render hooks.
+        type: object
+        schematize:
+          skipSchemaRender: true
+          details: |
+            Defines a map of partials to use as Markdown render hooks. Like all partials, these are
+            only processed when [sref:`Enabled`] is set to `true`.
+
+            Supported renderer partials include:
+
+            - `Codeblock`, processed for fenced code blocks with a language ID
+            - `Heading`, processed for headings
+            - `Image`, processed for image links
+            - `Link`, processed for non-image links
+
+            In all cases, all renderer partials for enabled features and markup options are checked
+            one after the other unless they return a render string. Only the first applicable
+            partial that returns a render string is processed and rendered.
+
+            <!-- Reference Links -->
+            [sref:`Enabled`]: Platen.Site.Markup.Section.Enabled
+        properties:
+          Codeblock:
+            title: Codeblock Render Hook Partial
+            description: Adds a partial to call when processing the codeblock render hook.
+            schematize:
+              details: |
+                Adds support for rendering the linked list of a section's pages with their
+                summaries. This render hook is only processed when the language ID for a codeblock
+                is `section`.
+
+                It renders the current page's children inside a [sref:<`dl`>][s01] element with a
+                [sref:`<dt>`][s02] linking to each page and a [sref:`<dd`][s03] containing the
+                page's summary. The description list is added inside a containing [sref:<div>][s04]
+                with optional leading text.
+
+                For more information about using codeblocks to add section description lists, see
+                [the reference documentation][01].
+
+                This value defaults to `platen/markup/section/codeblock`. You can replace it with a
+                different value and defining a new partial, or override the existing partial by
+                creating the file `layouts/partials/platen/markup/section/codeblock.html` in your
+                own site or module.
+
+                For more information about defining codeblock render hook partials, see
+                [Defining a Codeblock Render Hook Partial][02] in the [Theme Guide][03].
+
+                <!-- Reference Links -->
+                [01]: /modules/platen/markup/section
+                [02]: /styling
+                [03]: /styling
+                [s01]: mdn.html.element:dl
+                [s02]: mdn.html.element:dt
+                [s03]: mdn.html.element:dd
+                [s04]: mdn.html.element:div
+            type: string
+            default: platen/markup/section/codeblock
+  Style:
+    title: Markup Simple Style Module
+    description: Defines the art markup's simple style module
+    schematize:
+      weight: 100
+      skipSchemaRender: true
+      details: |
+        Defines default styling for section blocks created by render hooks.
+
+        When you use a [`section`][01] render hook, the following SCSS is applied:
+
+        ```scss
+        .markdown div.platen-section {
+          dd dl {
+            padding-left: $padding-large;
+          }
+        }
+        ```
+
+        The section block is created as an div ([sref:`<div>`]) element with the `platen-section`
+        class. It contains optional leading rendered Markdown and a description list ([sref:`<dl>`])
+        where each term ([sref:`<dt>`]) has the page's title as an anchor ([sref:`<a>`]) element
+        inside it and each definition ([sref:`<dd>`]) is the page's summary, rendered as inline
+        Markdown (without wrapping [sref:`<p>`] tags if the summary isn't more than one paragraph).
+
+        The only styling added is to ensure that nested description lists are indented by
+        [sref:`$padding-large`] so they're visually distinct from their parent item.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/markup/_section.scss` in your [assets folder][02], which defaults to `assets` in your
+        project root.
+        
+        You can also create a new style module in the `styles/markup` folder and set this value to
+        that module's name. If you do, omit the leading `_` and trailing `.scss`. For example, the
+        name for the style module `assets/styles/markup/_foo.scss` is `foo`.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you override the style module or this setting,you
+        _entirely overwrite_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide][03].
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/section
+        [02]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [03]: https://sass-lang.com/guide
+        [sref:`<a>`]: mdn.html.element:a
+        [sref:`<div>`]: mdn.html.element:div
+        [sref:`<dl>`]: mdn.html.element:dl
+        [sref:`<dt>`]: mdn.html.element:dt
+        [sref:`<dd>`]: mdn.html.element:dd
+        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+    type: string
+    default: section

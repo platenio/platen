@@ -1,0 +1,230 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: Themes.schema.yaml
+title: Toroidal Theme Style Modules
+description: Style options for the Toroidal module at the site level.
+schematize:
+  details: |
+    The Toroidal module includes a minimal default set of styles. Each item in this setting is a
+    key-value pair. The key represents the name of the style and the value determines whether and
+    how it's loaded into the style for Toroidal pages. When you import the module, only the
+    `Default` theme is defined. You can define additional key-value pairs and override the settings
+    for `Default`.
+
+    If the value is set to `true`, the downcased name of the theme is used when importing the
+    theme's style module. If the value is set to `false`, the theme's style module isn't imported.
+    If the value is set to a string, it's used as the name of the theme's style module.
+
+    For example:
+
+    ```yaml
+    Themes:
+      Default: true  # imports `assets/toroidal/themes/_default.scss`
+      Unused: false  # not imported
+      Custom: fooBar # imports `assets/toroidal/themes/_fooBar.scss`
+    ```
+
+    ## Defining Style Modules
+
+    You can override the [sref:default style module] or define entirely new ones. When you define a
+    new style module, consider whether you want to extend the styling for all Toroidal content or
+    only a subset webring.
+
+    You can use `article.toroidal` to style content in the administration page and `nav.toroidal` to
+    style the member page content. You can add another class to the selector, like
+    `nav.toroidal .my-example` to target only a subset of content. You can inject classes into your
+    generated content with the [sref:`Toroidal.Class`] setting in the site configuration or
+    the [sref:`ToroidalClass`] setting in a page's front matter.
+type: object
+properties:
+  Default:
+    title: Default Style Module
+    description: Defines the default style module for Toroidal content in a site.
+    schematize:
+      weight: 1
+      details: |
+        This SCSS style module includes the default styling for Toroidal content on a site. It
+        provides minimal functional styling you can extend or replace.
+
+        ```scss
+        article.toroidal {
+          header {
+            margin-top: 0;
+            margin-bottom: 1rem;
+          }
+          details {
+            summary {
+              min-height: 1.5em;
+              padding: .5em;
+              font-size: 1em;
+            }
+          }
+          h1, h2 {
+            text-align: center;
+          }
+          section.toroidal-member-entry-admin-links {
+            ul {
+              padding-inline-start: 1em;
+              li {
+                padding-bottom: .5em;
+              }
+            }
+          }
+          section.toroidal-member-entry-admin-embed {
+            div.toroidal-copy-buttons {
+              display: flex;
+              button {
+                justify-content: space-between;
+                -webkit-box-flex: 1;      /* OLD - iOS 6-, Safari 3.1-6 */
+                -moz-box-flex: 1;         /* OLD - Firefox 19- */
+                width: 20%;               /* For old syntax, otherwise collapses. */
+                -webkit-flex: 1;          /* Chrome */
+                -ms-flex: 1;              /* IE 10 */
+                flex: 1;                  /* NEW, Spec - Opera 12.1, Firefox 20+ */
+                margin-right: 5%;
+                min-height: 1.5em;
+                padding: .5em;
+              }
+            }
+          }
+        }
+
+        .toroidal-icon {
+          filter: var(--icon-filter);
+        }
+
+        // Member Page navigation
+        nav.toroidal, nav.toroidal .toroidal-default {
+          padding: 0em 1em;
+          ul {
+            list-style-type: none;
+            padding-inline-start: 0rem;
+            li {
+              padding-left: 0;
+            }
+          }
+        }
+        ```
+
+        ### Admin Page
+
+        The webring administration page content is all placed inside an `article` element with the
+        `toroidal` class.
+
+        ```scss
+        header {
+          margin-top: 0;
+          margin-bottom: 1rem;
+        }
+        ```
+
+        The `header` element for the page includes an `h1` and the administration information in a
+        details element. This style ensures there's an extra bottom margin of `1rem`.
+
+        ```scss
+        details {
+          summary {
+            min-height: 1.5em;
+            padding: .5em;
+            font-size: 1em;
+          }
+        }
+        ```
+
+        The administration details and code snippets are placed inside a `details` element. This
+        style ensures a consistent height for the element when collapsed, adds padding to give it
+        breathing room, and standardizes the font size.
+
+        ```scss
+        h1, h2 {
+          text-align: center;
+        }
+        ```
+
+        The page uses an `h1` for the page title and `h2` elements for each member's entry. This
+        style center-aligns them.
+
+        ```scss
+        section.toroidal-member-entry-admin-links {
+          ul {
+            padding-inline-start: 1em;
+            li {
+              padding-bottom: .5em;
+            }
+          }
+        }
+        ```
+
+        Each member entry has at least one actionable link, which leads to the member's home page.
+        Platen sites have an additional link to edit the member page's definition in the site's
+        repository.
+
+        This style ensures a consistent indent and padding for the list items.
+
+        ```scss
+        section.toroidal-member-entry-admin-embed {
+          div.toroidal-copy-buttons {
+            display: flex;
+            button {
+              justify-content: space-between;
+              -webkit-box-flex: 1;      /* OLD - iOS 6-, Safari 3.1-6 */
+              -moz-box-flex: 1;         /* OLD - Firefox 19- */
+              width: 20%;               /* For old syntax, otherwise collapses. */
+              -webkit-flex: 1;          /* Chrome */
+              -ms-flex: 1;              /* IE 10 */
+              flex: 1;                  /* NEW, Spec - Opera 12.1, Firefox 20+ */
+              margin-right: 5%;
+              min-height: 1.5em;
+              padding: .5em;
+            }
+          }
+        }
+        ```
+
+        Each member entry has buttons for copying the embeddable code of the member's webring
+        navigation as a literal HTML snippet and an `iframe`, with and without code comments.
+        This style ensures the buttons use flex rows for their styling and have a consistent height,
+        width, and padding for readability and ease of clicking.
+
+        ### Member Pages
+
+        ```scss
+        nav.toroidal {
+          padding: 0em 1em;
+          ul {
+            list-style-type: none;
+            padding-inline-start: 0rem;
+            li {
+              padding-left: 0;
+            }
+          }
+        }
+        ```
+
+        The navigation for webring members is always placed in a `nav` element with the `toroidal`
+        class. This style ensures there's no vertical padding but adds slight horizontal padding to
+        keep the elements from butting up directly against the side of the frame. It removes the
+        list bullets and indent for the entries.
+
+        ### Overwriting
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `toroidal/themes/_default.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        If you're hosting the webring on a Platen site, you can use any variables and style modules
+        available to page content. For more information, see [sref:`Platen.Theme`].
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [sref:`Platen.Theme`]: Platen.Site.Theme.Config
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+    oneOf:
+      - type: boolean
+      - type: string
+    default: true

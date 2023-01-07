@@ -6,7 +6,16 @@
 {{- $property := $params.property -}}
 {{- if isset $property "$id" -}}
   {{- $id := index $property "$id" -}}
-  {{- $munged := replaceRE "\\.schema\\.yaml" "/schema.json" $id | absURL -}}
+  {{- $munged := replaceRE "\\.schema\\.yaml" "/schema.json" $id -}}
+  {{- if hasPrefix $munged "/" -}}
+    {{/* ID is site-root-relative, use absolute URL for it */}}
+    {{- $munged = $munged | absURL -}}
+  {{- else if (or (hasPrefix $munged "http://") (hasPrefix $munged "https://")) -}}
+    {{/* ID is already a fully qualified URL */}}
+  {{- else -}}
+    {{/* Assume the ID is for this page. This might not be correct. 😬 */}}
+    {{- $munged = ($params.page.OutputFormats.Get "Schematize").Permalink -}}
+  {{- end -}}
   {{- $property = merge $property (dict "$id" $munged) -}}
 {{- end -}}
 

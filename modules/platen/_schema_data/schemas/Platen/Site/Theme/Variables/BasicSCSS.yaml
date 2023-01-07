@@ -1,0 +1,395 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: BasicSCSS.schema.yaml
+title: Basic SCSS Variables
+description: Simple variables that don't rely on anything else.
+schematize:
+  details: |
+    Defines a set of [SCSS variables] that Platen uses to determine how to display the site.
+
+    [SCSS variables]: https://sass-lang.com/documentation/variables
+type: object
+properties:
+  padding-minimal:
+    title: Minimal Padding
+    description: Defines the smallest possible padding for the theme.
+    schematize:
+      weight: 1
+      details: |
+        Defines the smallest possible padding for the theme. It defaults to `1px`. You can specify
+        any single valid size, such as `3px`, `1rem`, or `0.1em`.
+
+        This value is used for:
+
+        - The border of the `details` element
+        - The height of the `hr` element
+        - The border for `th` and `td` elements
+        - The border for the search box
+        - The border for [buttons]
+        - The borders for the [tabs]
+
+        For more information on valid values, see {{% sref "length" "mdn.css" /%}}.
+
+        [buttons]: /modules/platen/markup/buttons
+        [tabs]: /modules/platen/markup/tabs
+    type: string
+    pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
+    default: 1px
+  padding-small:
+    title: Small Padding
+    description: Defines small padding for the theme.
+    schematize:
+      weight: 2
+      details: |
+        Defines small padding for the theme, used to create space between items meant to be very
+        close together. It defaults to `0.25rem`.
+
+        You can specify any single valid size, such as `3px`, `1rem`, or `0.1em`.
+
+        This value is used for:
+
+        - The padding to the left and right of code blocks
+        - The margin after items in the TOC
+
+        For more information on valid values, see {{% sref "length" "mdn.css" /%}}.
+    type: string
+    pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
+    default: 0.25rem
+  padding-medium:
+    title: Medium Padding
+    description: Defines medium padding for the theme.
+    schematize:
+      weight: 3
+      details: |
+        Defines medium padding for the theme, used for most elements. It defaults to `0.5rem`. This
+        gives twice as much space between elements as [sref:`padding-small`].
+
+        You can specify any single valid size, such as `3px`, `1rem`, or `0.1em`.
+
+        This value is used for:
+
+        - The horizontal padding for blockquotes
+        - The vertical padding for table cells
+        - The shadow beneath the menu in mobile view
+        - The margin after the brand image in the menu
+        - The margin after images in the footer
+        - The padding around the search input box
+        - The margin around the search spinner, when visible
+        - The width of scrollbars, when visible
+        - The vertical padding for tab labels added by the [tabs markup]
+
+        For more information on valid values, see {{% sref "length" "mdn.css" /%}}.
+
+        [sref:`padding-small`]: Platen.Site.Theme.Variables.BasicSCSS.padding-small
+        [tabs markup]: /modules/platen/markup/tabs
+    type: string
+    pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
+    default: 0.5rem
+  padding-large:
+    title: Large Padding
+    description: Defines large padding for the theme.
+    schematize:
+      weight: 4
+      details: |
+        Defines large padding for the theme, used to create a full space between elements. It
+        defaults to `1rem`. This gives twice as much space between elements as
+        [sref:`padding-medium`].
+
+        You can specify any single valid size, such as `3px`, `1rem`, or `0.1em`.
+
+        This value is used for:
+
+        - The margin before starting an unordered list in the site menu
+        - The padding around pagination links
+        - The vertical margin and bottom padding for blockquotes
+        - The padding for code blocks
+        - The padding for the `details` element and the padding and margin for the `summary` element
+        - The vertical margin for `figure` elements
+        - The bottom margin for heading elements
+        - The padding before lists in markdown
+        - The top margin for `dt` elements and bottom margin for `dd` elements in a definition list
+        - The vertical margin for `table` elements and the horizontal padding for `th` and `td`
+          elements in those tables
+        - The bottom margin for the brand section in the site menu
+        - The margin above comments, if added to a page
+        - The padding at the top of the site footer
+        - The margin beneath the page header
+        - The margin after the languages menu, if it exists
+        - The padding around entries in the site menu
+        - The vertical margin for flat sections in the site menu
+        - The padding around the container for a page's content
+        - The margin beneath the content of a blog post
+        - The margin around the search section of the site menu
+        - The height and width of the search spinner when visible
+        - The padding around the main TOC content
+        - The height and horizontal padding for [buttons]
+        - The horizontal margins for [columns]
+        - The vertical margin for [tabs], the horizontal padding for their labels, and the
+          padding around their contents
+        - The padding for containers in wide view mode
+
+        For more information on valid values, see {{% sref "length" "mdn.css" /%}}
+
+        [sref:`padding-medium`]: Platen.Site.Theme.Variables.BasicSCSS.padding-medium
+        [buttons]: /modules/platen/markup/buttons
+        [tabs]: /modules/platen/markup/tabs
+    type: string
+    pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
+    default: 1rem
+  font-size-base:
+    title: Base Font Size
+    description: Defines the base font size for the theme.
+    schematize:
+      weight: 5
+      details: |
+        Defines the base font size for the theme. Any values that use root em units ([sref:`rem`]) for size
+        are relative to this value. The default is `16px`. This value must be defined in `px`.
+
+        This value is set as the font size in the root `html` element and for the site menu in
+        mobile view.
+
+        For more information, see {{% sref "font-size" "mdn.css" /%}}
+
+        [sref:`rem`]: mdn.css:font-size#rems
+    type: string
+    pattern: "^[0-9]+px$"
+    default: 16px
+  font-size-small:
+    title: Small Font Size
+    description: Defines the small font size for the theme.
+    schematize:
+      weight: 6
+      details: |
+        Defines the small font size for the theme. The default is `0.75rem`, which is defined by the
+        value of the [sref:`font-size-base`] variable. This value must be defined in [sref:`rem`].
+
+        This value is used for the text in the Table of Contents.
+
+        For more information, see {{% sref "font-size" "mdn.css" /%}}.
+
+        [sref:`font-size-base`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-base
+        [sref:`rem`]: mdn.css:font-size#rems
+    type: string
+    pattern: "^[0-9]+\\.?[0-9]*rem$"
+    default: 0.75rem
+  font-size-medium:
+    title: Medium Font Size
+    description: Defines the medium font size for the theme.
+    schematize:
+      weight: 7
+      details: |
+        Defines the medium font size for the theme. The default is `0.875rem`, which is defined by
+        the value of the [sref:`font-size-base`] variable. This value must be defined in
+        [sref:`rem`].
+
+        This value is used for the text in the site menu, page footers, and [buttons].
+
+        For more information, see {{% sref "font-size" "mdn.css" /%}}.
+
+        [sref:`font-size-base`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-base
+        [sref:`rem`]: mdn.css:font-size#rems
+        [buttons]: /modules/platen/markup/buttons
+    type: string
+    pattern: "^[0-9]+\\.?[0-9]*rem$"
+    default: 0.875rem
+  font-size-full:
+    title: Full Font Size
+    description: Defines the full font size for the theme.
+    schematize:
+      weight: 8
+      details: |
+        Defines the full font size for the theme. The default is `1rem`, which is defined by the
+        value of the [sref:`font-size-base`] variable. This value must be defined in [sref:`rem`].
+
+        This value isn't used by the theme directly, but provides a shorthand way for you to
+        override inheritied font sizes back to the default.
+
+        For more information, see {{% sref "font-size" "mdn.css" /%}}.
+
+        [sref:`font-size-base`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-base
+        [sref:`rem`]: mdn.css:font-size#rems
+    type: string
+    pattern: "^[0-9]+\\.?[0-9]*rem$"
+    default: 1rem
+  body-font-weight:
+    title: Body Font Weight
+    description: Defines the base font weight for all body text.
+    schematize:
+      weight: 9
+      details: |
+        Defines the base font weight for all body text. The default is `normal`, which is the
+        same as `400`. For more information, see {{% sref "font-weight" "mdn.css" /%}}.
+
+        This value isn't used by the theme directly, but provides a shorthand way for you to
+        override inheritied font sizes back to the default.
+    default: normal
+    type: string
+    enum:
+      - normal
+      - "100"
+      - "200"
+      - "300"
+      - "400"
+      - "500"
+      - "600"
+      - "700"
+      - "800"
+      - "900"
+  body-min-width:
+    title: Minimum Body Width
+    description: Defines the minimum width of the body container for the theme.
+    schematize:
+      weight: 10
+      details: |
+        Defines the minimum width of the body container for the theme. The default is `20rem`, which
+        is defined by the value of the [sref:`font-size-base`] variable.
+
+        This value is used to set the [sref:`min-width`] value for the the `body` element, the
+        `platen-page` container, and [columns].
+
+        While this variable can be set to any valid length, we recommend you use [sref:`rem`] to
+        keep it relative to the base font size.
+
+        For more information on valid values, see {{% sref "length" "mdn.css" /%}}.
+
+        [sref:`font-size-base`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-base
+        [sref:`min-width`]: mdn.css:min-width
+        [sref:`rem`]: mdn.css:font-size#rems
+        [columns]: /modules/platen/markup/columns
+    type: string
+    pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
+    default: 20rem
+  container-max-width:
+    title: Maximum Container Width
+    description: Defines the maximum width of containers for the theme.
+    schematize:
+      weight: 11
+      details: |
+        Defines the maximum width of containers for the theme. The default is `80rem`, which is
+        defined by the value of the [sref:`font-size-base`] variable.
+
+        This value is used to set the [sref:`max-width`] value for the the `container` class, which
+        the theme adds to the `main` element, and as the size boundary for the wide view.
+
+        While this variable can be set to any valid length, we recommend you use [sref:`rem`] to
+        keep it relative to the base font size.
+
+        For more information on valid values, see {{% sref "length" "mdn.css" /%}}.
+
+        [sref:`font-size-base`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-base
+        [sref:`max-width`]: mdn.css:max-width
+        [sref:`rem`]: mdn.css:font-size#rems
+    type: string
+    pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
+    default: 80rem
+  header-height:
+    title: Header Height
+    description: Defines the height for header elements in the theme.
+    schematize:
+      weight: 12
+      details: |
+        Defines the height for `header` elements in the theme. The default is `3.5rem`, which is
+        defined by the value of the [sref:`font-size-base`] variable.
+
+        This value isn't directly used by the theme but provides a shorthand for shortcode authors
+        and theme developers to use in their own work.
+
+        While this variable can be set to any valid length, we recommend you use [sref:`rem`] to
+        keep it relative to the base font size.
+
+        For more information on valid values, see {{% sref "length" "mdn.css" /%}}.
+
+        [sref:`font-size-base`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-base
+        [sref:`rem`]: mdn.css:font-size#rems
+    type: string
+    pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
+    default: 3.5rem
+  menu-width:
+    title: Menu Width
+    description: Defines the width of the site menu.
+    schematize:
+      weight: 13
+      details: |
+        Defines the width of the site menu. The default is `16rem`, which is defined by the value of
+        the [sref:`font-size-base`] variable.
+
+        While this variable can be set to any valid length, we recommend you use [sref:`rem`] to
+        keep it relative to the base font size.
+
+        For more information on valid values, see {{% sref "length" "mdn.css" /%}}.
+
+        [sref:`font-size-base`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-baseh
+        [sref:`rem`]: mdn.css:font-size#rems
+    type: string
+    pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
+    default: 16rem
+  toc-width:
+    title: Table of Contents Width
+    description: Defines the width of the table of contents.
+    schematize:
+      weight: 14
+      details: |
+        Defines the width of the table of contents. The default is `16rem`, which is defined by the
+        value of the [sref:`font-size-base`] variable.
+
+        While this variable can be set to any valid length, we recommend you use [sref:`rem`] to
+        keep it relative to the base font size.
+
+        For more information on valid values, see {{% sref "length" "mdn.css" /%}}.
+
+        [sref:`font-size-base`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-base
+        [sref:`rem`]: mdn.css:font-size#rems
+    type: string
+    pattern: "^[0-9]+\\.?[0-9]*(px|em|rem)$"
+    default: 16rem
+  details-colors:
+    title: Details Colors
+    description: Defines colors for details elements.
+    schematize:
+      skipSchemaRender: true
+      weight: 15
+      details: |
+        Defines colors for details elements created by Platen's [details markup][01]. The existing
+        value is a map of variables, named `info`, `warning`, and `danger`. Theme authors and site
+        maintainers can replace these values and add their own new keys to the map. These keys are
+        automatically incorporated into the theme.
+
+        For example, if you define the following configuration for a site:
+
+        ```yaml
+        params:
+          Platen:
+            Theme:
+              Variables:
+                BasicSCSS:
+                  details-colors:
+                    info: pink
+                    example: "#ee82ee"
+        ```
+
+        The value for the `info` variable will be replaced with pink and the value for the new
+        `example` option will be `#ee82e` (violet).
+
+        You don't need to keep the full list of all variables in your own configuration file. Only
+        specify the values you want to add or replace.
+
+        For more information on valid values, see [sref:`<color>`].
+
+        [01]: /modules/platen/markup/details
+        [sref:`<color>`]: mdn.css:color_value
+    type: object
+    patternProperties:
+      ".":
+        type: string
+        title: Color for a hint blockquote
+        description: |
+          Specify a valid color. For more info, see the MDN docs:
+
+          https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
+        schematize:
+          href: pattern-any
+          noMungeDescription: true
+          details: |
+            Specify a valid color. For more info, see [sref:`<color>`].
+
+            [sref:`<color>`]: mdn.css:color_value
