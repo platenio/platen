@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Toroidal/Content/Admin.schema.yaml
+$id: Admin.schema.yaml
 title: Admin Page Front Matter
 description: Settings for a Toroidal webring's administration page.
 schematize:

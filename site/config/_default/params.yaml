@@ -52,7 +52,7 @@ Platen:
     MountedPaths:
       - Source: modules/platen/docs
         Target: modules/platen
-      - Source: modules/toroidal/docs
+      - Source: modules/toroidal/_docs
         Target: modules/toroidal
       - Source: modules/schematize/docs
         Target: modules/schematize

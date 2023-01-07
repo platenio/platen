@@ -1,9 +1,10 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Toroidal/Site/Config.schema.yaml
+$id: Config.schema.yaml
 title: Toroidal Site Configuration
 description: Settings and options for the Toroidal module at the site level.
 schematize:
+  # skipSchemaRender: true
   details: |
     The Toroidal module makes it simpler to host webrings from a static site built with Hugo. These
     settings and options control how the Toroidal module behaves at the site level.
@@ -93,6 +94,23 @@ properties:
     default: auto
   Themes:
     $ref: ./Themes.yaml
+    schematize:
+      weight: 4
+  HideHeader:
+    title: Hide Header on Member Pages
+    description: Specifies whether to hide the h2 element on member pages
+    schematize:
+      weight: 5
+      details: |
+        This setting specifies whether to hide the `h2` element on member pages. By default, every
+        member page includes the webring's name as an `h2` at the top of the member's navigation.
+
+        Set this value to `true` to hide the element on member pages for the site. You can override
+        this setting on a per-webring basis by setting [sref:`ToroidalHideHeader`] in the webring's
+        section page front matter or by setting [sref:`ToroidalHideHeader`] in the member page's
+        front matter.
+    type: boolean
+    default: false
   AdminDetails:
     title: Administration Details
     description: Specifies the partial to use for the "About Member Administration" details
@@ -147,18 +165,3 @@ properties:
         - none
       - type: string
     default: default
-  HideHeader:
-    title: Hide Header on Member Pages
-    description: Specifies whether to hide the h2 element on member pages
-    schematize:
-      weight: 5
-      details: |
-        This setting specifies whether to hide the `h2` element on member pages. By default, every
-        member page includes the webring's name as an `h2` at the top of the member's navigation.
-
-        Set this value to `true` to hide the element on member pages for the site. You can override
-        this setting on a per-webring basis by setting [sref:`ToroidalHideHeader`] in the webring's
-        section page front matter or by setting [sref:`ToroidalHideHeader`] in the member page's
-        front matter.
-    type: boolean
-    default: false

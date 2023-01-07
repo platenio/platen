@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Toroidal/Content/Section.schema.yaml
+$id: Section.schema.yaml
 title: Section Front Matter
 description: Optional settings for the Toroidal module on a section page.
 schematize:

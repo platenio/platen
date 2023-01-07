@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: /schemas/Toroidal/Site/Themes.schema.yaml
+$id: Themes.schema.yaml
 title: Toroidal Theme Style Modules
 description: Style options for the Toroidal module at the site level.
 schematize:
