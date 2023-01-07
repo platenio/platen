@@ -4,5 +4,8 @@ summary: Documentation for configuration options of Platen and related modules
 weight: 35
 Platen:
   Menu:
-    CollapseSection: true
+    Hide: true
+cascade:
+  Platen:
+    ExcludeFromSearch: true
 ---
