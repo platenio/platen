@@ -2,16 +2,31 @@
   Resolve the reference to a references schema data. This is only supported for locally defined
   schemas and may behave strangely if accidentally called for external schemas.
 */}}
-{{- $params   := . }}
-{{- $property := $params.property -}}
-{{- $refPath  := replaceRE "\\.yaml" "" (index $property "$ref") -}}
-{{- $refPath   = relref $params.page (dict "path" $refPath) -}}
-{{- $refPath   = trim $refPath "\\/" -}}
-{{- $refPath   = strings.TrimPrefix "schemas/" $refPath -}}
-{{- $refPath   = replaceRE "\\/" "." $refPath -}}
-{{- $refLevel := default 0 $property._level }}
-{{- $refData  := site.Data.schemas }}
+{{- $params   := .                                                  -}}
+{{- $property := $params.property                                   -}}
+{{- $refPath  := replaceRE "\\.yaml" "" (index $property "$ref")    -}}
+{{- $refPath   = relref $params.page (dict "path" $refPath) | print -}}
+{{- if hasPrefix $refPath "/schemas" -}}
+  {{/* This is how everything was originally implemented. Keep this as a fallback. */}}
+  {{- $refPath   = trim $refPath "\\/"                    -}}
+  {{- $refPath   = strings.TrimPrefix "schemas/" $refPath -}}
+  {{- $refPath   = replaceRE "\\/" "." $refPath           -}}
+{{- else -}}
+  {{/*
+    This adds support for relative handling that isn't site-root-relative by using the page's own
+    definition to get the data path. This only works when the schematize data is set in the page
+    frontmatter. Need to consider how we might make this more robust for shortcodes later.
+  */}}
+  {{- $refPagePath := strings.TrimSuffix "/" $refPath -}}
+  {{- $refPagePath  = printf "%s.md" $refPagePath     -}}
+  {{- $refPage     := site.GetPage $refPagePath       -}}
+  {{- $refPath      = $refPage.Params.schematize      -}}
+{{- end -}}
+{{- $refLevel := default 0 $property._level -}}
+{{/* Still hard coded to schemas folder */}}
+{{- $refData  := site.Data.schemas          -}}
 
+{{/* Recurse through the dot path to find the data definition of the schema */}}
 {{- if in $refPath "." -}}
   {{- range $level := split $refPath "." -}}
     {{- $refData = index $refData $level -}}
@@ -19,6 +34,7 @@
 {{- else -}}
   {{- $refData = index $refData $refPath -}}
 {{- end -}}
-
 {{- $refData = merge $refData (dict "_level" $refLevel) -}}
+
+{{/* Return the referenced schema data to the caller */}}
 {{- return $refData -}}
