@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Settings.schema.yaml
+$id: settings.schema.yaml
 title: Repository Settings
 description: Settings defining how the Platen site is version controlled
 schematize:
@@ -9,7 +9,7 @@ schematize:
     control host you're using
 type: object
 properties:
-  URL:
+  url:
     title: Repository URL
     description: Defines the URL to the root of the repository on your version control host.
     schematize:
@@ -17,7 +17,7 @@ properties:
       details: |
         Defines the URL to the root of the repository on your version control host.
     type: string
-  CommitPath:
+  commit_path:
     title: Commit Path
     description: Sets the repository-relative path for the "See this page's source" link.
     schematize:
@@ -26,7 +26,7 @@ properties:
         Sets the repository-relative path for the "See this page's source" link.
     type: string
     default: commit
-  EditPath:
+  edit_path:
     title: Edit Path
     description: Sets the repository-relative path for the "Edit this page" link.
     schematize:
@@ -35,7 +35,7 @@ properties:
         Sets the repository-relative path for the "Edit this page" link.
     type: string
     default: edit/main
-  ContentRoot:
+  content_root:
     title: Repository-Relative Content Folder
     description: Specifies the path to the content folder relative to the repository root.
     schematize:
@@ -53,7 +53,7 @@ properties:
         if it's set. It will trim any leading `../` from the value. If the automatic resolution for
         the value still gives you an incorrect URL, use this setting to define it explicitly.
     type: string
-  MountedPaths:
+  mounted_paths:
     title: Mounted Content Paths
     description: Specifies maps for mounted content paths from repository-relative to site-relative.
     schematize:
@@ -67,4 +67,4 @@ properties:
         repository, or skip them entirely for a set of mounted content.
     type: array
     items:
-      $ref: ./MountedPath.yaml
+      $ref: ./mounted_path.yaml

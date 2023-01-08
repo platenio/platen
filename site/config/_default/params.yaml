@@ -35,27 +35,27 @@ Platen:
             DisplayName: Platen Sites
     Logo:
       URL: /images/logo.svg                   # BookLogo
-  Features:
-    Search:                                   # BookSearch
-      Enabled: true
-    Comments:                                 # BookComments
-      Enabled: true
-    PWA:                                      # BookServiceWorker
-      Enabled: true
-    PortableLinks:                            # BookPortableLinks
-      Enabled: true
-  Repository:
-    URL: "https://github.com/platenio/platen" # BookRepo
-    CommitPath: commit                        # BookCommitPath
-    EditPath: edit/main                       # BookEditPath
-    ContentRoot: 'content'
-    MountedPaths:
-      - Source: modules/platen/_docs
-        Target: modules/platen
-      - Source: modules/toroidal/_docs
-        Target: modules/toroidal
-      - Source: modules/schematize/_docs
-        Target: modules/schematize
+  features:
+    search:                                   # booksearch
+      enabled: true
+    comments:                                 # bookcomments
+      enabled: true
+    pwa:                                      # bookserviceworker
+      enabled: true
+    portable_links:                            # BookPortableLinks
+      enabled: true
+  repository:
+    url: "https://github.com/platenio/platen" # BookRepo
+    commit_path: commit                        # BookCommitPath
+    edit_path: edit/main                       # BookEditPath
+    content_root: 'content'
+    mounted_paths:
+      - source: modules/platen/_docs
+        target: modules/platen
+      - source: modules/toroidal/_docs
+        target: modules/toroidal
+      - source: modules/schematize/_docs
+        target: modules/schematize
   Multilingual:                               # BookTranslatedOnly
     TranslatedOnly: false
 

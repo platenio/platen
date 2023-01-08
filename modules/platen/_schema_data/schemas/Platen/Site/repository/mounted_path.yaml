@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: MountedPath.schema.yaml
+$id: mounted_path.schema.yaml
 title: Mounted Path
 description: Maps a mounted content path from repository-relative to site-relative.
 schematize:
@@ -8,21 +8,21 @@ schematize:
     Maps a mounted countent path from repository-relative to site-relative.
 
     Specify the repository-relative path to mounted content in the [sref:`Source`] property
-    and the site-relative path in the [sref:`Target`] property.
+    and the site-relative path in the [sref:`target`] property.
 
     When building the URL for the "Edit this page" links, any content file that has a prefix
-    matching a [sref:`Target`] value is munged to replace that path prefix with the one
-    defined in [sref:`Source`].
+    matching a [sref:`target`] value is munged to replace that path prefix with the one
+    defined in [sref:`source`].
 
     <!-- Reference Links -->
-    [sref:`Source`]: Platen.Site.Repository.MountedPath.Source
-    [sref:`Target`]: Platen.Site.Repository.MountedPath.Target
+    [sref:`source`]: Platen.Site.repository.mounted_path.source
+    [sref:`target`]: Platen.Site.repository.mounted_path.target
 type: object
 required:
-  - Source
-  - Target
+  - source
+  - target
 properties:
-  Source:
+  source:
     title: Repository-Relative Path
     description: Specifies the path to the file or folder relative to the repository root.
     schematize:
@@ -74,7 +74,7 @@ properties:
         ```
 
         To ensure platen maps the mounted content correctly, you would specify this value as
-        `SuperNeat/docs` and set [sref:`Target`] to `reference/super-neat`.
+        `SuperNeat/docs` and set [sref:`target`] to `reference/super-neat`.
 
         ### Mapping Content From Another Repository
 
@@ -108,7 +108,7 @@ properties:
         ```
 
         To ensure platen maps the mounted content correctly, you would specify this value as
-        `https://github.com/myOrg/myProjects/edit/main/SuperNeat/docs` and set [sref:`Target`] to
+        `https://github.com/myOrg/myProjects/edit/main/SuperNeat/docs` and set [sref:`target`] to
         `reference/super-neat`.
 
         ### Ignoring Mounted Content
@@ -139,12 +139,12 @@ properties:
         ```
 
         To ensure platen doesn't render an "Edit this page" link for this content, you would specify this value as
-        `IGNORE!!` and set [sref:`Target`] to `reference/super-neat`.
+        `IGNORE!!` and set [sref:`target`] to `reference/super-neat`.
 
         <!-- Reference Links -->
-        [sref:`Target`]: Platen.Site.Repository.MountedPath.Target
+        [sref:`target`]: Platen.Site.repository.mounted_path.target
     type: string
-  Target:
+  target:
     title: Site-Relative Path
     description: Specifies the path to the file or folder relative to the content directory.
     type: string
@@ -183,7 +183,7 @@ properties:
         ```
 
         To ensure platen maps the mounted content correctly, you would specify this value as
-        `reference/super-neat` and set [sref:`Source`] to `SuperNeat/docs`.
+        `reference/super-neat` and set [sref:`source`] to `SuperNeat/docs`.
 
         <!-- Reference Links -->
-        [sref:`Source`]: Platen.Site.Repository.MountedPath.Source
+        [sref:`source`]: Platen.Site.repository.mounted_path.source

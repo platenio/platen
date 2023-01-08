@@ -234,8 +234,8 @@ Platen:
         renderers:
           codeblock: platen/markup/tabs/codeblock
       style: tabs
-  Repository:
-    CommitPath: commit                        # BookCommitPath
-    EditPath: edit/main                       # BookEditPath
+  repository:
+    commit_path: commit                        # BookCommitPath
+    edit_path: edit/main                       # BookEditPath
   Multilingual:                               # BookTranslatedOnly
     TranslatedOnly: false
