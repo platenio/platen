@@ -8,5 +8,5 @@ type: object
 anyOf:
   - $ref: ./hugo/page.yaml
 properties:
-  Platen:
-    $ref: ./Platen/Content/Post.yaml
+  platen:
+    $ref: ./platen/content/post.yaml

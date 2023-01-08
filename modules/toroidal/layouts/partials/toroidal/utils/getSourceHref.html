@@ -10,9 +10,9 @@
 {{- $context    := .  -}}
 {{- $sourceHref := "" -}}
 
-{{- with site.Params.Platen.repository.url                                      -}}
-  {{- $base       := site.Params.Platen.repository.url                          -}}
-  {{- $editPath   := site.Params.Platen.repository.edit_path                    -}}
+{{- with site.Params.platen.repository.url                                      -}}
+  {{- $base       := site.Params.platen.repository.url                          -}}
+  {{- $editPath   := site.Params.platen.repository.edit_path                    -}}
   {{- $contentDir := default "content" site.Params.contentDir                   -}}
   {{- $filePath   := replace $context.File.Path "\\" "/"                        -}}
   {{- $sourceHref  = printf "%s/%s/%s/%s" $base $editPath $contentDir $filePath -}}

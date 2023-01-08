@@ -4,7 +4,7 @@ weight: 30
 summary: >-
   Documentation on the `columns` language ID for codeblocks, which enables you to format content in
   multiple columns on a page.
-Platen:
+platen:
   title_as_heading: true
 Memo:
   Name: columns

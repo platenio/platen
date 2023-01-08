@@ -1,5 +1,5 @@
-{{- $platenSiteParams := .Site.Params.Platen -}}
-{{- $platenPageParams := .Params.Platen      -}}
+{{- $platenSiteParams := .Site.Params.platen -}}
+{{- $platenPageParams := .Params.platen      -}}
 
 {{/*
   Determine if the ToC should be rendered:
@@ -8,7 +8,7 @@
   - If set in the site params but not the page, use that value.
   - If not set at all, default to true.
 */}}
-{{- $siteRenderToC := $platenSiteParams.table_of_contents.render             -}}
+{{- $siteRenderToC := $platenSiteParams.display.table_of_contents.render     -}}
 {{- $pageRenderToC := $platenPageParams.table_of_contents.render             -}}
 {{- $renderToC     := $pageRenderToC | default $siteRenderToC | default true -}}
 
@@ -68,8 +68,8 @@
 {{ define "header" }}
   {{ partial "platen/header" . }}
 
-  {{  $siteRenderToC := site.Params.Platen.table_of_contents.render            -}}
-  {{- $pageRenderToC := .Params.Platen.table_of_contents.render                -}}
+  {{  $siteRenderToC := site.Params.platen.display.table_of_contents.render    -}}
+  {{- $pageRenderToC := .Params.platen.table_of_contents.render                -}}
   {{- $renderToC     := $pageRenderToC | default $siteRenderToC | default true  }}
   {{ if $renderToC }}
   <aside class="hidden clearfix">
@@ -83,8 +83,8 @@
 {{ end }}
 
 {{ define "comments" }}
-  {{ $commentsEnabled := default .Site.Params.Platen.features.comments.enabled
-                                 .Params.Platen.enable_comments
+  {{ $commentsEnabled := default .Site.Params.platen.features.comments.enabled
+                                 .Params.platen.enable_comments
   }}
   {{ if and .Content (default false $commentsEnabled) }}
   <div class="platen-comments">

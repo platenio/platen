@@ -4,8 +4,8 @@
 {{- $context := . -}}
 
 {{/* Determine whether the page already has an h1 */}}
-{{- $hasHeading := default site.Params.Platen.display.header.title_as_heading
-                           $context.Params.Platen.title_as_heading
+{{- $hasHeading := default site.Params.platen.display.header.title_as_heading
+                           $context.Params.platen.title_as_heading
 -}}
 {{- $hasHeading  = default false $hasHeading -}}
 

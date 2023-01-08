@@ -1,5 +1,5 @@
 params:
-  Platen:
+  platen:
     features:
       memo:
         enabled: true

@@ -2,7 +2,7 @@
 title: Schematize
 summary: Schematize provides helpers for publishing and documenting JSON schemas.
 weight: 100
-Platen:
+platen:
   menu:
     collapse_section: true
 ---

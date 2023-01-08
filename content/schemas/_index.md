@@ -2,10 +2,10 @@
 title: Configuration Schemas
 summary: Documentation for configuration options of Platen and related modules
 weight: 35
-Platen:
+platen:
   menu:
     hide: true
 cascade:
-  Platen:
+  platen:
     exclude_from_search: true
 ---

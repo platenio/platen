@@ -2,7 +2,7 @@
 {{- $context  := $params.Context  -}}
 {{- $position := $params.Position -}}
 
-{{- with (index site.Params.Platen.display.menu $position) -}}
+{{- with (index site.Params.platen.display.menu $position) -}}
   {{- $positionSettings := . -}}
   {{- with $positionSettings.entries -}}
     {{- $partialParams := merge $params $positionSettings -}}

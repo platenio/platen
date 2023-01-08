@@ -2,7 +2,7 @@
 title: Platen
 summary: The main module, Platen provides the foundation for digital books.
 weight: 10
-Platen:
+platen:
   menu:
     collapse_section: true
 ---

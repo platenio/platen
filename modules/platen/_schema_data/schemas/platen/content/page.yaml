@@ -1,0 +1,212 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: Page.schema.yaml
+title: Page Options
+description: Optional settings for overriding site configuration on a content page.
+schematize:
+  details: |
+    Defines optional settings for overriding site configuration on a page using values in the page's
+    front matter.
+type: object
+properties:
+  title_as_heading:
+    title: Render Page Title as Heading
+    description: Specify whether the page title should be rendered as an h1 instead of strong.
+    schematize:
+      weight: 1
+      details: |
+        Use this setting to specify whether the page title should be rendered as an `<h1>`
+        element instead of the default `<strong>` element.
+
+        If this set to `true`, Platen renders the title text in an `<h1>` with the ID set to
+        the title, downcased and urlized.
+
+        When the page title is rendered as a heading, it's always visible, even when not in mobile
+        view.
+    type: boolean
+    default: false
+  enable_comments:
+    title: Enable Comments
+    description: Whether to enable comments on the page
+    schematize:
+      weight: 2
+      details: |
+        Specifies whether to enable comments on the page, overriding the site's [sref:`features.comments.enabled`]
+        setting for this page.
+
+        Set this value to `true` to enable comments for the page and `false` to disable them.
+
+        [sref:`features.comments.enabled`]: platen.site.features.comments.enabled
+    type: boolean
+  exclude_from_search:
+    title: Exclude from Search
+    description: Whether to exclude the page from site search results
+    schematize:
+      weight: 3
+      details: |
+        Specifies whether to exclude the page from site search results. This setting is only
+        effective when the site's [sref:`features.search.enabled`] setting is set to `true`.
+
+        [sref:`features.search.enabled`]: platen.site.features.search.enabled
+    type: boolean
+  menu:
+    title: Site Menu Options
+    description: Alters this page's entry in the site menu
+    schematize:
+      weight: 4
+      skipSchemaRender: true
+      details: |
+        Defines options for altering how this page is displayed in the site menu. Normal pages can
+        only be optionally hidden.
+    type: object
+    properties:
+      hide:
+        title: Hide from Site Menu
+        description: Whether to remove the page from the site menu
+        schematize:
+          weight: 2
+          details: |
+            Specifies whether to remove the page from the site menu. This setting only has an effect
+            when the page would otherwise be included in the site menu because it is in the folder
+            defined in the site's [sref:`display.menu.root_section`] setting.
+
+            To prevent the page from being added to the site menu, set this value to `true`. The
+            default is `false`.
+
+            [sref:`display.menu.root_section`]: platen.site.display.menu.settings.root_section
+        type: boolean
+        default: false
+  table_of_contents:
+    title: Table of Contents
+    description: Overrides the site's table of contents configuration for this page.
+    schematize:
+      weight: 5
+      skipSchemaRender: true
+      details: |
+        Defines overrides the site's table of contents configuration for this page.
+    type: object
+    properties:
+      use_built_in:
+        title: Use Built-In
+        description: Choose whether to use Hugo's builtin table of contents.
+        schematize:
+          details: |
+            Choose whether to use Hugo's builtin table of contents or generate them with Platen,
+            overriding the site's configuration for this page. This overrides the site's
+            [sref:`display.table_of_contents.use_built_in`][s01] setting.
+
+
+            Hugo's builtin table of contents only includes markdown headings, not HTML headings
+            added in shortcodes.
+
+            Platen's table of contents includes all headings, HTML and Markdown, as long as they're
+            within the specified values for [sref:`minimum_level`][s02] and
+            [sref:`maximum_level`][s03], inclusive.
+
+            [s01]: platen.site.display.settings.table_of_contents.use_built_in
+            [s02]: platen.content.page.minimum_level
+            [s03]: platen.content.page.maximum_level
+          weight: 1
+        type: boolean
+        default: false
+      render:
+        title: Render the Table of Contents
+        description: Whether to render the table of contents for the page
+        schematize:
+          weight: 2
+          details: |
+            Specifies whether to render the table of contents for the page. This setting overrides
+            the site's [sref:`display.table_of_contents.render`][s01], if set.
+
+            To prevent the table of contents from rendering for a page, set this value to `false`.
+            To render the table of contents for a page when it's disabled at the site level, set
+            this value to `true`.
+
+            [s01]: platen.site.display.settings.table_of_contents.Render
+        type: boolean
+        default: false
+      minimum_level:
+        title: Minimum Heading Level
+        description: Specify the minimum heading level to include in the page's table of contents.
+        schematize:
+          details: |
+            Specify the minimum heading level to include in the page's table of contents, overriding
+            the site's [sref:`display.table_of_contents.minimum_level`][s01] setting. This value
+            only affects the table of contents when [sref:`use_built_in`][s02] is set to `false`.
+
+            Headings at a lower level than this value aren't included in the table of contents. For
+            example, when this is set to `3`, first and second level Markdown and HTML headings
+            aren't included in the table of contents.
+
+            This value must be less than or equal to the value of [sref:`maximum_level`][s03].
+
+            [s01]: platen.site.display.settings.table_of_contents.minimum_level
+            [s02]: platen.content.page.use_built_in
+            [s03]: platen.content.page.maximum_level
+          weight: 3
+        type: integer
+        default: 2
+        minimum: 1
+        maximum: 6
+      maximum_level:
+        title: Maximum Heading Level
+        description: Specify the maximum heading level to include in the page's table of contents.
+        schematize:
+          details: |
+            Specify the maximum heading level to include in the page's table of contents, overriding
+            the site's [sref:`display.table_of_contents.maximum_level`][s01] setting. This value
+            only affects the table of contents when [sref:`use_built_in`][s02] is set to `false`.
+
+            Headings at a higher level than this value aren't included in the table of contents. For
+            example, when this is set to `4`, fifth and sixth level Markdown and HTML headings
+            aren't included in the table of contents.
+
+            This value must be greater than or equal to the value of [sref:`minimum_level`][s03].
+
+            [s01]: platen.site.display.settings.table_of_contents.maximum_level
+            [s02]: platen.content.page.use_built_in
+            [s03]: platen.content.page.minimum_level
+          weight: 4
+        type: integer
+        default: 4
+        minimum: 1
+        maximum: 6
+      ordered_list:
+        title: As Ordered List
+        description: Specify whether table of contents entries should render in an ordered list.
+        schematize:
+          weight: 5
+          details: |
+            Specify whether the table of contents should render its entries in an ordered list with
+            numerals before each item. By default, the table of contents is rendered in an unordered
+            list without any list markers, only with indents.
+
+            Set this value to `true` to add the entries in an ordered list instead.
+
+            This value overrides [sref:`display.table_of_contents.ordered_list`][s01] in the site's
+            configuration.
+
+            [s01]: platen.site.display.settings.table_of_contents.ordered_list
+        type: boolean
+        default: false
+  markup:
+    title: Markup Options
+    description: Control markup-specific behavior for this page, overriding site-level defaults.
+    schematize:
+      weight: 6
+      details: |
+        Specifies a map of options for Platen markup, allowing you to override site-level defaults
+        for a markup on a per-page basis.
+      skipSchemaRender: true
+    type: object
+    properties:
+      katex:
+        $ref: ./markup/katex.yaml
+        schematize:
+          weight: 1
+          skipSchemaRender: true
+      mermaid:
+        $ref: ./markup/mermaid.yaml
+        schematize:
+          weight: 2
+          skipSchemaRender: true

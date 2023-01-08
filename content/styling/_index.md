@@ -2,7 +2,7 @@
 title: Theme Guide
 summary: A handbook for customizing and styling Platen sites.
 weight: 20
-Platen:
+platen:
   menu:
     collapse_section: true
 ---

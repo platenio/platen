@@ -1,6 +1,6 @@
 {{- $Context       := .                                            -}}
-{{- $SiteConfigToC := site.Params.Platen.display.table_of_contents -}}
-{{- $PageConfigToC := $Context.Params.Platen.table_of_contents     -}}
+{{- $SiteConfigToC := site.Params.platen.display.table_of_contents -}}
+{{- $PageConfigToC := $Context.Params.platen.table_of_contents     -}}
 {{/*
   Determine whether to use Hugo's generator for the table of contents or Platen's. By default, use
   Platen's generator. If the site configuration specifies a value, use that setting.

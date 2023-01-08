@@ -2,7 +2,7 @@
 title: Contact
 summary: Reach out to the Platen team
 linktitle: Contact us
-Platen:
+platen:
   menu:
     hide: true
 ---

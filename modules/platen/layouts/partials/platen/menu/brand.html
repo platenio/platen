@@ -1,7 +1,7 @@
 <h2 class="platen-brand">
   <a class="flex align-center"
      href="{{ cond (not .Site.Home.File) .Sites.First.Home.RelPermalink .Site.Home.RelPermalink }}">
-    {{- with .Site.Params.Platen.display.logo.url -}}
+    {{- with .Site.Params.platen.display.logo.url -}}
     <img src="{{ . | relURL }}" alt="Logo" />
     {{- end -}}
     <span>{{ .Site.Title }}</span>

@@ -11,5 +11,5 @@ anyOf:
   - $ref: ./Toroidal/Content/Admin.yaml
   - $ref: ./Toroidal/Content/Member.yaml
 properties:
-  Platen:
-    $ref: ./Platen/Content/Page.yaml
+  platen:
+    $ref: ./platen/content/page.yaml

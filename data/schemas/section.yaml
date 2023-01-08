@@ -9,5 +9,5 @@ anyOf:
   - $ref: ./hugo/page.yaml
   - $ref: ./Toroidal/Content/Section.yaml
 properties:
-  Platen:
-    $ref: ./Platen/Content/Page.yaml
+  platen:
+    $ref: ./platen/content/page.yaml

@@ -217,11 +217,11 @@ properties:
         ```
 
         If you're hosting the webring on a Platen site, you can use any variables and style modules
-        available to page content. For more information, see [sref:`Platen.theme`].
+        available to page content. For more information, see [sref:`platen.theme`].
 
         For more information on authoring SCSS, see the [learning guide].
 
-        [sref:`Platen.theme`]: Platen.Site.theme.config
+        [sref:`platen.theme`]: platen.site.theme.config
         [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
         [learning guide]: https://sass-lang.com/guide
     oneOf:

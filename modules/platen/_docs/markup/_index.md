@@ -2,7 +2,7 @@
 title: Markup
 summary: Documentation on the special markup Platen uses.
 weight: 30
-Platen:
+platen:
   menu:
     collapse_section: true
 ---

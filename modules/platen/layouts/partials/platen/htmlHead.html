@@ -18,7 +18,7 @@
 
 {{ partial "platen/htmlHead/siteStyleLink" $context }}
 
-{{ range $feature, $settings := site.Params.Platen.features -}}
+{{ range $feature, $settings := site.Params.platen.features -}}
   {{- if $settings.enabled -}}
     {{- with $settings.partials.header -}}
       {{ partial . $context }}
@@ -26,7 +26,7 @@
   {{- end -}}
 {{- end -}}
 
-{{ range $feature, $settings := site.Params.Platen.markup -}}
+{{ range $feature, $settings := site.Params.platen.markup -}}
   {{- if $settings.enabled -}}
     {{- with $settings.partials.header -}}
       {{ partial . $context }}

@@ -1,8 +1,8 @@
 {{- $Context := . -}}
 
 {{- $loadKatex := $Context.Store.Get "_hasKatex"
-    | default $Context.Params.Platen.markup.katex.always_load
-    | default site.Params.Platen.markup.katex.always_load
+    | default $Context.Params.platen.markup.katex.always_load
+    | default site.Params.platen.markup.katex.always_load
 -}}
 
 {{- if $loadKatex -}}
@@ -11,7 +11,7 @@
                    | default (gt (findRE `\\ce\{(.|\s)+?\}` $Context.RawContent) 0)
   -}}
   {{/* Get the KaTeX URLs to use */}}
-  {{- $Version      := site.Params.Platen.markup.katex.version | default "0.16.4"         -}}
+  {{- $Version      := site.Params.platen.markup.katex.version | default "0.16.4"         -}}
   {{- $UrlPrefix    := "https://cdn.jsdelivr.net/npm/katex"                               -}}
   {{- $StyleUrl     := printf "%s@%s/dist/katex.min.css"              $UrlPrefix $Version -}}
   {{- $LibraryUrl   := printf "%s@%s/dist/katex.min.js"               $UrlPrefix $Version -}}

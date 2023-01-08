@@ -2,7 +2,7 @@
 title: Modules
 summary: Documentation for Platen modules to what your site can do.
 weight: 30
-Platen:
+platen:
   menu:
     flatten_section: true
 ---

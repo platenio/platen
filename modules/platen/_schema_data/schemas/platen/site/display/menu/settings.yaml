@@ -1,0 +1,354 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: settings.schema.yaml
+title: Site Menu Settings
+description: Optional settings controlling how a Platen site's menu is structured.
+schematize:
+  details: |
+    The Platen display options control how the Platen site's menu is structured and displays.
+    
+    With the [sref:`root_section`] setting, you can define a content folder to add to the site menu as
+    the main section.
+
+    With the [sref:`before_injection`], [sref:`before_hugo_config`], [sref:`before_root_section`],
+    [sref:`after_root_section`], [sref:`after_hugo_config`], and [sref:`after_injection`] settings
+    (collectively, the menu position settings), you can use Platen [sref:features] to add entries to
+    the site's menu in one of several locations using a partial defined for the feature.
+
+    In addition to the position settings, feature module authors can define any settings that
+    make sense for their functionality, such as top-level defaults that apply to every position
+    unless overridden.
+
+    For more information on how to define these settings, see [sref:Defining a Feature Menu Entry].
+
+    For more information on how this setting is used internally and how to define a feature that can
+    support these menu items, see [sref:`partials.menu` in Defining Features].
+
+    <!-- Reference Links -->
+    [sref:`partials.menu` in Defining Features]: platen.site.features.defining.partials.menu
+    [sref:`root_section`]: platen.site.display.menu.settings.root_section
+    [sref:`before_injection`]: platen.site.display.menu.settings.before_injection
+    [sref:`before_hugo_config`]: platen.site.display.menu.settings.before_hugo_config
+    [sref:`before_root_section`]: platen.site.display.menu.settings.before_root_section
+    [sref:`after_injection`]: platen.site.display.menu.settings.after_injection
+    [sref:`after_hugo_config`]: platen.site.display.menu.settings.after_hugo_config
+    [sref:`after_root_section`]: platen.site.display.menu.settings.after_root_section
+    [sref:Defining a Feature Menu Entry]: platen.site.display.menu.entry
+    [sref:features]: platen.site.features.defining
+type: object
+properties:
+  root_section:
+    title: Menu Root Section
+    description: >-
+      Specifies the root section of the content folder to add to the site menu.
+    schematize:
+      weight: 1
+      details: |
+        Specifies the root section of the content folder to add to the site menu. You can specify a
+        folder path relative to the root of the content folder, like `games` for `content/games`, or
+        `projects/releases` for `content/projects/releases`.
+
+        You can specify a single forward slash (`/`) to set the menu's root section to the entire
+        content folder.
+
+        If you want to uninclude a page or section from the site menu, set the
+        `platen.menu.hide` parameter in the [sref:page] or [sref:section]'s frontmatter to `true`.
+
+        The default value is `/`.
+
+        <!-- Reference Links -->
+        [sref:page]: platen.content.page.menu.hide
+        [sref:section]: platen.content.section.menu.hide
+    type: string
+    default: /
+  before_injection:
+    title: Feature Entries Before Menu Injection 
+    description: Define entries at the beginning of the site menu.
+    type: object
+    schematize:
+      weight: 2
+      skipSchemaRender: true
+      details: |
+        This setting allows you to add menu entries for the feature at the very top of the site
+        menu, after the brand and search section.
+
+        When the menu partial is called, this value is passed to the partial along with the
+        current page's context.
+    properties:
+      group:
+        $ref: ./group.yaml
+        schematize:
+          weight: 1
+      entries:
+        title: Entries
+        description: >-
+          Define one or more entries to include at this position.
+        schematize:
+          weight: 4
+          details: |
+            You must define at least one entry to include at this position. A position without any
+            entries isn't processed, even if [sref:`group`] is defined.
+
+            <!-- Reference Links -->
+            [sref:`group`]: platen.site.display.menu.settings.pattern-positional.group
+        type: array
+        items:
+          $ref: ./entry.yaml
+          schematize:
+            details: |
+              An entry must define either the [sref:`feature`] or the [sref:`group`] and
+              [sref:`Entries`] settings.
+
+              Entries with the [sref:`feature`] setting are individual entries that leverage a
+              partial defined by a Platen feature.
+
+              Entries with the [sref:`group`] setting acommodate a nested list of entries (defined
+              in [sref:`entries`]) in the menu, using this entry as the parent container.
+
+              <!-- Reference Links -->
+              [sref:`entries`]: platen.site.display.menu.entry.entries
+              [sref:`feature`]: platen.site.display.menu.entry.feature
+              [sref:`group`]: platen.site.display.menu.entry.group
+  before_hugo_config:
+    title: Feature Entries Before Hugo Menu Configuration Entries
+    description: Define feature menu entries after injection and before configured entries.
+    type: object
+    schematize:
+      weight: 3
+      skipSchemaRender: true
+      details: |
+        This setting allows you to add menu entries for the feature after any from the injection
+        partial but before the entries from the `menu.before` setting in Hugo's configuration
+        file.
+
+        When the menu partial is called, this value is passed to the partial along with the
+        current page's context.
+    properties:
+      group:
+        $ref: ./group.yaml
+        schematize:
+          weight: 1
+      entries:
+        title: Entries
+        description: >-
+          Define one or more entries to include at this position.
+        schematize:
+          weight: 4
+          details: |
+            You must define at least one entry to include at this position. A position without any
+            entries isn't processed, even if [sref:`group`] is defined.
+
+            <!-- Reference Links -->
+            [sref:`group`]: platen.site.display.menu.settings.pattern-positional.group
+        type: array
+        items:
+          $ref: ./entry.yaml
+          schematize:
+            details: |
+              An entry must define either the [sref:`feature`] or the [sref:`group`] and
+              [sref:`Entries`] settings.
+
+              Entries with the [sref:`feature`] setting are individual entries that leverage a
+              partial defined by a Platen feature.
+
+              Entries with the [sref:`group`] setting acommodate a nested list of entries (defined
+              in [sref:`entries`]) in the menu, using this entry as the parent container.
+
+              <!-- Reference Links -->
+              [sref:`entries`]: platen.site.display.menu.entry.entries
+              [sref:`feature`]: platen.site.display.menu.entry.feature
+              [sref:`group`]: platen.site.display.menu.entry.group
+  before_root_section:
+    title: Feature Entries Before Main Menu Entries
+    description: Define feature menu entries after configured entries and before automatic ones.
+    type: object
+    schematize:
+      weight: 4
+      skipSchemaRender: true
+      details: |
+        This setting allows you to add menu entries for the feature after the entries from the
+        `menu.before` setting in Hugo's configuration file but before the content added from the
+        root content section by Platen.
+
+        When the menu partial is called, this value is passed to the partial along with the
+        current page's context.
+    properties:
+      group:
+        $ref: ./group.yaml
+        schematize:
+          weight: 1
+      entries:
+        title: Entries
+        description: >-
+          Define one or more entries to include at this position.
+        schematize:
+          weight: 4
+          details: |
+            You must define at least one entry to include at this position. A position without any
+            entries isn't processed, even if [sref:`group`] is defined.
+
+            <!-- Reference Links -->
+            [sref:`group`]: platen.site.display.menu.settings.pattern-positional.group
+        type: array
+        items:
+          $ref: ./entry.yaml
+          schematize:
+            details: |
+              An entry must define either the [sref:`feature`] or the [sref:`group`] and
+              [sref:`entries`] settings.
+
+              Entries with the [sref:`feature`] setting are individual entries that leverage a
+              partial defined by a Platen feature.
+
+              Entries with the [sref:`group`] setting acommodate a nested list of entries (defined
+              in [sref:`entries`]) in the menu, using this entry as the parent container.
+
+              <!-- Reference Links -->
+              [sref:`entries`]: platen.site.display.menu.entry.entries
+              [sref:`feature`]: platen.site.display.menu.entry.feature
+              [sref:`group`]: platen.site.display.menu.entry.group
+  after_root_section:
+    title: Feature Entries After Main Menu Entries
+    description: Define feature menu entries after automatic entries and before configured ones.
+    type: object
+    schematize:
+      weight: 5
+      skipSchemaRender: true
+      details: |
+        This setting allows you to add menu entries for the feature after the content added from
+        the root content section by Platen but before the entries from the `menu.after` setting
+        in Hugo's configuration file.
+
+        When the menu partial is called, this value is passed to the partial along with the
+        current page's context.
+    properties:
+      group:
+        $ref: ./group.yaml
+        schematize:
+          weight: 1
+      entries:
+        title: Entries
+        description: >-
+          Define one or more entries to include at this position.
+        schematize:
+          weight: 4
+          details: |
+            You must define at least one entry to include at this position. A position without any
+            entries isn't processed, even if [sref:`group`] is defined.
+
+            <!-- Reference Links -->
+            [sref:`group`]: platen.site.display.menu.settings.pattern-positional.group
+        type: array
+        items:
+          $ref: ./entry.yaml
+          schematize:
+            details: |
+              An entry must define either the [sref:`feature`] or the [sref:`group`] and
+              [sref:`entries`] settings.
+
+              Entries with the [sref:`feature`] setting are individual entries that leverage a
+              partial defined by a Platen feature.
+
+              Entries with the [sref:`group`] setting acommodate a nested list of entries (defined
+              in [sref:`entries`]) in the menu, using this entry as the parent container.
+
+              <!-- Reference Links -->
+              [sref:`entries`]: platen.site.display.menu.entry.entries
+              [sref:`feature`]: platen.site.display.menu.entry.feature
+              [sref:`group`]: platen.site.display.menu.entry.group
+  after_hugo_config:
+    title: Feature Entries After Menu Configuration Entries
+    description: Define feature menu entries after configured entries and before injection.
+    type: object
+    schematize:
+      weight: 6
+      skipSchemaRender: true
+      details: |
+        This setting allows you to add menu entries for the feature after the entries from the
+        `menu.after` setting in Hugo's configuration file but before the injection partial.
+
+        When the menu partial is called, this value is passed to the partial along with the
+        current page's context.
+    properties:
+      group:
+        $ref: ./group.yaml
+        schematize:
+          weight: 1
+      entries:
+        title: Entries
+        description: >-
+          Define one or more entries to include at this position.
+        schematize:
+          weight: 4
+          details: |
+            You must define at least one entry to include at this position. A position without any
+            entries isn't processed, even if [sref:`group`] is defined.
+
+            <!-- Reference Links -->
+            [sref:`group`]: platen.site.display.menu.settings.pattern-positional.group
+        type: array
+        items:
+          $ref: ./entry.yaml
+          schematize:
+            details: |
+              An entry must define either the [sref:`feature`] or the [sref:`group`] and
+              [sref:`entries`] settings.
+
+              Entries with the [sref:`feature`] setting are individual entries that leverage a
+              partial defined by a Platen feature.
+
+              Entries with the [sref:`group`] setting acommodate a nested list of entries (defined
+              in [sref:`entries`]) in the menu, using this entry as the parent container.
+
+              <!-- Reference Links -->
+              [sref:`entries`]: platen.site.display.menu.entry.entries
+              [sref:`feature`]: platen.site.display.menu.entry.feature
+              [sref:`group`]: platen.site.display.menu.entry.group
+  after_injection:
+    title: Feature Entries After Menu Injection
+    description: Define feature menu entries at the end of the site menu.
+    type: object
+    schematize:
+      weight: 7
+      skipSchemaRender: true
+      details: |
+        This setting allows you to add menu entries for the feature at the very bottom of the
+        site menu after everything else.
+
+        When the menu partial is called, this value is passed to the partial along with the
+        current page's context.
+    properties:
+      group:
+        $ref: ./group.yaml
+        schematize:
+          weight: 1
+      entries:
+        title: Entries
+        description: >-
+          Define one or more entries to include at this position.
+        schematize:
+          weight: 4
+          details: |
+            You must define at least one entry to include at this position. A position without any
+            entries isn't processed, even if [sref:`group`] is defined.
+
+            <!-- Reference Links -->
+            [sref:`group`]: platen.site.display.menu.settings.pattern-positional.group
+        type: array
+        items:
+          $ref: ./entry.yaml
+          schematize:
+            details: |
+              An entry must define either the [sref:`feature`] or the [sref:`group`] and
+              [sref:`entries`] settings.
+
+              Entries with the [sref:`feature`] setting are individual entries that leverage a
+              partial defined by a Platen feature.
+
+              Entries with the [sref:`group`] setting acommodate a nested list of entries (defined
+              in [sref:`entries`]) in the menu, using this entry as the parent container.
+
+              <!-- Reference Links -->
+              [sref:`entries`]: platen.site.display.menu.entry.entries
+              [sref:`feature`]: platen.site.display.menu.entry.feature
+              [sref:`group`]: platen.site.display.menu.entry.group

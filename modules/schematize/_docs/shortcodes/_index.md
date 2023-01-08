@@ -2,7 +2,7 @@
 title: Shortcodes
 summary: Documentation on the shortcodes provided by the Schematize module.
 weight: 30
-Platen:
+platen:
   menu:
     collapse_section: true
 ---

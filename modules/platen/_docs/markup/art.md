@@ -3,7 +3,7 @@ title: Art
 weight: 10
 summary: >-
   Documentation on adding artwork to your content with an image link. 
-Platen:
+platen:
   title_as_heading: true
 Memo:
   Name: art

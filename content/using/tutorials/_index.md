@@ -2,7 +2,7 @@
 title: Tutorials
 summary: Tutorials for authoring digital books with Platen.
 weight: 10
-Platen:
+platen:
   menu:
     collapse_section: true
 ---

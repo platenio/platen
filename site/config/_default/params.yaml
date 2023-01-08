@@ -17,7 +17,7 @@ Schematize:
         global_attribute:
           srefBase: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
 
-Platen:
+platen:
   theme:
     mode: auto                                # BookTheme
   display:

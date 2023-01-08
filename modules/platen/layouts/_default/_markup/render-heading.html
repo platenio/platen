@@ -3,7 +3,7 @@
 {{- $renderedHeading := "" -}}
 
 {{/* Use renderers from features first */}}
-{{- range $feature := site.Params.Platen.features -}}
+{{- range $feature := site.Params.platen.features -}}
   {{- if and $feature.enabled (eq "" $renderedHeading) -}}
     {{- with $feature.partials.renderers.heading -}}
       {{- $renderedHeading = partial . $params }}
@@ -12,7 +12,7 @@
 {{- end -}}
 
 {{/* Use arbitrary renderers if no feature applied */}}
-{{- range $markup := site.Params.Platen.markup -}}
+{{- range $markup := site.Params.platen.markup -}}
   {{- if and $markup.enabled (eq "" $renderedHeading) -}}
     {{- with $markup.partials.renderers.heading -}}
       {{- $renderedHeading = partial . $params }}

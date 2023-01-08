@@ -3,8 +3,8 @@
 */}}
 {{- $Context       := .                                            -}}
 {{- $pageContent   := $Context.Content                             -}}
-{{- $SiteConfigToC := site.Params.Platen.display.table_of_contents -}}
-{{- $PageConfigToC := $Context.Params.Platen.table_of_contents     -}}
+{{- $SiteConfigToC := site.Params.platen.display.table_of_contents -}}
+{{- $PageConfigToC := $Context.Params.platen.table_of_contents     -}}
 
 {{/* Parse settings for minimum and maximum heading levels to include in ToC */}}
 {{- $MinLevel := $PageConfigToC.minimum_level | default $SiteConfigToC.minimum_level | default 2 -}}

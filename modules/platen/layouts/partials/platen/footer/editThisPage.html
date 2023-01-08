@@ -4,17 +4,17 @@
 {{- $context := . -}}
 
 {{/* Retrieve settings from the site config */}}
-{{- $platenSettings := site.Params.Platen                       -}}
+{{- $platenSettings := site.Params.platen                       -}}
 {{- $repoUrl        := $platenSettings.repository.url           -}}
 {{- $editPath       := $platenSettings.repository.edit_path     -}}
 
 {{/*
   Determine the repository-root-relative path to content directory.
 
-  1. If Platen.repository.content_root is specified, use that value.
+  1. If platen.repository.content_root is specified, use that value.
   1. If it isn't, check if contentDir is set. If it is, check if it's a relative
      path and make it non-relative. Relative paths break the URL builder.
-  1. If neither Platen.repository.content_root nor contentDir are set, fall back
+  1. If neither platen.repository.content_root nor contentDir are set, fall back
      on `content`.
 */}}
 {{- $contentDir     := "content" -}}
@@ -41,7 +41,7 @@
 {{ if $shouldRender }}
   {{/*
     Munge the file path if needed. This only applies when you have content mounted from a module.
-    It loops over the list of mounted paths in Platen.repository.mounted_paths and if the file's
+    It loops over the list of mounted paths in platen.repository.mounted_paths and if the file's
     path has the target value as a prefix, replaces the target value with the source value.
 
     Without this munging, mounted content can't have a functional "edit this page" link.

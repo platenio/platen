@@ -1,4 +1,4 @@
-{{- $platenSection := site.Params.Platen.display.menu.root_section | default "/" -}}
+{{- $platenSection := site.Params.platen.display.menu.root_section | default "/" -}}
 {{- if eq $platenSection "*" -}}
   {{- $platenSection = "/" -}}{{/* Backward compatibility */}}
 {{- end }}
@@ -9,9 +9,9 @@
 
 {{ define "platen-section-children" }}{{/* (dict "Section" .Section "CurrentPage" .CurrentPage) */}}
   <ul>
-    {{ range (where .Section.Pages "Params.Platen.menu.hide" "ne" true) }}
+    {{ range (where .Section.Pages "Params.platen.menu.hide" "ne" true) }}
       {{ if .IsSection }}
-        <li {{- if .Params.Platen.menu.flatten_section }} class="platen-section-flat" {{ end -}}>
+        <li {{- if .Params.platen.menu.flatten_section }} class="platen-section-flat" {{ end -}}>
           {{ template "platen-page-link"        (dict "Page"    . "CurrentPage" $.CurrentPage) }}
           {{ template "platen-section-children" (dict "Section" . "CurrentPage" $.CurrentPage) }}
         </li>
@@ -30,7 +30,7 @@
   {{- $titleParams := dict "Context" .Page "ForMenu" true          -}}
   {{- $titleText   := partial "platen/utils/getTitle" $titleParams -}}
 
-  {{ if .Page.Params.Platen.menu.collapse_section }}
+  {{ if .Page.Params.platen.menu.collapse_section }}
     <input type="checkbox"
            id="section-{{ md5 .Page }}"
            class="toggle" {{ if or $current $ancestor }}checked{{ end }} />

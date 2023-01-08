@@ -1,0 +1,283 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: katex.schema.yaml
+title: KaTeX Markup
+description: Defines the settings for the KaTeX markup option
+schematize:
+  details: |
+    Defines the map of settings for the Platen's KaTeX markup option. The existing value is a
+    map that includes whether or not to enable the markup rendering, whether to always load the
+    libraries on every page, and which version of KaTeX to use.
+
+    When this markup is enabled, you can use [KaTeX][01] markup in your content with an
+    [image link][02] (that has the `chem:`, `katex:`, or `math:` prefix), [codeblock][03] (whose
+    language ID is `chem`, `katex`, and `math`), and even with KaTeX's own open/closing tags in
+    normal Markdown content if [sref:`always_load`] is set to `true`.
+
+    With KaTeX, you can write mathematical and chemical formulae in plaintext and render them as
+    beautiful formula on your site.
+
+    You can override some of these settings at a [sref:content-level].
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the full
+    list of all properties in your own configuration file. Only specify the values you want to add
+    or replace.
+
+    <!-- Reference Links -->
+    [01]:  https://katex.org/
+    [02]: /modules/platen/markup/katex/inline
+    [03]: /modules/platen/markup/katex/block
+    [sref:`always_load`]: platen.site.markup.katex.always_load
+    [sref:content-level]: platen.content.markup.katex
+type: object
+examples:
+  - enabled: true
+    always_load: true
+    version: 0.16.0
+properties:
+  enabled:
+    title: Enable KaTeX
+    description: Choose whether KaTeX rendering is available for the site.
+    schematize:
+      details: |
+        Choose whether the site renders KaTeX. The default is `true`.
+      weight: 1
+    type: boolean
+    default: true
+  always_load:
+    title: Always Load KaTeX
+    description: Choose whether the KaTeX style and libraries are always added to pages.
+    schematize:
+      details: |
+        Choose whether the KaTeX style and library modules are always added to site pages. By
+        default, the modules and style code are only added to pages where KaTeX markup is used
+        with the codeblock render hook, the image render hook, or where the page's front matter
+        has [sref:`platen.markup.katex.always_load`] set to `true`.
+
+        When this setting is set to `true`, the modules are added to every page and will always
+        be called to auto-render any valid KaTeX found on the page. This is useful for sites that
+        make heavy use of inline KaTeX without the image link markup.
+
+        The default value is `false`.
+
+        <!-- Reference Links -->
+        [sref:`platen.markup.katex.always_load`]: platen.content.markup.katex.always_load
+      weight: 2
+    type: boolean
+    default: false
+  version:
+    title: KaTeX Version
+    description: Specify the version of KaTeX to load when needed.
+    schematize:
+      details: |
+        Specify the version of KaTeX to load when needed. Platen retrieves the style and script
+        modules for KaTeX from a CDN at build time. This value is used to determine which version to
+        bundle with the site and use for auto-rendering.
+
+        You can set this value to any valid released version of KaTeX, but if you override the
+        default there may be incompatibilities with the available fonts. In that case, you'll need
+        to also download the fonts for that version and add them to the `static/katex` folder,
+        replacing the existing fonts.
+
+        Due to the fragility of the KaTeX auto-rendering library and fonts, this setting can only be
+        defined at the site level at this time.
+      weight: 2
+    type: string
+    default: 0.16.4
+  aliases:
+    title: Aliases
+    description: Defines additional language IDs for the codeblock render hook.
+    schematize:
+      weight: 3
+      details: |
+        Define one or more aliases to use in addition to the default language IDs for codeblocks and
+        alt text prefixes for image links
+        that render KaTeX markup.
+
+        The default language IDs for codeblocks are `katex` and `math` for math markup and `chem`
+        for chemistry markup. The default prefixes for image links are `katex:` and `math:` for math
+        markup and `chem:` for chemistry markup.
+
+        You can specify a string, a map, or an array of strings or maps for this value. If the value
+        is an array, each item in the array is added as an alias. Do not add a `:` suffix to any
+        value.
+
+        String values are added as valid language IDs/prefixes for the non-chemistry codeblocks in
+        addition to `katex` and `math`.
+        
+        Map values must have either the `Math` or `Chemistry` key with a string value. If you define
+        a value for `Math`, it becomes a valid language ID and prefix for math markup codeblocks and
+        image links respectively. If you define a value for `Chemistry`, it becomes a valid language
+        ID and prefix for chemistry markup codeblocks and image links respectively, which add the
+        chemistry libraries even if you don't use a chemistry syntax. You can specify both in a
+        single map but don't have to.
+    oneOf:
+      - type: array
+        items:
+          oneOf:
+          - type: object
+            description: >-
+              A map defining either/both an alias for the math and chemistry codeblock language ID
+              and image link alt text prefix.
+            properties:
+              chemistry:
+                title: Chemistry Alias
+                description: >-
+                  Alias for the chemistry-rendering codeblock language ID and image link prefix,
+                  (default is 'chem').
+                type: string
+              math:
+                title: Math Alias
+                description: >-
+                  Alias for the math-rendering codeblock language ID and image link prefix,
+                  (defaults are 'katex' and `math`).
+                type: string
+          - type: string
+      - type: object
+        description: >-
+          A map defining either/both an alias for the math and chemistry codeblock language ID
+          and image link alt text prefix.
+        properties:
+          chemistry:
+            title: Chemistry Alias
+            description: >-
+              Alias for the chemistry-rendering codeblock language ID and image link prefix,
+              (default is 'chem').
+            type: string
+          math:
+            title: Math Alias
+            description: >-
+              Alias for the math-rendering codeblock language ID and image link prefix, (defaults
+              are 'katex' and `math`).
+            type: string
+      - type: string
+  partials:
+    title: Markup Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when [sref:`enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`enabled`]: platen.site.markup.katex.enabled
+      weight: 100
+      skipSchemaRender: true
+    type: object
+    properties:
+      header:
+        title: Header Partial
+        description: Injects a partial into the HTML header.
+        schematize:
+          weight: 1
+          details: |
+            If specified, this partial is processed in the HTML header with the current page's
+            context. The default value is `platen/markup/katex/header`. You can overwrite
+            this value, replacing it with another partial entirely, or you can add the same file to
+            your own theme or site, effectively replacing it.
+
+            The default partial pulls the KaTeX style and library modules from a CDN if any of the
+            following conditions are met:
+            
+            1. The page content includes any image links with the `chem:`, `katex:`, or `math:`
+               prefix.
+            1. The page content includes any codeblocks with `chem`, `katex`, or `math` as the
+               language ID.
+            1. The page front matter has [sref:`platen.markup.katex.always_load`] set to `true`
+            1. The site is configured with [sref:`always_load`] enabled.
+
+            With the modules loaded, the page will automatically render any valid KaTeX on the
+            page, displaying the formulae.
+
+            <!-- Reference Links -->
+            [sref:`platen.markup.katex.always_load`]: platen.content.markup.katex.always_load
+            [sref:`always_load`]: platen.site.markup.katex.always_load
+        type: string
+        default: platen/markup/katex/header
+      renderers:
+        title: Renderer Partials
+        description: Registers one or more partials that act as render hooks.
+        type: object
+        schematize:
+          weight: 2
+          skipSchemaRender: true
+          details: |
+            Defines a map of partials to use as Markdown render hooks. Like all partials, these are
+            only processed when [sref:`enabled`] is set to `true`.
+
+            Supported renderer partials include:
+
+            - `Codeblock`, processed for fenced code blocks with a language ID
+            - `Heading`, processed for headings
+            - `Image`, processed for image links
+            - `Link`, processed for non-image links
+
+            In all cases, all renderer partials for enabled features and markup options are checked
+            one after the other unless they return a render string. Only the first applicable
+            partial that returns a render string is processed and rendered.
+
+            <!-- Reference Links -->
+            [sref:`enabled`]: platen.site.markup.katex.enabled
+        properties:
+          codeblock:
+            title: Codeblock Render Hook Partial
+            description: Adds a partial to call when processing the codeblock render hook.
+            schematize:
+              details: |
+                Adds support for KaTeX and mhchem markup rendering for content. This render hook is
+                only processed when the language ID for a codeblock is `chem`, `katex`, or `math`.
+
+                It registers the current page as having KaTeX, which ensures the library and style
+                modules are loaded for automatic rendering. If the codeblock uses the `\ce{...}` tag
+                or has the `chem` language code, it registers the current page as having chemistry
+                markup and ensures the mhchem KaTeX plugin is loaded as well.
+
+                It renders the definition inside the codeblock inside a `span` element, denoting it
+                as display-mode KaTeX by default. With the `class` attribute, it adds the specified
+                classes to the element. With the `display` attribute, an author can explicitly
+                control whether the span is rendered in display mode. Setting `display` to `false`
+                renders the markup in inline mode.
+
+                This value defaults to `platen/markup/katex/codeblock`. You can replace it with a
+                different value, defining a new partial, or override the existing partial by
+                creating the file `layouts/partials/platen/markup/katex/codeblock.html` in your own
+                site or module.
+
+                For more information about defining codeblock render hook partials, see
+                [Defining a Codeblock Render Hook Partial][01] in the [Theme Guide][02].
+
+                <!-- Reference Links -->
+                [01]: /styling
+                [02]: /styling
+            type: string
+            default: platen/markup/katex/codeblock
+          image:
+            title: Image Render Hook Partial
+            description: Adds a partial to call when processing the image link render hook.
+            schematize:
+              details: |
+                Adds support for KaTeX and mhchem markup rendering for content. This render hook is
+                only processed when the alt text for an image link has the `chem:`, `katex:`, or
+                `math:` prefix.
+
+                It registers the current page as having KaTeX, which ensures the library and style
+                modules are loaded for automatic rendering. If the codeblock uses the `\ce{...}` tag
+                or has the `chem:` prefix, it registers the current page as having chemistry markup
+                and ensures the mhchem KaTeX plugin is loaded as well.
+
+                It renders the alt text (with the prefix trimmed away) as a `span` element, denoting
+                it as inline-mode KaTeX.
+
+                This value defaults to `platen/markup/katex/image`. You can replace it with a
+                different value, defining a new partial, or override the existing partial by
+                creating the file `layouts/partials/platen/markup/katex/image.html` in your own
+                site or module.
+
+                For more information about defining image link render hook partials, see
+                [Defining an Image Link Render Hook Partial][01] in the [Theme Guide][02].
+
+                <!-- Reference Links -->
+                [01]: /styling
+                [02]: /styling
+            type: string
+            default: platen/markup/katex/image

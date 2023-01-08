@@ -4,7 +4,7 @@ weight: 40
 summary: >-
   Documentation on the `details` language ID for codeblocks, which adds a details and summary HTML
   tag to a Markdown page for semantically collapsible content.
-Platen:
+platen:
   title_as_heading: true
 Memo:
   Name: details

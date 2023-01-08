@@ -9,7 +9,7 @@
   {{- $context = $params.Context -}}
 {{- end -}}
 
-{{- range $feature, $settings := $context.Site.Params.Platen.features -}}
+{{- range $feature, $settings := $context.Site.Params.platen.features -}}
   {{- if and (eq "" $title) $settings.enabled -}}
     {{- with $settings.partials.title -}}
       {{ $title = partial . $params }}

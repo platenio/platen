@@ -10,7 +10,7 @@ outputFormats:
     isPlainText: true
 
 params:
-  Platen:
+  platen:
     features:
       toroidal:
         enabled: true

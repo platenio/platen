@@ -1,4 +1,4 @@
-{{- if .Page.Site.Params.Platen.features.portable_links.enabled -}}
+{{- if .Page.Site.Params.platen.features.portable_links.enabled -}}
   {{- template "portable-image" . -}}
 {{- else -}}
   <img src="{{ .Destination | safeURL }}"

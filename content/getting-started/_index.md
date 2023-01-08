@@ -2,7 +2,7 @@
 title: Getting Started
 summary: Get started authoring digital books with Platen
 weight: 1
-Platen:
+platen:
   menu:
     collapse_section: true
 ---

@@ -2,8 +2,8 @@
     Docs.Partial: title
 */}}
 {{- $Context                  := .                                                  -}}
-{{- $SiteConfigTitleAsHeading := site.Params.Platen.display.header.title_as_heading -}}
-{{- $PageConfigTitleAsHeading := $Context.Params.Platen.title_as_heading            -}}
+{{- $SiteConfigTitleAsHeading := site.Params.platen.display.header.title_as_heading -}}
+{{- $PageConfigTitleAsHeading := $Context.Params.platen.title_as_heading            -}}
 
 {{/* Get the title text */}}
 {{- $titleParams := dict "Context" $Context "ForHeader" true     -}}

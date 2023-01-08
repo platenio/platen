@@ -2,7 +2,7 @@
 title: Configuration
 summary: Reference guide for configuring the Schematize module
 weight: 40
-Platen:
+platen:
   menu:
     collapse_section: true
 ---

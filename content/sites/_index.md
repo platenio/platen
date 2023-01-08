@@ -3,7 +3,7 @@
 # see: http://platen.io/schemas/Toroidal/Content/Section/
 title: Platen Sites
 type: toroidal
-Platen:
+platen:
   menu:
     hide: true
 cascade:

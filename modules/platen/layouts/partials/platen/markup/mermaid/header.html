@@ -2,8 +2,8 @@
 
 {{- if $context.Store.Get "_hasMermaid" -}}
   {{/* Get the Mermaid URL */}}
-  {{- $Version       := default site.Params.Platen.markup.mermaid.version
-                                $context.Params.Platen.markup.mermaid.version
+  {{- $Version       := default site.Params.platen.markup.mermaid.version
+                                $context.Params.platen.markup.mermaid.version
   -}}
   {{- $UrlPrefix     := "https://cdn.jsdelivr.net/npm"                                 -}}
   {{- $libraryURL    := printf "%s/mermaid@%v/dist/mermaid.esm.min.mjs" $UrlPrefix $Version -}}

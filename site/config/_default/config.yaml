@@ -54,7 +54,7 @@ module:
     - path: github.com/platenio/platen/modules/platen
       mounts:
         - source: _docs/config
-          target: content/schemas/Platen
+          target: content/schemas/platen
           excludeFiles: /_index.md
         - source: _docs
           target: content/modules/platen

@@ -1,5 +1,5 @@
 {{- $Params      := .                                 -}}
-{{- $Config      := site.Params.Platen.markup.katex   -}}
+{{- $Config      := site.Params.platen.markup.katex   -}}
 {{- $Aliases     := $Config.aliases                   -}}
 {{- $Page        := $Params.Page                      -}}
 {{- $destination := $Params.Destination               -}}
@@ -20,7 +20,7 @@
     {{- $chemAliases := $Aliases.chem -}}
     {{- with $mathAliases -}}
       {{- if (reflect.IsMap $mathAliases) -}}
-        {{- errorf "Invalid definition for Platen.markup.katex.aliases.math; must be one or more strings." -}}
+        {{- errorf "Invalid definition for platen.markup.katex.aliases.math; must be one or more strings." -}}
       {{- else if (reflect.IsSlice $mathAliases) -}}
         {{- $mathPrefixes = union $mathPrefixes $mathAliases -}}
       {{- else -}}
@@ -29,7 +29,7 @@
     {{- end -}}
     {{- with $chemAliases -}}
       {{- if (reflect.IsMap $chemAliases) -}}
-        {{- errorf "Invalid definition for Platen.markup.katex.aliases.chemistry; must be one or more strings." -}}
+        {{- errorf "Invalid definition for platen.markup.katex.aliases.chemistry; must be one or more strings." -}}
       {{- else if (reflect.IsSlice $chemAliases) -}}
         {{- $chemPrefixes = union $chemPrefixes $chemAliases -}}
       {{- else -}}
