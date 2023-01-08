@@ -86,20 +86,20 @@ created (with your specified name instead):
 ```md
 ---
 # For more information about the available options for defining a member site,
-# see: http://platen.io/schemas/Toroidal/Content/Member/
+# see: http://platen.io/modules/toroidal/config/content/member/
 name: First Member
 description: |
   A short summary of the member's site
 weight: 1 # Replace with desired weight.
-ToroidalHomePage: https://member.com # Replace with the member's actual site
+toroidal_home_page: https://member.com # Replace with the member's actual site
 ---
 ```
 
-You should update the [sref:`description`] field to be a 1--3 sentence summary of the member site.
+You should update the [`description`][r01] field to be a 1--3 sentence summary of the member site.
 This value is used in the member list page for the webring to help visitors get a quick
 understanding of each member.
 
-You also need to update the [sref:`ToroidalHomePage`] field to the URL of the member site. This is
+You also need to update the [`toroidal_home_page`][r02] field to the URL of the member site. This is
 the URL that is actually used in the member list page and in member navigation to direct visitors to
 each site in the webring.
 
@@ -118,22 +118,22 @@ As before, you need to edit the file.
 ```md
 ---
 # For more information about the available options for defining a member site,
-# see: http://platen.io/schemas/Toroidal/Content/Member/
+# see: http://platen.io/modules/toroidal/config/content/member/
 name: Another Member
 description: |
   A short summary of the member's site
 weight: 1 # Replace with desired weight.
-ToroidalHomePage: https://member.com # Replace with the member's actual site
+toroidal_home_page: https://member.com # Replace with the member's actual site
 ---
 ```
 
-This time, in addition to defining the [sref:`description`] and [sref:`ToroidalHomePage`] fields, you need to
-update the [sref:`weight`]. Incremement it by one from the last member's value. For your second member,
-`weight` should be set to `2`. For your third, `3`, and so on.
+This time, in addition to defining the [`description`][r01] and [`toroidal_home_page`][r02] fields,
+you need to update the [`weight`][r03]. Incremement it by one from the last member's value. For your
+second member, `weight` should be set to `2`. For your third, `3`, and so on.
 
-The [sref:`weight`] field is used to determine the order of member sites in the list and ensure that
-visitors are able to cycle reliably through the list of members. You can reorder members however
-you like, but they must _all_ have a defined [sref:`weight`] and none of the weights should be the same.
+The [`weight`][r03] field is used to determine the order of member sites in the list and ensure that
+visitors are able to cycle reliably through the list of members. You can reorder members however you
+like, but they must _all_ have a defined [`weight`][r03] and none of the weights should be the same.
 
 ## Previewing Your Webring
 
@@ -151,7 +151,7 @@ navigate to your webring. If you added your webring at `webrings/example-webring
 
 Here you should see your list of members beneath the title `Members of the Example Webring`.
 Clicking a member's name sends you to their home page, which you defined in the
-[sref:`ToroidalHomePage`] setting for that member's definition file.
+[`toroidal_home_page`] setting for that member's definition file.
 
 Great! But there's more you can do here. First, navigate to the administration page for your
 webring. This is always a page called `admin` in your webring's section. If you added your
@@ -205,8 +205,8 @@ When you create a Toroidal webring for the first time, the module, webring, and 
 created with minimal and functional configuration. You can modify the styling, presentation, and
 functionality.
 
-For more information, see the [sref:site configuration], [sref:webring section configuration], and
-[sref:member configuration] documentation.
+For more information, see the [site configuration][r04], [webring section configuration][r05], and
+[member configuration][r06] documentation.
 
 <!-- Link References -->
 [01]: https://gohugo.io/installation/
@@ -214,9 +214,9 @@ For more information, see the [sref:site configuration], [sref:webring section c
 [03]: https://gohugo.io/hugo-modules/use-modules/
 [04]: https://gohugo.io/getting-started/configuration/
 [05]: https://gohugo.io/commands/hugo_new/
-[sref:site configuration]: Toroidal.Site.Config
-[sref:webring section configuration]: Toroidal.Content.Section
-[sref:member configuration]: Toroidal.Content.Member
-[sref:`description`]: Toroidal.Content.Member.description
-[sref:`ToroidalHomePage`]: Toroidal.Content.Member.ToroidalHomePage
-[sref:`weight`]: Toroidal.Content.Member.weight
+[r01]: /modules/toroidal/config/content/member#description
+[r02]: /modules/toroidal/config/content/member#toroidal_home_page
+[r03]: /modules/toroidal/config/content/member#weight
+[r04]: /modules/toroidal/config/site/config
+[r05]: /modules/toroidal/config/content/section
+[r06]: /modules/toroidal/config/content/member

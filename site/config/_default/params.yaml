@@ -2,62 +2,62 @@ description: A toolkit for interactive digital books.
 images:
   - /images/logo.svg
 
-Schematize:
-  ReferenceMap:
+schematize:
+  reference_map:
     mdn:
-      srefSuffix: in the MDN documentation
-      srefBase: https://developer.mozilla.org/docs
+      sref_suffix: in the MDN documentation
+      sref_base: https://developer.mozilla.org/docs
       css:
-        srefBase: https://developer.mozilla.org/docs/Web/CSS
+        sref_base: https://developer.mozilla.org/docs/Web/CSS
       html:
         element:
-          srefBase: https://developer.mozilla.org/en-US/docs/Web/HTML/Element
+          sref_base: https://developer.mozilla.org/en-US/docs/Web/HTML/Element
         attribute:
-          srefBase: https://developer.mozilla.org/docs/HTML/Attributes
+          sref_base: https://developer.mozilla.org/docs/HTML/Attributes
         global_attribute:
-          srefBase: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
+          sref_base: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
 
-Platen:
-  Theme:
-    Mode: auto                                # BookTheme
-  Display:
-    TableOfContents:
-      MinimumLevel: 1
-      MaximumLevel: 6
-    DateFormat: "January 2, 2006"             # BookDateFormat
-    Menu:
-      RootSection: /                          # BookSection
-      BeforeInjection:
-        Entries:
-          - Feature: Toroidal
-            Weight: 1
-            PagePath: sites/platen
-            DisplayName: Platen Sites
-    Logo:
-      URL: /images/logo.svg                   # BookLogo
-  Features:
-    Search:                                   # BookSearch
-      Enabled: true
-    Comments:                                 # BookComments
-      Enabled: true
-    PWA:                                      # BookServiceWorker
-      Enabled: true
-    PortableLinks:                            # BookPortableLinks
-      Enabled: true
-  Repository:
-    URL: "https://github.com/platenio/platen" # BookRepo
-    CommitPath: commit                        # BookCommitPath
-    EditPath: edit/main                       # BookEditPath
-    ContentRoot: 'content'
-    MountedPaths:
-      - Source: modules/platen/_docs
-        Target: modules/platen
-      - Source: modules/toroidal/_docs
-        Target: modules/toroidal
-      - Source: modules/schematize/_docs
-        Target: modules/schematize
-  Multilingual:                               # BookTranslatedOnly
-    TranslatedOnly: false
+platen:
+  theme:
+    mode: auto                                # BookTheme
+  display:
+    table_of_contents:
+      minimum_level: 1
+      maximum_level: 6
+    date_format: "January 2, 2006"             # BookDateFormat
+    menu:
+      root_section: /                          # BookSection
+      before_injection:
+        entries:
+          - feature: toroidal
+            weight: 1
+            page_path: sites/platen
+            display_name: Platen Sites
+    logo:
+      url: /images/logo.svg                   # BookLogo
+  features:
+    search:                                   # booksearch
+      enabled: true
+    comments:                                 # bookcomments
+      enabled: true
+    pwa:                                      # bookserviceworker
+      enabled: true
+    portable_links:                            # BookPortableLinks
+      enabled: true
+  repository:
+    url: "https://github.com/platenio/platen" # BookRepo
+    commit_path: commit                        # BookCommitPath
+    edit_path: edit/main                       # BookEditPath
+    content_root: 'content'
+    mounted_paths:
+      - source: modules/platen/_docs
+        target: modules/platen
+      - source: modules/toroidal/_docs
+        target: modules/toroidal
+      - source: modules/schematize/_docs
+        target: modules/schematize
+  multilingual:                               # BookTranslatedOnly
+    translated_only: false
 
 Toroidal:
   WebringName: Platen Site Ring

@@ -3,18 +3,18 @@
 {{- $renderedHeading := "" -}}
 
 {{/* Use renderers from features first */}}
-{{- range $feature := site.Params.Platen.Features -}}
-  {{- if and $feature.Enabled (eq "" $renderedHeading) -}}
-    {{- with $feature.Partials.Renderers.Heading -}}
+{{- range $feature := site.Params.platen.features -}}
+  {{- if and $feature.enabled (eq "" $renderedHeading) -}}
+    {{- with $feature.partials.renderers.heading -}}
       {{- $renderedHeading = partial . $params }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
 {{/* Use arbitrary renderers if no feature applied */}}
-{{- range $markup := site.Params.Platen.Markup -}}
-  {{- if and $markup.Enabled (eq "" $renderedHeading) -}}
-    {{- with $markup.Partials.Renderers.Heading -}}
+{{- range $markup := site.Params.platen.markup -}}
+  {{- if and $markup.enabled (eq "" $renderedHeading) -}}
+    {{- with $markup.partials.renderers.heading -}}
       {{- $renderedHeading = partial . $params }}
     {{- end -}}
   {{- end -}}

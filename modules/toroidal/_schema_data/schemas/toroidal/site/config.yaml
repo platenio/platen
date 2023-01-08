@@ -1,0 +1,167 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: config.schema.yaml
+title: Toroidal Site Configuration
+description: Settings and options for the Toroidal module at the site level.
+schematize:
+  # skip_schema_render: true
+  details: |
+    The Toroidal module makes it simpler to host webrings from a static site built with Hugo. These
+    settings and options control how the Toroidal module behaves at the site level.
+type: object
+properties:
+  webring_name:
+    title: Webring Name
+    description: Specifies the name of the webring to host
+    schematize:
+      weight: 1
+      details: |
+        If this value is specified, it's used as the default name for webrings on the site. This
+        value is most useful if you're creating your webring in the `content/toroidal` folder and
+        don't want to add an `_index.md` file.
+
+        If you're hosting multiple webrings on the same site, every webring except one will need to
+        define a section page (`_index.md`) and override this value with `toroidal_webring_name` in
+        the front matter.
+
+        This value can also be overridden on a per member basis with `toroidal_webring_name` in the
+        member page's front matter.
+    type: string
+  random_member_link:
+    title: Random Member Link
+    description: Specifies whether to include a link to a random member in the ring navigation
+    schematize:
+      weight: 2
+      details: |
+        This value specifies whether the generated navigation for webring members should include a
+        link to a random member of the webring. If this value is set to `false`, the link isn't
+        included. If this value is set to `true`, the link is included. The default is `true`.
+
+        The implementation of the random member link ensures visitors of member sites not using an
+        iframe for their webring navigation to visit a random member of the webring, even when
+        connectivity to the webring host isn't available. In that case, the navigation uses a
+        pre-defined list of available members from when the member site's administrator copied the
+        HTML snippet.
+
+        When there's connectivity to the webring host, the random member link instead calls the
+        host's API for the most up-to-date list of members and randomly selects one.
+
+        This value can be overridden at the webring level by defining `toroidal_random_member_link`
+        in the front matter of the webring's section (`_index.md`) page. It can also be overridden
+        on a per member basis with `toroidal_random_member_link` in the member page's front matter.
+
+        This value only affects the inclusion of the link in member navigation, not the availability
+        of the API for the webring.
+    type: boolean
+    default: true
+  class:
+    title: Additional Class
+    description: Specifies one or more classes to append to the generated HTML for webrings
+    schematize:
+      weight: 4
+      details: |
+        Specifies one or more classes to append to the generated HTML for webrings. To specify
+        multiple classes, separate each class with a space. You can use this value with the defined
+        themes to style a webring more specifically.
+
+        This value can be overridden at the webring level by defining `toroidal_class` in the front
+        matter of the webring's section (`_index.md`) page. It can also be overridden on a per
+        member basis with `toroidal_class` in the member page's front matter.
+    type: string
+    default: ""
+  mode:
+    title: Display Mode
+    description: >-
+      Specifies whether the Toroidal pages on the site should display in light or dark mode or use
+      the site visitor's OS preference setting.
+    schematize:
+      weight: 3
+      details: |
+        Specifies whether the Toroidal pages on the site should display in light mode (`light`),
+        dark mode (`dark`), or the mode that matches the site visitor's OS preferences (`auto`).
+
+        This setting only has an effect if the module is used without the Platen module or when the
+        `toroidal.enabled` feature for Platen is set to `false`.
+
+        This setting only affects the member pages and their iframes, not the rest of the site.
+
+        The default is `auto`.
+    type: string
+    enum:
+      - auto
+      - light
+      - dark
+    default: auto
+  themes:
+    $ref: ./themes.yaml
+    schematize:
+      weight: 4
+  hide_header:
+    title: Hide Header on Member Pages
+    description: Specifies whether to hide the h2 element on member pages
+    schematize:
+      weight: 5
+      details: |
+        This setting specifies whether to hide the `h2` element on member pages. By default, every
+        member page includes the webring's name as an `h2` at the top of the member's navigation.
+
+        Set this value to `true` to hide the element on member pages for the site. You can override
+        this setting on a per-webring basis by setting [sref:`toroidal_hide_header`] in the
+        webring's section page front matter or by setting [sref:`toroidal_hide_header`] in the
+        member page's front matter.
+    type: boolean
+    default: false
+  admin_details:
+    title: Administration Details
+    description: Specifies the partial to use for the "About Member Administration" details
+    schematize:
+      weight: 6
+      details: |
+        This setting defines the partial to use for the "About Member Administration" `details`
+        element in a webring's administration page. It defaults to `default`. You can set it to
+        `none` to intentionally exclude the details.
+
+        The pre-defined options are:
+
+        - `default` - Defined in `layouts/partials/toroidal/adminDetails/default.md`
+        - `none` - Defined in `layouts/partials/toroidal/adminDetails/none.md`
+        - `platen` - Defined in `layouts/partials/toroidal/adminDetails/platen.md`
+
+        On Platen sites, when the `default` details would be used, `platen` is used instead to
+        account for the differences between a Toroidal webring on a Platen site.
+        
+        ### Defining and Overriding Details
+
+        You can override the pre-defined options by creating a file of the same name and path in
+        your own site or module. You can also define entirely new options, as long as your partial
+        is valid.
+
+        The partial must return valid HTML or an empty string. If it returns an empty string, the
+        details element isn't rendered.
+
+        The partial gets the page context for the webring administration page as input.
+
+        By default, this partial assumes that the specified details partial is a markdown file
+        unless the name ends with a file extension. It also assumes that the partial is in
+        `layouts/partials/toroidal/adminDetails` unless it has a path prefix, like
+        `myWebring/details`.
+
+        For example, consider the following mapping:
+
+        - `default => toroidal/adminDetails/default.md` on non-Platen sites
+        - `default => toroidal/adminDetails/platen.md` on Platen sites
+        - `none    => toroidal/adminDetails/none.md`
+        - `myWebring/details => myWebring/details.md`
+        - `notMarkdown.thml` => toroidal/adminDetails/notMarkdown.html`
+
+        If the partial file name has the `.md` or `.markdown` extension, the partial renders the
+        Markdown to HTML.
+
+        You can override this setting for any webring by setting [sref:`toroidal_admin_details`] in
+        the administration page's front matter.
+    oneOf:
+      - enum:
+        - default
+        - none
+      - type: string
+    default: default

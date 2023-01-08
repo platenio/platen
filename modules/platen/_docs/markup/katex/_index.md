@@ -3,10 +3,10 @@ title: KaTeX Formulas
 weight: 120
 summary: >-
   Documentation on using math markup to include formulas in your text.
-Platen:
-  TitleAsHeading: true
-  Menu:
-    Collapse: true
+platen:
+  title_as_heading: true
+  menu:
+    collapse_section: true
 ---
 
 Platen supports using [KaTeX markup][01] to add mathematical and scientific formulas to your pages.
@@ -108,20 +108,20 @@ By default, any text wrapped in the following tag pairs is rendered:
 
 You can also use configuration to define how KaTeX behaves on your Platen site. If you want to use
 KaTeX rendering inside of a codeblock, no special configuration is required as long as you haven't
-set [sref:`Platen.Markup.Katex.Enabled`][s06] to `false` in your site configuration.
+set [sref:`platen.markup.katex.enabled`][s06] to `false` in your site configuration.
 
 If you want to ensure you can use math or chemistry markup on a page without using a codeblock or
-shortcode, you'll need to add [sref:`Platen.Markup.Katex`][s07] to your page's front matter and
-set `AlwaysLoad` to `true` or set [sref:`AlwaysLoad` in your site configuration][s08] to `true`.
+shortcode, you'll need to add [sref:`platen.markup.katex`][s07] to your page's front matter and
+set `always_load` to `true` or set [sref:`always_load` in your site configuration][s08] to `true`.
 
 ```memo-example-data
-Platen:
-  Markup:
-    Katex:
-      AlwaysLoad: true
+platen:
+  markup:
+    katex:
+      always_load: true
 ```
 
-With `AlwaysLoad` set to `true`, the KaTeX modules added to the page and automatically renders any
+With `always_load` set to `true`, the KaTeX modules added to the page and automatically renders any
 [valid tags](#manual-markup) outside of codeblocks and inline code declarations.
 
 For more information about the available options for configuring KaTeX site wide, see
@@ -133,7 +133,7 @@ For more information about the available options for configuring KaTeX site wide
 [03]: block.md
 [04]: https://katex.org/docs/supported.html
 [05]: https://mhchem.github.io/MathJax-mhchem/
-[s06]: Platen.Site.Markup.Katex.Enabled
-[s07]: Platen.Content.Markup.Katex
-[s08]: Platen.Site.Markup.Katex.AlwaysLoad
-[s09]: Platen.Site.Markup.Katex
+[s06]: platen.site.markup.katex.Enabled
+[s07]: platen.content.markup.katex
+[s08]: platen.site.markup.katex.always_load
+[s09]: platen.site.markup.katex

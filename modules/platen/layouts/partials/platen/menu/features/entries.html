@@ -19,23 +19,23 @@
     the Feature or Group key raise an error.
   */}}
   {{- range $entry := $entries -}}
-    {{- with $entry.Feature -}}
+    {{- with $entry.feature -}}
       {{- with (index $usableFeatures (lower .)) -}}
-        {{- with $entry.Weight -}}
+        {{- with $entry.weight -}}
           {{- $weightedEntries = $weightedEntries | append $entry -}}
         {{- else -}}
           {{- $unweightedEntries = $unweightedEntries | append $entry -}}
         {{- end -}}
       {{- else -}}
         {{- warnf "%s; %s. %s"
-                  (printf "Feature '%s' isn't usable" $entry.Feature )
-                  (printf "usable features must be Enabled and define Partials.Menu")
+                  (printf "Feature '%s' isn't usable" $entry.feature )
+                  (printf "usable features must be enabled and define 'partials.menu'")
                   (printf "Skipping entry: %#v" $entry)
         -}}
       {{- end -}}
     {{- else -}}
-      {{- with $entry.Group -}}
-        {{- with $entry.Weight -}}
+      {{- with $entry.group -}}
+        {{- with $entry.weight -}}
           {{- $weightedEntries = $weightedEntries | append $entry -}}
         {{- else -}}
           {{- $unweightedEntries = $unweightedEntries | append $entry -}}
@@ -44,7 +44,7 @@
         {{- errorf "%s %s, %s: %#v"
                     "Ambiguous feature entry menu for"
                     $position
-                    "can't process unless the Feature or Group key is defined"
+                    "can't process unless the 'feature' or 'group' key is defined"
                     $entry
         -}}
       {{- end -}}
@@ -52,14 +52,14 @@
   {{- end -}}
 
   {{/* Process the weighted entries first, in order from lowest to highest weight */}}
-  {{- range $entry := sort $weightedEntries "Weight" -}}
-    {{- with $entry.Group -}}
+  {{- range $entry := sort $weightedEntries "weight" -}}
+    {{- with $entry.group -}}
       {{- $groupParams := merge $params $entry                       -}}
       {{- $groupParams  = merge $groupParams (dict "TopLevel" false) -}}
       {{- partial "platen/menu/features/group" $groupParams          -}}
     {{- else -}}
-      {{- $entryPartialParams := dict "Context" $context "Entry" $entry                 -}}
-      {{- $entryPartial := (index $usableFeatures (lower $entry.Feature)).Partials.Menu -}}
+      {{- $entryPartialParams := dict "Context" $context "entry" $entry                 -}}
+      {{- $entryPartial := (index $usableFeatures (lower $entry.feature)).partials.menu -}}
       {{- if $params.TopLevel -}}
       <ul>
         {{ partial $entryPartial $entryPartialParams }}
@@ -71,13 +71,13 @@
   {{- end -}}
   {{/* Process the unweighted entries next, in non deterministic order */}}
   {{- range $entry := sort $unweightedEntries -}}
-    {{- with $entry.Group -}}
+    {{- with $entry.group -}}
       {{- $groupParams := merge $params $entry                       -}}
       {{- $groupParams  = merge $groupParams (dict "TopLevel" false) -}}
       {{- partial "platen/menu/features/group" $groupParams          -}}
     {{- else -}}
-      {{- $entryPartialParams := dict "Context" $context "Entry" $entry                 -}}
-      {{- $entryPartial := (index $usableFeatures (lower $entry.Feature)).Partials.Menu -}}
+      {{- $entryPartialParams := dict "Context" $context "entry" $entry                 -}}
+      {{- $entryPartial := (index $usableFeatures (lower $entry.feature)).partials.menu -}}
       <ul class="platen">
         {{ partial $entryPartial $entryPartialParams }}
       </ul>
@@ -87,7 +87,7 @@
   {{/* If UsableFeatures wasn't specified, discover them and call the partial again. */}}
   {{- $usableFeatures := dict -}}
   {{- range $feature, $settings := partial "platen/utils/features/getEnabledFeatures" -}}
-    {{- with $settings.Partials.Menu -}}
+    {{- with $settings.partials.menu -}}
       {{- $usableFeatures = merge $usableFeatures (dict $feature $settings) -}}
     {{- end -}}
   {{- end -}}

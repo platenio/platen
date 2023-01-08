@@ -1,13 +1,12 @@
 {{/*
     Docs.Partial: menuControl
 */}}
-{{- $context := . -}}
+{{- $Context       := .                                            -}}
+{{- $SiteConfigToC := site.Params.platen.display.table_of_contents -}}
+{{- $PageConfigToC := $Context.Params.platen.table_of_contents     -}}
 
 {{/* Determine if the TOC menu should be rendered */}}
-{{- $shouldRender := default site.Params.Platen.Display.TableOfContents.Render
-                             $context.Params.Platen.TableOfContents.Render
--}}
-{{- $shouldRender  = default true $shouldRender -}}
+{{- $shouldRender := $PageConfigToC.render | default $SiteConfigToC.render | default true -}}
 
 {{/* Get the menu icon */}}
 {{- $src := "svg/toc.svg" | relURL -}}

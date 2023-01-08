@@ -1,7 +1,7 @@
 ---
 name: security
 title: Security Options
-Schematize: hugo.properties.security
+schematize: hugo.properties.security
 type: schematize
 outputs:
   - Schematize

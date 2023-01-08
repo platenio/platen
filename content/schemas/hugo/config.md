@@ -1,7 +1,7 @@
 ---
 name: config
 title: Hugo Configuration
-Schematize: hugo.config
+schematize: hugo.config
 type: schematize
 outputs:
   - Schematize

@@ -1,7 +1,7 @@
 ---
 name: mediaTypes
 title: Hugo Media Types Configuration
-Schematize: mediaTypes
+schematize: mediaTypes
 type: schematize
 outputs:
   - Schematize

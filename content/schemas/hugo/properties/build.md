@@ -1,7 +1,7 @@
 ---
 name: build
 title: Build Options
-Schematize: hugo.properties.build
+schematize: hugo.properties.build
 type: schematize
 outputs:
   - Schematize

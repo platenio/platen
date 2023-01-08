@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: comments.schema.yaml
+title: Site Comments Feature
+description: Settings that control the site's commenting feature.
+type: object
+properties:
+  enabled:
+    title: Enable Comments
+    description: Choose whether comments are turned on for the site.
+    schematize:
+      details: |
+        Choose whether comments are turned on for the site. The default is `false`.
+      weight: 1
+    type: boolean
+    default: false

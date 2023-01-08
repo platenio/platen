@@ -1,0 +1,145 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: Config.schema.yaml
+title: Site Configuration
+description: Settings and options for a Platen site
+schematize:
+  details: |
+    Platen has several configuration options and settings you can use to customize your site. All of
+    these options are overridable and provide a default setup so that things work out of the box
+    with as little work as possible.
+type: object
+properties:
+  theme:
+    $ref: ./theme/config.yaml
+    schematize:
+      weight: 1
+  display:
+    $ref: ./display/settings.yaml
+    schematize:
+      weight: 2
+  features:
+    title: Feature Settings
+    description: Settings that control Platen's features
+    schematize:
+      weight: 3
+      skip_schema_render: true
+      details: |
+        Platen and its modules include several features that you can use in your site. These settings
+        control their behavior.
+    type: object
+    properties:
+      comments:
+        $ref: ./features/comments.yaml
+        schematize:
+          weight: 1
+      portable_links:
+        $ref: ./features/portable_links.yaml
+        schematize:
+          weight: 2
+      pwa:
+        $ref: ./features/pwa.yaml
+        schematize:
+          weight: 3
+      search:
+        $ref: ./features/search.yaml
+        schematize:
+          weight: 4
+    patternProperties:
+      ".":
+        $ref: ./features/defining.yaml
+        schematize:
+          href: pattern-any
+  shortcodes:
+    title: Shortcode Options
+    description: Configure registered shortcodes
+    schematize:
+      weight: 4
+      skip_schema_render: true
+      details: |
+        Defines the configuration for shortcodes that integrate with Platen.
+
+        While you can add shortcodes independently of this configuration, the setting provides a
+        standardized and discoverable way for theme developers building on Platen to make their
+        shortcodes usable for others without requiring modifying the base theme's files.
+
+        Platen modules use this configuration to add their shortcodes and make them configurable.
+
+        Shortcodes defined in this way must not depend on each other.
+    type: object
+    patternProperties:
+      ".":
+        $ref: ./shortcodes/valid.yaml
+        schematize:
+          href: pattern-any
+  markup:
+    title: Markup Options
+    description: Configure custom markdown for Platen.
+    schematize:
+      details: |
+        Platen site and theme developers sometimes need to override how codeblocks, images, links, and
+        headers are rendered into HTML for a page. These settings allow developers to add new syntax
+        for converting Markdown into HTML in a standard, discoverable, configurable way. This makes
+        the new syntax usable for others without requiring modifying the base theme's files.
+
+        Platen modules use this configuration to extend the available markup options. Markup options
+        added this way must not depend on each other.
+
+        For more information on defining a markup option, see [Defining Markup Renderers][01] in the
+        [Theme Guide][02].
+
+        <!-- Reference Links -->
+        [01]: /styling
+        [02]: /styling
+      weight: 5
+    type: object
+    properties:
+      art:
+        $ref: ./markup/art.yaml
+        schematize:
+          weight: 1
+      buttons:
+        $ref: ./markup/buttons.yaml
+        schematize:
+          weight: 2
+      columns:
+        $ref: ./markup/columns.yaml
+        schematize:
+          weight: 3
+      details:
+        $ref: ./markup/details.yaml
+        schematize:
+          weight: 4
+      itch:
+        $ref: ./markup/itch.yaml
+        schematize:
+          weight: 5
+      katex:
+        $ref: ./markup/katex.yaml
+        schematize:
+          weight: 6
+      mermaid:
+        $ref: ./markup/mermaid.yaml
+        schematize:
+          weight: 7
+      section:
+        $ref: ./markup/section.yaml
+        schematize:
+          weight: 8
+      tabs:
+        $ref: ./markup/tabs.yaml
+        schematize:
+          weight: 9
+    patternProperties:
+      ".":
+        $ref: ./markup/defining.yaml
+        schematize:
+          href: pattern-any
+  multilingual:
+    $ref: ./multilingual.yaml
+    schematize:
+      weight: 6
+  repository:
+    $ref: ./repository/settings.yaml
+    schematize:
+      weight: 7

@@ -17,7 +17,7 @@
 {{- $context            := .                                         -}}
 {{- $webringName        := partial "toroidal/utils/getWebringName" . -}}
 {{- $webringMemberPages := where .CurrentSection.RegularPages
-                           "Params.ToroidalHomePage" "!=" nil
+                           "Params.toroidal_home_page" "!=" nil
 -}}
   {
     "webringName": "{{ $webringName }}",

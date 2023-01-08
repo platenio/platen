@@ -2,9 +2,9 @@
 title: Configuration
 summary: Reference guide for configuring the Toroidal module
 weight: 30
-Platen:
-  Menu:
-    CollapseSection: true
+platen:
+  menu:
+    collapse_section: true
 ---
 
 Filler text.

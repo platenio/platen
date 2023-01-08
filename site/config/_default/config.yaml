@@ -16,7 +16,7 @@ module:
     - path: github.com/platenio/platen/modules/toroidal
       mounts:
         - source: _docs/config
-          target: content/schemas/Toroidal
+          target: content/schemas/toroidal
           excludeFiles: /_index.md
         - source: _docs
           target: content/modules/toroidal
@@ -35,7 +35,7 @@ module:
     - path: github.com/platenio/platen/modules/schematize
       mounts:
         - source: _docs/config
-          target: content/schemas/Schematize
+          target: content/schemas/schematize
           excludeFiles: /_index.md
         - source: _docs
           target: content/modules/schematize
@@ -54,7 +54,7 @@ module:
     - path: github.com/platenio/platen/modules/platen
       mounts:
         - source: _docs/config
-          target: content/schemas/Platen
+          target: content/schemas/platen
           excludeFiles: /_index.md
         - source: _docs
           target: content/modules/platen

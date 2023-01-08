@@ -1,5 +1,5 @@
 {{- $params      := .                                    -}}
-{{- $config      := site.Params.Platen.Markup.Schematize -}}
+{{- $config      := site.Params.platen.markup.schematize -}}
 {{- $page        := $params.Page                         -}}
 {{- $destination := $params.Destination                  -}}
 {{- $title       := $params.Title                        -}}
@@ -8,11 +8,11 @@
 {{- $linkText    := ""                                   -}}
 
 {{/*
-  Given the page has Schematize: Platen.Content.Post
+  Given the page has schematize: platen.content.post
 
-  [sref:`Foo.Bar`](Platen.Site.Themes.Foo.Bar) => [`Foo.Bar`](/Schemas/Platen/Site/Themes/Foo#bar)
+  [sref:`foo.bar`](platen.site.themes.foo.bar) => [`Foo.Bar`](/Schemas/platen/site/themes/foo#bar)
   [sref:`color`](mdn.css:color) => [`color`] => [`color](https://mozilla.dev/web/css/color)
-  [sref: `Baz`](Baz) => [`Baz`](/Schemas/Platen/Content/Post#baz)
+  [sref: `baz`](baz) => [`baz`](/Schemas/platen/content/post#baz)
 */}}
 
 {{- if hasPrefix $text $prefix -}}
@@ -25,7 +25,7 @@
     {{- $refTarget = index $destinationInfo 0 -}}
     {{- $reference = index $destinationInfo 1 -}}
   {{- else -}}
-    {{- with $params.Page.Params.Schematize -}}
+    {{- with $params.Page.Params.schematize -}}
       {{- $reference = . -}}
     {{- else -}}
       {{- errorf "No schematize target or path found for sref link" -}}

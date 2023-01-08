@@ -10,17 +10,17 @@ outputFormats:
     isPlainText: true
 
 params:
-  Platen:
-    Features:
-      Toroidal:
-        Enabled: true
-        Partials:
-          Title: platen/features/toroidal/title
-          Style: platen/features/toroidal/style.scss
-          Menu: platen/features/toroidal/menu/render
-  Toroidal:
-    AdminDetails: default
-    RandomMemberLink: true
-    Mode: auto
-    Themes:
-      Default: true
+  platen:
+    features:
+      toroidal:
+        enabled: true
+        partials:
+          title: platen/features/toroidal/title
+          style: platen/features/toroidal/style.scss
+          menu: platen/features/toroidal/menu/render
+  toroidal:
+    admin_details: default
+    random_member_link: true
+    mode: auto
+    themes:
+      default: true

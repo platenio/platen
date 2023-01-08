@@ -1,38 +1,36 @@
 {{/*
     Docs.Partial: generate
 */}}
-{{- $context     := . -}}
-{{- $pageContent := $context.Content -}}
+{{- $Context       := .                                            -}}
+{{- $pageContent   := $Context.Content                             -}}
+{{- $SiteConfigToC := site.Params.platen.display.table_of_contents -}}
+{{- $PageConfigToC := $Context.Params.platen.table_of_contents     -}}
 
 {{/* Parse settings for minimum and maximum heading levels to include in ToC */}}
-{{- $minLevel := default 2         site.Params.Platen.Display.TableOfContents.MinimumLevel -}}
-{{- $minLevel  = default $minLevel $context.Params.Platen.TableOfContents.MinimumLevel     -}}
-{{- $maxLevel := default 4         site.Params.Platen.Display.TableOfContents.MaximumLevel -}}
-{{- $maxLevel  = default $maxLevel $context.Params.Platen.TableOfContents.MaximumLevel     -}}
+{{- $MinLevel := $PageConfigToC.minimum_level | default $SiteConfigToC.minimum_level | default 2 -}}
+{{- $MaxLevel := $PageConfigToC.maximum_level | default $SiteConfigToC.maximum_level | default 4 -}}
 
 {{/* Build Regex to find includable headings. */}}
 {{- $headerFullPattern := printf "<h[%v-%v].*?>(.|\n)+?</h[%v-%v]>"
-                          $minLevel $maxLevel $minLevel $maxLevel
+                          $MinLevel $MaxLevel $MinLevel $MaxLevel
 -}}
 {{- $headerTextPattern := printf "<h[%v-%v].*?>((.|\n)+?)</h[%v-%v]>"
-                          $minLevel $maxLevel $minLevel $maxLevel
+                          $MinLevel $MaxLevel $MinLevel $MaxLevel
 -}}
 
 {{/* Build Regex to find heading levels. */}}
-{{- $levelPattern := printf "[%v-%v]" $minLevel $maxLevel -}}
+{{- $levelPattern := printf "[%v-%v]" $MinLevel $MaxLevel -}}
 
 {{/* Parse settings to determine if the items should be in ordered or unordered lists */}}
-{{- $listType := "ul" -}}
-{{- with site.Params.Platen.Display.TableOfContents.OrderedList -}}
-  {{- $listType = cond . "ol" "ul" -}}
-{{- end -}}
-{{- with $context.Params.Platen.TableOfContents.OrderedList -}}
-  {{- $listType = cond . "ol" "ul" -}}
-{{- end -}}
+{{- $UseOrderedList := $PageConfigToC.ordered_list
+                       | default $SiteConfigToC.ordered_list
+                       | default false
+-}}
+{{- $ListType := cond $UseOrderedList "ol" "ul" -}}
 
 {{/* Create open and closing list tags for convenience */}}
-{{- $openList  := printf "<%s>"  $listType | safeHTML -}}
-{{- $closeList := printf "</%s>" $listType | safeHTML -}}
+{{- $OpenList  := printf "<%s>"  $ListType | safeHTML -}}
+{{- $CloseList := printf "</%s>" $ListType | safeHTML -}}
 
 {{/* Find all headings in the rendered content */}}
 {{- $headers     := findRE $headerFullPattern $pageContent -}}
@@ -52,9 +50,9 @@
 
 {{- $.Scratch.Set "bareul" slice -}}
 <nav id="TableOfContents">
-{{ $openList }}
+{{ $OpenList }}
   {{- range seq (sub $firstHeaderLevel $largest) -}}
-    {{ $openList }}
+    {{ $OpenList }}
     {{- $.Scratch.Add "bareul" (sub (add $largest .) 1) -}}
   {{- end -}}
   {{- range $index, $header := $headers -}}
@@ -79,7 +77,7 @@
         {{/* Handle nested lists based on level */}}
         {{- if gt $headerLevel $prevHeaderLevel -}}
           {{- range seq $prevHeaderLevel (sub $headerLevel 1) -}}
-            {{ $openList }}
+            {{ $OpenList }}
             {{/* the first should not be recorded */}}
             {{- if ne $prevHeaderLevel . -}}
               {{- $.Scratch.Add "bareul" . -}}
@@ -90,7 +88,7 @@
           {{- if lt $headerLevel $prevHeaderLevel -}}
             {{- range seq (sub $prevHeaderLevel 1) -1 $headerLevel -}}
               {{- if in ($.Scratch.Get "bareul") . -}}
-                {{ $closeList }}
+                {{ $CloseList }}
                 {{/* manually do pop item */}}
                 {{- $tmp := $.Scratch.Get "bareul" -}}
                 {{- $.Scratch.Delete "bareul" -}}
@@ -99,7 +97,7 @@
                   {{- $.Scratch.Add "bareul" (index $tmp (sub . 1)) -}}
                 {{- end -}}
               {{- else -}}
-                {{ $closeList }}</li>
+                {{ $CloseList }}</li>
               {{- end -}}
             {{- end -}}
           {{- end -}}
@@ -118,11 +116,11 @@
   </li>
   {{- range seq (sub $lastHeaderLevel $firstHeaderLevel) -}}
     {{- if in ($.Scratch.Get "bareul") (add . $firstHeaderLevel) -}}
-      {{ $closeList }}
+      {{ $CloseList }}
     {{- else -}}
-      {{ $closeList }}</li>
+      {{ $CloseList }}</li>
     {{- end -}}
   {{- end -}}
-{{ $closeList }}
+{{ $CloseList }}
 </nav>
 {{- end -}}

@@ -1,23 +1,23 @@
-{{- $params     := .                                   -}}
-{{- $config     := site.Params.Platen.Markup.Columns   -}}
-{{- $aliases    := $config.aliases                     -}}
-{{- $page       := $params.Page                        -}}
-{{- $position   := $params.Position                    -}}
-{{- $definition := $params.Inner                       -}}
-{{- $type       := $params.Type | lower                -}}
-{{- $attributes := $params.Attributes                  -}}
+{{- $Params     := .                                   -}}
+{{- $Config     := site.Params.platen.markup.columns   -}}
+{{- $Aliases    := $Config.aliases                     -}}
+{{- $Page       := $Params.Page                        -}}
+{{- $Position   := $Params.Position                    -}}
+{{- $definition := $Params.Inner                       -}}
+{{- $type       := $Params.Type | lower                -}}
+{{- $Attributes := $Params.Attributes                  -}}
 
 {{- $renderedCode := "" -}}
 
 {{- $groupLanguageIDs := slice "columns" -}}
 {{- $entryLanguageIDs := slice "column"  -}}
-{{- with $aliases -}}
-  {{- if reflect.IsMap $aliases -}}
-    {{- $groupAliases := $aliases.group -}}
-    {{- $entryAliases := $aliases.entry -}}
+{{- with $Aliases -}}
+  {{- if reflect.IsMap $Aliases -}}
+    {{- $groupAliases := $Aliases.group -}}
+    {{- $entryAliases := $Aliases.entry -}}
     {{- with $groupAliases -}}
       {{- if (reflect.IsMap $groupAliases) -}}
-        {{- errorf "Invalid definition for Platen.Markup.Columns.Aliases.Group; must be one or more strings." -}}
+        {{- errorf "Invalid definition for platen.markup.columns.aliases.group; must be one or more strings." -}}
       {{- else if (reflect.IsSlice $groupAliases) -}}
         {{- $groupLanguageIDs = union $groupLanguageIDs $groupAliases -}}
       {{- else -}}
@@ -26,17 +26,17 @@
     {{- end -}}
     {{- with $entryAliases -}}
       {{- if (reflect.IsMap $entryAliases) -}}
-        {{- errorf "Invalid definition for Platen.Markup.Columns.Aliases.Entry; must be one or more strings." -}}
+        {{- errorf "Invalid definition for platen.markup.columns.aliases.entry; must be one or more strings." -}}
       {{- else if (reflect.IsSlice $entryAliases) -}}
         {{- $entryLanguageIDs = union $entryLanguageIDs $entryAliases -}}
       {{- else -}}
         {{- $entryLanguageIDs = $entryLanguageIDs | append (print $entryAliases) -}}
       {{- end  -}}
     {{- end -}}
-  {{- else if (reflect.IsSlice $aliases) -}}
-    {{- $groupLanguageIDs = union $groupLanguageIDs $aliases -}}
+  {{- else if (reflect.IsSlice $Aliases) -}}
+    {{- $groupLanguageIDs = union $groupLanguageIDs $Aliases -}}
   {{- else -}}
-    {{- $groupLanguageIDs = $groupLanguageIDs | append (print $aliases) -}}
+    {{- $groupLanguageIDs = $groupLanguageIDs | append (print $Aliases) -}}
   {{- end  -}}
 {{- end -}}
 
@@ -46,15 +46,15 @@
   {{- $info       := partial "platen/utils/getCodeblockInfo" $infoParams                       -}}
 
   {{/* Handle attributes and data */}}
-  {{- $class     := $info.Data.class | default $attributes.class -}}
-  {{- $id        := $info.Data.id    | default $attributes.id    -}}
+  {{- $class     := $info.Data.class | default $Attributes.class -}}
+  {{- $id        := $info.Data.id    | default $Attributes.id    -}}
   {{- $group     := printf "%s-%s"     $type $id                 -}}
   {{- $definition = $info.Markdown                               -}}
 
   {{/* Check for group ID, error if it isn't set */}}
   {{- with $id -}}
   {{- else -}}
-    {{- errorf "Missing mandatory ID for columns block at %s" $position -}}
+    {{- errorf "Missing mandatory ID for columns block at %s" $Position -}}
   {{- end -}}
 
   {{/* Process the actual definition, error if it's empty */}}
@@ -85,11 +85,11 @@
       {{- $columnDefinition  = printf "%s\n%s\n%s" $columnOpen $columnDefinition $columnClose -}}
       {{- $definition        = replace $definition $column $columnDefinition                  -}}
     {{- else -}}
-      {{- errorf "No columns specified in column block at %s" $position -}}
+      {{- errorf "No columns specified in column block at %s" $Position -}}
     {{- end -}}
 
     {{/* Render the inner markdown for the columns */}}
-    {{- $renderedColumns := $definition | $page.RenderString (dict "display" "block") -}}
+    {{- $renderedColumns := $definition | $Page.RenderString (dict "display" "block") -}}
     {{- $renderedColumns  = trim $renderedColumns "\n" -}}
 
     {{/* Define the default classes for the container div. */}}
@@ -112,7 +112,7 @@
     {{- $renderStrings  = $renderStrings | append `</div>`           -}}
     {{- $renderedCode   = delimit $renderStrings "\n"                -}}
   {{- else -}}
-    {{- errorf "No content in definition for columns block at %s" $position -}}
+    {{- errorf "No content in definition for columns block at %s" $Position -}}
   {{- end -}}
 {{- else if in $entryLanguageIDs $type -}}
   {{/* Parse the definition for data and markdown */}}
@@ -121,13 +121,13 @@
   {{- $definition  = $info.Markdown -}}
 
   {{/* Handle attributes and data */}}
-  {{- $class   := $info.Data.class | default $attributes.class                  -}}
-  {{- $id      := $info.Data.id    | default $attributes.id                     -}}
-  {{- $grow    := $info.Dada.grow  | default $attributes.grow | default 1 | int -}}
+  {{- $class   := $info.Data.class | default $Attributes.class                  -}}
+  {{- $id      := $info.Data.id    | default $Attributes.id                     -}}
+  {{- $grow    := $info.Data.grow  | default $Attributes.grow | default 1 | int -}}
   {{- $groupID := $info.Data.groupID                                            -}}
   {{- with $groupID -}}
   {{- else -}}
-    {{- errorf "Missing group ID for column at '%s'. Is it inside a `columns` block?" $position -}}
+    {{- errorf "Missing group ID for column at '%s'. Is it inside a `columns` block?" $Position -}}
   {{- end -}}
 
   {{/* Define the default classes for the column divs */}}
@@ -146,7 +146,7 @@
   {{- $columnAttributes = partial "platen/utils/getSafeAttributes" $attributeParams -}}
 
   {{/* Get the rendered content */}}
-  {{- $renderParams    := dict "Page" $page "Content" $definition "IndentCount" 4 "AsBlock" true -}}
+  {{- $renderParams    := dict "Page" $Page "Content" $definition "IndentCount" 4 "AsBlock" true -}}
   {{- $renderedColumn  := partial "platen/utils/getPrettyRender" $renderParams                   -}}
 
   {{/* Build the rendered code */}}

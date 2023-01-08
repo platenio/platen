@@ -88,8 +88,9 @@
 
 {{- with $property.if -}}
   {{- with $property.schematize.details -}}
-    {{- $title := default "Conditional Settings" $property.schematize.title -}}
-    {{- $metadata = merge $metadata (dict $title .) -}}
+    {{- $title   := default "Conditional Settings" $property.schematize.title -}}
+    {{- $details := $params.page.RenderString .                               -}}
+    {{- $metadata = merge $metadata (dict $title $details)                    -}}
   {{- end -}}
 {{- end -}}
 
@@ -105,10 +106,12 @@
   {{/* Build the summary by combining the details for the reference with a link to the docs */}}
   {{- $summary := default $refData.description $refData.schematize.details -}}
   {{- $summary  = default $summary $property.schematize.details -}}
-  {{- if not $property.schematize.skipMoreInfo -}}
+  {{- if not $property.schematize.skip_more_info -}}
     {{- $moreInfo := printf "For more information, see [%s](%s)." $refData.title $pageRef -}}
     {{- $summary   = printf "\n%s\n\n%s\n" $summary $moreInfo}}
   {{- end -}}
+  {{/* Render the summary's markdown */}}
+  {{- $summary = $params.page.RenderString $summary -}}
   {{/* Keys in the metadata dictionary list are markdownified, so ensure it links to the schema */}}
   {{- $key := printf "%s ([Schema](%s))" $refData.title $schemaRef -}}
   {{- $metadata = merge $metadata (dict $key $summary) -}}

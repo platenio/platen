@@ -14,12 +14,12 @@
 {{- $params := . -}}
 {{- $prevHref := "" -}}
 {{- with $params.Context.NextInSection -}}
-  {{- $prevHref = .Params.ToroidalHomePage -}}
+  {{- $prevHref = .Params.toroidal_home_page -}}
 {{- end -}}
 {{- if not $prevHref -}}
   {{- $validMembers := where $params.MemberPages
-                       "Params.ToroidalHomePage" "!=" $params.Context.Params.ToroidalHomePage
+                       "Params.toroidal_home_page" "!=" $params.Context.Params.toroidal_home_page
   -}}
-  {{- $prevHref = (index (last 1 $validMembers) 0).Params.ToroidalHomePage -}}
+  {{- $prevHref = (index (last 1 $validMembers) 0).Params.toroidal_home_page -}}
 {{- end -}}
 {{- return $prevHref -}}

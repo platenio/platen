@@ -18,17 +18,17 @@
 
 {{ partial "platen/htmlHead/siteStyleLink" $context }}
 
-{{ range $feature, $settings := site.Params.Platen.Features -}}
-  {{- if $settings.Enabled -}}
-    {{- with $settings.Partials.Header -}}
+{{ range $feature, $settings := site.Params.platen.features -}}
+  {{- if $settings.enabled -}}
+    {{- with $settings.partials.header -}}
       {{ partial . $context }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
-{{ range $feature, $settings := site.Params.Platen.Markup -}}
-  {{- if $settings.Enabled -}}
-    {{- with $settings.Partials.Header -}}
+{{ range $feature, $settings := site.Params.platen.markup -}}
+  {{- if $settings.enabled -}}
+    {{- with $settings.partials.header -}}
       {{ partial . $context }}
     {{- end -}}
   {{- end -}}

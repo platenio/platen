@@ -1,7 +1,7 @@
 ---
 name: menu
 title: Hugo Menu Configuration
-Schematize: menu
+schematize: menu
 type: schematize
 outputs:
   - Schematize

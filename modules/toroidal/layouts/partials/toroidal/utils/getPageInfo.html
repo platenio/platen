@@ -43,17 +43,15 @@
     - `memberName`        - No override, member page only
     - `randomMemberLink   - Member page overrides site.
 */}}
-{{- $class             := default $context.Site.Params.Toroidal.Class
-                                  $context.Params.ToroidalClass
--}}
-{{- $hideHeader        := default $context.Site.Params.Toroidal.HideHeader
-                                  $context.Params.ToroidalHideHeader
--}}
-{{- $memberDescription := $context.Params.description      -}}
-{{- $memberHomePage    := $context.Params.ToroidalHomePage -}}
-{{- $memberName        := $context.Params.name             -}}
-{{- $randomMemberLink  := default $context.Site.Params.Toroidal.RandomMemberLink
-                                  $context.Params.ToroidalRandomMemberLink
+{{- $SiteConfig        := site.Params.toroidal                                               -}}
+{{- $PageConfig        := $context.Params                                                    -}}
+{{- $class             := $PageConfig.toroidal_class | default $SiteConfig.class             -}}
+{{- $hideHeader        := $PageConfig.toroidal_hide_header | default $SiteConfig.hide_header -}}
+{{- $memberDescription := $PageConfig.description                                            -}}
+{{- $memberHomePage    := $PageConfig.toroidal_home_page                                     -}}
+{{- $memberName        := $PageConfig.name                                                   -}}
+{{- $randomMemberLink  := $PageConfig.toroidal_random_member_link
+                          | default $SiteConfig.random_member_link
 -}}
 
 {{/* Set the variables for the iframe */}}

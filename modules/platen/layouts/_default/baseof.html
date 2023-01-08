@@ -1,5 +1,5 @@
-{{- $platenSiteParams := .Site.Params.Platen -}}
-{{- $platenPageParams := .Params.Platen      -}}
+{{- $platenSiteParams := site.Params.platen -}}
+{{- $platenPageParams := .Params.platen      -}}
 
 {{/*
   Determine if the ToC should be rendered:
@@ -8,19 +8,19 @@
   - If set in the site params but not the page, use that value.
   - If not set at all, default to true.
 */}}
-{{- $siteRenderToC := $platenSiteParams.TableOfContents.Render -}}
-{{- $pageRenderToC := $platenPageParams.TableOfContents.Render -}}
-{{- $renderToC := default true (default $siteRenderToC $pageRenderToC) -}}
+{{- $siteRenderToC := $platenSiteParams.display.table_of_contents.render     -}}
+{{- $pageRenderToC := $platenPageParams.table_of_contents.render             -}}
+{{- $renderToC     := $pageRenderToC | default $siteRenderToC | default true -}}
 
 {{/* Write the HTML */}}
 <!DOCTYPE html>
-<html lang="{{ default .Site.Language.Lang .Site.LanguageCode  }}"
-      dir="{{ default "ltr" .Site.Language.LanguageDirection }}">
+<html lang="{{ site.LanguageCode | default site.Language.Lang  }}"
+      dir="{{ site.Language.LanguageDirection | default "ltr" }}">
 <head>
   {{ partial "platen/htmlHead" . }}
   {{ partial "platen/inject/head" . }}
 </head>
-<body dir="{{ default "ltr" .Site.Language.LanguageDirection }}">
+<body dir="{{ site.Language.LanguageDirection | default "ltr" }}">
   <input type="checkbox" class="hidden toggle" id="menu-control" />
   <input type="checkbox" class="hidden toggle" id="toc-control" />
   <main class="container flex">
@@ -68,7 +68,10 @@
 {{ define "header" }}
   {{ partial "platen/header" . }}
 
-  {{ if default true (default .Site.Params.Platen.ToC .Params.Platen.ToC) }}
+  {{  $siteRenderToC := site.Params.platen.display.table_of_contents.render    -}}
+  {{- $pageRenderToC := .Params.platen.table_of_contents.render                -}}
+  {{- $renderToC     := $pageRenderToC | default $siteRenderToC | default true  }}
+  {{ if $renderToC }}
   <aside class="hidden clearfix">
     {{ template "toc" . }}
   </aside>
@@ -80,8 +83,8 @@
 {{ end }}
 
 {{ define "comments" }}
-  {{ $commentsEnabled := default .Site.Params.Platen.Features.Comments.Enabled
-                                 .Params.Platen.EnableComments
+  {{ $commentsEnabled := .Params.platen.enable_comments
+                         | default site.Params.platen.features.comments.enabled
   }}
   {{ if and .Content (default false $commentsEnabled) }}
   <div class="platen-comments">

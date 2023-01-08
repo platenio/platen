@@ -1,27 +1,30 @@
 {{/*
     Docs.Partial: title
 */}}
-{{- $context := . -}}
+{{- $Context                  := .                                                  -}}
+{{- $SiteConfigTitleAsHeading := site.Params.platen.display.header.title_as_heading -}}
+{{- $PageConfigTitleAsHeading := $Context.Params.platen.title_as_heading            -}}
 
 {{/* Get the title text */}}
-{{- $titleParams := dict "Context" $context "ForHeader" true     -}}
+{{- $titleParams := dict "Context" $Context "ForHeader" true     -}}
 {{- $titleText   := partial "platen/utils/getTitle" $titleParams -}}
 
-{{/* Determine the element type. */}}
-{{- $shouldBeHeader := default site.Params.Platen.Display.Header.TitleAsHeading
-                               $context.Params.Platen.TitleAsHeading
+{{/* Determine the element tag. */}}
+{{- $shouldBeHeader := $PageConfigTitleAsHeading
+                       | default $SiteConfigTitleAsHeading
+                       | default false
 -}}
-{{- $shouldBeHeader  = default false $shouldBeHeader -}}
+{{- $elementTag     := cond $shouldBeHeader "h1" "strong" -}}
 
-{{- $elementType       := cond $shouldBeHeader "h1" "strong" -}}
+{{/* define the attributes for the tag */}}
 {{- $openTagAttributes := slice                              -}}
 {{- if $shouldBeHeader -}}
   {{- $id               := urlize (lower $titleText)                          -}}
   {{- $openTagAttributes = $openTagAttributes | append (printf `id="%s"` $id) -}}
 {{- end -}}
 {{- $openTagAttributes = partial "platen/utils/getSafeAttributes" $openTagAttributes -}}
-{{- $openTag          := printf `<%s %s>` $elementType $openTagAttributes | safeHTML -}}
-{{- $closeTag         := printf `</%s>`   $elementType                    | safeHTML -}}
+{{- $openTag          := printf `<%s %s>` $elementTag $openTagAttributes | safeHTML  -}}
+{{- $closeTag         := printf `</%s>`   $elementTag                    | safeHTML  -}}
 
 {{/* Render */}}
 {{ $openTag }}

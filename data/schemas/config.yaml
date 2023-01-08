@@ -13,7 +13,7 @@ properties:
     schematize:
       noMungeDescription: true
     properties:
-      Platen:
-        $ref: ./Platen/Site/Config.yaml
-      Schematize:
-        $ref: ./Schematize/Site/Config.yaml
+      platen:
+        $ref: ./platen/site/config.yaml
+      schematize:
+        $ref: ./schematize/site/config.yaml

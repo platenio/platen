@@ -24,15 +24,15 @@
 
 {{- if and (ne "schematize" $refTarget) $addSuffix -}}
   {{- $srefSuffix := "" -}}
-  {{- with site.Params.Schematize.ReferenceMap -}}
-    {{- $indices := split (printf "%s.srefSuffix" $refTarget) "." -}}
+  {{- with site.Params.schematize.reference_map -}}
+    {{- $indices := split (printf "%s.sref_suffix" $refTarget) "." -}}
     {{- $srefSettings := . -}}
     {{- range $index := $indices -}}
-      {{- if isset $srefSettings "srefSuffix" -}}
-        {{- $srefSuffix = index $srefSettings "srefSuffix" -}}
+      {{- if isset $srefSettings "sref_suffix" -}}
+        {{- $srefSuffix = index $srefSettings "sref_suffix" -}}
       {{- end -}}
       {{- if isset $srefSettings $index -}}
-        {{- if eq "srefSuffix" $index -}}
+        {{- if eq "sref_suffix" $index -}}
           {{- $srefSuffix = index $srefSettings $index -}}
         {{- else -}}
           {{- $srefSettings = index $srefSettings $index -}}
@@ -61,7 +61,7 @@
       {{- printf "<a class=\"schematize-sref\" href=\"%s\">%s</a>" $href $linkText | safeHTML -}}
     {{- end -}}
   {{- else -}}
-    {{- errorf "couldn't resolve href for %s (%s)" $reference $refTarget -}}
+    {{- errorf "couldn't resolve sref for %s (%s)" $reference $refTarget -}}
   {{- end -}}
 {{- else -}}
   {{- errorf "No reference specified for sref; this value is mandatory. " -}}

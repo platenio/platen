@@ -1,7 +1,7 @@
 ---
 name: config
 title: Configuration File
-Schematize: config
+schematize: config
 type: schematize
 outputs:
   - Schematize

@@ -1,8 +1,8 @@
-{{- $features        := site.Params.Platen.Features -}}
+{{- $features        := site.Params.platen.features -}}
 {{- $enabledFeatures := dict                        -}}
 
 {{- range $feature, $settings := $features -}}
-  {{- if $settings.Enabled -}}
+  {{- if $settings.enabled -}}
     {{- $enabledFeatures = merge $enabledFeatures (dict $feature $settings) -}}
   {{- end -}}
 {{- end -}}

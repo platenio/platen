@@ -1,8 +1,8 @@
-Platen:
-  Theme:
-    Mode: auto
-    Variables:
-      BasicSCSS:
+platen:
+  theme:
+    mode: auto
+    variables:
+      basic_scss:
         padding-minimal: 1px
         padding-small: 0.25rem
         padding-medium: 0.5rem
@@ -21,10 +21,10 @@ Platen:
           info: "#6bf"
           warning: "#fd6"
           danger: "#f66"
-      CalculatedSCSS:
+      calculated_scss:
         border-radius: $padding-small
         mobile-breakpoint: $menu-width + $body-min-width * 1.2 + $toc-width
-      LightCSS:
+      light_css:
         gray-100: "#f8f9fa"
         gray-200: "#e9ecef"
         gray-500: "#adb5bd"
@@ -33,7 +33,7 @@ Platen:
         body-background: white
         body-font-color: black
         icon-filter: none
-      DarkCSS:
+      dark_css:
         gray-100: rgba(255, 255, 255, 0.1)
         gray-200: rgba(255, 255, 255, 0.2)
         gray-500: rgba(255, 255, 255, 0.5)
@@ -42,200 +42,200 @@ Platen:
         body-background: "#343a40"
         body-font-color: "#e9ecef"
         icon-filter: brightness(0) invert(1)
-    Styles:
-      Base:
-        HTML:
-          Enabled: true
-        Body:
-          Enabled: true
-        Headings:
-          Enabled: true
-        Links:
-          Enabled: true
-        Images:
-          Enabled: true
-        Focus:
-          Enabled: true
-        Navigation:
-          Enabled: true
-        Pagination:
-          Enabled: true
-        Containers:
-          Enabled: true
-      Platen:
-        Icon:
-          Enabled: true
-        Brand:
-          Enabled: true
-        Menu:
-          Enabled: true
-        Page:
-          Enabled: true
-        Post:
-          Enabled: true
-        Header:
-          Enabled: true
-        Search:
-          Enabled: true
-        ToC:
-          Enabled: true
-        Footer:
-          Enabled: true
-        Comments:
-          Enabled: true
-        Languages:
-          Enabled: true
-        Responsiveness:
-          Enabled: true
-      Mobile:
-        Header:
-          Enabled: true
-        Menu:
-          Enabled: true
-        ToC:
-          Enabled: true
-      Wide:
-        Padding:
-          Enabled: true
-      Markdown:
-        Page:
-          Enabled: true
-        Headings:
-          Enabled: true
-        Links:
-          Enabled: true
-        Bold:
-          Enabled: true
-        Paragraphs:
-          Enabled: true
-        Images:
-          Enabled: true
-        Code:
-          Enabled: true
-        Blockquotes:
-          Enabled: true
-        Tables:
-          Enabled: true
-        Lists:
-          Enabled: true
-        Rulers:
-          Enabled: true
-        Figure:
-          Enabled: true
-        Inner:
-          Enabled: true
-      Utils:
-        Basic:
-          Enabled: true
-        Toggle:
-          Enabled: true
-        Clearfix:
-          Enabled: true
-        Spin:
-          Enabled: true
-        Fixed:
-          Enabled: true
-        Outline:
-          Enabled: true
-    Fonts:
-      Styles:
-        - ImportName: roboto
-      Settings:
-        Body:
-          Selector: body
-          Family: "'Roboto', sans-serif"
-        Code:
-          Selector: code
-          Family: "'Roboto Mono', monospace"
-    Printing:
-      Styles:
-        Basic:
-          Enabled: true
-  Display:
-    TableOfContents:
-      MinimumLevel: 2
-      MaximumLevel: 4
-      Render: true
-    DateFormat: "January 2, 2006"             # BookDateFormat
-    Header:
-      TitleAsHeading: false
-    MenuRootSection: /                        # BookSection
-    Logo:
-      URL: /images/logo.svg                   # BookLogo
-  Features:
-    Search:                                   # BookSearch
-      Enabled: true
-      Partials:
-        Header: platen/features/search/header
-    Comments:                                 # BookComments
-      Enabled: false
-    PWA:                                      # BookServiceWorker
-      Enabled: true
-      Partials:
-        Header: platen/features/pwa/header
-    PortableLinks:                            # BookPortableLinks
-      Enabled: true
-  Markup:
-    Art:
-      Enabled: true
-      Partials:
-        Renderers:
-          Image: platen/markup/art/image
-      Style: art
-    Button:
-      Enabled: true
-      Partials:
-        Renderers:
-          Image: platen/markup/button/image
-      Style: button
-    Columns:
-      Enabled: true
-      Partials:
-        Renderers:
-          Codeblock: platen/markup/columns/codeblock
-      Style: columns
-    Details:
-      Enabled: true
-      Partials:
-        Renderers:
-          Codeblock: platen/markup/details/codeblock
-      Style: details
-    Itch:
-      Enabled: true
-      Partials:
-        Renderers:
-          Image: platen/markup/itch/image
-    Katex:
-      Enabled: true
-      AlwaysLoad: false
-      Version: 0.16.4
-      Partials:
-        Header: platen/markup/katex/header
-        Renderers:
-          Codeblock: platen/markup/katex/codeblock
-          Image: platen/markup/katex/image
-    Mermaid:
-      Enabled: true
-      Version: 9.3.0
-      Container: pre
-      Partials:
-        Header: platen/markup/mermaid/header
-        Renderers:
-          Codeblock: platen/markup/mermaid/codeblock
-    Section:
-      Enabled: true
-      Partials:
-        Renderers:
-          Codeblock: platen/markup/section/codeblock
-      Style: section
-    Tabs:
-      Enabled: true
-      Partials:
-        Renderers:
-          Codeblock: platen/markup/tabs/codeblock
-      Style: tabs
-  Repository:
-    CommitPath: commit                        # BookCommitPath
-    EditPath: edit/main                       # BookEditPath
-  Multilingual:                               # BookTranslatedOnly
-    TranslatedOnly: false
+    styles:
+      base:
+        html:
+          enabled: true
+        body:
+          enabled: true
+        headings:
+          enabled: true
+        links:
+          enabled: true
+        images:
+          enabled: true
+        focus:
+          enabled: true
+        navigation:
+          enabled: true
+        pagination:
+          enabled: true
+        containers:
+          enabled: true
+      platen:
+        icon:
+          enabled: true
+        brand:
+          enabled: true
+        menu:
+          enabled: true
+        page:
+          enabled: true
+        post:
+          enabled: true
+        header:
+          enabled: true
+        search:
+          enabled: true
+        table_of_contents:
+          enabled: true
+        footer:
+          enabled: true
+        comments:
+          enabled: true
+        languages:
+          enabled: true
+        responsiveness:
+          enabled: true
+      mobile:
+        header:
+          enabled: true
+        menu:
+          enabled: true
+        table_of_contents:
+          enabled: true
+      wide:
+        padding:
+          enabled: true
+      markdown:
+        page:
+          enabled: true
+        headings:
+          enabled: true
+        links:
+          enabled: true
+        bold:
+          enabled: true
+        paragraphs:
+          enabled: true
+        images:
+          enabled: true
+        code:
+          enabled: true
+        blockquotes:
+          enabled: true
+        tables:
+          enabled: true
+        lists:
+          enabled: true
+        rulers:
+          enabled: true
+        figure:
+          enabled: true
+        inner:
+          enabled: true
+      utils:
+        basic:
+          enabled: true
+        toggle:
+          enabled: true
+        clearfix:
+          enabled: true
+        spin:
+          enabled: true
+        fixed:
+          enabled: true
+        outline:
+          enabled: true
+    fonts:
+      styles:
+        - import_name: roboto
+      settings:
+        body:
+          selector: body
+          family: "'Roboto', sans-serif"
+        code:
+          selector: code
+          family: "'Roboto Mono', monospace"
+    printing:
+      styles:
+        basic:
+          enabled: true
+  display:
+    table_of_contents:
+      minimum_level: 2
+      maximum_level: 4
+      render: true
+    date_format: "January 2, 2006"             # BookDateFormat
+    header:
+      title_as_heading: false
+    menu_root_section: /                        # BookSection
+    logo:
+      url: /images/logo.svg                   # BookLogo
+  features:
+    search:                                   # booksearch
+      enabled: true
+      partials:
+        header: platen/features/search/header
+    comments:                                 # bookcomments
+      enabled: false
+    pwa:                                      # bookserviceworker
+      enabled: true
+      partials:
+        header: platen/features/pwa/header
+    portable_links:                            # BookPortableLinks
+      enabled: true
+  markup:
+    art:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/art/image
+      style: art
+    buttons:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/buttons/image
+      style: buttons
+    columns:
+      enabled: true
+      partials:
+        renderers:
+          codeblock: platen/markup/columns/codeblock
+      style: columns
+    details:
+      enabled: true
+      partials:
+        renderers:
+          codeblock: platen/markup/details/codeblock
+      style: details
+    itch:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/itch/image
+    katex:
+      enabled:     true
+      always_load: false
+      version:     0.16.4
+      partials:
+        header: platen/markup/katex/header
+        renderers:
+          codeblock: platen/markup/katex/codeblock
+          image: platen/markup/katex/image
+    mermaid:
+      enabled: true
+      version: 9.3.0
+      container: pre
+      partials:
+        header: platen/markup/mermaid/header
+        renderers:
+          codeblock: platen/markup/mermaid/codeblock
+    section:
+      enabled: true
+      partials:
+        renderers:
+          codeblock: platen/markup/section/codeblock
+      style: section
+    tabs:
+      enabled: true
+      partials:
+        renderers:
+          codeblock: platen/markup/tabs/codeblock
+      style: tabs
+  repository:
+    commit_path: commit                        # BookCommitPath
+    edit_path: edit/main                       # BookEditPath
+  multilingual:                               # BookTranslatedOnly
+    translated_only: false

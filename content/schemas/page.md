@@ -1,7 +1,7 @@
 ---
 name: page
 title: Page Front Matter
-Schematize: page
+schematize: page
 type: schematize
 outputs:
   - Schematize

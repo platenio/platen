@@ -1,7 +1,7 @@
-{{- $params  := .                               -}}
-{{- $page    := $params.Page                    -}}
-{{- $recurse := $params.Recurse | default false -}}
-{{- $depth   := $params.Depth   | default 0     -}}
+{{- $Params  := .                               -}}
+{{- $Page    := $Params.Page                    -}}
+{{- $Recurse := $Params.Recurse | default false -}}
+{{- $depth   := $Params.Depth   | default 0     -}}
 
 {{/* Determine leading whitespace */}}
 {{- $lead := strings.Repeat 4 " " -}}
@@ -11,10 +11,10 @@
 {{- $lineDelimiter := printf "\n%s" $lead -}}
 
 {{/* Define term values */}}
-{{- $termUrl   := $page.RelPermalink                                                    -}}
-{{- $termTitle := partial "platen/utils/getTitle" (dict "Context" $page "ForList" true) -}}
+{{- $termUrl   := $Page.RelPermalink                                                    -}}
+{{- $termTitle := partial "platen/utils/getTitle" (dict "Context" $Page "ForList" true) -}}
 {{/*
-  We use the with/else here and access $page.Params.summary instead of $page.Summary in the default
+  We use the with/else here and access $Page.Params.summary instead of $Page.Summary in the default
   function to avoid infinite recursion for pages with a section codeblock where the page is included
   in the root section; in those cases, the .Summary has to render the page, then truncate it, which
   means that the codeblock is called again from inside itself forever.
@@ -22,18 +22,18 @@
   Despite the documentation, setting `summary` in the front matter or specifying the magic more
   comment before the summary block doesn't fix this.
 */}}
-{{- $termText  := $page.Description | default $page.Params.summary -}}
+{{- $termText  := $Page.Description | default $Page.Params.summary -}}
 {{- with $termText -}}
-  {{- $termText = $page.RenderString $termText -}}
+  {{- $termText = $Page.RenderString $termText -}}
 {{- else -}}
-  {{- $termText = $page.Summary -}}
+  {{- $termText = $Page.Summary -}}
 {{- end -}}
 
 {{/* Handle recursion for child pages that are folders by adding a nested description list */}}
-{{- if and (eq true $recurse) (gt (len $page.Pages) 0) -}}
+{{- if and (eq true $Recurse) (gt (len $Page.Pages) 0) -}}
   {{- $childEntries := slice -}}
-  {{- range $child := $page.Pages -}}
-    {{- $childParams := dict "Page" $child "Recurse" $recurse "Depth" (add 1 $depth) -}}
+  {{- range $child := $Page.Pages -}}
+    {{- $childParams := dict "Page" $child "Recurse" $Recurse "Depth" (add 1 $depth) -}}
     {{- $childEntry  := partial "platen/markup/section/item" $childParams          -}}
     {{- $childEntries = $childEntries | append $childEntry                           -}}
   {{- end -}}

@@ -1,7 +1,7 @@
 ---
 name: security
 title: Hugo Security Map Configuration
-Schematize: security
+schematize: security
 type: schematize
 outputs:
   - Schematize

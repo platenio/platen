@@ -4,8 +4,8 @@ weight: 140
 summary: >-
   Documentation on the `mermaid` language ID for codeblocks, which renders Mermaid markup on a
   content page, allowing you to include flowcharts and other diagrams.
-Platen:
-  TitleAsHeading: true
+platen:
+  title_as_heading: true
 Memo:
   Name: mermaid
   MungeTitle: false
@@ -30,9 +30,6 @@ Memo:
       Default: 'bottom'
   Definition:
     Type: Mermaid
-    YAML:
-      Required: false
-      Definition: Schemas.Platen.Mermaid.Figure
     Syntax: |-
       [%%{ <InitDirective> }%%]
 
@@ -224,4 +221,4 @@ The diagram syntax uses the standard Mermaid syntax for defining diagrams. For m
 [s01]: mdn.html.element:figure
 [s02]: mdn.html.element:p
 [s03]: mdn.html.element:figcaption
-[s04]: Platen.Site.Markup.Mermaid
+[s04]: platen.site.markup.mermaid

@@ -1,16 +1,16 @@
-{{- $params      := .                                  -}}
-{{- $config      := site.Params.Platen.Markup.Itch     -}}
-{{- $page        := $params.Page                       -}}
-{{- $destination := $params.Destination                -}}
-{{- $title       := $params.Title                      -}}
-{{- $text        := $params.PlainText                  -}}
-{{- $isBlock     := $params.IsBlock                    -}}
-{{- $ordinal     := $params.Ordinal                    -}}
+{{- $Params      := .                                  -}}
+{{- $Config      := site.Params.platen.markup.itch     -}}
+{{- $Page        := $Params.Page                       -}}
+{{- $destination := $Params.Destination                -}}
+{{- $title       := $Params.Title                      -}}
+{{- $text        := $Params.PlainText                  -}}
+{{- $IsBlock     := $Params.IsBlock                    -}}
+{{- $Ordinal     := $Params.Ordinal                    -}}
 
 {{- $renderedImage := "" -}}
 
 {{- $prefixes := slice "itch:" -}}
-{{- range $alias := $config.aliases -}}
+{{- range $alias := $Config.aliases -}}
   {{- $prefixes = $prefixes | append (printf "%s:" $alias) -}}
 {{- end -}}
 
@@ -52,8 +52,8 @@
 
     {{/* If the image is a block, handle the attributes. */}}
     {{/* Both should set the url and title */}}
-    {{- if $isBlock -}}
-      {{- $attributes       = $params.Attributes -}}
+    {{- if $IsBlock -}}
+      {{- $attributes       = $Params.Attributes -}}
       {{- $dark            := $attributes.dark            | default false -}}
       {{- $square          := $attributes.square          | default false -}}
       {{- $linkback        := $attributes.linkback        | default false -}}
@@ -122,7 +122,7 @@
     {{- $attributes       = partial "platen/utils/getSafeAttributes" $attributeParams -}}
     {{- $renderedImage    = printf "<iframe %s></iframe>" $attributes                 -}}
   {{- else -}}
-    {{- errorf (i18n "ErrorItchioMissingID" (dict "page" $page)) -}}
+    {{- errorf (i18n "ErrorItchioMissingID" (dict "page" $Page)) -}}
   {{- end -}}
 {{- end -}}
 

@@ -4,8 +4,8 @@ weight: 210
 summary: >-
   Documentation on the `tabs` language ID for codeblocks, which enables you to format content as
   tabs in a card pane on a page.
-Platen:
-  TitleAsHeading: true
+platen:
+  title_as_heading: true
 Memo:
   Name: tabs
   MungeTitle: false

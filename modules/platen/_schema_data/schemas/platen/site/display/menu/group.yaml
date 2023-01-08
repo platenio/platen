@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: group.schema.yaml
+title: Group Settings
+description: Ensures entries are added in a containing group and configures their display.
+schematize:
+  details: |
+    In the position settings for [sref:`platen.display.menu`], you can group entries at the
+    top-level or nested in the entries list. These settings determine how those grouped entries are
+    displayed.
+
+    If this setting isn't defined at the top-level for a position, all entries for that position are
+    added in an unordered list without a containing item to indicate that they're semantically
+    related.
+
+    You can use this setting for individual entries, creating a nested group of related entries.
+
+    <!-- Reference Links -->
+    [sref:`platen.display.menu`]: platen.site.display.menu.settings
+type: object
+required:
+  - name
+properties:
+  name:
+    title: Group Entry Name
+    description: >-
+      Specifies the root section of the content folder to add to the site menu.
+    schematize:
+      weight: 1
+      details: |
+        Specifies the name to use for the group entry in the site menu. This is the text value
+        displayed in the site menu for the group.
+    type: string
+  href:
+    title: Group Entry URL
+    description: >-
+      Specifies the URL clicking the group entry in the site menu should take a visitor to.
+    schematize:
+      weight: 2
+      details: |
+        Specifies the URL clicking the group entry in the site menu should take a visitor to. If
+        this value isn't specified, the group entry still contains its entries but it can't be
+        navigated to.
+    type: string
+  collapse:
+    title: Collapse Group Entry
+    description: >-
+      Specifies whether to collapse the group entry in the site menu.
+    schematize:
+      weight: 3
+      details: |
+        Specifies whether to collapse the group entry in the site menu. Collapsed entries are
+        displayed with a clickable arrow that expands and collapses the group's entries, defaulting
+        to collapsed.
+
+        This setting is incompatible with [sref:`flatten`]. A group entry can be collapsed or
+        flattened, but not both.
+
+        <!-- Reference Links -->
+        [sref:`flatten`]: platen.site.display.menu.group.flatten
+    type: boolean
+  flatten:
+    title: Flatten Group Entry
+    description: >-
+      Specifies whether to flatten the group entry in the site menu.
+    schematize:
+      weight: 4
+      details: |
+        Specifies whether to flatten the group entry in the site menu. Flattened entries are
+        displayed with the grouping entry bolded above a the group's entries without additional
+        spacing or indenting for those entries.
+
+        This setting is incompatible with [sref:`collapse`]. A group entry can be collapsed or
+        flattened, but not both.
+
+        <!-- Reference Links -->
+        [sref:`collapse`]: platen.site.display.menu.group.collapse
+    type: boolean
+  class:
+    title: Group Entry Class
+    description: >-
+      Specifies a class to add to the group entry in the site menu.
+    schematize:
+      weight: 5
+      details: |
+        Specifies a class to add to the group entry in the site menu. To specify more than one
+        class, separate each class with a space.
+
+        If this value isn't specified, the group is added without any class injection. If this value
+        is specified, the class declaration is injected in the top-level unordered list (`<ul>`) if
+        the group is declared at the top-level for a position or in the unordered list containing
+        the group's entries if the group is nested in the entries list.
+
+        Top-level lists without the `platen` class are added to the site menu with a small margin
+        above them. To ensure a top-level group is added to the site menu without this additional
+        spacing, set this value to `platen`.
+    type: string
+  group:
+    $ref: ./group.yaml
+    schematize:
+      weight: 100
+      skip_more_info: true

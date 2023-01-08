@@ -1,0 +1,218 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: settings.schema.yaml
+title: Display Settings
+description: Optional settings controlling how a Platen site is structured.
+schematize:
+  weight: 2
+  details: |
+    The Platen display settings control how the Platen site is structured and displays, separate
+    from the SCSS styling.
+type: object
+properties:
+  date_format:
+    title: Date Format
+    description: >-
+      Specifies the format for dates on the site.
+    schematize:
+      weight: 1
+      details: |
+        Specifies the date-time format on the site. You can specify a shorthand value, like
+        `:date_full`, or a example string `Jan 2 2006`.
+
+        The default value is `January 2, 2006`.
+    oneOf:
+      - enum:
+          - :date_full
+          - :date_long
+          - :date_medium
+          - :date_short
+          - :time_full
+          - :time_long
+          - :time_medium
+          - :time_short
+      - type: string
+    default: January 2, 2006
+  header:
+    title: Page Header Settings
+    description: Controls the rendering of the header element for site pages.
+    schematize:
+      weight: 2
+      skip_schema_render: true
+      details: |
+        Controls the rendering of the header element for site pages. By default, every page is
+        rendered with a header element that includes the controls for displaying the menu and table
+        of contents in mobile view and the page's title in a `<strong>` element.
+
+        You can use the [sref:`title_as_heading`] option to write the page's title as an `<h1>`
+        instead.
+
+        <!-- Reference Links -->
+        [sref:`title_as_heading`]: platen.site.display.settings.header.title_as_heading
+    type: object
+    properties:
+      title_as_heading:
+        title: Render Page Title as Heading
+        description: Specify whether the page title should be rendered as an h1 instead of strong.
+        schematize:
+          details: |
+            Use this setting to specify whether the page title should be rendered as an `<h1>`
+            element instead of the default `<strong>` element.
+
+            If this set to `true`, Platen renders the title text in an `<h1>` with the ID set to
+            the title, downcased and urlized.
+
+            When the page title is rendered as a heading, it's always visible, even when not in
+            mobile view.
+        type: boolean
+        default: false
+  logo:
+    title: Site Logo
+    description: Defines the branding logo for the site.
+    schematize:
+      weight: 3
+      skip_schema_render: true
+      details: |
+        Defines the logo for the site. The logo is added to the site menu before the site's name.
+    type: object
+    properties:
+      url:
+        title: Logo URL
+        description: Choose whether to use Hugo's builtin table of contents.
+        schematize:
+          details: |
+            Defines the path to the logo file. You can specify the path to an image in the `assets`
+            folder for your site, a site-relative path to the file in your `static` folder, or to
+            a remote image. You can also set this value to an empty string to remove the logo from
+            the site menu entirely.
+
+            We recommend placing your logo in the `assets` folder for best results and the `static`
+            folder for ease-of-use. We don't recommend you use a remote image for your site's logo
+            due to site performance impacts.
+
+            This value defaults to `/images/logo.svg`, which you can place in the `static` or
+            `assets` folder for your site.
+          weight: 1
+        type: string
+        default: /images/logo.svg
+  menu:
+    $ref: ./menu/settings.yaml
+    schematize:
+      weight: 4
+  table_of_contents:
+    title: Table of Contents
+    description: Controls the rendering of the table of contents for site pages.
+    schematize:
+      weight: 5
+      skip_schema_render: true
+      details: |
+        Controls the rendering of the table of contents for site pages. You can choose whether to
+        use Platen's table of contents generator or Hugo's. If you're using Platen to generate the
+        table of contents, you can set the minimum and maximum heading levels to include.
+
+        By default, the site is set to use Platen to generate the table of contents and include
+        heading levels 2--4.
+    type: object
+    properties:
+      use_built_in:
+        title: Use Built-In
+        description: Choose whether to use Hugo's builtin table of contents.
+        schematize:
+          details: |
+            Choose whether to use Hugo's builtin table of contents or generate them with Platen.
+
+            Hugo's builtin table of contents only includes markdown headings, not HTML headings
+            added in shortcodes. For more information on configuring the behavior for Hugo's builtin
+            table of contents, see [Table of Contents in the Hugo documentation][01]
+
+            Platen's table of contents includes all headings, HTML and Markdown, as long as they're
+            within the specified values for [sref:`minimum_level`][s01] and
+            [sref:`maximum_level`][s02], inclusive.
+
+            The default is `false` and the site use's Platen to generate the table of contents.
+
+            <!-- Reference Links -->
+            [01]: https://gohugo.io/getting-started/configuration-markup/#table-of-contents
+            [s01]: platen.site.display.settings.table_of_contents.minimum_level
+            [s02]: platen.site.display.settings.table_of_contents.maximum_level
+          weight: 1
+        type: boolean
+        default: false
+      minimum_level:
+        title: Minimum Heading Level
+        description: Specify the minimum heading level to include in Platen's table of contents.
+        schematize:
+          details: |
+            Specify the minimum heading level to include in Platen's table of contents. This value
+            only affects the table of contents when [sref:`use_built_in`][s01] is set to `false`.
+
+            Headings at a lower level than this value aren't included in the table of contents. For
+            example, when this is set to `3`, first and second level Markdown and HTML headings
+            aren't included in the table of contents.
+
+            This value must be less than or equal to the value of [sref:`maximum_level`][s02].
+
+            The default is `2`.
+
+            <!-- Reference Links -->
+            [s01]: platen.site.display.settings.table_of_contents.use_built_in
+            [s02]: platen.site.display.settings.table_of_contents.maximum_level
+          weight: 3
+        type: integer
+        default: 2
+        minimum: 1
+        maximum: 6
+      maximum_level:
+        title: Maximum Heading Level
+        description: Specify the maximum heading level to include in Platen's table of contents.
+        schematize:
+          details: |
+            Specify the maximum heading level to include in Platen's table of contents. This value
+            only affects the table of contents when [sref:`use_built_in`][s01] is set to `false`.
+
+            Headings at a higher level than this value aren't included in the table of contents. For
+            example, when this is set to `4`, fifth and sixth level Markdown and HTML headings
+            aren't included in the table of contents.
+
+            This value must be greater than or equal to the value of [sref:`minimum_level`][s02].
+
+            The default is `4`.
+
+            <!-- Reference Links -->
+            [s01]: platen.site.display.settings.table_of_contents.use_built_in
+            [s02]: platen.site.display.settings.table_of_contents.minimum_level
+          weight: 4
+        type: integer
+        default: 4
+        minimum: 1
+        maximum: 6
+      ordered_list:
+        title: As Ordered List
+        description: Specify whether table of contents entries should render in an ordered list.
+        schematize:
+          weight: 5
+          details: |
+            Specify whether the table of contents should render its entries in an ordered list with
+            numerals before each item. By default, the table of contents is rendered in an unordered
+            list without any list markers, only with indents.
+
+            Set this value to `true` to add the entries in an ordered list instead.
+
+            This value can be overridden on a per-page basis.
+        type: boolean
+        default: false
+      render:
+        title: Render the Table of Contents
+        description: Whether to render the table of contents for the site's content
+        schematize:
+          weight: 2
+          details: |
+            Specifies whether to render the table of contents for the site's content.
+
+            To prevent the table of contents from rendering for a page, set this value to `false`.
+            To render the table of contents for a page when it's disabled at the site level, set
+            this value to `true`.
+
+            The default value is `true`.
+        type: boolean
+        default: true

@@ -6,7 +6,7 @@
 {{- $schemaData  := $params.property -}}
 {{- $level := add 1 $params._level -}}
 {{/* Sometimes you might not want to display the schema for a given object */}}
-{{- $skipSchemaRender := default false $schemaData.schematize.skipSchemaRender -}}
+{{- $skipSchemaRender := default false $schemaData.schematize.skip_schema_render -}}
   {{- if not $skipSchemaRender -}}
   {{/* Munge descriptions to include links to docs */}}
   {{- $docsURL := ($params.page.OutputFormats.Get "html").Permalink  -}}

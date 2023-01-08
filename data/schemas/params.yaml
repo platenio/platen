@@ -8,9 +8,9 @@ type: object
 # anyOf:
 #   - $ref: ./hugo/config.yaml
 properties:
-  Platen:
-    $ref: ./Platen/Site/Config.yaml
-  Schematize:
-    $ref: ./Schematize/Site/Config.yaml
-  Toroidal:
-    $ref: ./Toroidal/Site/Config.yaml
+  platen:
+    $ref: ./platen/site/config.yaml
+  schematize:
+    $ref: ./schematize/site/config.yaml
+  toroidal:
+    $ref: ./toroidal/site/config.yaml

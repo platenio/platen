@@ -2,11 +2,11 @@
 {{- $context  := $params.Context  -}}
 {{- $position := $params.Position -}}
 
-{{- with (index site.Params.Platen.Display.Menu $position) -}}
+{{- with (index site.Params.platen.display.menu $position) -}}
   {{- $positionSettings := . -}}
-  {{- with $positionSettings.Entries -}}
+  {{- with $positionSettings.entries -}}
     {{- $partialParams := merge $params $positionSettings -}}
-    {{- with $positionSettings.Group -}}
+    {{- with $positionSettings.group -}}
       {{ partial "platen/menu/features/group" $partialParams }}
     {{- else -}}
       {{- $partialParams = merge $partialParams (dict "TopLevel" true) -}}

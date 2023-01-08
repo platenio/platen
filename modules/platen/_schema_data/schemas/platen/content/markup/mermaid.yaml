@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: mermaid.schema.yaml
+title: Mermaid Options
+description: Optional settings for overriding Mermaid configuration on a content page.
+schematize:
+  details: |
+    Defines optional settings for overriding [sref:site configuration] for the Mermaid diagrams
+    markup, which enables you to use [Mermaid][01] to create diagrams in your content with `mermaid`
+    [codeblock rendering hook][02].
+
+    With Mermaid, you can create numerous diagrams including flowcharts, pie  charts, and sequence
+    diagrams.
+
+    [sref:site configuration]: platen.site.markup.mermaid
+    [01]: https://mermaid-js.github.io/mermaid/
+    [02]: /modules/platen/markup/mermaid
+type: object
+properties:
+  version:
+    title: Mermaid Version
+    description: Specify the version of Mermaid to load for this content.
+    schematize:
+      details: |
+        Specifies the version of Mermaid to load when needed, overriding the
+        [sref:site-level setting]. Platen retrieves the style and script modules for Mermaid from a
+        CDN at build time. This value is used to determine which version to bundle and use for this
+        content.
+
+        You can set this value to any valid released version of Mermaid.
+
+        [sref:site-level setting]: platen.site.markup.mermaid.version
+    type: string

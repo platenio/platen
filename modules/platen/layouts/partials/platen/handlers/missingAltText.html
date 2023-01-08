@@ -13,7 +13,7 @@
 
     If the caller includes a suffix, that string is appended to the message.
 
-    If the site's configuration has the `Platen.Accessibility.WarnOnMissingAltText` option set to
+    If the site's configuration has the `platen.accessibility.warn_on_missing_alt_text` option set to
     `true`, this handler raises a warning instead of an error.
 */}}
 
@@ -23,7 +23,7 @@
 {{- $suffix := $params.Suffix -}}
 
 {{/* Retrieve site accessibility settings */}}
-{{- $a11ySettings := site.Params.Platen.Accessibility -}}
+{{- $a11ySettings := site.Params.platen.accessibility -}}
 
 {{/* Set default message without context */}}
 {{- $message      := i18n "MissingAltText"               -}}
@@ -48,7 +48,7 @@
 {{- end -}}
 
 {{/* Write warning or error as configured */}}
-{{- if $a11ySettings.WarnOnMissingAltText -}}
+{{- if $a11ySettings.warn_on_missing_alt_text -}}
   {{- warnf  $message -}}
 {{- else -}}
   {{- errorf $message -}}

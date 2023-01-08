@@ -17,7 +17,7 @@
   {{- if gt (len $usages) 0 -}}
     {{- $message := slice    (printf "Found usage of the disabled '%s'"        $shortcode)
                     | append (printf "shortcode in content for '%s'."          $context.File.Path)
-                    | append (printf "Set Platen.Shortcode.%s.Enabled to true" $shortcode)
+                    | append (printf "Set platen.shortcodes.%s.enabled to true" $shortcode)
                     | append "in your site configuration or remove all uses of the shortcode."
     -}}
     {{- with $settings.aliases -}}

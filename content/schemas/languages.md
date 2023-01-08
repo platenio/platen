@@ -1,7 +1,7 @@
 ---
 name: languages
 title: Hugo Languages Configuration
-Schematize: languages
+schematize: languages
 type: schematize
 outputs:
   - Schematize

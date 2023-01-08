@@ -1,8 +1,8 @@
 {{- $context := . -}}
 {{/* Only add page info for toroidal members; otherwise, error. */}}
-{{- with $context.Params.ToroidalHomePage -}}
-{{- $lang := default $context.Site.Language.Lang $context.Site.LanguageCode -}}
-{{- $dir  := default "ltr" $context.Site.Language.LanguageDirection -}}
+{{- with $context.Params.toroidal_home_page -}}
+{{- $lang := site.LanguageCode               | default site.Language.Lang -}}
+{{- $dir  := site.Language.LanguageDirection | default "ltr"              -}}
 <!DOCTYPE html>
 <html lang="{{ $lang }}" dir="{{ $dir }}">
   {{- $info        := partial "toroidal/utils/getPageInfo" $context -}}
@@ -11,7 +11,7 @@
   {{- $headParams  := dict "context" $context "memberName" $memberName "webringName" $webringName }}
   <head>
   {{- with (resources.Get "styles/platen.scss") -}}
-    {{ if $context.Site.Params.Platen.Features.Toroidal.Enabled }}
+    {{ if site.Params.platen.features.toroidal.enabled }}
       {{ partial "toroidal/htmlHeadMember/platen" $context }}
     {{ else }}
       {{ partial "toroidal/htmlHeadMember/default" $headParams }}

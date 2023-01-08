@@ -1,0 +1,459 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: base.schema.yaml
+title: Base Style Modules
+description: Defines the map of base SCSS style modules for the theme.
+schematize:
+  details: |
+    Defines the map of base SCSS style modules for the theme. The existing value is a map of
+    styles that are loaded first for the theme and set defaults for the presentation.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all styles in your own configuration file. Only specify the values you want
+    to add or replace.
+type: object
+properties:
+  html:
+    title: HTML Style Module
+    description: Defines the base style for the html element.
+    schematize:
+      weight: 1
+      skip_schema_render: true
+      details: |
+        Defines the base style for the `html` element. By default, the only setting for this
+        property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        html {
+          font-size: $font-size-base;
+          scroll-behavior: smooth;
+          touch-action: manipulation;
+        }
+        ```
+
+        This applies to the `html` element and its children, setting the default font size to the
+        value defined in [sref:`theme.variables.basic_scss.font-size-base`]. This defines the value
+        of [sref:`rem`] units for the theme and effects the size of most elements.
+
+        It also sets the scroll behavior to [sref:`smooth`], which makes scrolling the site less
+        jarring for visitors.
+
+        Finally, it sets the touch action to [sref:`manipulation`], which makes the site work
+        predictably for mobile and tablet users.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/base/_html.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`enabled`]: platen.site.theme.styles.defined.enabled
+        [sref:`manipulation`]: mdn.css:touch-action#manipulation
+        [sref:`rem`]: mdn.css:length#rem
+        [sref:`smooth`]: mdn.css:scroll-behavior#smooth
+        [sref:`theme.variables.basic_scss.font-size-base`]: platen.site.theme.variables.basic_scss.font-size-base
+    type: object
+  body:
+    title: Body Style Module
+    description: Defines the base style for the body element.
+    schematize:
+      weight: 2
+      skip_schema_render: true
+      details: |
+        Defines the base style for the `body` element. By default, the only setting for this
+        property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        body {
+          min-width: $body-min-width;
+          color: var(--body-font-color);
+          background: var(--body-background);
+
+          letter-spacing: 0.33px;
+          font-weight: $body-font-weight;
+          text-rendering: optimizeLegibility;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+
+          box-sizing: border-box;
+          * {
+            box-sizing: inherit;
+          }
+        }
+        ```
+
+        This applies to the `body` element and its children, setting the minimum width of the
+        container to the value defined in [sref:`theme.variables.basic_scss.body-min-width`] and
+        setting the color of the font and background based on the values defined in the
+        [sref:`light`] or [sref:`dark`] theme, depending on which is active.
+
+        It sets the [sref:letter spacing] to `0.33px`, which keeps the font readable.
+
+        It sets the default weight of the font to the value defined in
+        [sref:`theme.variables.basic_scss.body-font-weight`].
+
+        The settings for [sref:text rendering] and font-smoothing ensure that the text displays best
+        for reading on the site visitor's device.
+
+        The [sref:box sizing] ensures that the border and padding values of elements are taken into
+        account for placement and visibility.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/base/_body.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`dark`]: platen.site.theme.variables.dark_css
+        [sref:`enabled`]: platen.site.theme.styles.defined.enabled
+        [sref:`light`]: platen.site.theme.variables.light_css
+        [sref:`theme.variables.basic_scss.body-font-weight`]: platen.site.theme.variables.basic_scss.body-font-weight
+        [sref:`theme.variables.basic_scss.body-min-width`]: platen.site.theme.variables.basic_scss.body-min-width
+        [sref:box sizing]: mdn.css:box-sizing
+        [sref:letter spacing]: mdn.css:letter-spacing
+        [sref:text rendering]: mdn.css:text-rendering
+    type: object
+  headings:
+    title: Headings Style Module
+    description: Defines the base style for the h* elements.
+    schematize:
+      weight: 3
+      skip_schema_render: true
+      details: |
+        Defines the base style for the `h1` through `h6` elements. By default, the only setting for
+        this property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+          font-weight: $body-font-weight;
+        }
+        ```
+
+        This applies to the `h*` elements, setting their font-weight to the value defined in
+        [sref:`theme.variables.basic_scss.body-font-weight`].
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`enabled`]: platen.site.theme.styles.defined.enabled
+        [sref:`theme.variables.basic_scss.body-font-weight`]: platen.site.theme.variables.basic_scss.body-font-weight
+    type: object
+  links:
+    title: Links Style Module
+    description: Defines the base style for the a elements.
+    schematize:
+      weight: 4
+      skip_schema_render: true
+      details: |
+        Defines the base style for the `a` elements (links). By default, the only setting for this
+        property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        a {
+          text-decoration: none;
+          color: var(--color-link);
+        }
+        ```
+
+        This applies to the `a` elements, setting their color to the value defined in
+        [sref:`theme.variables.light_css.color-link`] or
+        [sref:`theme.variables.dark_css.color-link`], depending on whether the site is displaying in
+        light or dark [sref:`theme.config.mode`]. It also removes the default underline beneath
+        links by setting [sref:`text-decoration`] to `none`.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`enabled`]: platen.site.theme.styles.defined.enabled
+        [sref:`text-decoration`]: mdn.css:text-decoration
+        [sref:`theme.config.mode`]: platen.site.theme.config.mode
+        [sref:`theme.variables.dark_css.color-link`]: platen.site.theme.variables.dark_css.color-link
+        [sref:`theme.variables.light_css.color-link`]: platen.site.theme.variables.light_css.color-link
+    type: object
+  images:
+    title: Images Style Module
+    description: Defines the base style for the img elements.
+    schematize:
+      weight: 5
+      skip_schema_render: true
+      details: |
+        Defines the base style for `img` elements. By default, the only setting for this property is
+        [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to `false`, this
+        style isn't applied to the site.
+
+        With [sref:`enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        img {
+          vertical-align: baseline;
+        }
+        ```
+
+        This applies to the `img` elements, setting their vertical alignment to [sref:`baseline`],
+        which aligns the image relative to its parent's baseline.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`baseline`]: mdn.css:vertical-align#baseline
+        [sref:`enabled`]: platen.site.theme.styles.defined.enabled
+    type: object
+  focus:
+    title: Focus Style Module
+    description: Defines the base style for elements the vistor has in focus.
+    schematize:
+      weight: 6
+      skip_schema_render: true
+      details: |
+        Defines the base style for elements the vistor has in focus. By default, the only setting
+        for this property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to `false`,
+        this style isn't applied to the site.
+
+        With [sref:`enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        :focus {
+          @include outline;
+        }
+        ```
+
+        This applies to the any elements when the {{% sref ":focus" "mdn.css" "noPostFix" %}}`:focus` selector{{% /sref %}}
+        applies. It ensures the utility [mixin] defined in [sref:`theme.styles.utils.outline`] is
+        applied to those elements.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [mixin]: https://sass-lang.com/documentation/at-rules/mixin
+        [sref:`enabled`]: platen.site.theme.styles.defined.enabled
+        [sref:`theme.styles.utils.outline`]: platen.site.theme.styles.utils.outline
+        [sref:`theme.variables.basic_scss.body-font-weight`]: platen.site.theme.variables.basic_scss.body-font-weight
+    type: object
+  navigation:
+    title: Navigation Style Module
+    description: Defines the base style for the site navigation.
+    schematize:
+      weight: 7
+      skip_schema_render: true
+      details: |
+        Defines the base style for the navigation menus, both the site menu and the table of
+        contents for a page. By default, the only setting for this property is [sref:`enabled`],
+        which defaults to `true`. If you set [sref:`enabled`] to `false`, this style isn't applied
+        to the site.
+
+        With [sref:`enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        aside nav ul {
+          padding: 0;
+          margin: 0;
+          list-style: none;
+
+          li {
+            margin: 1em 0;
+            position: relative;
+          }
+
+          a {
+            display: block;
+          }
+
+          a:hover {
+            opacity: 0.5;
+          }
+
+          ul {
+            padding-inline-start: $padding-large;
+          }
+        }
+        ```
+
+        This applies to the `ul` elements and their children when the `ul` is in a `nav` container
+        in an `aside`, which is the case for the site menu and for the table of contents for a page.
+
+        It sets the padding and margin for the list itself to `0` and sets the list style to `none`,
+        ensuring there's no bullet points shown before the items.
+
+        For the list items it sets the vertical margin to `1rem`, giving them a little space between
+        entries, and sets their position as relative to their container.
+
+        For the links themselves, it sets them to display as block items instead of inline, making
+        it possible to click anywhere in their area to navigate to the page, making it easier to use
+        with touch devices and more convenient generally. When a site visitor hovers on a link, the
+        link's opacity is reduced by half to give a visual cue that clicking will select that item.
+
+        For nested lists, which includes submenus, it sets the [sref:`padding-inline-start`] to the
+        value of the [sref:`theme.variables.basic_scss.padding-large`] variable.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`enabled`]: platen.site.theme.styles.defined.enabled
+        [sref:`passing-inline-start`]: mdn.css:padding-inline-start
+        [sref:`theme.variables.basic_scss.paddding-large`]: platen.site.theme.variables.basic_scss.paddding-large
+    type: object
+  pagination:
+    title: Pagination Style Module
+    description: Defines the base style for the pagination lists.
+    schematize:
+      weight: 8
+      skip_schema_render: true
+      details: |
+        Defines the base style for the pagination lists. By default, the only setting for this
+        property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
+        `false`, this style isn't applied to the site.
+
+        With [sref:`enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        ul.pagination {
+          display: flex;
+          justify-content: center;
+          list-style-type: none;
+
+          .page-item a {
+            padding: $padding-large;
+          }
+        }
+        ```
+
+        This applies to the `ul` elements with the `pagination` class, which is used to render the
+        list of blog posts and taxonomy terms. It uses the [sref:flexible box layout] for these
+        lists, ensuring that the links to the next set of pages are evenly spaced and don't include
+        a leading bullet point. It uses the [sref:`theme.variables.basic_scss.padding-large`]
+        variable to set padding around the links.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in
+        your project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`enabled`]: platen.site.theme.styles.defined.enabled
+        [sref:`theme.variables.basic_scss.padding-large`]: platen.site.theme.variables.basic_scss.padding-large
+        [sref:flexible box layout]: mdn.css:CSS_Flexible_Box_Layout
+    type: object
+  containers:
+    title: Containers Style Module
+    description: Defines the base style for elements with the container class.
+    schematize:
+      weight: 9
+      skip_schema_render: true
+      details: |
+        Defines the base style for elements with the container class. By default, the only setting
+        for this property is [sref:`enabled`], which defaults to `true`. If you set
+        [sref:`enabled`] to `false`, this style isn't applied to the site.
+
+        With [sref:`enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        .container {
+          max-width: $container-max-width;
+          margin: 0 auto;
+        }
+        ```
+
+        This applies to any element with the `container` class, which includes only the `main`
+        element by default. It sets the maximum width to the value defined in
+        [sref:`theme.variables.basic_scss.container-max-width`], sets the vertical margin to `0`, and
+        sets the horizontal margin to `auto`, centering it in the available space.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/base/_headings.scss` in your [assets folder], which defaults to `assets` in your
+        project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide].
+
+        [assets folder]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [learning guide]: https://sass-lang.com/guide
+        [sref:`enabled`]: platen.site.theme.styles.defined.enabled
+        [sref:`theme.variables.basic_scss.container-max-width`]: platen.site.theme.variables.basic_scss.container-max-width
+    type: object
+patternProperties:
+  ".":
+    $ref: ./defined.yaml
+    schematize:
+      href: pattern-any

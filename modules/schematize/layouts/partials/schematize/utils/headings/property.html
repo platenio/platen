@@ -12,7 +12,7 @@
   If the attempted heading is for a reference without a title, this partial errors because it
   won't be able to display the information correctly.
 
-  If the schema author sets the schematize.noHeading key to true for a property, the heading is
+  If the schema author sets the schematize.no_heading key to true for a property, the heading is
   written as bold instead of an actual heading. This is a workaround to avoid needing to decompose
   the schema.
 */}}
@@ -21,7 +21,7 @@
 {{- $property := $params.property -}}
 
 {{/* Handle schematize overrides */}}
-{{- $noHeading := $property.schematize.noHeading }}
+{{- $noHeading := $property.schematize.no_heading }}
 
 {{/* Initialize header text, which needs to be built before rendering */}}
 {{- $headerText := "" -}}

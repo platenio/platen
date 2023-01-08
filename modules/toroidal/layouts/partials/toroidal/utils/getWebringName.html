@@ -11,13 +11,13 @@
      - if the `name` parameter is not set, it will use the page's Title
   3. If the index file is not toroidal or no index file is found, it will fall
      back on the site's webring name. The site webring name is defined as:
-     - The value of the site parameter `.Toroidal.WebringName`, if set.
+     - The value of the site parameter `.toroidal.webring_name`, if set.
      - "Webring" if the parameter is not set.
 */ -}}
 {{- $context := . -}}
 
-{{- $webringName := default $context.Site.Params.Toroidal.WebringName
-                            $context.Params.ToroidalWebringName
+{{- $webringName := default site.Params.toroidal.webring_name
+                            $context.Params.toroidal_webring_name
 -}}
 {{- $webringName  = default "Webring" $webringName -}}
 

@@ -1,11 +1,11 @@
 ---
 {{- $webringName := replace .Name "-" " " | title }}
 # For more information about the available options for defining a member site,
-# see: http://platen.io/schemas/Toroidal/Content/Section/
+# see: http://platen.io/modules/toroidal/config/content/section/
 title: {{ $webringName }}
 type: toroidal
 cascade:
-  ToroidalWebringName: {{ $webringName }}
+  toroidal_webring_name: {{ $webringName }}
 ---
 
 This is boilerplate text that is never shown. Hugo requires _some_ text in the body of a file to

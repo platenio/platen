@@ -1,8 +1,8 @@
 <!-- Merge home and current page translations -->
-{{ $translatedOnly := default false .Site.Params.Platen.Multilingual.TranslatedOnly }}
+{{ $translatedOnly := default false site.Params.platen.multilingual.translated_only }}
 {{ $translations := dict }}
 {{ if (eq $translatedOnly false ) }}
-  {{ range .Site.Home.Translations }}
+  {{ range site.Home.Translations }}
     {{ $translations = merge $translations (dict .Language.Lang .) }}
   {{ end }}
 {{ end }}
@@ -16,12 +16,12 @@
     <label for="languages" class="flex justify-between">
       <a role="button" class="flex align-center">
         <img src="{{ "svg/translate.svg" | relURL }}" class="platen-icon" alt="Languages" />
-        {{ $.Site.Language.LanguageName }}
+        {{ site.Language.LanguageName }}
       </a>
     </label>
 
     <ul>
-      {{ range .Site.Languages }}{{ with index $translations .Lang }}
+      {{ range site.Languages }}{{ with index $translations .Lang }}
       <li>
         <a href="{{ .Permalink }}">
           {{ .Language.LanguageName }}

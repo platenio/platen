@@ -4,24 +4,23 @@ module:
     min: 0.104.0
 
 outputFormats:
-  Schematize:
+  schematize:
     mediaType: application/json
     baseName: schema
     isPlainText: true
 
 params:
-  Platen:
-    Theme:
-      Shortcodes:
-        Schematize:
-          Enabled: true
-          Style:
-            Name: schematize
-    Markup:
-      Schematize:
-        Enabled: true
-        Partials:
-          Renderers:
-            Link: schematize/sref/markup/renderers/links
-  Schematize:
-    SchemaRoot: schemas
+  platen:
+    shortcodes:
+      schematize:
+        enabled: true
+        style:
+          name: schematize
+    markup:
+      schematize:
+        enabled: true
+        partials:
+          renderers:
+            link: schematize/sref/markup/renderers/links
+  schematize:
+    schema_root: schemas

@@ -9,9 +9,9 @@
   {{- $context = $params.Context -}}
 {{- end -}}
 
-{{- range $feature, $settings := $context.Site.Params.Platen.Features -}}
-  {{- if and (eq "" $title) $settings.Enabled -}}
-    {{- with $settings.Partials.Title -}}
+{{- range $feature, $settings := site.Params.platen.features -}}
+  {{- if and (eq "" $title) $settings.enabled -}}
+    {{- with $settings.partials.title -}}
       {{ $title = partial . $params }}
     {{- end -}}
   {{- end -}}

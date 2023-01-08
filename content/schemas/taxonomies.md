@@ -1,7 +1,7 @@
 ---
 name: taxonomies
 title: Hugo Taxonomies Configuration
-Schematize: taxonomies
+schematize: taxonomies
 type: schematize
 outputs:
   - Schematize

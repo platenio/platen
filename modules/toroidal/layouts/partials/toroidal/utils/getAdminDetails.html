@@ -3,7 +3,7 @@
   admin page partial. If it returns an empty string, the details element isn't rendered.
 
   It expects to receive the page context for the webring administration page. It uses the details
-  partial defined in `Toroidal.AdminDetails` unless `ToroidalAdminDetails` is specified in the
+  partial defined in `toroidal.admin_details` unless `toroidal_admin_details` is specified in the
   page's front matter. The site value defaults to "default". It can be set to "none" to
   intentionally exclude the details.
 
@@ -30,8 +30,8 @@
 */}}
 {{- $context     := .  -}}
 {{- $detailsHTML := "" -}}
-{{- $detailsFile := default site.Params.Toroidal.AdminDetails
-                            $context.Params.ToroidalAdminDetails
+{{- $detailsFile := default site.Params.toroidal.admin_details
+                            $context.Params.toroidal_admin_details
 -}}
 
 {{- with (resources.Get "styles/platen.scss") -}}

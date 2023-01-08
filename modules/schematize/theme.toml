@@ -1,4 +1,4 @@
-name = "PlatenSchematize"
+name = "platen.schematize"
 license = "MIT"
 licenselink = "https://github.com/platenio/platen/blob/main/modules/schematize/LICENSE"
 description = "Platen Schema theme for Hugo: Document and publish schemas"

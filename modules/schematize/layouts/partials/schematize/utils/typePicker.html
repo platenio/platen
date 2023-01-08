@@ -37,7 +37,7 @@
     {{- $refData        = merge $refData (dict "schematize" $refSchematize) -}}
   {{- end -}}
   {{- $options := dict "property" $refData "page" $params.page "refPath" $refPath -}}
-  {{- with $property.schematize.skipMoreInfo -}}
+  {{- with $property.schematize.skip_more_info -}}
     {{- $options = merge $options (dict "_skipMoreInfo" .) -}}
   {{- end -}}
   {{- partial "schematize/docs/ref" $options -}}

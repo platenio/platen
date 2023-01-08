@@ -12,7 +12,7 @@
 <article class="toroidal">
   <h2>Members of the {{ $webringName }}</h2>
   <ul class="toroidal-member-list">
-    {{- range where .Paginator.Pages "Params.ToroidalHomePage" "!=" nil -}}
+    {{- range where .Paginator.Pages "Params.toroidal_home_page" "!=" nil -}}
     {{ partial "toroidal/member-entry-list" . }}
     {{- end -}}
   </ul>

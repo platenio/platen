@@ -3,8 +3,8 @@
 {{- $renderStrings := slice -}}
 
 {{- range $name, $settings := $stylesMap -}}
-  {{- if $settings.Enabled }}
-    {{- $mungedName   := default (lower $name) $settings.Name               -}}
+  {{- if $settings.enabled }}
+    {{- $mungedName   := default (lower $name) $settings.name               -}}
     {{- $importLine   := printf  `@import "%s/%s";` $rootFolder $mungedName -}}
     {{- $renderStrings = $renderStrings | append $importLine                -}}
   {{- end -}}

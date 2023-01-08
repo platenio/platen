@@ -7,7 +7,7 @@
 {{- end -}}
 
 {{/* Only process this title for pages that define the toroidal params in their frontmatter */}}
-{{- with $context.Params.ToroidalHomePage -}}
+{{- with $context.Params.toroidal_home_page -}}
   {{- $info        := partial "toroidal/utils/getPageInfo" $context -}}
   {{- $webringName := $info.WebringName                             -}}
   {{- $memberName  := $info.MemberName                              -}}
