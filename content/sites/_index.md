@@ -1,13 +1,13 @@
 ---
 # For more information about the available options for defining a member site,
-# see: http://platen.io/schemas/Toroidal/Content/Section/
+# see: http://platen.io/modules/toroidal/config/content/section/
 title: Platen Sites
 type: toroidal
 platen:
   menu:
     hide: true
 cascade:
-  ToroidalWebringName: Platen Site Ring
+  toroidal_webring_name: Platen Site Ring
 ---
 
 This is boilerplate text that is never shown. Hugo requires _some_ text in the body of a file to

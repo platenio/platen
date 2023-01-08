@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Themes.schema.yaml
+$id: themes.schema.yaml
 title: Toroidal Theme Style Modules
 description: Style options for the Toroidal module at the site level.
 schematize:
@@ -33,11 +33,11 @@ schematize:
     You can use `article.toroidal` to style content in the administration page and `nav.toroidal` to
     style the member page content. You can add another class to the selector, like
     `nav.toroidal .my-example` to target only a subset of content. You can inject classes into your
-    generated content with the [sref:`Toroidal.Class`] setting in the site configuration or
-    the [sref:`ToroidalClass`] setting in a page's front matter.
+    generated content with the [sref:`toroidal.class`] setting in the site configuration or
+    the [sref:`toroidal_class`] setting in a page's front matter.
 type: object
 properties:
-  Default:
+  default:
     title: Default Style Module
     description: Defines the default style module for Toroidal content in a site.
     schematize:

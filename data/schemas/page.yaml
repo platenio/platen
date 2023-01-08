@@ -8,8 +8,8 @@ type: object
 anyOf:
   - $ref: ./hugo/page.yaml
   - $ref: ./schematize/content/page.yaml
-  - $ref: ./Toroidal/Content/Admin.yaml
-  - $ref: ./Toroidal/Content/Member.yaml
+  - $ref: ./toroidal/content/admin.yaml
+  - $ref: ./toroidal/content/member.yaml
 properties:
   platen:
     $ref: ./platen/content/page.yaml

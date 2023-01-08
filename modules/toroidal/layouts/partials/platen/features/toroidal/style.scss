@@ -1,6 +1,6 @@
 {{- $context := . -}}
 {{- $themesToImport := slice -}}
-{{- range $theme, $enabled := $context.Site.Params.Toroidal.Themes -}}
+{{- range $theme, $enabled := $context.Site.Params.toroidal.themes -}}
   {{- if eq true $enabled -}}
     {{- $themesToImport = $themesToImport | append $theme -}}
   {{- else if $enabled -}}

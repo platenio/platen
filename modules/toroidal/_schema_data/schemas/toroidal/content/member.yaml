@@ -11,7 +11,7 @@ required:
   - name
   - description
   - weight
-  - ToroidalHomePage
+  - toroidal_home_page
 properties:
   name:
     title: Member Display Name
@@ -43,7 +43,7 @@ properties:
         deterministic and validly looping webring.
     type: integer
     minimum: 0
-  ToroidalHomePage:
+  toroidal_home_page:
     title: Member HomePage
     description: The URL to the webring member's home page.
     schematize:
@@ -52,7 +52,7 @@ properties:
         The URL to the webring member's home page. If this value isn't specified for a member, Hugo
         raises an error.
     type: string
-  ToroidalRandomMemberLink:
+  toroidal_random_member_link:
     title: Display Random Member
     description: Whether the navigation for a member should include a link to a random member
     schematize:
@@ -66,7 +66,7 @@ properties:
         default is `true`.
     type: boolean
     default: true
-  ToroidalClass:
+  toroidal_class:
     title: Additional Class
     description: Specifies one or more classes to append to the generated HTML for the webring
     schematize:
@@ -77,7 +77,7 @@ properties:
         themes to style a webring more specifically.
     type: string
     default: ""
-  ToroidalWebringName:
+  toroidal_webring_name:
     title: Webring Name
     description: Specifies the name of the webring
     schematize:
@@ -87,7 +87,7 @@ properties:
         member level, with the webring overriding the site and the member overriding both. If this
         value isn't specified, the default name `Webring` is used.
     type: string
-  ToroidalMemberName:
+  toroidal_member_name:
     title: Member Name
     description: Specifies the name of the member
     schematize:
@@ -96,7 +96,7 @@ properties:
         Specifies the name of the member. This setting overrides the value used in `name`. Use this
         when you want the page name and the member name to be different.
     type: string
-  ToroidalHideHeader:
+  toroidal_hide_header:
     title: Hide Header on Member Pages
     description: Specifies whether to hide the h2 header on this member page
     schematize:
@@ -106,7 +106,7 @@ properties:
         member page includes the webring's name as an `h2` at the top of the member's navigation.
 
         Set this value to `true` to hide the element on member pages for the page. This setting
-        overrides both [sref`Toroidal.HideHeader`] in the site's configuration and
-        [sref`ToroidalHeader`] in the webring's section page front matter, if set.
+        overrides both [sref`toroidal.hide_header`] in the site's configuration and
+        [sref`toroidal_hide_header`] in the webring's section page front matter, if set.
     type: boolean
     default: false

@@ -16,7 +16,7 @@ module:
     - path: github.com/platenio/platen/modules/toroidal
       mounts:
         - source: _docs/config
-          target: content/schemas/Toroidal
+          target: content/schemas/toroidal
           excludeFiles: /_index.md
         - source: _docs
           target: content/modules/toroidal

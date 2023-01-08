@@ -5,7 +5,7 @@ summary: |
   Defines theme modules to include for the Toroidal module
 weight: 1
 type: schematize
-schematize: Toroidal.Site.Themes
+schematize: toroidal.site.themes
 outputs:
   - HTML
   - Schematize

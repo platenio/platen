@@ -18,9 +18,9 @@ params:
           title: platen/features/toroidal/title
           style: platen/features/toroidal/style.scss
           menu: platen/features/toroidal/menu/render
-  Toroidal:
-    AdminDetails: default
-    RandomMemberLink: true
-    Mode: auto
-    Themes:
-      Default: true
+  toroidal:
+    admin_details: default
+    random_member_link: true
+    mode: auto
+    themes:
+      default: true

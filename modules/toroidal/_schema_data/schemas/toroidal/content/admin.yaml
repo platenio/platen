@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Admin.schema.yaml
+$id: admin.schema.yaml
 title: Admin Page Front Matter
 description: Settings for a Toroidal webring's administration page.
 schematize:
@@ -39,7 +39,7 @@ properties:
       - toroidal
     items:
       type: string
-  AdminDetails:
+  admin_details:
     title: Administration Details
     description: Specifies the partial to use for the "About Member Administration" details
     schematize:
@@ -47,7 +47,7 @@ properties:
       details: |
         This setting defines the partial to use for the "About Member Administration" `details`
         element in a webring's administration page. It inherits the site's
-        [sref:`Toroidal.AdminDetails`] setting. You can set it to `none` to intentionally exclude
+        [sref:`toroidal.admin_details`] setting. You can set it to `none` to intentionally exclude
         the details.
 
         The pre-defined options are:

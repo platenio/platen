@@ -1,11 +1,11 @@
 ---
 # For more information about the available options for defining a member site,
-# see: http://platen.io/schemas/Toroidal/Content/Section/
+# see: http://platen.io/modules/toroidal/config/content/section/
 title: Example Webring
 type: toroidal
 cascade:
   type: toroidal
-  ToroidalWebringName: Example Webring
+  toroidal_webring_name: Example Webring
 ---
 
 This is boilerplate text that is never shown. Hugo requires _some_ text in the body of a file to

@@ -1,6 +1,6 @@
 {{- $context := . -}}
 {{/* Only add page info for toroidal members; otherwise, error. */}}
-{{- with $context.Params.ToroidalHomePage -}}
+{{- with $context.Params.toroidal_home_page -}}
 {{- $lang := default $context.Site.Language.Lang $context.Site.LanguageCode -}}
 {{- $dir  := default "ltr" $context.Site.Language.LanguageDirection -}}
 <!DOCTYPE html>

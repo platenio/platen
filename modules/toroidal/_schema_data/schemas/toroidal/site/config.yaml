@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Config.schema.yaml
+$id: config.schema.yaml
 title: Toroidal Site Configuration
 description: Settings and options for the Toroidal module at the site level.
 schematize:
@@ -10,7 +10,7 @@ schematize:
     settings and options control how the Toroidal module behaves at the site level.
 type: object
 properties:
-  WebringName:
+  webring_name:
     title: Webring Name
     description: Specifies the name of the webring to host
     schematize:
@@ -21,13 +21,13 @@ properties:
         don't want to add an `_index.md` file.
 
         If you're hosting multiple webrings on the same site, every webring except one will need to
-        define a section page (`_index.md`) and override this value with `ToroidalWebringName` in
+        define a section page (`_index.md`) and override this value with `toroidal_webring_name` in
         the front matter.
 
-        This value can also be overridden on a per member basis with `ToroidalWebringName` in the
+        This value can also be overridden on a per member basis with `toroidal_webring_name` in the
         member page's front matter.
     type: string
-  RandomMemberLink:
+  random_member_link:
     title: Random Member Link
     description: Specifies whether to include a link to a random member in the ring navigation
     schematize:
@@ -46,15 +46,15 @@ properties:
         When there's connectivity to the webring host, the random member link instead calls the
         host's API for the most up-to-date list of members and randomly selects one.
 
-        This value can be overridden at the webring level by defining `ToroidalRandomMemberLink` in
-        the front matter of the webring's section (`_index.md`) page. It can also be overridden on a
-        per member basis with `ToroidalRandomMemberLink` in the member page's front matter.
+        This value can be overridden at the webring level by defining `toroidal_random_member_link`
+        in the front matter of the webring's section (`_index.md`) page. It can also be overridden
+        on a per member basis with `toroidal_random_member_link` in the member page's front matter.
 
         This value only affects the inclusion of the link in member navigation, not the availability
         of the API for the webring.
     type: boolean
     default: true
-  Class:
+  class:
     title: Additional Class
     description: Specifies one or more classes to append to the generated HTML for webrings
     schematize:
@@ -64,12 +64,12 @@ properties:
         multiple classes, separate each class with a space. You can use this value with the defined
         themes to style a webring more specifically.
 
-        This value can be overridden at the webring level by defining `ToroidalClass` in the front
+        This value can be overridden at the webring level by defining `toroidal_class` in the front
         matter of the webring's section (`_index.md`) page. It can also be overridden on a per
-        member basis with `ToroidalClass` in the member page's front matter.
+        member basis with `toroidal_class` in the member page's front matter.
     type: string
     default: ""
-  Mode:
+  mode:
     title: Display Mode
     description: >-
       Specifies whether the Toroidal pages on the site should display in light or dark mode or use
@@ -81,7 +81,7 @@ properties:
         dark mode (`dark`), or the mode that matches the site visitor's OS preferences (`auto`).
 
         This setting only has an effect if the module is used without the Platen module or when the
-        `Toroidal.Enabled` feature for Platen is set to `false`.
+        `toroidal.enabled` feature for Platen is set to `false`.
 
         This setting only affects the member pages and their iframes, not the rest of the site.
 
@@ -92,11 +92,11 @@ properties:
       - light
       - dark
     default: auto
-  Themes:
-    $ref: ./Themes.yaml
+  themes:
+    $ref: ./themes.yaml
     schematize:
       weight: 4
-  HideHeader:
+  hide_header:
     title: Hide Header on Member Pages
     description: Specifies whether to hide the h2 element on member pages
     schematize:
@@ -106,12 +106,12 @@ properties:
         member page includes the webring's name as an `h2` at the top of the member's navigation.
 
         Set this value to `true` to hide the element on member pages for the site. You can override
-        this setting on a per-webring basis by setting [sref:`ToroidalHideHeader`] in the webring's
-        section page front matter or by setting [sref:`ToroidalHideHeader`] in the member page's
-        front matter.
+        this setting on a per-webring basis by setting [sref:`toroidal_hide_header`] in the
+        webring's section page front matter or by setting [sref:`toroidal_hide_header`] in the
+        member page's front matter.
     type: boolean
     default: false
-  AdminDetails:
+  admin_details:
     title: Administration Details
     description: Specifies the partial to use for the "About Member Administration" details
     schematize:
@@ -157,7 +157,7 @@ properties:
         If the partial file name has the `.md` or `.markdown` extension, the partial renders the
         Markdown to HTML.
 
-        You can override this setting for any webring by setting [sref:`ToroidalAdminDetails`] in
+        You can override this setting for any webring by setting [sref:`toroidal_admin_details`] in
         the administration page's front matter.
     oneOf:
       - enum:

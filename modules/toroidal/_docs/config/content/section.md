@@ -6,7 +6,7 @@ summary: |
   in the page's front matter.
 weight: 4
 type: schematize
-schematize: Toroidal.Content.Section
+schematize: toroidal.content.section
 outputs:
   - HTML
   - Schematize

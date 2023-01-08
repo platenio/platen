@@ -48,7 +48,7 @@ properties:
             is processed after the theme's builtin styles but before the shortcode styles, allowing
             a shortcode to depend on it.
 
-            It imports every SCSS style module defined in [sref:`Toroidal.Themes`] that isn't disabled. The
+            It imports every SCSS style module defined in [sref:`toroidal.themes`] that isn't disabled. The
             style modules must be located in the `assets/toroidal/themes` folder.
 
             This value defaults to `platen/features/toroidal/style.scss`. You can set this to
@@ -57,7 +57,7 @@ properties:
             the functionality.
 
             <!-- Reference Links -->
-            [sref:`Toroidal.Themes`]: Toroidal.Site.Config.Themes
+            [sref:`toroidal.themes`]: toroidal.site.config.themes
         type: string
       title:
         title: Title Partial
@@ -69,7 +69,7 @@ properties:
             name of the browser tab and is used in Open Graph.
 
             This partial is called for all pages but only defines the title for member pages (pages
-            that define `Toroidal.HomePage` in their front matter). For all other pages, this
+            that define `toroidal_home_page` in their front matter). For all other pages, this
             partial returns an empty string.
 
             For member pages, this partial returns the title as `<Member Name> | <Webring Name>`.

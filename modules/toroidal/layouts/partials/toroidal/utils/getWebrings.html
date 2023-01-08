@@ -12,11 +12,11 @@
 {{- $webrings := slice -}}
 
 {{- range where $context.Site.Sections "Type" "toroidal" -}}
-  {{- if len (where .RegularPages "Params.ToroidalHomePage" "!=" nil) -}}
+  {{- if len (where .RegularPages "Params.toroidal_home_page" "!=" nil) -}}
     {{- $webrings = $webrings | append . -}}
   {{- end -}}
   {{- range .Sections -}}
-    {{- if len (where .RegularPages "Params.ToroidalHomePage" "!=" nil) -}}
+    {{- if len (where .RegularPages "Params.toroidal_home_page" "!=" nil) -}}
       {{- $webrings = $webrings | append . -}}
     {{- end -}}
   {{- end -}}

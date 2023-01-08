@@ -25,7 +25,7 @@ properties:
         level. Values for this setting override any set in the site configuration.
     type: object
     properties:
-      ToroidalWebringName:
+      toroidal_webring_name:
         title: Webring Name
         description: Specifies the name of the webring
         schematize:
@@ -35,7 +35,7 @@ properties:
             member level, with the webring overriding the site and the member overriding both. If this
             value isn't specified, the default name `Webring` is used.
         type: string
-      ToroidalRandomMemberLink:
+      toroidal_random_member_link:
         title: Display Random Member
         description: Whether the navigation for a member should include a link to a random member
         schematize:
@@ -49,7 +49,7 @@ properties:
             default is `true`.
         type: boolean
         default: true
-      ToroidalClass:
+      toroidal_class:
         title: Additional Class
         description: Specifies one or more classes to append to the generated HTML for the webring
         schematize:
@@ -60,7 +60,7 @@ properties:
             themes to style a webring more specifically.
         type: string
         default: ""
-      ToroidalHideHeader:
+      toroidal_hide_header:
         title: Hide Header on Member Pages
         description: Specifies whether to hide the h2 header on member pages in this webring
         schematize:
@@ -71,8 +71,8 @@ properties:
             navigation.
 
             Set this value to `true` to hide the element on member pages for this webring. This
-            setting overrides the [sref`Toroidal.HideHeader`] in the site's configuration. You can
-            override this setting on a per-member basis by setting [sref:`ToroidalHideHeader`] in
+            setting overrides the [sref`toroidal.hide_header`] in the site's configuration. You can
+            override this setting on a per-member basis by setting [sref:`toroidal_hide_header`] in
             the member page's front matter.
         type: boolean
         default: false

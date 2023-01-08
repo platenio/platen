@@ -12,7 +12,7 @@
   3. Returning the slice.
 */}}
 {{- $context := . -}}
-{{- $toroidalPages := where $context.Parent.RegularPages "Params.ToroidalHomePage" "!=" nil -}}
+{{- $toroidalPages := where $context.Parent.RegularPages "Params.toroidal_home_page" "!=" nil -}}
 {{- $memberPages := slice -}}
 {{- range $toroidalPages -}}
     {{- $memberPages = $memberPages | append . -}}
