@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: styles.schema.yaml
+title: Printing Style Modules
+description: Defines the map of printing-specific SCSS style modules for the theme.
+schematize:
+  details: |
+    Defines the map of printing-specific SCSS style modules for the theme. The existing value is a
+    map of styles that are loaded first for the theme and set defaults for the presentation.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all styles in your own configuration file. Only specify the values you want
+    to add or replace.
+
+    For more information on authoring SCSS style modules, see [the SCSS documentation][01].
+
+    <!-- Reference Links -->
+    [01]: https://sass-lang.com/documentation/at-rules/use
+type: object
+properties:
+  basic:
+    title: Basic Printing Style Module
+    description: Defines default styling when a site visitor prints a page.
+    schematize:
+      weight: 100
+      skipSchemaRender: true
+      details: |
+        Defines default styling when a site visitor prints a page. By default, the only setting for
+        this property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to `false`,
+        this style isn't applied to the site.
+
+        With [sref:`enabled`] set to `true`, Platen applies the following style to the site:
+
+        ```scss
+        @media print {
+          .platen-menu,
+          .platen-footer,
+          .platen-toc {
+            display: none;
+          }
+
+          .platen-header,
+          .platen-header aside {
+            display: block;
+          }
+
+          main {
+            // Fix for https://bugzilla.mozilla.org/show_bug.cgi?id=939897
+            display: block !important;
+          }
+        }
+        ```
+
+        This applies when a site visitor uses the print function while on a page, normally to export
+        the page as PDF or print it immediately.
+
+        It hides the site menu, footer, and page table of contents and ensures the header and body
+        content are visible.
+
+        You can overwrite this definition for your own site or theme by creating the file
+        `styles/printing/_basic.scss` in your [assets folder][01], which defaults to `assets` in
+        your project root.
+
+        ```details { .danger summary="Careful!" }
+        Note that if you create this file, it _entirely overwrites_ the default from the theme.
+        ```
+
+        For more information on authoring SCSS, see the [learning guide][02].
+
+        <!-- Reference Links -->
+        [01]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [02]: https://sass-lang.com/guide
+        [sref:`enabled`]: Platen.Site.theme.styles.defined.enabled
+    type: object

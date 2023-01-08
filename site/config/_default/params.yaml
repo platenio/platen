@@ -18,8 +18,8 @@ Schematize:
           srefBase: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
 
 Platen:
-  Theme:
-    Mode: auto                                # BookTheme
+  theme:
+    mode: auto                                # BookTheme
   display:
     table_of_contents:
       minimum_level: 1

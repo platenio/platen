@@ -220,9 +220,9 @@ properties:
 
         The container is uses [sref:`$padding-large`] to set the vertical margins. It adds a solid
         border with the width set to [sref:`$padding-minimal`], the border radius to
-        [sref:`Theme.Variables.LightCSS.color-link`], and the color to
-        [sref:`Theme.Variables.LightCSS.gray-200`] or [sref:`Theme.Variables.LightCSS.gray-200`]
-        depending on the value of the [sref:`Theme.Config.Mode`] setting.
+        [sref:`theme.variables.light_css.color-link`], and the color to
+        [sref:`theme.variables.light_css.gray-200`] or [sref:`theme.variables.light_css.gray-200`]
+        depending on the value of the [sref:`theme.config.mode`] setting.
 
         Is sets the [sref:`overflow`] attribute to hidden, which keeps any content that doesn't fit
         the container from displaying.
@@ -254,10 +254,10 @@ properties:
         and have their cursor always display as a normal pointer.
 
         When the input for a label is checked, the label's border color switches from being
-        transparent to the value of [sref:`Theme.Variables.LightCSS.color-link`] or
-        [sref:`Theme.Variables.LightCSS.color-link`] depending on the [sref:`Theme.Config.Mode`].
+        transparent to the value of [sref:`theme.variables.light_css.color-link`] or
+        [sref:`theme.variables.light_css.color-link`] depending on the [sref:`theme.config.mode`].
 
-        When the input for a label is focused, the label uses the [sref:`Theme.Styles.Utils.Outline`]
+        When the input for a label is focused, the label uses the [sref:`theme.styles.utils.outline`]
         mixin to add a full box outline to the label.
 
         ### Tab Content
@@ -279,8 +279,8 @@ properties:
         The tabs are all set to have an [sref:`order`] of 999, putting them together at the end of
         the flex box. They're set to have a width of 100% of their container and given a solid top
         border with a width of [sref:`$padding-minimal`] and their color set to either
-        [sref:`Theme.Variables.LightCSS.gray-200`] or [sref:`Theme.Variables.DarkCSS.gray-200`]
-        depending on the [sref:`Theme.Config.Mode`]. Their padding is set to
+        [sref:`theme.variables.light_css.gray-200`] or [sref:`theme.variables.dark_css.gray-200`]
+        depending on the [sref:`theme.config.mode`]. Their padding is set to
         [sref:`$padding-large`].
 
         Finally, their display is set to `none` so they're hidden until selected. When a tab is
@@ -310,16 +310,16 @@ properties:
         [sref:`flex-wrap`]: mdn.css:flex-wrap
         [sref:`order`]: mdn.css:order
         [sref:`overflow`]: mdn.css:overflow
-        [sref:`Theme.Config.Mode`]: Platen.Site.Theme.Config.Mode
-        [sref:`Theme.Styles.Utils.Outline`]: Platen.Site.Theme.Styles.Utils.Outline
-        [sref:`$border-radius`]: Platen.Site.Theme.Variables.BasicSCSS.border-radius
-        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
-        [sref:`$padding-medium`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
-        [sref:`$padding-minimal`]: Platen.Site.Theme.Variables.BasicSCSS.padding-minimal
-        [sref:`Theme.Variables.DarkCSS.gray-200`]: Platen.Site.Theme.Variables.DarkCSS.gray-200
-        [sref:`Theme.Variables.DarkCSS.link-color`]: Platen.Site.Theme.Variables.DarkCSS.link-color
-        [sref:`Theme.Variables.LightCSS.gray-200`]: Platen.Site.Theme.Variables.LightCSS.gray-200
-        [sref:`Theme.Variables.LightCSS.link-color`]: Platen.Site.Theme.Variables.LightCSS.link-color
+        [sref:`theme.config.mode`]: Platen.Site.theme.config.mode
+        [sref:`theme.styles.utils.outline`]: Platen.Site.theme.styles.utils.outline
+        [sref:`$border-radius`]: Platen.Site.theme.variables.basic_scss.border-radius
+        [sref:`$padding-large`]: Platen.Site.theme.variables.basic_scss.padding-large
+        [sref:`$padding-medium`]: Platen.Site.theme.variables.basic_scss.padding-large
+        [sref:`$padding-minimal`]: Platen.Site.theme.variables.basic_scss.padding-minimal
+        [sref:`theme.variables.dark_css.gray-200`]: Platen.Site.theme.variables.dark_css.gray-200
+        [sref:`theme.variables.dark_css.link-color`]: Platen.Site.theme.variables.dark_css.link-color
+        [sref:`theme.variables.light_css.gray-200`]: Platen.Site.theme.variables.light_css.gray-200
+        [sref:`theme.variables.light_css.link-color`]: Platen.Site.theme.variables.light_css.link-color
         [sref:flex box]: mdn.css:CSS_Flexible_Box_Layout
         [sref:radio input]: mdn.html.element:input/radio
         [sref:label]: mdn.html.element:label

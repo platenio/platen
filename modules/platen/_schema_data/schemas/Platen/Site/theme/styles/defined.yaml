@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: defined.schema.yaml
+title: Defined Style Module
+description: foo
+schematize:
+  details: |
+    All existing style modules, and any style module you add, must define the [sref:`enabled`]
+    property at a minimum. This allows theme developers and site maintainers to toggle individual
+    style modules on and off. You can add other key-values pairs to control how the style module
+    behaves, if you want. Those values will be available to the module when it's processed as a
+    template.
+
+    [sref:`enabled`]: Platen.Site.theme.styles.defined.enabled
+type: object
+required:
+  - enabled
+properties:
+  enabled:
+    title: Enable Module
+    description: Choose whether the module should be loaded into the theme.
+    type: boolean

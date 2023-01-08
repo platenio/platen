@@ -1,8 +1,8 @@
 Platen:
-  Theme:
-    Mode: auto
-    Variables:
-      BasicSCSS:
+  theme:
+    mode: auto
+    variables:
+      basic_scss:
         padding-minimal: 1px
         padding-small: 0.25rem
         padding-medium: 0.5rem
@@ -21,10 +21,10 @@ Platen:
           info: "#6bf"
           warning: "#fd6"
           danger: "#f66"
-      CalculatedSCSS:
+      calculated_scss:
         border-radius: $padding-small
         mobile-breakpoint: $menu-width + $body-min-width * 1.2 + $toc-width
-      LightCSS:
+      light_css:
         gray-100: "#f8f9fa"
         gray-200: "#e9ecef"
         gray-500: "#adb5bd"
@@ -33,7 +33,7 @@ Platen:
         body-background: white
         body-font-color: black
         icon-filter: none
-      DarkCSS:
+      dark_css:
         gray-100: rgba(255, 255, 255, 0.1)
         gray-200: rgba(255, 255, 255, 0.2)
         gray-500: rgba(255, 255, 255, 0.5)
@@ -42,115 +42,115 @@ Platen:
         body-background: "#343a40"
         body-font-color: "#e9ecef"
         icon-filter: brightness(0) invert(1)
-    Styles:
-      Base:
-        HTML:
-          Enabled: true
-        Body:
-          Enabled: true
-        Headings:
-          Enabled: true
-        Links:
-          Enabled: true
-        Images:
-          Enabled: true
-        Focus:
-          Enabled: true
-        Navigation:
-          Enabled: true
-        Pagination:
-          Enabled: true
-        Containers:
-          Enabled: true
-      Platen:
-        Icon:
-          Enabled: true
-        Brand:
-          Enabled: true
-        Menu:
-          Enabled: true
-        Page:
-          Enabled: true
-        Post:
-          Enabled: true
-        Header:
-          Enabled: true
-        Search:
-          Enabled: true
-        ToC:
-          Enabled: true
-        Footer:
-          Enabled: true
-        Comments:
-          Enabled: true
-        Languages:
-          Enabled: true
-        Responsiveness:
-          Enabled: true
-      Mobile:
-        Header:
-          Enabled: true
-        Menu:
-          Enabled: true
-        ToC:
-          Enabled: true
-      Wide:
-        Padding:
-          Enabled: true
-      Markdown:
-        Page:
-          Enabled: true
-        Headings:
-          Enabled: true
-        Links:
-          Enabled: true
-        Bold:
-          Enabled: true
-        Paragraphs:
-          Enabled: true
-        Images:
-          Enabled: true
-        Code:
-          Enabled: true
-        Blockquotes:
-          Enabled: true
-        Tables:
-          Enabled: true
-        Lists:
-          Enabled: true
-        Rulers:
-          Enabled: true
-        Figure:
-          Enabled: true
-        Inner:
-          Enabled: true
-      Utils:
-        Basic:
-          Enabled: true
-        Toggle:
-          Enabled: true
-        Clearfix:
-          Enabled: true
-        Spin:
-          Enabled: true
-        Fixed:
-          Enabled: true
-        Outline:
-          Enabled: true
-    Fonts:
-      Styles:
-        - ImportName: roboto
-      Settings:
-        Body:
-          Selector: body
-          Family: "'Roboto', sans-serif"
-        Code:
-          Selector: code
-          Family: "'Roboto Mono', monospace"
-    Printing:
-      Styles:
-        Basic:
-          Enabled: true
+    styles:
+      base:
+        html:
+          enabled: true
+        body:
+          enabled: true
+        headings:
+          enabled: true
+        links:
+          enabled: true
+        images:
+          enabled: true
+        focus:
+          enabled: true
+        navigation:
+          enabled: true
+        pagination:
+          enabled: true
+        containers:
+          enabled: true
+      platen:
+        icon:
+          enabled: true
+        brand:
+          enabled: true
+        menu:
+          enabled: true
+        page:
+          enabled: true
+        post:
+          enabled: true
+        header:
+          enabled: true
+        search:
+          enabled: true
+        table_of_contents:
+          enabled: true
+        footer:
+          enabled: true
+        comments:
+          enabled: true
+        languages:
+          enabled: true
+        responsiveness:
+          enabled: true
+      mobile:
+        header:
+          enabled: true
+        menu:
+          enabled: true
+        table_of_contents:
+          enabled: true
+      wide:
+        padding:
+          enabled: true
+      markdown:
+        page:
+          enabled: true
+        headings:
+          enabled: true
+        links:
+          enabled: true
+        bold:
+          enabled: true
+        paragraphs:
+          enabled: true
+        images:
+          enabled: true
+        code:
+          enabled: true
+        blockquotes:
+          enabled: true
+        tables:
+          enabled: true
+        lists:
+          enabled: true
+        rulers:
+          enabled: true
+        figure:
+          enabled: true
+        inner:
+          enabled: true
+      utils:
+        basic:
+          enabled: true
+        toggle:
+          enabled: true
+        clearfix:
+          enabled: true
+        spin:
+          enabled: true
+        fixed:
+          enabled: true
+        outline:
+          enabled: true
+    fonts:
+      styles:
+        - import_name: roboto
+      settings:
+        body:
+          selector: body
+          family: "'Roboto', sans-serif"
+        code:
+          selector: code
+          family: "'Roboto Mono', monospace"
+    printing:
+      styles:
+        basic:
+          enabled: true
   display:
     table_of_contents:
       minimum_level: 2

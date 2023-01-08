@@ -1,0 +1,195 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: light_css.schema.yaml
+title: Light Mode CSS Variables
+description: Defines custom CSS properties that define the light mode for the theme.
+schematize:
+  details: |
+    Defines [sref:custom CSS properties] that define the light mode for the theme. These values
+    control the display of the site when the [sref:`theme.mode`] is set to `light` or when set to
+    `auto` and the site visitor's OS preferences are set to light mode.
+
+    [sref:`theme.mode`]: Platen.Site.theme.config.mode
+    [sref:custom CSS properties]: mdn.css:Using_CSS_custom_properties
+type: object
+properties:
+  gray-100:
+    title: Lightest Gray
+    description: Defines the lightest gray color for the theme.
+    schematize:
+      weight: 1
+      details: |
+        Defines the lightest gray color for the theme. It defaults to `#f8f9fa`. You can specify any
+        You can specify any single [sref:valid color], or reference any color value defined in
+        [sref:`theme.variables.basic_scss`] or [sref:`theme.variables.calculated_scss`].
+
+        This value is used for:
+
+        - The background color of unhighlighted blocks of code
+        - The background color of even rows in tables
+        - The background dcolor of the site search box
+        - The border separating the tabs and content added with Platen's [tabs markup]
+
+        For more information on valid values, see {{% sref "color_value" "mdn.css" %}}`color`{{% /sref %}}.
+
+        [sref:valid color]: mdn.css:color_value
+        [sref:`theme.variables.basic_scss`]: Platen.Site.theme.variables.basic_scss
+        [sref:`theme.variables.calculated_scss`]: Platen.Site.theme.variables.calculated_scss
+        [tabs markup]: /modules/platen/markup/tabs
+    type: string
+    default: "#f8f9fa"
+  gray-200:
+    title: Light Gray
+    description: Defines the light gray color for the theme.
+    schematize:
+      weight: 2
+      details: |
+        Defines the light gray color for the theme. It defaults to `#e9ecef`. You can specify any
+        can specify any single [sref:valid color], or reference any color value defined in
+        [sref:`theme.variables.basic_scss`] or [sref:`theme.variables.calculated_scss`].
+
+        This value is used for:
+
+        - The opening border of blockquotes
+        - The background color of inline code
+        - The border for the `details` element
+        - The color of the `hr` element
+        - The border separating rows in tables
+        - The border for [tabs] containers
+
+        For more information on valid values, see {{% sref "color_value" "mdn.css" %}}`color`{{% /sref %}}.
+
+        [sref:valid color]: mdn.css:color_value
+        [sref:`theme.variables.basic_scss`]: Platen.Site.theme.variables.basic_scss
+        [sref:`theme.variables.calculated_scss`]: Platen.Site.theme.variables.calculated_scss
+        [tabs]: /modules/platen/markup/tabs
+    type: string
+    default: "#e9ecef"
+  gray-500:
+    title: Medium Gray
+    description: Defines the medium gray color for the theme.
+    schematize:
+      weight: 3
+      details: |
+        Defines the medium gray color for the theme. It defaults to `#adb5bd`. You can specify any
+        can specify any single [sref:valid color], or reference any color value defined in
+        [sref:`theme.variables.basic_scss`] or [sref:`theme.variables.calculated_scss`].
+
+        This value is used for the background color of the scrollbars for overflow content, when
+        visible.
+
+        For more information on valid values, see {{% sref "color_value" "mdn.css" %}}`color`{{% /sref %}}.
+
+        [sref:valid color]: mdn.css:color_value
+        [sref:`theme.variables.basic_scss`]: Platen.Site.theme.variables.basic_scss
+        [sref:`theme.variables.calculated_scss`]: Platen.Site.theme.variables.calculated_scss
+    type: string
+    default: "#adb5bd"
+  color-link:
+    title: Link Color
+    description: Defines the color of links for the theme.
+    schematize:
+      weight: 4
+      details: |
+        Defines the color of links for the theme. It defaults to `#0055bb`. You can specify any
+        single [sref:valid color], or reference any color value in
+        [sref:`theme.variables.basic_scss`] or [sref:`theme.variables.calculated_scss`].
+
+        This value is used for the color of:
+
+        - Normal links in the body
+        - The active page link in the site menu
+        - The text and border for [buttons]
+        - The bottom border of the open tab for a group added with the [tabs markup]
+
+        For more information on valid values, see {{% sref "color_value" "mdn.css" %}}`color`{{% /sref %}}.
+
+        [sref:valid color]: mdn.css:color_value
+        [sref:`theme.variables.basic_scss`]: Platen.Site.theme.variables.basic_scss
+        [sref:`theme.variables.calculated_scss`]: Platen.Site.theme.variables.calculated_scss
+        [buttons]: /modules/platen/markup/buttons
+        [tabs markup]: /modules/platen/markup/tabs
+    type: string
+    default: "#0055bb"
+  color-visited-link:
+    title: Visited Link Color
+    description: Defines the color of links for the theme.
+    schematize:
+      weight: 5
+      details: |
+        Defines the color of links for the theme. It defaults to `#8440f1`. You can specify any
+        single [sref:valid color], or reference any color value defined in
+        [sref:`theme.variables.basic_scss`] or [sref:`theme.variables.calculated_scss`]
+
+        This value is used for the color of normal links in the body that the site visitor has
+        already been to.
+
+        For more information on valid values, see {{% sref "color_value" "mdn.css" %}}`color`{{% /sref %}}.
+
+        [sref:valid color]: mdn.css:color_value
+        [sref:`theme.variables.basic_scss`]: Platen.Site.theme.variables.basic_scss
+        [sref:`theme.variables.calculated_scss`]: Platen.Site.theme.variables.calculated_scss
+    type: string
+    default: "#8440f1"
+  body-background:
+    title: Body Background
+    description: Defines the background of the page body for the theme.
+    schematize:
+      weight: 6
+      details: |
+        Defines the background of the page body for the theme. It defaults to `white`. You can
+        specify any single [sref:valid color], or reference any color value defined in
+        [sref:`theme.variables.basic_scss`] or [sref:`theme.variables.calculated_scss`]. You can also
+        specify any other valid value for the [sref:`background` CSS property], like an image or
+        multiple layers.
+
+        [sref:`background` CSS property]: mdn.css:background
+        [sref:valid color]: mdn.css:color_value
+        [sref:`theme.variables.basic_scss`]: Platen.Site.theme.variables.basic_scss
+        [sref:`theme.variables.calculated_scss`]: Platen.Site.theme.variables.calculated_scss
+    type: string
+    default: white
+  body-font-color:
+    title: Body Font Color
+    description: Defines the color of body text for the theme.
+    schematize:
+      weight: 7
+      details: |
+        Defines the color of body text for the theme. It defaults to `black`. You can specify any
+        single [sref:valid color], or reference any color value defined in
+        [sref:`theme.variables.basic_scss`] or [sref:`theme.variables.calculated_scss`].
+
+        This value is used for:
+
+        - The color of normal text in the body
+        - The color of text in the site search bar
+        - The color of the top border for the site search spinner, when visible
+
+        For more information on valid values, see {{% sref "color_value" "mdn.css" %}}`color`{{% /sref %}}
+
+        [sref:valid color]: mdn.css:color_value
+        [sref:`theme.variables.basic_scss`]: Platen.Site.theme.variables.basic_scss
+        [sref:`theme.variables.calculated_scss`]: Platen.Site.theme.variables.calculated_scss
+    type: string
+    default: black
+  icon-filter:
+    title: Icon Filter
+    description: Defines the filter to apply to icons for the theme.
+    schematize:
+      weight: 8
+      details: |
+        Defines the [sref:filter] to apply to icons for the theme. It defaults to `none`. You can
+        specify any single valid [sref:filter], or reference any filter value defined in
+        [sref:`theme.variables.basic_scss`] or [sref:`theme.variables.calculated_scss`].
+
+        This value is applied to any element with the `platen-icon` class, such as the site branding
+        icon, the calendar in the footer for last updated, the site menu and table of contents icons
+        in mobile view, and the language picker icon.
+
+        For more information on valid values, see {{% sref "filter" "mdn.css" /%}}.
+
+        [sref:filter]: mdn.css:filter
+        [sref:`theme.variables.basic_scss`]: Platen.Site.theme.variables.basic_scss
+        [sref:`theme.variables.calculated_scss`]: Platen.Site.theme.variables.calculated_scss
+    type: string
+    default: none

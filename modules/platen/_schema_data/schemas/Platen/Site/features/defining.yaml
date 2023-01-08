@@ -41,14 +41,14 @@ properties:
           details: |
             If specified, this partial is processed in the HTML header. This is useful for adding
             standalone styles, scripts, and metadata. To add a style that uses the SCSS style
-            modules defined in the [sref:`Theme`] settings, add a new map to [sref:`Theme.Styles`]
+            modules defined in the [sref:`theme`] settings, add a new map to [sref:`theme.styles`]
             or specify a [sref:`style`] partial for the feature.
 
             The partial is given the current page's context.
 
             <!-- Reference Links -->
-            [sref:`Theme`]: Platen.Site.Theme.Config
-            [sref:`Theme.Styles`]: Platen.Site.Theme.Config.Styles
+            [sref:`theme`]: Platen.Site.theme.config
+            [sref:`theme.styles`]: Platen.Site.theme.config.styles
             [sref:`style`]: Platen.Site.features.defining.partials.style
         type: string
       menu:

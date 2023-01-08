@@ -303,6 +303,6 @@ properties:
         [04]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
         [05]: https://sass-lang.com/guide
         [sref:`object-fit`]: mdn.css:object-fit
-        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`$padding-large`]: Platen.Site.theme.variables.basic_scss.padding-large
     type: string
     default: art

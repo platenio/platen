@@ -141,14 +141,14 @@ properties:
 
         It sets the display to [sref:`inline-block`] so the button can be added in the body text of
         a paragraph. It sets the font-size to the value of [sref:`$font-size-medium`], the text
-        color to [sref:`LightCSS.color-link`] or [sref:`DarkCSS.color-link`] depending on the value
-        of the [sref:`Theme.Config.Mode`] setting.
+        color to [sref:`light_css.color-link`] or [sref:`dark_css.color-link`] depending on the value
+        of the [sref:`theme.config.mode`] setting.
 
         It sets the horizontal padding for the button to [sref:`$padding-large`] and the line height
         to twice that value.
 
         It adds a minimal solid border with the width set to [sref:`$padding-minimal`], the color to
-        either [sref:`LightCSS.color-link`] or [sref:`DarkCSS.color-link`], and the radius to
+        either [sref:`light_css.color-link`] or [sref:`dark_css.color-link`], and the radius to
         [sref:`$border-radius`].
 
         It ensures that the cursor is a normal pointer and that no text decoration is added when a
@@ -175,12 +175,12 @@ properties:
         [03]: https://sass-lang.com/guide
         [sref:`<a>`]: mdn.html.element:a
         [sref:`inline-block`]: mdn.css:display-legacy
-        [sref:`Theme.Config.Mode`]: Platen.Site.Theme.Config.Mode
-        [sref:`$border-radius`]: Platen.Site.Theme.Variables.BasicSCSS.border-radius
-        [sref:`$font-size-medium`]: Platen.Site.Theme.Variables.BasicSCSS.font-size-medium
-        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
-        [sref:`$padding-minimal`]: Platen.Site.Theme.Variables.BasicSCSS.padding-minimal
-        [sref:`DarkCSS.color-link`]: Platen.Site.Theme.Variables.DarkCSS.color-link
-        [sref:`LightCSS.color-link`]: Platen.Site.Theme.Variables.LightCSS.color-link
+        [sref:`theme.config.mode`]: Platen.Site.theme.config.mode
+        [sref:`$border-radius`]: Platen.Site.theme.variables.basic_scss.border-radius
+        [sref:`$font-size-medium`]: Platen.Site.theme.variables.basic_scss.font-size-medium
+        [sref:`$padding-large`]: Platen.Site.theme.variables.basic_scss.padding-large
+        [sref:`$padding-minimal`]: Platen.Site.theme.variables.basic_scss.padding-minimal
+        [sref:`dark_css.color-link`]: Platen.Site.theme.variables.dark_css.color-link
+        [sref:`light_css.color-link`]: Platen.Site.theme.variables.light_css.color-link
     type: string
     default: buttons

@@ -215,7 +215,7 @@ properties:
         [02]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
         [03]: https://sass-lang.com/guide
         [sref:`flex-direction`]: mdn.css:flex-direction
-        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
-        [sref:`$body-min-width`]: Platen.Site.Theme.Variables.BasicSCSS.body-min-width
+        [sref:`$padding-large`]: Platen.Site.theme.variables.basic_scss.padding-large
+        [sref:`$body-min-width`]: Platen.Site.theme.variables.basic_scss.body-min-width
     type: string
     default: columns

@@ -10,8 +10,8 @@ schematize:
     with as little work as possible.
 type: object
 properties:
-  Theme:
-    $ref: ./Theme/Config.yaml
+  theme:
+    $ref: ./theme/config.yaml
     schematize:
       weight: 1
   display:

@@ -170,6 +170,6 @@ properties:
         [sref:`<dl>`]: mdn.html.element:dl
         [sref:`<dt>`]: mdn.html.element:dt
         [sref:`<dd>`]: mdn.html.element:dd
-        [sref:`$padding-large`]: Platen.Site.Theme.Variables.BasicSCSS.padding-large
+        [sref:`$padding-large`]: Platen.Site.theme.variables.basic_scss.padding-large
     type: string
     default: section

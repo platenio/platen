@@ -1,5 +1,5 @@
 {{- $context           := . -}}
-{{- $theme             := $context.Site.Params.Platen.Theme -}}
+{{- $theme             := $context.Site.Params.Platen.theme -}}
 {{- $variablesPartial  := "platen/utils/styles/variables"  -}}
 {{- $importPartial     := "platen/utils/styles/import"     -}}
 {{- $fontsPartial      := "platen/utils/styles/fonts"      -}}
@@ -7,14 +7,14 @@
 {{- $shortcodesPartial := "platen/utils/styles/shortcodes" -}}
 // Adds the basic SCSS variables. These can be strings or maps. Values in this
 // group must not reference other values, only primitives.
-{{- range $name, $value := $theme.Variables.BasicSCSS -}}
+{{- range $name, $value := $theme.variables.basic_scss -}}
   {{ $params := dict "Name" $name "Value" $value "IsDefault" true }}
   {{ partial $variablesPartial $params }}
 {{ end }}
 
 // Adds calculated SCSS variables which depend on previously declared variables
 // defined in the basic list.
-{{- range $name, $value := $theme.Variables.CalculatedSCSS }}
+{{- range $name, $value := $theme.variables.calculated_scss }}
   {{ $params := dict "Name" $name "Value" $value "IsDefault" true }}
   {{ partial $variablesPartial $params }}
 {{ end }}
@@ -24,14 +24,14 @@
 // in the site configuration. Further customization requires more in-depth
 // handling.
 @mixin theme-light {
-  {{ range $name, $value := $theme.Variables.LightCSS }}
+  {{ range $name, $value := $theme.variables.light_css }}
     {{ $params := dict "Name" $name "Value" $value "IsCSS" true }}
     {{ partial $variablesPartial $params }}
   {{ end }}
 }
 
 @mixin theme-dark {
-  {{ range $name, $value := $theme.Variables.DarkCSS }}
+  {{ range $name, $value := $theme.variables.dark_css }}
     {{ $params := dict "Name" $name "Value" $value "IsCSS" true }}
     {{ partial $variablesPartial $params }}
   {{ end }}
@@ -43,36 +43,36 @@
 
 // Modes determine whether the site uses light mode, dark mode, or automatically
 // shows the same mode as the site user's system preferences.
-@import "modes/{{ default "auto" $theme.Mode }}";
+@import "modes/{{ default "auto" $theme.mode }}";
 
 // Normalize the styles before applying specifics
 @import "normalize";
 
 // Utils need to be loaded before more specific / component-oriented styles
 // because they may/will use these utils.
-{{ partial $importPartial (dict "StylesMap" $theme.Styles.Utils "RootFolder" "utils") }}
+{{ partial $importPartial (dict "StylesMap" $theme.styles.utils "RootFolder" "utils") }}
 
 // The base styles for general structure on the site.
-{{ partial $importPartial (dict "StylesMap" $theme.Styles.Base "RootFolder" "base") }}
+{{ partial $importPartial (dict "StylesMap" $theme.styles.base "RootFolder" "base") }}
 
 // Applies to platen-specific components, but general - specifics for shortcodes
 // are handled on a per-shortcode basis.
-{{ partial $importPartial (dict "StylesMap" $theme.Styles.Platen "RootFolder" "platen") }}
+{{ partial $importPartial (dict "StylesMap" $theme.styles.platen "RootFolder" "platen") }}
 
 // Ensures functionality on mobile.
-{{ partial $importPartial (dict "StylesMap" $theme.Styles.Mobile "RootFolder" "mobile") }}
+{{ partial $importPartial (dict "StylesMap" $theme.styles.mobile "RootFolder" "mobile") }}
 
 // Applies when the screen is particularly wide.
-{{ partial $importPartial (dict "StylesMap" $theme.Styles.Wide "RootFolder" "wide") }}
+{{ partial $importPartial (dict "StylesMap" $theme.styles.wide "RootFolder" "wide") }}
 
 // Settings for when a site user tries to print a web page
-{{ partial $importPartial (dict "StylesMap" $theme.Printing.Styles "RootFolder" "printing") }}
+{{ partial $importPartial (dict "StylesMap" $theme.printing.styles "RootFolder" "printing") }}
 
 // Markdown covers article/post content, not the site-wide or structural items.
-{{ partial $importPartial (dict "StylesMap" $theme.Styles.Markdown "RootFolder" "markdown") }}
+{{ partial $importPartial (dict "StylesMap" $theme.styles.markdown "RootFolder" "markdown") }}
 
 // Add in all of the fonts.
-{{ partial $fontsPartial $theme.Fonts }}
+{{ partial $fontsPartial $theme.fonts }}
 
 // Loop over the enabled features, handling each in turn. Features must be independently styled.
 {{ range $feature, $settings := $context.Site.Params.Platen.features -}}
