@@ -75,9 +75,9 @@
 {{ partial $fontsPartial $theme.Fonts }}
 
 // Loop over the enabled features, handling each in turn. Features must be independently styled.
-{{ range $feature, $settings := $context.Site.Params.Platen.Features -}}
-  {{- if $settings.Enabled -}}
-    {{- with $settings.Partials.Style }}
+{{ range $feature, $settings := $context.Site.Params.Platen.features -}}
+  {{- if $settings.enabled -}}
+    {{- with $settings.partials.style }}
       {{ partial . $context }}
     {{- end -}}
   {{- end -}}

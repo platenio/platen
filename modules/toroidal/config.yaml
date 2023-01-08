@@ -11,13 +11,13 @@ outputFormats:
 
 params:
   Platen:
-    Features:
-      Toroidal:
-        Enabled: true
-        Partials:
-          Title: platen/features/toroidal/title
-          Style: platen/features/toroidal/style.scss
-          Menu: platen/features/toroidal/menu/render
+    features:
+      toroidal:
+        enabled: true
+        partials:
+          title: platen/features/toroidal/title
+          style: platen/features/toroidal/style.scss
+          menu: platen/features/toroidal/menu/render
   Toroidal:
     AdminDetails: default
     RandomMemberLink: true

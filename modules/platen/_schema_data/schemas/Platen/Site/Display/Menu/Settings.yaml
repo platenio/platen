@@ -22,10 +22,10 @@ schematize:
     For more information on how to define these settings, see [sref:Defining a Feature Menu Entry].
 
     For more information on how this setting is used internally and how to define a feature that can
-    support these menu items, see [sref:`Partials.Menu` in Defining Features].
+    support these menu items, see [sref:`partials.menu` in Defining Features].
 
     <!-- Reference Links -->
-    [sref:`Partials.Menu` in Defining Features]: Platen.Site.Features.Defining.Partials.Menu
+    [sref:`partials.menu` in Defining Features]: Platen.Site.features.defining.partials.menu
     [sref:`RootSection`]: Platen.Site.Display.Menu.Settings.RootSection
     [sref:`BeforeInjection`]: Platen.Site.Display.Menu.Settings.BeforeInjection
     [sref:`BeforeHugoConfig`]: Platen.Site.Display.Menu.Settings.BeforeHugoConfig
@@ -34,7 +34,7 @@ schematize:
     [sref:`AfterHugoConfig`]: Platen.Site.Display.Menu.Settings.AfterHugoConfig
     [sref:`AfterRootSection`]: Platen.Site.Display.Menu.Settings.AfterRootSection
     [sref:Defining a Feature Menu Entry]: Platen.Site.Display.Menu.Entry
-    [sref:features]: Platen.Site.Features.Defining
+    [sref:features]: Platen.Site.features.defining
 type: object
 properties:
   RootSection:

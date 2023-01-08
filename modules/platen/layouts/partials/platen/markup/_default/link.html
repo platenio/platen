@@ -1,4 +1,4 @@
-{{- if .Page.Site.Params.Platen.Features.PortableLinks.Enabled -}}
+{{- if .Page.Site.Params.Platen.features.portable_links.enabled -}}
   {{- template "portable-link" . -}}
 {{- else -}}
   {{- $href       := printf `href="%s"` (.Destination | safeURL) -}}

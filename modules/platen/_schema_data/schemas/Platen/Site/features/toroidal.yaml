@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Toroidal.schema.yaml
+$id: toroidal.schema.yaml
 title: Toroidal Webring Feature
 description: Settings that control Platen's integration with the Toroidal webring feature.
 schematize:
@@ -13,7 +13,7 @@ schematize:
     [01]: /modules/toroidal
 type: object
 properties:
-  Enabled:
+  enabled:
     title: Enable Toroidal integration
     description: Choose whether Platen integrates with Toroidal.
     schematize:
@@ -25,20 +25,20 @@ properties:
       weight: 1
     type: boolean
     default: true
-  Partials:
+  partials:
     title: Feature Partials
     description: Define a map of partials for Platen to inject as needed.
     schematize:
       details: |
         Define a map of partials for Platen to inject as needed. These partials are only
-        injected when [sref:`Enabled`] is set to `true`.
+        injected when [sref:`enabled`] is set to `true`.
 
         <!-- Reference Links -->
-        [sref:`Enabled`]: Platen.Site.Features.Toroidal.Enabled
+        [sref:`enabled`]: Platen.Site.features.toroidal.enabled
       weight: 2
     type: object
     properties:
-      Style:
+      style:
         title: Style Partial
         description: Injects a partial into the site's SCSS.
         schematize:
@@ -59,7 +59,7 @@ properties:
             <!-- Reference Links -->
             [sref:`Toroidal.Themes`]: Toroidal.Site.Config.Themes
         type: string
-      Title:
+      title:
         title: Title Partial
         description: Injects a partial to override the default HTML header title.
         schematize:

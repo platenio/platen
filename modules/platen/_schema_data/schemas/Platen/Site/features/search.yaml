@@ -1,11 +1,11 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Search.schema.yaml
+$id: search.schema.yaml
 title: Site Search Feature
 description: Settings that control the site's search feature.
 type: object
 properties:
-  Enabled:
+  enabled:
     title: Enable Site Search
     description: Choose whether site search is turned on.
     schematize:
@@ -14,20 +14,20 @@ properties:
       weight: 1
     type: boolean
     default: true
-  Partials:
+  partials:
     title: Feature Partials
     description: Define a map of partials for Platen to inject as needed.
     schematize:
       details: |
         Define a map of partials for Platen to inject as needed. These partials are only
-        injected when [sref:`Enabled`] is set to `true`.
+        injected when [sref:`enabled`] is set to `true`.
 
         <!-- Reference Links -->
-        [sref:`Enabled`]: Platen.Site.Features.Search.Enabled
+        [sref:`enabled`]: Platen.Site.features.search.enabled
       weight: 2
     type: object
     properties:
-      Header:
+      header:
         title: Header Partial
         description: Injects a partial into the HTML header.
         schematize:

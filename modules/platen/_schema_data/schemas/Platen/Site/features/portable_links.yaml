@@ -1,11 +1,11 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: PortableLinks.schema.yaml
+$id: portable_links.schema.yaml
 title: Portable Links Feature
 description: Settings that control the site's portable links feature.
 type: object
 properties:
-  Enabled:
+  enabled:
     title: Enable Portable Links
     description: Choose whether the site uses portable links
     schematize:

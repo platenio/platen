@@ -1,6 +1,6 @@
 const cacheName = self.location.pathname
 const pages = [
-{{ if eq .Site.Params.Platen.Features.PWA.Enabled "precache" }}
+{{ if eq .Site.Params.Platen.features.pwa.enabled "precache" }}
   {{ range .Site.AllPages -}}
   "{{ .RelPermalink }}",
   {{ end -}}

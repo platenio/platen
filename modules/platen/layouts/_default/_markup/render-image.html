@@ -3,9 +3,9 @@
 {{- $renderedImage := "" -}}
 
 {{/* Use renderers from features first */}}
-{{- range $feature := site.Params.Platen.Features -}}
-  {{- if and $feature.Enabled (eq "" $renderedImage) -}}
-    {{- with $feature.Partials.Renderers.Image -}}
+{{- range $feature := site.Params.Platen.features -}}
+  {{- if and $feature.enabled (eq "" $renderedImage) -}}
+    {{- with $feature.partials.renderers.image -}}
       {{- $renderedImage = partial . $params }}
     {{- end -}}
   {{- end -}}

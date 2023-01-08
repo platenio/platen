@@ -9,7 +9,7 @@
 
   This is currently commented out because the transition to 0.7.0+ will require substantial rework.
 
-{{- $searchApiVersion   := default "0.7.31" site.Params.Platen.Features.Search.FlexSearchVersion -}}
+{{- $searchApiVersion   := default "0.7.31" site.Params.Platen.features.search.flex_search_version -}}
 {{- $urlPrefix          := "https://rawcdn.githack.com/nextapps-de/flexsearch"                   -}}
 {{- $searchApiUrl       := printf "%s/%s/dist/flexsearch.bundle.js" $urlPrefix $searchApiVersion -}}
 {{- $searchApi          := resources.GetRemote $searchApiUrl | resources.Fingerprint             -}}

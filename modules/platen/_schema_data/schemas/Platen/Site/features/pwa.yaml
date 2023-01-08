@@ -1,11 +1,11 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Features.schema.yaml
+$id: pwa.schema.yaml
 title: Progressive Web Application Feature
 description: Settings that control the site's progressive web application feature.
 type: object
 properties:
-  Enabled:
+  enabled:
     title: Enable PWA
     description: Choose whether the site is generated as a PWA.
     schematize:
@@ -15,21 +15,21 @@ properties:
       weight: 1
     type: boolean
     default: true
-  Partials:
+  partials:
     title: Feature Partials
     description: Define a map of partials for Platen to inject as needed.
     schematize:
       details: |
         Define a map of partials for Platen to inject as needed. These partials are only
-        injected when [sref:`Enabled`] is set to `true`.
+        injected when [sref:`enabled`] is set to `true`.
 
         <!-- Reference Links -->
-        [sref:`Enabled`]: Platen.Site.Features.PWA.Enabled
+        [sref:`enabled`]: Platen.Site.features.pwa.enabled
       weight: 2
       skipSchemaRender: true
     type: object
     properties:
-      Header:
+      header:
         title: Header Partial
         description: Injects a partial into the HTML header.
         schematize:

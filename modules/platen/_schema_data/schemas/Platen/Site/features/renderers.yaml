@@ -1,32 +1,32 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Renderers.schema.yaml
+$id: renderers.schema.yaml
 title: Renderer Partials
 description: Registers one or more partials that act as render hooks.
 type: object
 schematize:
   details: |
     Defines a map of partials to use as Markdown render hooks. Like all partials, these are only
-    processed when `Enabled` is set to `true`.
+    processed when `enabled` is set to `true`.
 
     Supported renderer partials include:
 
-    - [sref:`Codeblock`], processed for fenced code blocks with a language ID
-    - [sref:`Heading`], processed for headings
-    - [sref:`Image`], processed for image links
-    - [sref:`Link`], processed for non-image links
+    - [sref:`codeblock`], processed for fenced code blocks with a language ID
+    - [sref:`heading`], processed for headings
+    - [sref:`image`], processed for image links
+    - [sref:`link`], processed for non-image links
 
     In all cases, all renderer partials for enabled features are checked one after the other unless
     they return a render string. Once an applicable partial returns a render string, no further
     render hook partials are processed for that specific content.
 
     <!-- Reference Links -->
-    [sref:`Codeblock`]: Platen.Site.Features.Renderers.Codeblock
-    [sref:`Heading`]: Platen.Site.Features.Renderers.Heading
-    [sref:`Image`]: Platen.Site.Features.Renderers.Image
-    [sref:`Link`]: Platen.Site.Features.Renderers.Link
+    [sref:`codeblock`]: Platen.Site.features.renderers.codeblock
+    [sref:`heading`]: Platen.Site.features.renderers.heading
+    [sref:`image`]: Platen.Site.features.renderers.image
+    [sref:`link`]: Platen.Site.features.renderers.link
 properties:
-  Codeblock:
+  codeblock:
     title: Codeblock Render Hook Partial
     description: Adds a partial to call when processing the codeblock render hook.
     schematize:
@@ -55,7 +55,7 @@ properties:
         [02]: /styling
         [03]: /styling
     type: string
-  Heading:
+  heading:
     title: Heading Render Hook Partial
     description: Adds a partial to call when processing the heading render hook.
     schematize:
@@ -84,7 +84,7 @@ properties:
         [02]: /styling
         [03]: /styling
     type: string
-  Image:
+  image:
     title: Image Render Hook Partial
     description: Adds a partial to call when processing the image render hook.
     schematize:
@@ -114,7 +114,7 @@ properties:
         [02]: /styling
         [03]: /styling
     type: string
-  Link:
+  link:
     title: Link Render Hook Partial
     description: Adds a partial to call when processing the link render hook.
     schematize:

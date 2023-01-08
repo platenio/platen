@@ -1,6 +1,6 @@
 {
-  "name": "{{ .Site.Title }}",
-  "short_name": "{{ .Site.Title }}",
+  "name": "{{ site.Title }}",
+  "short_name": "{{ site.Title }}",
   "start_url": "{{ "/" | relURL }}",
   "scope": "{{ "/" | relURL }}",
   "display": "standalone",

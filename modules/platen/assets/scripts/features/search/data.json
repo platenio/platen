@@ -1,5 +1,5 @@
 [
-{{- $pages := where .Site.Pages "Kind" "in" (slice "page" "section") -}}
+{{- $pages := where site.Pages "Kind" "in" (slice "page" "section") -}}
 {{- $pages = where $pages "Params.Platen.ExcludeFromSearch" "!=" true -}}
 {{- $pages = where $pages "Content" "not in" (slice nil "") -}}
 

@@ -18,7 +18,7 @@ properties:
     $ref: ./Display/Settings.yaml
     schematize:
       weight: 2
-  Features:
+  features:
     title: Feature Settings
     description: Settings that control Platen's features
     schematize:
@@ -29,25 +29,25 @@ properties:
         control their behavior.
     type: object
     properties:
-      Comments:
-        $ref: ./Features/Comments.yaml
+      comments:
+        $ref: ./features/comments.yaml
         schematize:
           weight: 1
-      PortableLinks:
-        $ref: ./Features/PortableLinks.yaml
+      portable_links:
+        $ref: ./features/portable_links.yaml
         schematize:
           weight: 2
-      PWA:
-        $ref: ./Features/PWA.yaml
+      pwa:
+        $ref: ./features/pwa.yaml
         schematize:
           weight: 3
-      Search:
-        $ref: ./Features/Search.yaml
+      search:
+        $ref: ./features/search.yaml
         schematize:
           weight: 4
     patternProperties:
       ".":
-        $ref: ./Features/Defining.yaml
+        $ref: ./features/defining.yaml
         schematize:
           href: pattern-any
   shortcodes:

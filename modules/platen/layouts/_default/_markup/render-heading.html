@@ -3,9 +3,9 @@
 {{- $renderedHeading := "" -}}
 
 {{/* Use renderers from features first */}}
-{{- range $feature := site.Params.Platen.Features -}}
-  {{- if and $feature.Enabled (eq "" $renderedHeading) -}}
-    {{- with $feature.Partials.Renderers.Heading -}}
+{{- range $feature := site.Params.Platen.features -}}
+  {{- if and $feature.enabled (eq "" $renderedHeading) -}}
+    {{- with $feature.partials.renderers.heading -}}
       {{- $renderedHeading = partial . $params }}
     {{- end -}}
   {{- end -}}

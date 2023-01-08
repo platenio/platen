@@ -162,19 +162,19 @@ Platen:
     MenuRootSection: /                        # BookSection
     Logo:
       URL: /images/logo.svg                   # BookLogo
-  Features:
-    Search:                                   # BookSearch
-      Enabled: true
-      Partials:
-        Header: platen/features/search/header
-    Comments:                                 # BookComments
-      Enabled: false
-    PWA:                                      # BookServiceWorker
-      Enabled: true
-      Partials:
-        Header: platen/features/pwa/header
-    PortableLinks:                            # BookPortableLinks
-      Enabled: true
+  features:
+    search:                                   # booksearch
+      enabled: true
+      partials:
+        header: platen/features/search/header
+    comments:                                 # bookcomments
+      enabled: false
+    pwa:                                      # bookserviceworker
+      enabled: true
+      partials:
+        header: platen/features/pwa/header
+    portable_links:                            # BookPortableLinks
+      enabled: true
   markup:
     art:
       enabled: true

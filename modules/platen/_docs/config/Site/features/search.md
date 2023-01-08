@@ -3,7 +3,7 @@ name: Search
 title: Site Search
 weight: 10
 type: schematize
-Schematize: Platen.Site.Features.Search
+Schematize: Platen.Site.features.search
 outputs:
   - HTML
   - Schematize

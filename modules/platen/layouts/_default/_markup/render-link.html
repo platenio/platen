@@ -3,9 +3,9 @@
 {{- $renderedLink := "" -}}
 
 {{/* Use renderers from features first */}}
-{{- range $feature := site.Params.Platen.Features -}}
-  {{- if and $feature.Enabled (eq "" $renderedLink) -}}
-    {{- with $feature.Partials.Renderers.Link -}}
+{{- range $feature := site.Params.Platen.features -}}
+  {{- if and $feature.enabled (eq "" $renderedLink) -}}
+    {{- with $feature.partials.renderers.link -}}
       {{- $renderedLink = partial . $params }}
     {{- end -}}
   {{- end -}}

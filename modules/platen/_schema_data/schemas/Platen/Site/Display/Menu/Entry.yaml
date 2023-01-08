@@ -52,8 +52,8 @@ properties:
         This value must map to the name of a feature that is usable for menu entries. A usable
         Feature:
 
-        1. Has [sref:`Enabled`] set to `true`.
-        2. Defines a value for [sref:`Partials.Menu`].
+        1. Has [sref:`enabled`] set to `true`.
+        2. Defines a value for [sref:`partials.menu`].
 
         If an entry references an unusable or non-existant feature, Hugo raises a warning and skips
         the entry.
@@ -61,8 +61,8 @@ properties:
         This setting is mandatory if the [sref:`Group`] setting isn't specified for the entry.
 
         <!-- Reference Links -->
-        [sref:`Enabled`]: Platen.Site.Features.Defining.Enabled
-        [sref:`Partials.Menu`]: Platen.Site.Features.Defining.Partials.Menu
+        [sref:`enabled`]: Platen.Site.features.defining.enabled
+        [sref:`partials.menu`]: Platen.Site.features.defining.partials.menu
         [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group
     type: string
   Weight:

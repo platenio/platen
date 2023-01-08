@@ -3,9 +3,9 @@
 {{- $renderedCode := "" -}}
 
 {{/* Use renderers from features first */}}
-{{- range $feature := site.Params.Platen.Features -}}
-  {{- if and $feature.Enabled (eq "" $renderedCode) -}}
-    {{- with $feature.Partials.Renderers.Codeblock -}}
+{{- range $feature := site.Params.Platen.features -}}
+  {{- if and $feature.enabled (eq "" $renderedCode) -}}
+    {{- with $feature.partials.renderers.codeblock -}}
       {{- $renderedCode = partial . $params }}
     {{- end -}}
   {{- end -}}

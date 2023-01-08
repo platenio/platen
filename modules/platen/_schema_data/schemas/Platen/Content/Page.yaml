@@ -31,12 +31,12 @@ properties:
     schematize:
       weight: 2
       details: |
-        Specifies whether to enable comments on the page, overriding the site's [sref:`Features.Comments.Enabled`]
+        Specifies whether to enable comments on the page, overriding the site's [sref:`features.comments.enabled`]
         setting for this page.
 
         Set this value to `true` to enable comments for the page and `false` to disable them.
 
-        [sref:`Features.Comments.Enabled`]: Platen.Site.Features.Comments.Enabled
+        [sref:`features.comments.enabled`]: Platen.Site.features.comments.enabled
     type: boolean
   ExcludeFromSearch:
     title: Exclude from Search
@@ -45,9 +45,9 @@ properties:
       weight: 3
       details: |
         Specifies whether to exclude the page from site search results. This setting is only
-        effective when the site's [sref:`Features.Search.Enabled`] setting is set to `true`.
+        effective when the site's [sref:`features.search.enabled`] setting is set to `true`.
 
-        [sref:`Features.Search.Enabled`]: Platen.Site.Features.Search.Enabled
+        [sref:`features.search.enabled`]: Platen.Site.features.search.enabled
     type: boolean
   Menu:
     title: Site Menu Options

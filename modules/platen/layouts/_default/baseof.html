@@ -80,7 +80,7 @@
 {{ end }}
 
 {{ define "comments" }}
-  {{ $commentsEnabled := default .Site.Params.Platen.Features.Comments.Enabled
+  {{ $commentsEnabled := default .Site.Params.Platen.features.comments.enabled
                                  .Params.Platen.EnableComments
   }}
   {{ if and .Content (default false $commentsEnabled) }}
