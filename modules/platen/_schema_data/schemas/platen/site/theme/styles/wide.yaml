@@ -22,7 +22,7 @@ properties:
     description: Defines the container padding when the screen is particularly wide.
     schematize:
       weight: 100
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the container padding when the screen is particularly wide. By default, the only
         setting for this property is [sref:`enabled`], which defaults to `true`. If you set

@@ -1,7 +1,7 @@
 ---
 name: privacy
 title: Hugo Privacy Configuration
-Schematize: privacy
+schematize: privacy
 type: schematize
 outputs:
   - Schematize

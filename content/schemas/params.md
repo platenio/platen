@@ -1,7 +1,7 @@
 ---
 name: params
 title: Hugo Parameters Configuration
-Schematize: params
+schematize: params
 type: schematize
 outputs:
   - Schematize

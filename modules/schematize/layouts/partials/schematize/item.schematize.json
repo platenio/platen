@@ -3,7 +3,7 @@
   data. For example, `foo.bar.baz` maps to `data/schemas/foo/bar/baz.yaml`.
 */}}
 {{- $context     := .                          -}}
-{{- $schema_path := $context.Params.Schematize -}}
+{{- $schema_path := $context.Params.schematize -}}
 {{- $schemaData  := site.Data.schemas          -}}
 {{- range $level := split $schema_path "."     -}}
   {{- $schemaData = index $schemaData $level -}}

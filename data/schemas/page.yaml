@@ -7,7 +7,7 @@ schematize:
 type: object
 anyOf:
   - $ref: ./hugo/page.yaml
-  - $ref: ./Schematize/Content/Page.yaml
+  - $ref: ./schematize/content/page.yaml
   - $ref: ./Toroidal/Content/Admin.yaml
   - $ref: ./Toroidal/Content/Member.yaml
 properties:

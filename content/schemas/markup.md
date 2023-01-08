@@ -1,7 +1,7 @@
 ---
 name: markup
 title: Hugo Markup Configuration
-Schematize: markup
+schematize: markup
 type: schematize
 outputs:
   - Schematize

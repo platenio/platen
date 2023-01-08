@@ -1,7 +1,7 @@
 ---
 name: imaging
 title: Image Processing Options
-Schematize: hugo.properties.imaging
+schematize: hugo.properties.imaging
 type: schematize
 outputs:
   - Schematize

@@ -67,7 +67,7 @@ properties:
     type: object
     schematize:
       weight: 2
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         This setting allows you to add menu entries for the feature at the very top of the site
         menu, after the brand and search section.
@@ -115,7 +115,7 @@ properties:
     type: object
     schematize:
       weight: 3
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         This setting allows you to add menu entries for the feature after any from the injection
         partial but before the entries from the `menu.before` setting in Hugo's configuration
@@ -164,7 +164,7 @@ properties:
     type: object
     schematize:
       weight: 4
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         This setting allows you to add menu entries for the feature after the entries from the
         `menu.before` setting in Hugo's configuration file but before the content added from the
@@ -213,7 +213,7 @@ properties:
     type: object
     schematize:
       weight: 5
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         This setting allows you to add menu entries for the feature after the content added from
         the root content section by Platen but before the entries from the `menu.after` setting
@@ -262,7 +262,7 @@ properties:
     type: object
     schematize:
       weight: 6
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         This setting allows you to add menu entries for the feature after the entries from the
         `menu.after` setting in Hugo's configuration file but before the injection partial.
@@ -310,7 +310,7 @@ properties:
     type: object
     schematize:
       weight: 7
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         This setting allows you to add menu entries for the feature at the very bottom of the
         site menu after everything else.

@@ -23,7 +23,7 @@ properties:
     description: Defines default styling when a site visitor prints a page.
     schematize:
       weight: 100
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines default styling when a site visitor prints a page. By default, the only setting for
         this property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to `false`,

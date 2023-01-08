@@ -1,7 +1,7 @@
 ---
 name: minify
 title: Hugo Minify Configuration
-Schematize: minify
+schematize: minify
 type: schematize
 outputs:
   - Schematize

@@ -3,7 +3,7 @@ name: Site
 title: Configuration
 weight: 1
 type: schematize
-Schematize: platen.site.config
+schematize: platen.site.config
 outputs:
   - HTML
   - Schematize

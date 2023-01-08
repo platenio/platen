@@ -1,7 +1,7 @@
 ---
 name: languages
 title: Language Options
-Schematize: hugo.properties.languages
+schematize: hugo.properties.languages
 type: schematize
 outputs:
   - Schematize

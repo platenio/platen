@@ -347,7 +347,7 @@ properties:
     title: Details Colors
     description: Defines colors for details elements.
     schematize:
-      skipSchemaRender: true
+      skip_schema_render: true
       weight: 15
       details: |
         Defines colors for details elements created by Platen's [details markup][01]. The existing

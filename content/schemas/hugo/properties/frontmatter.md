@@ -1,7 +1,7 @@
 ---
 name: frontmatter
 title: Front Matter Options
-Schematize: hugo.properties.frontmatter
+schematize: hugo.properties.frontmatter
 type: schematize
 outputs:
   - Schematize

@@ -6,7 +6,7 @@ summary: |
   control host you're using
 weight: 1
 type: schematize
-Schematize: platen.site.repository.settings
+schematize: platen.site.repository.settings
 outputs:
   - HTML
   - Schematize

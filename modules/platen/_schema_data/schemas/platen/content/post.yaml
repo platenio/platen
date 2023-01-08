@@ -46,7 +46,7 @@ properties:
     description: Overrides the site's table of contents configuration for this page.
     schematize:
       weight: 4
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines overrides the site's table of contents configuration for this page.
     type: object
@@ -162,16 +162,16 @@ properties:
       details: |
         Specifies a map of options for Platen's markup, allowing you to override site-level defaults
         for a markup on a per-page basis.
-      skipSchemaRender: true
+      skip_schema_render: true
     type: object
     properties:
       katex:
         $ref: ./markup/katex.yaml
         schematize:
           weight: 1
-          skipSchemaRender: true
+          skip_schema_render: true
       mermaid:
         $ref: ./markup/mermaid.yaml
         schematize:
           weight: 2
-          skipSchemaRender: true
+          skip_schema_render: true

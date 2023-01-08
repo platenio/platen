@@ -18,7 +18,7 @@ properties:
     description: Defines the style for Platen icons
     schematize:
       weight: 1
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for Platen icons. By default, the only setting for this property is
         [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to `false`, this
@@ -64,7 +64,7 @@ properties:
     description: Defines the style for the branding elements.
     schematize:
       weight: 2
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for the branding elements. By default, the only setting for this property
         is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to `false`, this
@@ -115,7 +115,7 @@ properties:
     description: Defines the styles for the site menu.
     schematize:
       weight: 3
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the styles for the site menu. By default, the only setting for this property is
         [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to `false`, this
@@ -364,7 +364,7 @@ properties:
     description: Defines the style for the platen-page class.
     schematize:
       weight: 4
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for elements with the `platen-page` class. By default, the only setting
         for this property is [sref:`enabled`], which defaults to `true`. If you set
@@ -407,7 +407,7 @@ properties:
     description: Defines the style for the platen-post class.
     schematize:
       weight: 5
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for the `platen-post` class. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -444,7 +444,7 @@ properties:
     description: Defines the style for the platen-header class.
     schematize:
       weight: 6
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for the platen-header class. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -495,7 +495,7 @@ properties:
     description: Defines the style for the site search elements.
     schematize:
       weight: 7
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for the site search elements. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -672,7 +672,7 @@ properties:
     description: Defines the style for the table of contents on a page.
     schematize:
       weight: 8
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for the table of contents on a page. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -742,7 +742,7 @@ properties:
     description: Defines the styles for the page footer.
     schematize:
       weight: 9
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the styles for the page footer. By default, the only setting for this property is
         [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to `false`, this
@@ -793,7 +793,7 @@ properties:
     description: Defines the style for comments sections.
     schematize:
       weight: 10
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for comments sections. By default, the only setting for this property is
         [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to `false`, this style isn't
@@ -831,7 +831,7 @@ properties:
     description: Defines the ? style for ?.
     schematize:
       weight: 11
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the languages style for Platen. By default, the only setting for this property is [sref:`enabled`],
         which defaults to `true`. If you set [sref:`enabled`] to `false`, this style isn't applied to the
@@ -885,7 +885,7 @@ properties:
     description: Defines the responsiveness behavior for elements.
     schematize:
       weight: 12
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the responsiveness behavior for elements. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to

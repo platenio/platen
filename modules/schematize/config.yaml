@@ -4,7 +4,7 @@ module:
     min: 0.104.0
 
 outputFormats:
-  Schematize:
+  schematize:
     mediaType: application/json
     baseName: schema
     isPlainText: true
@@ -22,5 +22,5 @@ params:
         partials:
           renderers:
             link: schematize/sref/markup/renderers/links
-  Schematize:
-    SchemaRoot: schemas
+  schematize:
+    schema_root: schemas

@@ -35,7 +35,7 @@ module:
     - path: github.com/platenio/platen/modules/schematize
       mounts:
         - source: _docs/config
-          target: content/schemas/Schematize
+          target: content/schemas/schematize
           excludeFiles: /_index.md
         - source: _docs
           target: content/modules/schematize

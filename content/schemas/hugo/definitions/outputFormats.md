@@ -1,7 +1,7 @@
 ---
 name: outputFormats
 title: Output Formats
-Schematize: hugo.definitions.outputFormats
+schematize: hugo.definitions.outputFormats
 type: schematize
 outputs:
   - Schematize

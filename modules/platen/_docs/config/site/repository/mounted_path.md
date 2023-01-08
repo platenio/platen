@@ -5,7 +5,7 @@ summary: |
   Maps a mounted content path from repository-relative to site-relative.
 weight: 2
 type: schematize
-Schematize: platen.site.repository.mounted_path
+schematize: platen.site.repository.mounted_path
 outputs:
   - HTML
   - Schematize

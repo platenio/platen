@@ -7,12 +7,12 @@
 
 {{- $schema_path := $params.Get "path"
                     | default ($params.Get 0)
-                    | default $page.Params.Schematize
+                    | default $page.Params.schematize
 -}}
 {{- $schema_root := $params.Get "root"
                     | default ($params.Get 1)
-                    | default $page.Params.SchematizeRoot
-                    | default site.Params.Schematize.SchemaRoot
+                    | default $page.Params.schematize_root
+                    | default site.Params.schematize.schema_root
 -}}
 
 {{- with $schema_path -}}

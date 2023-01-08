@@ -23,7 +23,7 @@ properties:
     description: Settings that control Platen's features
     schematize:
       weight: 3
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Platen and its modules include several features that you can use in your site. These settings
         control their behavior.
@@ -55,7 +55,7 @@ properties:
     description: Configure registered shortcodes
     schematize:
       weight: 4
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the configuration for shortcodes that integrate with Platen.
 

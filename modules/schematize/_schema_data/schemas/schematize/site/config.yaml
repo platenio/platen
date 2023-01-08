@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Config.schema.yaml
+$id: config.schema.yaml
 title: Site Configuration
 description: Settings and options for the Schematize module at the site level.
 schematize:
@@ -10,5 +10,5 @@ schematize:
     is rendered.
 type: object
 properties:
-  ReferenceMap:
-    $ref: ./ReferenceMap.yaml
+  reference_map:
+    $ref: ./reference_map.yaml

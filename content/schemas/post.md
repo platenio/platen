@@ -1,7 +1,7 @@
 ---
 name: post
 title: Post Front Matter
-Schematize: post
+schematize: post
 type: schematize
 outputs:
   - Schematize

@@ -1,7 +1,7 @@
 ---
 name: module
 title: Hugo Module Configuration
-Schematize: module
+schematize: module
 type: schematize
 outputs:
   - Schematize

@@ -18,7 +18,7 @@ properties:
     description: Values in this setting are applied by default to pages in this section.
     schematize:
       weight: 1
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Specifies values to apply to pages in this section by default. If a page also defines one of
         these settings, the value in the page's frontmatter overrides any set here at the section

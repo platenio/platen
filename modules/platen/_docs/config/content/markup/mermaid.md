@@ -5,7 +5,7 @@ summary: |
   Defines optional settings for overriding site configuration for the Mermaid markup option.
 weight: 1
 type: schematize
-Schematize: platen.content.markup.mermaid
+schematize: platen.content.markup.mermaid
 outputs:
   - HTML
   - Schematize

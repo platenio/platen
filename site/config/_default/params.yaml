@@ -2,20 +2,20 @@ description: A toolkit for interactive digital books.
 images:
   - /images/logo.svg
 
-Schematize:
-  ReferenceMap:
+schematize:
+  reference_map:
     mdn:
-      srefSuffix: in the MDN documentation
-      srefBase: https://developer.mozilla.org/docs
+      sref_suffix: in the MDN documentation
+      sref_base: https://developer.mozilla.org/docs
       css:
-        srefBase: https://developer.mozilla.org/docs/Web/CSS
+        sref_base: https://developer.mozilla.org/docs/Web/CSS
       html:
         element:
-          srefBase: https://developer.mozilla.org/en-US/docs/Web/HTML/Element
+          sref_base: https://developer.mozilla.org/en-US/docs/Web/HTML/Element
         attribute:
-          srefBase: https://developer.mozilla.org/docs/HTML/Attributes
+          sref_base: https://developer.mozilla.org/docs/HTML/Attributes
         global_attribute:
-          srefBase: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
+          sref_base: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
 
 platen:
   theme:

@@ -4,7 +4,7 @@ $id: Config.schema.yaml
 title: Toroidal Site Configuration
 description: Settings and options for the Toroidal module at the site level.
 schematize:
-  # skipSchemaRender: true
+  # skip_schema_render: true
   details: |
     The Toroidal module makes it simpler to host webrings from a static site built with Hugo. These
     settings and options control how the Toroidal module behaves at the site level.

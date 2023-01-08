@@ -54,7 +54,7 @@ properties:
         <!-- Reference Links -->
         [sref:`enabled`]: platen.site.markup.defining.enabled
       weight: 2
-      skipSchemaRender: true
+      skip_schema_render: true
     type: object
     properties:
       header:
@@ -248,7 +248,7 @@ properties:
     description: Defines the markup's simple style module
     schematize:
       weight: 2
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the name of the markup's style module. This setting can be omitted if the
         markup has no specific styling needs (if it relies on existing or otherwise

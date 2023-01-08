@@ -6,7 +6,7 @@ summary: |
   post's front matter.
 weight: 2
 type: schematize
-Schematize: platen.content.post
+schematize: platen.content.post
 outputs:
   - HTML
   - Schematize

@@ -105,4 +105,4 @@ properties:
       schematize:
         details: |
           Nested entries follow the same rules as other entries and have the same considerations.
-        skipMoreInfo: true
+        skip_more_info: true

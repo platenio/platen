@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: ReferenceMap.schema.yaml
+$id: reference_map.schema.yaml
 title: Schematize Reference Map
 description: Defines a map of reference targets for schematized documentation.
 schematize:
@@ -9,8 +9,8 @@ schematize:
     reference documentation. An entry in the `sref_map` defines information for the shortcode
     and renderer to use when referencing external documentation.
 
-    The [sref:`srefBase`] setting defines the base URL for the reference. The
-    [sref:`srefSuffix`] setting defines an optional automatic postix to add to the link text
+    The [sref:`sref_base`] setting defines the base URL for the reference. The
+    [sref:`sref_suffix`] setting defines an optional automatic postix to add to the link text
     when using the shortcode and is ignored by the link renderer.
 
     You can arbitrarily nest maps within each other to keep references from the same source but
@@ -19,13 +19,13 @@ schematize:
     For example, you could define a map for Mozilla's web documentation like this:
 
     ```yaml
-    Schematize:
-      ReferenceMap:
+    schematize:
+      reference_map:
         mdn:
-          srefSuffix: in the MDN documentation
-          srefBase: https://developer.mozilla.org/docs
+          sref_suffix: in the MDN documentation
+          sref_base: https://developer.mozilla.org/docs
           css:
-            srefBase: https://developer.mozilla.org/docs/Web/CSS
+            sref_base: https://developer.mozilla.org/docs/Web/CSS
     ```
 
     And then access it with in the link reference:
@@ -43,14 +43,14 @@ schematize:
     [sref:`text-decoration`]: mdn.css:text-decoration
 type: object
 properties:
-  srefSuffix:
-    title: Postfix
+  sref_suffix:
+    title: Postfix Markdown
     description: Markdown text to add after input text when rendering an sref shortcode
     schematize:
       details: |
         Specifies Markdown text to add after input text when rendering an sref shortcode.
     type: string
-  srefBase:
+  sref_base:
     title: Base URL
     description: The base URL to prefix sref values with for this target.
     schematize:
@@ -65,4 +65,4 @@ patternProperties:
     description: Defines a nested schema reference map
     schematize:
       href: pattern-not-builtin
-    $ref: ./ReferenceMap.yaml
+    $ref: ./reference_map.yaml

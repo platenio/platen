@@ -89,7 +89,7 @@ properties:
         <!-- Reference Links -->
         [sref:`enabled`]: platen.site.markup.mermaid.enabled
       weight: 100
-      skipSchemaRender: true
+      skip_schema_render: true
     type: object
     properties:
       header:
@@ -117,7 +117,7 @@ properties:
         description: Registers one or more partials that act as render hooks.
         type: object
         schematize:
-          skipSchemaRender: true
+          skip_schema_render: true
           details: |
             Defines a map of partials to use as Markdown render hooks. Like all partials, these are
             only processed when [sref:`enabled`] is set to `true`.

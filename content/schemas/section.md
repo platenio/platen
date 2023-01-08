@@ -1,7 +1,7 @@
 ---
 name: section
 title: Section Front Matter
-Schematize: section
+schematize: section
 type: schematize
 outputs:
   - Schematize

@@ -22,7 +22,7 @@ properties:
     title: Body Font Settings
     description: Settings for the font of body text.
     schematize:
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the font settings for body text on the site. By default, the selector is `body`,
         which applies the fonts to everything. The family is set to `'Roboto', sans-serif`. The
@@ -35,7 +35,7 @@ properties:
     title: Code Font Settings
     description: Settings for the font of inline and block code.
     schematize:
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the font settings for inline and block code on the site. By default, the selector is
         `code`, which applies the fonts to everything in that element. The family is set to

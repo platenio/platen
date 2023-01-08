@@ -11,10 +11,10 @@
 {{- if eq "" $reference -}}
   {{- errorf "Missing mandatory schematize reference for specified sref %#v" $params -}}
 {{- else -}}
-  {{- $schematizePages := where site.Pages "Params.Schematize" "!=" nil -}}
+  {{- $schematizePages := where site.Pages "Params.schematize" "!=" nil -}}
 
   {{- range $page := $schematizePages -}}
-    {{- if eq $page.Params.Schematize $reference -}}
+    {{- if eq $page.Params.schematize $reference -}}
       {{- $href = $page.Permalink }}
     {{- end -}}
   {{- end -}}

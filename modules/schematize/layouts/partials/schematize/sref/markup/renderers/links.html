@@ -8,7 +8,7 @@
 {{- $linkText    := ""                                   -}}
 
 {{/*
-  Given the page has Schematize: platen.content.post
+  Given the page has schematize: platen.content.post
 
   [sref:`foo.bar`](platen.site.themes.foo.bar) => [`Foo.Bar`](/Schemas/platen/site/themes/foo#bar)
   [sref:`color`](mdn.css:color) => [`color`] => [`color](https://mozilla.dev/web/css/color)
@@ -25,7 +25,7 @@
     {{- $refTarget = index $destinationInfo 0 -}}
     {{- $reference = index $destinationInfo 1 -}}
   {{- else -}}
-    {{- with $params.Page.Params.Schematize -}}
+    {{- with $params.Page.Params.schematize -}}
       {{- $reference = . -}}
     {{- else -}}
       {{- errorf "No schematize target or path found for sref link" -}}

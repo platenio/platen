@@ -99,4 +99,4 @@ properties:
     $ref: ./group.yaml
     schematize:
       weight: 100
-      skipMoreInfo: true
+      skip_more_info: true

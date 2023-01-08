@@ -18,7 +18,7 @@ properties:
     description: Defines the style for the page container for Markdown content.
     schematize:
       weight: 1
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for the page container for Markdown content. By default, the only setting
         for this property is [sref:`enabled`], which defaults to `true`. If you set
@@ -59,7 +59,7 @@ properties:
     description: Defines styles for headings in Markdown content.
     schematize:
       weight: 2
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines styles for headings in Markdown content. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -169,7 +169,7 @@ properties:
     description: Defines the styles for links in Markdown content.
     schematize:
       weight: 3
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the styles for links in Markdown content. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -215,7 +215,7 @@ properties:
     description: Defines the bolding behavior styles for Markdown content.
     schematize:
       weight: 4
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the bolding behavior styles for Markdown content. By default, the only setting for
         this property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -255,7 +255,7 @@ properties:
     description: Defines the style for paragraphs in Markdown content.
     schematize:
       weight: 5
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for paragraphs in Markdown content. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -293,7 +293,7 @@ properties:
     description: Defines the style for images in Markdown content.
     schematize:
       weight: 6
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for images in Markdown content. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -332,7 +332,7 @@ properties:
     description: Defines styles for inline and blocks of code in Markdown content.
     schematize:
       weight: 7
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines styles for inline and blocks of code in Markdown content. By default, the only
         setting for this property is [sref:`enabled`], which defaults to `true`. If you set
@@ -438,7 +438,7 @@ properties:
     description: Defines the style for blockquotes in Markdown.
     schematize:
       weight: 8
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for blockquotes in Markdown. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -486,7 +486,7 @@ properties:
     description: Defines the style for tables in Markdown content.
     schematize:
       weight: 9
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for tables in Markdown content. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -569,7 +569,7 @@ properties:
     description: Defines styles for definition, ordered, and unordered lists in Markdown content.
     schematize:
       weight: 10
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines styles for definition, ordered, and unordered lists in Markdown content. By default,
         the only setting for this property is [sref:`enabled`], which defaults to `true`. If you set
@@ -646,7 +646,7 @@ properties:
     description: Defines the style for rulers in Markdown content.
     schematize:
       weight: 11
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for rulers in Markdown content. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -685,7 +685,7 @@ properties:
     description: Defines the style for figures in Markdown.
     schematize:
       weight: 13
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for figures in Markdown. By default, the only setting for this property is
         [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to `false`, this
@@ -733,7 +733,7 @@ properties:
     description: Defines the style for nested Markdown content.
     schematize:
       weight: 14
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for nested Markdown content. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to

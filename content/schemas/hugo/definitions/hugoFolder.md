@@ -1,7 +1,7 @@
 ---
 name: hugoFolder
 title: Hugo Folder
-Schematize: hugo.definitions.hugoFolder
+schematize: hugo.definitions.hugoFolder
 type: schematize
 outputs:
   - Schematize

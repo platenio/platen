@@ -1,7 +1,7 @@
 ---
 name: build
 title: Hugo Build Configuration
-Schematize: build
+schematize: build
 type: schematize
 outputs:
   - Schematize

@@ -31,7 +31,7 @@ properties:
     description: Variables to insert for SCSS and CSS.
     schematize:
       weight: 2
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines several different groups of variables to insert into the SCSS that defines how the
         site is displayed.
@@ -75,7 +75,7 @@ properties:
     description: SCSS Style modules
     schematize:
       weight: 3
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines several different groups of style modules to insert into the SCSS that defines how
         the site is displayed.
@@ -116,7 +116,7 @@ properties:
     description: Add and configure fonts
     schematize:
       weight: 4
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the set of fonts the theme should add and configures how to apply those fonts to
         different elements in the theme.
@@ -191,7 +191,7 @@ properties:
     description: Configure and style the site for printing
     schematize:
       weight: 5
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style modules to use when a site visitor prints a page.
 

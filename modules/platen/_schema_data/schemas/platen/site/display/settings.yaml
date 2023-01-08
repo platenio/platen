@@ -38,7 +38,7 @@ properties:
     description: Controls the rendering of the header element for site pages.
     schematize:
       weight: 2
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Controls the rendering of the header element for site pages. By default, every page is
         rendered with a header element that includes the controls for displaying the menu and table
@@ -71,7 +71,7 @@ properties:
     description: Defines the branding logo for the site.
     schematize:
       weight: 3
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the logo for the site. The logo is added to the site menu before the site's name.
     type: object
@@ -104,7 +104,7 @@ properties:
     description: Controls the rendering of the table of contents for site pages.
     schematize:
       weight: 5
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Controls the rendering of the table of contents for site pages. You can choose whether to
         use Platen's table of contents generator or Hugo's. If you're using Platen to generate the

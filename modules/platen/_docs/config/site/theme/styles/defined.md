@@ -7,7 +7,7 @@ summary: |
   end users to update their own site configuration or assets.
 weight: 100
 type: schematize
-Schematize: platen.site.theme.styles.defined
+schematize: platen.site.theme.styles.defined
 outputs:
   - HTML
   - Schematize

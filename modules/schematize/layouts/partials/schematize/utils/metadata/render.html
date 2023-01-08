@@ -19,19 +19,19 @@
   of the metadata rendering:
 
   - schematize.metadata.summary - used for the summary element in details if specified.
-  - schematize.metadata.collapseDetailsElement - ensures the details element is collapsed on load.
-  - schematize.metadata.noDetailsElement - Writes the definition list without the details wrapper.
+  - schematize.metadata.collapse_details_element - ensures the details element is collapsed on load.
+  - schematize.metadata.no_details_element - Writes the definition list without the details wrapper.
 */}}
 {{- $schematize        := $property.schematize -}}
 {{- $detailsSummary    := default "Metadata" $schematize.metadata.summary -}}
 {{- $metadata          := partial "schematize/utils/metadata/munge" $params -}}
 
 {{- $detailsOpen := "open" -}}
-{{- with $schematize.metadata.collapseDetailsElement -}}
+{{- with $schematize.metadata.collapse_details_element -}}
   {{- $detailsOpen = cond . "" "open" -}}
 {{- end -}}
 
-{{ if $schematize.metadata.noDetailsElement }}
+{{ if $schematize.metadata.no_details_element }}
   {{- partial "schematize/utils/metadata/render/list" $metadata }}
 {{ else }}
 <details class="schematize-metadata" {{ $detailsOpen }}>

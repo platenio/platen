@@ -18,7 +18,7 @@ properties:
     description: Defines the base style for the html element.
     schematize:
       weight: 1
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the base style for the `html` element. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -67,7 +67,7 @@ properties:
     description: Defines the base style for the body element.
     schematize:
       weight: 2
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the base style for the `body` element. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -136,7 +136,7 @@ properties:
     description: Defines the base style for the h* elements.
     schematize:
       weight: 3
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the base style for the `h1` through `h6` elements. By default, the only setting for
         this property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -177,7 +177,7 @@ properties:
     description: Defines the base style for the a elements.
     schematize:
       weight: 4
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the base style for the `a` elements (links). By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -221,7 +221,7 @@ properties:
     description: Defines the base style for the img elements.
     schematize:
       weight: 5
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the base style for `img` elements. By default, the only setting for this property is
         [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to `false`, this
@@ -258,7 +258,7 @@ properties:
     description: Defines the base style for elements the vistor has in focus.
     schematize:
       weight: 6
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the base style for elements the vistor has in focus. By default, the only setting
         for this property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to `false`,
@@ -298,7 +298,7 @@ properties:
     description: Defines the base style for the site navigation.
     schematize:
       weight: 7
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the base style for the navigation menus, both the site menu and the table of
         contents for a page. By default, the only setting for this property is [sref:`enabled`],
@@ -370,7 +370,7 @@ properties:
     description: Defines the base style for the pagination lists.
     schematize:
       weight: 8
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the base style for the pagination lists. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -417,7 +417,7 @@ properties:
     description: Defines the base style for elements with the container class.
     schematize:
       weight: 9
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the base style for elements with the container class. By default, the only setting
         for this property is [sref:`enabled`], which defaults to `true`. If you set

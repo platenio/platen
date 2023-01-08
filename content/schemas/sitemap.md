@@ -1,7 +1,7 @@
 ---
 name: sitemap
 title: Hugo Site Map Configuration
-Schematize: sitemap
+schematize: sitemap
 type: schematize
 outputs:
   - Schematize

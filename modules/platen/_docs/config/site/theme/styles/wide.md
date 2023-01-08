@@ -5,7 +5,7 @@ summary: |
   Defines the map of SCSS style modules for the theme's wide-screen view.
 weight: 1
 type: schematize
-Schematize: platen.site.theme.styles.wide
+schematize: platen.site.theme.styles.wide
 outputs:
   - HTML
   - Schematize

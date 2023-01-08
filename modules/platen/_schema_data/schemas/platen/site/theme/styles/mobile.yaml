@@ -18,7 +18,7 @@ properties:
     description: Defines the style for the page header in mobile view.
     schematize:
       weight: 1
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for the page header in mobile view. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -56,7 +56,7 @@ properties:
     description: Defines the style for the site menu in mobile view.
     schematize:
       weight: 2
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for the site menu in mobile view. By default, the only setting for this
         property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to
@@ -220,7 +220,7 @@ properties:
     description: Defines the style for the table of contents in mobile view
     schematize:
       weight: 3
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the style for the table of contents in mobile view. By default, the only setting for
         this property is [sref:`enabled`], which defaults to `true`. If you set [sref:`enabled`] to

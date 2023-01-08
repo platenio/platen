@@ -1,7 +1,7 @@
 ---
 name: markup
 title: Markdown Options
-Schematize: hugo.properties.markup
+schematize: hugo.properties.markup
 type: schematize
 outputs:
   - Schematize

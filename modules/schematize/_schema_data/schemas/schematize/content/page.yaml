@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Page.schema.yaml
+$id: page.schema.yaml
 title: Page Front Matter
 description: Optional settings for the schematize module on a content page.
 schematize:
@@ -9,7 +9,7 @@ schematize:
     matter.
 type: object
 properties:
-  Schematize:
+  schematize:
     title: Schematize Path
     description: Specifies the dot-path to the schema data in the site's data map.
     schematize:
@@ -30,14 +30,14 @@ properties:
       weight: 2
       details: |
         Uses Hugo's [output formats] to ensure that the schematize module can convert the data
-        specified in [sref:`Schematize`] and publish it as a cleaned JSON schema. If this value isn't
+        specified in [sref:`schematize`] and publish it as a cleaned JSON schema. If this value isn't
         set to include `schematize` in the array of outputs, the JSON Schema won't be published.
 
         If this value doesn't include `html`, _only_ the JSON Schema will be published, not the
         accompanying HTML page with the documentation added through the `schematize` shortcode.
 
         [output formats]: https://gohugo.io/templates/output-formats/#configure-output-formats
-        [sref:`Schematize`]: Schematize.Content.Page.Schematize
+        [sref:`schematize`]: schematize.content.page.schematize
     type: array
     default:
       - html

@@ -55,7 +55,7 @@ properties:
     description: Defines the settings for the shortcode's styling
     schematize:
       weight: 2
-      skipSchemaRender: true
+      skip_schema_render: true
       details: |
         Defines the settings for the shortcode's styling. This setting can be omitted if the
         shortcode has no specific styling needs (if it relies on existing or otherwise

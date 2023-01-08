@@ -15,5 +15,5 @@ properties:
     properties:
       platen:
         $ref: ./platen/site/config.yaml
-      Schematize:
-        $ref: ./Schematize/Site/Config.yaml
+      schematize:
+        $ref: ./schematize/site/config.yaml

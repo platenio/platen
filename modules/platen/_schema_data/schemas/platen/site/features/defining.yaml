@@ -30,7 +30,7 @@ properties:
         <!-- Reference Links -->
         [sref:`enabled`]: platen.site.features.defining.enabled
       weight: 2
-      skipSchemaRender: true
+      skip_schema_render: true
     type: object
     properties:
       header:

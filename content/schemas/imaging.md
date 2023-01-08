@@ -1,7 +1,7 @@
 ---
 name: imaging
 title: Hugo Imaging Configuration
-Schematize: imaging
+schematize: imaging
 type: schematize
 outputs:
   - Schematize

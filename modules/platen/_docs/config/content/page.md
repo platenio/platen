@@ -6,7 +6,7 @@ summary: |
   front matter.
 weight: 1
 type: schematize
-Schematize: platen.content.page
+schematize: platen.content.page
 outputs:
   - HTML
   - Schematize
