@@ -135,8 +135,8 @@ properties:
         $ref: ./markup/defining.yaml
         schematize:
           href: pattern-any
-  Multilingual:
-    $ref: ./Multilingual.yaml
+  multilingual:
+    $ref: ./multilingual.yaml
     schematize:
       weight: 6
   repository:

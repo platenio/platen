@@ -56,8 +56,8 @@ Platen:
         target: modules/toroidal
       - source: modules/schematize/_docs
         target: modules/schematize
-  Multilingual:                               # BookTranslatedOnly
-    TranslatedOnly: false
+  multilingual:                               # BookTranslatedOnly
+    translated_only: false
 
 Toroidal:
   WebringName: Platen Site Ring

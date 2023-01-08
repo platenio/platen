@@ -237,5 +237,5 @@ Platen:
   repository:
     commit_path: commit                        # BookCommitPath
     edit_path: edit/main                       # BookEditPath
-  Multilingual:                               # BookTranslatedOnly
-    TranslatedOnly: false
+  multilingual:                               # BookTranslatedOnly
+    translated_only: false

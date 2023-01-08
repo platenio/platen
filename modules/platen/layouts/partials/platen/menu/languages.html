@@ -1,5 +1,5 @@
 <!-- Merge home and current page translations -->
-{{ $translatedOnly := default false .Site.Params.Platen.Multilingual.TranslatedOnly }}
+{{ $translatedOnly := default false .Site.Params.Platen.multilingual.translated_only }}
 {{ $translations := dict }}
 {{ if (eq $translatedOnly false ) }}
   {{ range .Site.Home.Translations }}

@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Multilingual.schema.yaml
+$id: multilingual.schema.yaml
 title: Multilingual Settings
 description: Settings for multilingual sites
 schematize:
@@ -11,7 +11,7 @@ schematize:
     [01]: https://gohugo.io/content-management/multilingual/
 type: object
 properties:
-  TranslatedOnly:
+  translated_only:
     title: Translated Only
     description: Specifies whether the site is only a translation of another project or site.
     schematize:
