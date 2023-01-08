@@ -3,7 +3,7 @@
 {{- $webringMemberPages := where $context.CurrentSection.RegularPages
                                  "Params.toroidal_home_page" "!=" nil
 -}}
-{{- $class              := default $context.Site.Params.toroidal.class
+{{- $class              := default site.Params.toroidal.class
                                    $context.Params.toroidal_class
 -}}
 {{- with $class -}}

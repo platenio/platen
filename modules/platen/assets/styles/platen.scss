@@ -1,5 +1,5 @@
 {{- $context           := . -}}
-{{- $theme             := $context.Site.Params.platen.theme -}}
+{{- $theme             := site.Params.platen.theme -}}
 {{- $variablesPartial  := "platen/utils/styles/variables"  -}}
 {{- $importPartial     := "platen/utils/styles/import"     -}}
 {{- $fontsPartial      := "platen/utils/styles/fonts"      -}}
@@ -75,7 +75,7 @@
 {{ partial $fontsPartial $theme.fonts }}
 
 // Loop over the enabled features, handling each in turn. Features must be independently styled.
-{{ range $feature, $settings := $context.Site.Params.platen.features -}}
+{{ range $feature, $settings := site.Params.platen.features -}}
   {{- if $settings.enabled -}}
     {{- with $settings.partials.style }}
       {{ partial . $context }}
@@ -84,7 +84,7 @@
 {{- end -}}
 
 // Loop over the enabled markup extensions, handling each in turn. They may be independently styled.
-{{ range $markup, $settings := $context.Site.Params.platen.markup -}}
+{{ range $markup, $settings := site.Params.platen.markup -}}
   {{- if $settings.enabled -}}
     {{- with $settings.partials.style }}
       {{ partial . $context }}
@@ -96,7 +96,7 @@
 {{- end -}}
 
 // Shortcodes must always load _after_ all more normal/universal items.
-{{ range $shortcode, $settings := $context.Site.Params.platen.shortcodes }}
+{{ range $shortcode, $settings := site.Params.platen.shortcodes }}
   {{ if $settings.enabled }}
     {{ with $settings.style }}
       {{ partial $shortcodesPartial (dict "Name" $shortcode "Settings" $settings) }}

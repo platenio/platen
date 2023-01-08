@@ -1,6 +1,6 @@
 {{/*
   Returns formatted date.
-  Usage: partial "platen/utils/getFormattedDate" (dict "Date" .Date "Format" .Site.Params.display.date_format)
+  Usage: partial "platen/utils/getFormattedDate" (dict "Date" .Date "Format" site.Params.display.date_format)
 */}}
 {{- $format := default "January 2, 2006" .Format -}}
 {{- return (.Date.Format $format) -}}

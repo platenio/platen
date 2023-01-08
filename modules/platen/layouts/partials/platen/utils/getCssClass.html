@@ -44,7 +44,7 @@
             {{- end -}}
         {{- else -}} {{/* Process an ancestor section */}}
             {{- $segment := printf "/%s" (delimit $parts "/" $index) -}}
-            {{- with $.Site.GetPage $segment -}} {{/* The section has an _index.md */}}
+            {{- with site.GetPage $segment -}} {{/* The section has an _index.md */}}
                 {{- with .Params.cssClass -}}
                     {{- $injectedClass = printf "%s %s" $injectedClass . -}}
                 {{- else -}}

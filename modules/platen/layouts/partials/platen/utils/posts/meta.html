@@ -4,7 +4,7 @@
   </h5>
 {{ end }}
 
-{{ range $taxonomy, $_ := .Site.Taxonomies }}
+{{ range $taxonomy, $_ := site.Taxonomies }}
   {{ with $terms := $.GetTerms $taxonomy }}
   <div>
     {{ range $n, $term := $terms }}{{ if $n }}, {{ end }}

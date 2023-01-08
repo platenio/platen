@@ -16,7 +16,7 @@
 */ -}}
 {{- $context := . -}}
 
-{{- $webringName := default $context.Site.Params.toroidal.webring_name
+{{- $webringName := default site.Params.toroidal.webring_name
                             $context.Params.toroidal_webring_name
 -}}
 {{- $webringName  = default "Webring" $webringName -}}

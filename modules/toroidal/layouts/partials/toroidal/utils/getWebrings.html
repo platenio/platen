@@ -11,7 +11,7 @@
 {{- $context  := .     -}}
 {{- $webrings := slice -}}
 
-{{- range where $context.Site.Sections "Type" "toroidal" -}}
+{{- range where site.Sections "Type" "toroidal" -}}
   {{- if len (where .RegularPages "Params.toroidal_home_page" "!=" nil) -}}
     {{- $webrings = $webrings | append . -}}
   {{- end -}}

@@ -1,13 +1,13 @@
 @import "defaults";
 @import "variables";
-@import "modes/{{ default "auto" .Site.Params.toroidal.mode }}";
+@import "modes/{{ default "auto" site.Params.toroidal.mode }}";
 @import "normalize";
 @import "utils";
 @import "main";
 @import "fonts";
 
 {{- $themesToImport := slice -}}
-{{- range $theme, $enabled := $context.Site.Params.toroidal.themes -}}
+{{- range $theme, $enabled := site.Params.toroidal.themes -}}
   {{- if eq true $enabled -}}
     {{- $themesToImport = $themesToImport | append $theme -}}
   {{- else if $enabled -}}

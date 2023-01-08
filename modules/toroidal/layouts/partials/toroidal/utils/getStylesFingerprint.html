@@ -11,7 +11,7 @@
 {{- end -}}
 
 {{- with (resources.Get "styles/platen.scss") -}}
-  {{ if $context.Site.Params.platen.features.toroidal.enabled }}
+  {{ if site.Params.platen.features.toroidal.enabled }}
     {{ $resource = . }}
   {{ else }}
     {{- $resource = resources.Get "toroidal/toroidal.scss" -}}

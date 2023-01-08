@@ -3,7 +3,7 @@
   {{- $platenSection = "/" -}}{{/* Backward compatibility */}}
 {{- end }}
 
-{{ with .Site.GetPage $platenSection }}
+{{ with site.GetPage $platenSection }}
   {{ template "platen-section-children" (dict "Section" . "CurrentPage" $) }}
 {{ end }}
 
