@@ -1,35 +1,35 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Entry.schema.yaml
+$id: entry.schema.yaml
 title: Entry Settings
 description: Defines an entry for the site menu.
 schematize:
   details: |
-    In the position settings for [sref:`Platen.Display.Menu`], you can add entries to the site menu.
+    In the position settings for [sref:`Platen.display.menu`], you can add entries to the site menu.
     These settings define how a specific entry is added to the menu.
 
-    An entry must define either the [sref:`Feature`] or the [sref:`Group`] and [sref:`Entries`]
+    An entry must define either the [sref:`feature`] or the [sref:`group`] and [sref:`Entries`]
     settings.
     
-    Entries with the [sref:`Feature`] setting are individual entries that leverage
+    Entries with the [sref:`feature`] setting are individual entries that leverage
     a partial defined by a Platen feature.
 
-    Entries with the [sref:`Group`] setting acommodate a nested list of entries (defined in
-    [sref:`Entries`]) in the menu, using this entry as the parent container.
+    Entries with the [sref:`group`] setting acommodate a nested list of entries (defined in
+    [sref:`entries`]) in the menu, using this entry as the parent container.
 
     <!-- Reference Links -->
-    [sref:`Platen.Display.Menu`]: Platen.Site.Display.Menu.Settings
-    [sref:`Entries`]: Platen.Site.Display.Menu.Entry.Entries
-    [sref:`Feature`]: Platen.Site.Display.Menu.Entry.Feature
-    [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group
+    [sref:`Platen.display.menu`]: Platen.Site.display.menu.settings
+    [sref:`entries`]: Platen.Site.display.menu.entry.entries
+    [sref:`feature`]: Platen.Site.display.menu.entry.feature
+    [sref:`group`]: Platen.Site.display.menu.entry.group
 type: object
 anyOf:
   - if:
       properties:
-        Feature:
-          const: Toroidal
+        feature:
+          const: toroidal
     then:
-      $ref: ./Toroidal.yaml
+      $ref: ./toroidal.yaml
     schematize:
       title: Toroidal Webring Entries
       details: |
@@ -39,9 +39,9 @@ anyOf:
         For more information, see [sref:Toroidal Entry Settings].
 
         <!-- Reference Links -->
-        [sref:Toroidal Entry Settings]: Platen.Site.Display.Menu.Toroidal 
+        [sref:Toroidal Entry Settings]: Platen.Site.display.menu.toroidal 
 properties:
-  Feature:
+  feature:
     title: Feature Name
     description: >-
       Specifies the name of the Platen feature this entry should use to write HTML in the menu.
@@ -63,9 +63,9 @@ properties:
         <!-- Reference Links -->
         [sref:`enabled`]: Platen.Site.features.defining.enabled
         [sref:`partials.menu`]: Platen.Site.features.defining.partials.menu
-        [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group
+        [sref:`group`]: Platen.Site.display.menu.entry.group
     type: string
-  Weight:
+  weight:
     title: Entry Weight
     description: >-
       Specifies the weight of the entry in the current level of the site menu.
@@ -77,31 +77,31 @@ properties:
         entries are added in order from lowest weight to highest. Unweighted entries are added in
         alphabetical order.
     type: integer
-  Group:
-    $ref: ./Group.yaml
+  group:
+    $ref: ./group.yaml
     schematize:
       weight: 3
       details: |
         You can use this setting to create a nested group of related entries at the current level.
-        If you define this value, you must also specify one or more entries in [sref:`Entries`].
+        If you define this value, you must also specify one or more entries in [sref:`entries`].
 
         <!-- Reference Links -->
-        [sref:`Entries`]: Platen.Site.Display.Menu.Entry.Entries
-  Entries:
+        [sref:`entries`]: Platen.Site.display.menu.entry.entries
+  entries:
     title: Nested Entries
     description: >-
       Define one or more nested entries to include in a group entry.
     schematize:
       weight: 4
       details: |
-        If you define the [sref:`Group`] setting for an entry, you must define at least one nested
+        If you define the [sref:`group`] setting for an entry, you must define at least one nested
         entry to include in that group with this setting.
 
         <!-- Reference Links -->
-        [sref:`Group`]: Platen.Site.Display.Menu.Entry.Group
+        [sref:`group`]: Platen.Site.display.menu.entry.group
     type: array
     items:
-      $ref: ./Entry.yaml
+      $ref: ./entry.yaml
       schematize:
         details: |
           Nested entries follow the same rules as other entries and have the same considerations.

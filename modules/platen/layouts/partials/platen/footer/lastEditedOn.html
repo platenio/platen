@@ -6,7 +6,7 @@
 {{/* Retrieve settings from the site config */}}
 {{- $platenSettings := site.Params.Platen                 -}}
 {{- $repoUrl        := $platenSettings.repository.url     -}}
-{{- $dateFormat     := $platenSettings.Display.DateFormat -}}
+{{- $dateFormat     := $platenSettings.display.date_format -}}
 
 {{/* Retrieve info from the page */}}
 {{- $gitInfo := $context.GitInfo -}}

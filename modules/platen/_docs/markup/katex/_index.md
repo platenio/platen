@@ -4,9 +4,9 @@ weight: 120
 summary: >-
   Documentation on using math markup to include formulas in your text.
 Platen:
-  TitleAsHeading: true
-  Menu:
-    Collapse: true
+  title_as_heading: true
+  menu:
+    collapse_section: true
 ---
 
 Platen supports using [KaTeX markup][01] to add mathematical and scientific formulas to your pages.

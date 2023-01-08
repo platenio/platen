@@ -3,8 +3,8 @@ title: Printing
 summary: Schemas for the printing options in Platen's configuration.
 weight: 40
 Platen:
-  Menu:
-    CollapseSection: true
+  menu:
+    collapse_section: true
 ---
 
 Platen has some minimal support for site visitors printing a page from their browser. These settings

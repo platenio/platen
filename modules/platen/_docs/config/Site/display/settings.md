@@ -2,10 +2,10 @@
 name: Settings
 title: Settings
 summary: |
-  Optional settings controlling how a Platen site menu is structured.
+  Optional settings controlling how a Platen site is structured.
 weight: 1
 type: schematize
-Schematize: Platen.Site.Display.Menu.Settings
+Schematize: Platen.Site.display.settings
 outputs:
   - HTML
   - Schematize

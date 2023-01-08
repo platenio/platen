@@ -3,8 +3,8 @@ title: Shortcodes
 summary: Schemas for configuring Platen's registered shortcodes.
 weight: 14
 Platen:
-  Menu:
-    CollapseSection: true
+  menu:
+    collapse_section: true
 ---
 
 Platen keeps a registry of integrated shortcodes. This enables site authors and theme developers to

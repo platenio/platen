@@ -3,8 +3,8 @@ title: Contact
 summary: Reach out to the Platen team
 linktitle: Contact us
 Platen:
-  Menu:
-    Hide: true
+  menu:
+    hide: true
 ---
 
 You can always reach out to us on GitHub. Check our [Discussions][01] and ask questions, make

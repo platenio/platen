@@ -5,7 +5,7 @@ summary: >-
   Documentation on the `katex` image link markup, which renders math markup in the alt text of an
   image link on a content page, allowing you to include formulas and other advanced representations.
 Platen:
-  TitleAsHeading: true
+  title_as_heading: true
 Memo:
   Name: katex
   MungeTitle: false

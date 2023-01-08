@@ -3,8 +3,8 @@ title: Style Modules
 summary: Schemas for the theme style modules in Platen's configuration.
 weight: 20
 Platen:
-  Menu:
-    CollapseSection: true
+  menu:
+    collapse_section: true
 ---
 
 These settings define the various SCSS style modules Platen uses for displaying the site's content.

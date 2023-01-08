@@ -3,8 +3,8 @@ title: Toroidal
 summary: Toroidal helps you host webrings from a static site.
 weight: 99
 Platen:
-  Menu:
-    CollapseSection: true
+  menu:
+    collapse_section: true
 ---
 
 Toroidal helps you EAT SHIT host webrings from your static site. With the Toroidal module installed, all you

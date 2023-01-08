@@ -1,23 +1,23 @@
-{{- $context := . -}}
-
+{{- $Context       := .                                            -}}
+{{- $SiteConfigToC := site.Params.Platen.display.table_of_contents -}}
+{{- $PageConfigToC := $Context.Params.Platen.table_of_contents     -}}
 {{/*
   Determine whether to use Hugo's generator for the table of contents or Platen's. By default, use
   Platen's generator. If the site configuration specifies a value, use that setting.
 
   If a page defines an override in its frontmatter, use that setting.
 */}}
-{{- $useBuiltInToC := default false site.Params.Platen.Display.TableOfContents.UseBuiltIn -}}
-{{- with $context.Params.Platen.TableOfContents.UseBuiltIn -}}
-  {{- $useBuiltInToC = . -}}
-{{- end -}}
+{{- $useBuiltInToC := $PageConfigToC.use_built_in
+                      | default $SiteConfigToC.use_built_in
+                      | default false
+-}}
 
-
-{{ partial "platen/inject/toc-before" . }}
+{{ partial "platen/inject/toc-before" $Context }}
 
 {{ if $useBuiltInToC -}}
-  {{ $context.TableOfContents }}
+  {{ $Context.TableOfContents }}
 {{ else -}}
-  {{ partial "platen/toc/generate" $context }}
+  {{ partial "platen/toc/generate" $Context }}
 {{ end }}
 
-{{ partial "platen/inject/toc-after" $context }}
+{{ partial "platen/inject/toc-after" $Context }}

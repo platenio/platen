@@ -1,11 +1,11 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: Group.schema.yaml
+$id: group.schema.yaml
 title: Group Settings
 description: Ensures entries are added in a containing group and configures their display.
 schematize:
   details: |
-    In the position settings for [sref:`Platen.Display.Menu`], you can group entries at the
+    In the position settings for [sref:`Platen.display.menu`], you can group entries at the
     top-level or nested in the entries list. These settings determine how those grouped entries are
     displayed.
 
@@ -16,12 +16,12 @@ schematize:
     You can use this setting for individual entries, creating a nested group of related entries.
 
     <!-- Reference Links -->
-    [sref:`Platen.Display.Menu`]: Platen.Site.Display.Menu.Settings
+    [sref:`Platen.display.menu`]: Platen.Site.display.menu.settings
 type: object
 required:
-  - Name
+  - name
 properties:
-  Name:
+  name:
     title: Group Entry Name
     description: >-
       Specifies the root section of the content folder to add to the site menu.
@@ -31,7 +31,7 @@ properties:
         Specifies the name to use for the group entry in the site menu. This is the text value
         displayed in the site menu for the group.
     type: string
-  Href:
+  href:
     title: Group Entry URL
     description: >-
       Specifies the URL clicking the group entry in the site menu should take a visitor to.
@@ -42,7 +42,7 @@ properties:
         this value isn't specified, the group entry still contains its entries but it can't be
         navigated to.
     type: string
-  Collapse:
+  collapse:
     title: Collapse Group Entry
     description: >-
       Specifies whether to collapse the group entry in the site menu.
@@ -53,13 +53,13 @@ properties:
         displayed with a clickable arrow that expands and collapses the group's entries, defaulting
         to collapsed.
 
-        This setting is incompatible with [sref:`Flatten`]. A group entry can be collapsed or
+        This setting is incompatible with [sref:`flatten`]. A group entry can be collapsed or
         flattened, but not both.
 
         <!-- Reference Links -->
-        [sref:`Flatten`]: Platen.Site.Display.Menu.Group.Flatten
+        [sref:`flatten`]: Platen.Site.display.menu.group.flatten
     type: boolean
-  Flatten:
+  flatten:
     title: Flatten Group Entry
     description: >-
       Specifies whether to flatten the group entry in the site menu.
@@ -70,13 +70,13 @@ properties:
         displayed with the grouping entry bolded above a the group's entries without additional
         spacing or indenting for those entries.
 
-        This setting is incompatible with [sref:`Collapse`]. A group entry can be collapsed or
+        This setting is incompatible with [sref:`collapse`]. A group entry can be collapsed or
         flattened, but not both.
 
         <!-- Reference Links -->
-        [sref:`Collapse`]: Platen.Site.Display.Menu.Group.Collapse
+        [sref:`collapse`]: Platen.Site.display.menu.group.collapse
     type: boolean
-  Class:
+  class:
     title: Group Entry Class
     description: >-
       Specifies a class to add to the group entry in the site menu.
@@ -95,8 +95,8 @@ properties:
         above them. To ensure a top-level group is added to the site menu without this additional
         spacing, set this value to `platen`.
     type: string
-  Group:
-    $ref: ./Group.yaml
+  group:
+    $ref: ./group.yaml
     schematize:
       weight: 100
       skipMoreInfo: true

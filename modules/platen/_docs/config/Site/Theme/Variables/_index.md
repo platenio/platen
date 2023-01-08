@@ -3,8 +3,8 @@ title: Variables
 summary: Schemas for the theme variables in Platen's configuration.
 weight: 10
 Platen:
-  Menu:
-    CollapseSection: true
+  menu:
+    collapse_section: true
 ---
 
 Platen uses these configuration settings to define SCSS variables and custom CSS properties (which

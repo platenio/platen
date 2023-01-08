@@ -29,31 +29,31 @@
       </ul>
     {{- end -}}
   {{- else -}}
-    {{- warnf "Specified Group '%s' for position %s without any entries; skipping this Group."
+    {{- warnf "Specified group '%s' for position %s without any entries; skipping this group."
               $name
               $position
     -}}
   {{- end -}}
 {{- else -}}
   {{/*
-    If the Name key isn't defined and Group isn't a map or slice, assume the value is the name of
+    If the 'name' key isn't defined and 'group' isn't a map or slice, assume the value is the name of
     the group and recall the partial.
   */}}
   {{- if reflect.IsMap $group -}}
-    {{- errorf "Specified Group as a map without mandatory key 'Name' for position %s: %#v" $position $group -}}
+    {{- errorf "Specified group as a map without mandatory key 'name' for position %s: %#v" $position $group -}}
   {{- else if reflect.IsSlice $group -}}
     {{- errorf "%s. %s. Definition: %#v"
                (printf "Specified Group as an array for position %s" $position)
-               "Must be a map with the key 'Name' defined or a string"
+               "Must be a map with the key 'name' defined or a string"
                $group
     -}}
   {{- else -}}
-    {{- $group = dict "Name" (print $group) -}}
-    {{- $mungedParams := dict "Context" $context
-                              "Class"       $class
-                              "Entries"     $entries
-                              "Group"       $group
-                              "Position"    $position
+    {{- $group = dict "name" (print $group) -}}
+    {{- $mungedParams := dict "Context"     $context
+                              "class"       $class
+                              "entries"     $entries
+                              "group"       $group
+                              "position"    $position
     -}}
     {{- partial "platen/menu/features/group" $mungedParams -}}
   {{- end  -}}

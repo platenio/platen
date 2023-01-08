@@ -4,8 +4,8 @@
 title: Platen Sites
 type: toroidal
 Platen:
-  Menu:
-    Hide: true
+  menu:
+    hide: true
 cascade:
   ToroidalWebringName: Platen Site Ring
 ---

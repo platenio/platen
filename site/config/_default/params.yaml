@@ -20,21 +20,21 @@ Schematize:
 Platen:
   Theme:
     Mode: auto                                # BookTheme
-  Display:
-    TableOfContents:
-      MinimumLevel: 1
-      MaximumLevel: 6
-    DateFormat: "January 2, 2006"             # BookDateFormat
-    Menu:
-      RootSection: /                          # BookSection
-      BeforeInjection:
-        Entries:
-          - Feature: Toroidal
-            Weight: 1
-            PagePath: sites/platen
-            DisplayName: Platen Sites
-    Logo:
-      URL: /images/logo.svg                   # BookLogo
+  display:
+    table_of_contents:
+      minimum_level: 1
+      maximum_level: 6
+    date_format: "January 2, 2006"             # BookDateFormat
+    menu:
+      root_section: /                          # BookSection
+      before_injection:
+        entries:
+          - feature: toroidal
+            weight: 1
+            page_path: sites/platen
+            display_name: Platen Sites
+    logo:
+      url: /images/logo.svg                   # BookLogo
   features:
     search:                                   # booksearch
       enabled: true

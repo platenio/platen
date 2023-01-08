@@ -3,8 +3,8 @@ title: Theme Guide
 summary: A handbook for customizing and styling Platen sites.
 weight: 20
 Platen:
-  Menu:
-    CollapseSection: true
+  menu:
+    collapse_section: true
 ---
 
 This section is a handbook for customizing and styling Platen sites. You can use it to control how

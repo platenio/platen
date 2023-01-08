@@ -3,8 +3,8 @@ title: Font Options
 summary: Schemas for the fonts in Platen's theme configuration.
 weight: 30
 Platen:
-  Menu:
-    CollapseSection: true
+  menu:
+    collapse_section: true
 ---
 
 These settings control how Platen loads and uses fonts for the site. While you can add and use fonts

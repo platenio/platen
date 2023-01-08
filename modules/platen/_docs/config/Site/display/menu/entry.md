@@ -5,7 +5,7 @@ summary: |
   Defines a specific entry in the site menu.
 weight: 2
 type: schematize
-Schematize: Platen.Site.Display.Menu.Entry
+Schematize: Platen.Site.display.menu.entry
 outputs:
   - HTML
   - Schematize

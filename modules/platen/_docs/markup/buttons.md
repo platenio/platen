@@ -4,7 +4,7 @@ weight: 20
 summary: >-
   Documentation on the `button` image link markup, which renders an image link as a button.
 Platen:
-  TitleAsHeading: true
+  title_as_heading: true
 Memo:
   Name: button
   MungeTitle: false

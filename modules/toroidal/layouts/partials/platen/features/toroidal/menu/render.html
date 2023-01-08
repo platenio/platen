@@ -1,48 +1,48 @@
-{{- $params   := .                                         -}}
-{{- $context  := default $params.context  $params.Context  -}}
-{{- $entry    := default $params.entry    $params.Entry    -}}
-{{- $position := default $params.position $params.Position -}}
+{{- $Params   := .                                         -}}
+{{- $Context  := default $Params.context  $Params.Context  -}}
+{{- $Entry    := default $Params.entry    $Params.Entry    -}}
+{{- $Position := default $Params.position $Params.Position -}}
 
-{{- with $entry.PagePath -}}
-  {{- with $entry.PartialPath -}}
+{{- with $Entry.page_path -}}
+  {{- with $Entry.partial_path -}}
     {{- errorf "%s. %s. %s: %v"
                "Specified both page and partial for webring entry in site menu"
                "Only one allowed per entry"
                "Entry definition"
-               $entry
+               $Entry
     -}}
   {{- end -}}
-  {{ template "toroidal-platen-menu-entry-from-page" $entry }}
+  {{ template "toroidal-platen-menu-entry-from-page" $Entry }}
 {{- else -}}
-  {{- with $entry.PartialPath -}}
-    {{- $partialEntry := merge $entry (dict "Context" $context)         -}}
-    {{- $partialEntry := merge $entry (dict "Position" $position)       -}}
+  {{- with $Entry.partial_path -}}
+    {{- $partialEntry := merge $Entry (dict "Context" $Context)         -}}
+    {{- $partialEntry := merge $Entry (dict "Position" $Position)       -}}
     {{ template "toroidal-platen-menu-entry-from-partial" $partialEntry  }}
   {{- else -}}
-    {{- errorf "Specified Toroidal menu item without PagePath or PartialPath in %s: %#v" $entry -}}
+    {{- errorf "Specified Toroidal menu item without 'page_path' or 'partial_path' in %s: %#v" $Position $Entry -}}
   {{- end  -}}
 {{- end -}}
 
 {{- define "toroidal-platen-menu-entry-from-page" -}}
-  {{- $params := . -}}
-  {{- with (site.GetPage $params.PagePath) -}}
+  {{- $Entry := . -}}
+  {{- with (site.GetPage $Entry.page_path) -}}
     {{- $info := partial "toroidal/utils/getPageInfo" .                                        -}}
-    {{- $info  = merge $info (dict "WebringName" (default $info.WebringName $params.DisplayName)) -}}
+    {{- $info  = merge $info (dict "WebringName" (default $info.WebringName $Entry.display_name)) -}}
 
-    {{- if isset $params "Flatten" -}}
-      {{- $info  = merge $info (dict "MenuFlatten" $params.Flatten)                   -}}
-      {{- $info  = merge $info (dict "MenuCollapse" (default false $params.Collapse)) -}}
+    {{- if isset $Entry "flatten" -}}
+      {{- $info  = merge $info (dict "MenuFlatten" $Entry.flatten)                   -}}
+      {{- $info  = merge $info (dict "MenuCollapse" (default false $Entry.collapse)) -}}
     {{- else -}}
-      {{- $info = merge $info (dict "MenuCollapse" (default true $params.Collapse))   -}}
+      {{- $info = merge $info (dict "MenuCollapse" (default true $Entry.collapse))   -}}
     {{- end -}}
 
     {{ partial "platen/features/toroidal/menu/entry" $info }}
   {{- else -}}
-    {{- errorf "Couldn't find toroidal webring member page '%s' to include in site menu" $params.PagePath -}}
+    {{- errorf "Couldn't find toroidal webring member page '%s' to include in site menu" $Entry.page_path -}}
   {{- end -}}
 {{- end -}}
 
 {{- define "toroidal-platen-menu-entry-from-partial" -}}
-  {{- $params := . -}}
-  {{- partial $params.PartialPath $params -}}
+  {{- $Entry := . -}}
+  {{- partial $Entry.partial_path $Entry -}}
 {{- end -}}

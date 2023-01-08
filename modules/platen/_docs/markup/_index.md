@@ -3,8 +3,8 @@ title: Markup
 summary: Documentation on the special markup Platen uses.
 weight: 30
 Platen:
-  Menu:
-    CollapseSection: true
+  menu:
+    collapse_section: true
 ---
 
 This section documents the special markup that Platen supports. The markup transforms your Markdown

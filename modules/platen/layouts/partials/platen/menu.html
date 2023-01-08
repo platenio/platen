@@ -1,35 +1,35 @@
-{{- $context := . -}}
+{{- $Context := . -}}
 
 <nav>
-  {{ partial "platen/menu/brand" $context }}
+  {{ partial "platen/menu/brand" $Context }}
 
-  {{ partial "platen/features/search/menu" $context }}
+  {{ partial "platen/features/search/menu" $Context }}
 
-  {{ if $context.Site.IsMultiLingual }}
-    {{ partial "platen/menu/languages" $context }}
+  {{ if $Context.Site.IsMultiLingual }}
+    {{ partial "platen/menu/languages" $Context }}
   {{ end }}
 
-  {{ partial "platen/menu/feature" (dict "Context" $context "Position" "BeforeInjection") }}
+  {{ partial "platen/menu/feature" (dict "Context" $Context "Position" "before_injection") }}
 
-  {{ partial "platen/inject/menu-before" $context }}
+  {{ partial "platen/inject/menu-before" $Context }}
 
-  {{ partial "platen/menu/feature" (dict "Context" $context "Position" "BeforeHugoConfig") }}
+  {{ partial "platen/menu/feature" (dict "Context" $Context "Position" "before_hugo_config") }}
 
-  {{ partial "platen/menu/hugo" $context.Site.Menus.before }}
+  {{ partial "platen/menu/hugo" $Context.Site.Menus.before }}
 
-  {{ partial "platen/menu/feature" (dict "Context" $context "Position" "BeforeRootSection") }}
+  {{ partial "platen/menu/feature" (dict "Context" $Context "Position" "before_root_section") }}
 
-  {{ partial "platen/menu/filetree" $context }}
+  {{ partial "platen/menu/filetree" $Context }}
 
-  {{ partial "platen/menu/feature" (dict "Context" $context "Position" "AfterRootSection") }}
+  {{ partial "platen/menu/feature" (dict "Context" $Context "Position" "after_root_section") }}
 
-  {{ partial "platen/menu/hugo" $context.Site.Menus.after }}
+  {{ partial "platen/menu/hugo" $Context.Site.Menus.after }}
 
-  {{ partial "platen/menu/feature" (dict "Context" $context "Position" "AfterHugoConfig") }}
+  {{ partial "platen/menu/feature" (dict "Context" $Context "Position" "after_hugo_config") }}
 
-  {{ partial "platen/inject/menu-after" $context }}
+  {{ partial "platen/inject/menu-after" $Context }}
 
-  {{ partial "platen/menu/feature" (dict "Context" $context "Position" "AfterInjection") }}
+  {{ partial "platen/menu/feature" (dict "Context" $Context "Position" "after_injection") }}
 </nav>
 
-{{ partial "platen/menu/reset" $context }}
+{{ partial "platen/menu/reset" $Context }}

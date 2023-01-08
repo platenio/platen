@@ -11,7 +11,7 @@
   {{- $headParams  := dict "context" $context "memberName" $memberName "webringName" $webringName }}
   <head>
   {{- with (resources.Get "styles/platen.scss") -}}
-    {{ if $context.Site.Params.Platen.Features.Toroidal.Enabled }}
+    {{ if $context.Site.Params.Platen.features.toroidal.enabled }}
       {{ partial "toroidal/htmlHeadMember/platen" $context }}
     {{ else }}
       {{ partial "toroidal/htmlHeadMember/default" $headParams }}

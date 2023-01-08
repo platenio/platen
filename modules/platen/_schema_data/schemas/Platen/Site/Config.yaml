@@ -14,8 +14,8 @@ properties:
     $ref: ./Theme/Config.yaml
     schematize:
       weight: 1
-  Display:
-    $ref: ./Display/Settings.yaml
+  display:
+    $ref: ./display/settings.yaml
     schematize:
       weight: 2
   features:
@@ -139,7 +139,7 @@ properties:
     $ref: ./Multilingual.yaml
     schematize:
       weight: 6
-  Repository:
-    $ref: ./Repository/Settings.yaml
+  repository:
+    $ref: ./repository/settings.yaml
     schematize:
       weight: 7

@@ -1,6 +1,6 @@
 {{ with .Date }}
   <h5>
-    {{ partial "platen/utils/getFormattedDate" (dict "Date" . "Format" $.Site.Params.Platen.Display.DateFormat) }}
+    {{ partial "platen/utils/getFormattedDate" (dict "Date" . "Format" site.Params.Platen.display.date_format) }}
   </h5>
 {{ end }}
 
