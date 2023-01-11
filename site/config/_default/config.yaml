@@ -4,6 +4,33 @@ title: Platen
 themesDir: ../modules
 contentDir: ../content
 dataDir: ../data
+disablePathToLower: true
+enableGitInfo: true
+
+languages:
+  en:
+    languageName: English
+    contentDir: ../content
+    weight: 1
+
+markup:
+  _merge: deep
+
+menu:
+  after:
+    - name: Contact
+      url: /contact
+      weight: 5
+    - name: Hugo
+      url: https://gohugo.io/
+      weight: 10
+    - name: Hugo Book
+      url: https://github.com/alex-shpak/hugo-book
+      weight: 20
+  before:
+    - name: Posts
+      url: /posts
+      weight: 10
 
 module:
   replacements: >-
@@ -71,39 +98,7 @@ module:
         - source: static
           target: static
 
-disablePathToLower: true
-enableGitInfo: true
-
-markup:
-  goldmark:
-    renderer:
-      unsafe: true
-    parser:
-      wrapStandAloneImageWithinParagraph: false
-      attribute:
-        block: true
-  tableOfContents:
-    startLevel: 1
-    endLevel: 6
-
-languages:
-  en:
-    languageName: English
-    contentDir: ../content
-    weight: 1
-
-menu:
-  after:
-    - name: Contact
-      url: /contact
-      weight: 5
-    - name: Hugo
-      url: https://gohugo.io/
-      weight: 10
-    - name: Hugo Book
-      url: https://github.com/alex-shpak/hugo-book
-      weight: 20
-  before:
-    - name: Posts
-      url: /posts
-      weight: 10
+params:
+  description: A toolkit for interactive digital books.
+  images:
+    - /images/logo.svg

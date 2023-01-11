@@ -1,1 +1,15 @@
 # yaml-language-server: $schema=http://localhost:1313/modules/platen/config/site/display/settings/schema.json
+table_of_contents:
+  minimum_level: 1
+  maximum_level: 6
+date_format: "January 2, 2006"             # BookDateFormat
+menu:
+  root_section: /                          # BookSection
+  before_injection:
+    entries:
+      - feature: toroidal
+        weight: 1
+        page_path: sites/platen
+        display_name: Platen Sites
+logo:
+  url: /images/logo.svg   
