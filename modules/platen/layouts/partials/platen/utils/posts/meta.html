@@ -1,11 +1,15 @@
+{{- $Context          := .                                                                -}}
+{{- $Image            := $Context.Params.image                                            -}}
+{{- $ConfigKey        := "platen.display.date_format"                                     -}}
+{{- $DateFormatConfig := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 {{ with .Date }}
   <h5>
-    {{ partial "platen/utils/getFormattedDate" (dict "Date" . "Format" site.Params.platen.display.date_format) }}
+    {{ partial "platen/utils/getFormattedDate" (dict "Date" . "Format" $DateFormatConfig) }}
   </h5>
 {{ end }}
 
 {{ range $taxonomy, $_ := site.Taxonomies }}
-  {{ with $terms := $.GetTerms $taxonomy }}
+  {{ with $terms := $Context.GetTerms $taxonomy }}
   <div>
     {{ range $n, $term := $terms }}{{ if $n }}, {{ end }}
       <a href="{{ $term.RelPermalink }}">{{ $term.Title }}</a>
@@ -14,12 +18,12 @@
   {{ end }}
 {{ end }}
 
-{{ if .Params.image }}
+{{ if $Image }}
 <p>
-  {{ with .Resources.GetMatch .Params.image }}
+  {{ with $Context.Resources.GetMatch $Image }}
     <img src={{ .RelPermalink }} />
   {{ else }}
-    <img src={{ .Params.image | relURL }} />
+    <img src={{ $Image | relURL }} />
   {{ end }}
 </p>
 {{ end }}

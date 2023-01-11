@@ -1,40 +1,41 @@
-{{- $context := . -}}
+{{- $Context      := .                                             -}}
+{{- $PlatenConfig      := partialCached "platen/param/getKey" "platen" "platen" -}}
 
-{{- partial "platen/configuration/checkShortcodes" $context -}}
+{{- partial  "platen/param/checkShortcodes" $Context -}}
 
-{{ partial "platen/htmlHead/meta" $context }}
+{{  partial  "platen/htmlHead/meta"                 $Context  }}
 
-{{- template "_internal/opengraph.html" $context -}}
+{{- template "_internal/opengraph.html"             $Context -}}
 
 <title>
-  {{ partial "platen/utils/getHtmlHeadTitle" $context }}
+  {{ partial "platen/utils/getHtmlHeadTitle" $Context }}
 </title>
 
-{{ partial "platen/htmlHead/faviconLink" $context }}
+{{ partial "platen/htmlHead/faviconLink" $Context }}
 
-{{- range $translatedPage := .Translations }}
+{{- range $translatedPage := $Context.Translations }}
   {{ partial "platen/htmlHead/translationLink" $translatedPage }}
 {{- end -}}
 
-{{ partial "platen/htmlHead/siteStyleLink" $context }}
+{{ partial "platen/htmlHead/siteStyleLink" $Context }}
 
-{{ range $feature, $settings := site.Params.platen.features -}}
+{{ range $feature, $settings := $PlatenConfig.features -}}
   {{- if $settings.enabled -}}
     {{- with $settings.partials.header -}}
-      {{ partial . $context }}
+      {{ partial . $Context }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
-{{ range $feature, $settings := site.Params.platen.markup -}}
+{{ range $feature, $settings := $PlatenConfig.markup -}}
   {{- if $settings.enabled -}}
     {{- with $settings.partials.header -}}
-      {{ partial . $context }}
+      {{ partial . $Context }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
-{{- template "_internal/google_analytics.html" $context -}}
+{{- template "_internal/google_analytics.html" $Context -}}
 
 {{ partial "platen/htmlHead/rssLink" }}
 

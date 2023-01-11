@@ -1,47 +1,54 @@
-{{- if site.Params.platen.features.portable_links.enabled -}}
-  {{- template "portable-link" . -}}
+{{- $Context          := . -}}
+{{- $UsePortableLinks := partialCached "platen/param/getKey"
+                                       "platen.features.portable_links.enabled"
+                                       "platen.features.portable_links.enabled"
+-}}
+{{- if $UsePortableLinks -}}
+  {{- template "portable-link" $Context -}}
 {{- else -}}
-  {{- $href       := printf `href="%s"` (.Destination | safeURL) -}}
-  {{- $text       := .Text | safeHTML -}}
-  {{- $attributes := slice $href -}}
-  {{- with .Title -}}
-    {{- $title := printf `title="%s"` . -}}
-    {{- $attributes = $attributes | append $title -}}
+  {{- $href       := printf `href="%s"` ($Context.Destination | safeURL) -}}
+  {{- $text       := $Context.Text | safeHTML                            -}}
+  {{- $attributes := slice $href                                         -}}
+  {{- with $Context.Title -}}
+    {{- $title     := printf `title="%s"` $Context.Title -}}
+    {{- $attributes = $attributes | append $title        -}}
   {{- end -}}
   {{- $attributes = partial "platen/utils/getSafeAttributes" $attributes -}}
-  {{- printf "<a %s>%s</a>" $attributes $text | safeHTML -}}
+  {{- printf "<a %s>%s</a>" $attributes $text | safeHTML                 -}}
 {{- end -}}
 
 {{- define "portable-link" -}}
-  {{- $destination := .Destination -}}
-  {{- $isRemote    := or (in .Destination ":") (strings.HasPrefix .Destination "//") -}}
-  {{- if not $isRemote -}}
-    {{- $url  := urls.Parse .Destination                   -}}
-    {{- $path := strings.TrimSuffix "/_index.md" $url.Path -}}
+  {{- $Context     := .                                                              -}}
+  {{- $File        := $Context.Page.File                                             -}}
+  {{- $destination := .Destination                                                   -}}
+  {{- $IsRemote    := or (in $destination ":") (strings.HasPrefix $destination "//") -}}
+  {{- if not $IsRemote -}}
+    {{- $URL  := urls.Parse $destination                   -}}
+    {{- $path := strings.TrimSuffix "/_index.md" $URL.Path -}}
     {{- $path  = strings.TrimSuffix "/_index"    $path     -}}
     {{- $path  = strings.TrimSuffix ".md"        $path     -}}
     {{/* If there's no path, assume its a fragment for the current page */}}
     {{- if ne "" $path -}}
-      {{- $page := .Page.GetPage $path -}}
+      {{- $page := $Context.Page.GetPage $path -}}
       {{- if $page -}}
         {{- $destination = $page.RelPermalink -}}
-        {{- if $url.Fragment -}}
-          {{- $destination = print $destination "#" $url.Fragment -}}
+        {{- if $URL.Fragment -}}
+          {{- $destination = print $destination "#" $URL.Fragment -}}
         {{- end -}}
-      {{- else if fileExists (print .Page.File.Dir .Destination) -}}
-        <!-- Nothing -->
+      {{- else if fileExists (print $File.Dir $destination) -}}
+        {{/*  Nothing  */}}
       {{- else -}}
-        {{- warnf "Page '%s' not found in '%s'" .Destination .Page.File -}}
+        {{- warnf "Page '%s' not found in '%s'" $destination $File -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
   {{- $href       := printf `href="%s"` ($destination | safeURL) -}}
-  {{- $text       := .Text | safeHTML -}}
-  {{- $attributes := slice $href -}}
-  {{- with .Title -}}
-    {{- $title := printf `title="%s"` . -}}
-    {{- $attributes = $attributes | append $title -}}
+  {{- $text       := $Context.Text | safeHTML                    -}}
+  {{- $attributes := slice $href                                 -}}
+  {{- with $Context.Title -}}
+    {{- $title := printf `title="%s"` $Context.Title -}}
+    {{- $attributes = $attributes | append $title    -}}
   {{- end -}}
   {{- $attributes = partial "platen/utils/getSafeAttributes" $attributes -}}
-  {{- printf "<a %s>%s</a>" $attributes $text | safeHTML -}}
+  {{- printf "<a %s>%s</a>" $attributes $text | safeHTML                 -}}
 {{- end -}}

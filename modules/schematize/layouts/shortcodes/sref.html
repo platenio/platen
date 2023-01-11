@@ -1,32 +1,39 @@
 {{/*
   This partial adds a link to another schema data entry on the site.
 */}}
-{{- $params := .Params -}}
+{{- $Input  := .             -}}
+{{- $Params := $Input.Params -}}
 
-{{- $reference := cond (.IsNamedParams) (.Get "reference") (.Get 0) -}}
-{{- $refTarget := "schematize" -}}
-{{- with (.Get "target") -}}
+{{- $reference := $Input.Get "reference" | default ($Input.Get 0) -}}
+{{- $refTarget := "schematize"                                    -}}
+{{- with ($Input.Get "target") -}}
   {{- $refTarget = . -}}
 {{- else -}}
-  {{- $target := .Get 1 -}}
+  {{- $target := $Input.Get 1 -}}
   {{- if not (in (slice "urlOnly" "noSuffix") $target) -}}
-    {{- $refTarget = default $refTarget $target -}}
+    {{- $refTarget = $target | default $refTarget -}}
   {{- end -}}
 {{- end -}}
 
-{{- $addSuffix := not (in .Params "noSuffix") -}}
-{{- $urlOnly    := in .Params "urlOnly" -}}
+{{- $addSuffix := not (in $Params "noSuffix") -}}
+{{- $urlOnly   := in $Params "urlOnly"        -}}
 
 {{- $linkText := printf "<code>%s</code>" $reference -}}
-{{- with .Inner -}}
-  {{- $linkText = markdownify . -}}
+{{- with $Input.Inner -}}
+  {{- $linkText = markdownify $Input.Inner -}}
+{{- end -}}
+
+{{- $ReferenceMap := site.Params.schematize.reference_map -}}
+{{- if (partialCached "schematize/utils/canUsePlatenPartials" "" "check") -}}
+  {{- $ConfigKey   := "schematize.reference_map"                                       -}}
+  {{- $ReferenceMap = partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 {{- end -}}
 
 {{- if and (ne "schematize" $refTarget) $addSuffix -}}
   {{- $srefSuffix := "" -}}
-  {{- with site.Params.schematize.reference_map -}}
+  {{- with $ReferenceMap -}}
     {{- $indices := split (printf "%s.sref_suffix" $refTarget) "." -}}
-    {{- $srefSettings := . -}}
+    {{- $srefSettings := $ReferenceMap -}}
     {{- range $index := $indices -}}
       {{- if isset $srefSettings "sref_suffix" -}}
         {{- $srefSuffix = index $srefSettings "sref_suffix" -}}
@@ -47,11 +54,11 @@
 {{- with $reference -}}
   {{- $href := "" -}}
   {{- if eq "schematize" $refTarget -}}
-    {{- $hrefParams := dict "reference" $reference -}}
-    {{- $href = partial "schematize/sref/schematize" $hrefParams -}}
+    {{- $hrefParams := dict "reference" $reference                      -}}
+    {{- $href        = partial "schematize/sref/schematize" $hrefParams -}}
   {{- else -}}
     {{- $hrefParams := dict "reference" $reference "target" $refTarget -}}
-    {{- $href = partial "schematize/sref/external" $hrefParams -}}
+    {{- $href        = partial "schematize/sref/external" $hrefParams  -}}
   {{- end -}}
 
   {{- with $href -}}

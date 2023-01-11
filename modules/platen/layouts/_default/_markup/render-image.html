@@ -1,21 +1,21 @@
-{{- $params := . -}}
-
-{{- $renderedImage := "" -}}
+{{- $Context       := .                                                            -}}
+{{- $PlatenConfig  := partialCached "platen/param/getKey" "platen" "platen" -}}
+{{- $renderedImage := ""                                                           -}}
 
 {{/* Use renderers from features first */}}
-{{- range $feature := site.Params.platen.features -}}
+{{- range $feature := $PlatenConfig.features -}}
   {{- if and $feature.enabled (eq "" $renderedImage) -}}
     {{- with $feature.partials.renderers.image -}}
-      {{- $renderedImage = partial . $params }}
+      {{- $renderedImage = partial . $Context }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
 {{/* Use arbitrary renderers if no feature applied */}}
-{{- range $markup := site.Params.platen.markup -}}
+{{- range $markup := $PlatenConfig.markup -}}
   {{- if and $markup.enabled (eq "" $renderedImage) -}}
     {{- with $markup.partials.renderers.image -}}
-      {{- $renderedImage = partial . $params }}
+      {{- $renderedImage = partial . $Context }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -24,5 +24,5 @@
 {{- with $renderedImage -}}
   {{- safeHTML $renderedImage -}}
 {{- else -}}
-  {{- partial "platen/markup/_default/image" $params -}}
+  {{- partial "platen/markup/_default/image" $Context -}}
 {{- end -}}

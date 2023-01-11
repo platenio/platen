@@ -1,8 +1,10 @@
-{{- $params   := .                -}}
-{{- $context  := $params.Context  -}}
-{{- $position := $params.Position -}}
+{{- $params     := .                                                                -}}
+{{- $context    := $params.Context                                                  -}}
+{{- $position   := $params.Position                                                 -}}
+{{- $ConfigKey  := "platen.display.menu"                                            -}}
+{{- $MenuConfig := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 
-{{- with (index site.Params.platen.display.menu $position) -}}
+{{- with (index $MenuConfig $position) -}}
   {{- $positionSettings := . -}}
   {{- with $positionSettings.entries -}}
     {{- $partialParams := merge $params $positionSettings -}}

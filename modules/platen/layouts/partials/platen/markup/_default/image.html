@@ -1,21 +1,29 @@
-{{- if site.Params.platen.features.portable_links.enabled -}}
-  {{- template "portable-image" . -}}
+{{- $Context          := . -}}
+{{- $UsePortableLinks := partialCached "platen/param/getKey"
+                                       "platen.features.portable_links.enabled"
+                                       "platen.features.portable_links.enabled"
+-}}
+{{- if $UsePortableLinks -}}
+  {{- template "portable-image" $Context -}}
 {{- else -}}
-  <img src="{{ .Destination | safeURL }}"
-       alt="{{ .Text }}" {{ with .Title }}title="{{ . }}"{{ end }}/>
+  <img src="{{ $Context.Destination | safeURL }}"
+       alt="{{ $Context.Text }}" {{ with $Context.Title }}title="{{ . }}"{{ end }}/>
 {{- end -}}
 
 {{- define "portable-image" -}}
-  {{- $isRemote := or (in .Destination "://") (strings.HasPrefix .Destination "//") }}
+  {{- $Context  := . -}}
+  {{- $Destination := $Context.Destination -}}
+  {{- $File        := $Context.Page.File   -}}
+  {{- $isRemote := or (in $Destination "://") (strings.HasPrefix $Destination "//") }}
   {{- if not $isRemote }}
-    {{- $path := print .Page.File.Dir .Destination }}
-    {{- if strings.HasPrefix .Destination "/" }}
-      {{- $path = print "/static" .Destination }}
+    {{- $path := print $File.Dir $Destination }}
+    {{- if strings.HasPrefix $Destination "/" }}
+      {{- $path = print "/static" $Destination }}
     {{- end }}
     {{- if not (fileExists $path) }}
-      {{- warnf "Image '%s' not found in '%s'" .Destination .Page.File }}
+      {{- warnf "Image '%s' not found in '%s'" $Destination $File }}
     {{- end }}
   {{- end }}
-  <img src="{{ .Destination | safeURL }}"
-       alt="{{ .Text }}" {{ with .Title }}title="{{ . }}"{{ end }}/>
+  <img src="{{ $Destination | safeURL }}"
+       alt="{{ $Context.Text }}" {{ with $Context.Title }}title="{{ . }}"{{ end }}/>
 {{- end -}}

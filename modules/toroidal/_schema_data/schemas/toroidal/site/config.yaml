@@ -21,11 +21,14 @@ properties:
         don't want to add an `_index.md` file.
 
         If you're hosting multiple webrings on the same site, every webring except one will need to
-        define a section page (`_index.md`) and override this value with `toroidal_webring_name` in
-        the front matter.
+        define a section page (`_index.md`) and override this value with
+        [sref:`toroidal_webring_name`][s01] in the front matter.
 
-        This value can also be overridden on a per member basis with `toroidal_webring_name` in the
-        member page's front matter.
+        This value can also be overridden on a per member basis with
+        [sref:`toroidal_webring_name`][s02] in the member page's front matter.
+
+        [s01]: toroidal.content.section.toroidal_webring_name
+        [s02]: toroidal.content.member.toroidal_webring_name
     type: string
   random_member_link:
     title: Random Member Link
@@ -46,12 +49,16 @@ properties:
         When there's connectivity to the webring host, the random member link instead calls the
         host's API for the most up-to-date list of members and randomly selects one.
 
-        This value can be overridden at the webring level by defining `toroidal_random_member_link`
-        in the front matter of the webring's section (`_index.md`) page. It can also be overridden
-        on a per member basis with `toroidal_random_member_link` in the member page's front matter.
+        This value can be overridden at the webring level by defining
+        [sref:`toroidal_random_member_link`][s01] in the front matter of the webring's section
+        (`_index.md`) page. It can also be overridden on a per member basis with
+        [sref:`toroidal_random_member_link`][s02] in the member page's front matter.
 
         This value only affects the inclusion of the link in member navigation, not the availability
         of the API for the webring.
+
+        [s01]: toroidal.content.section.toroidal_random_member_link
+        [s02]: toroidal.content.member.toroidal_random_member_link
     type: boolean
     default: true
   class:
@@ -64,9 +71,12 @@ properties:
         multiple classes, separate each class with a space. You can use this value with the defined
         themes to style a webring more specifically.
 
-        This value can be overridden at the webring level by defining `toroidal_class` in the front
-        matter of the webring's section (`_index.md`) page. It can also be overridden on a per
-        member basis with `toroidal_class` in the member page's front matter.
+        This value can be overridden at the webring level by defining [sref:`toroidal_class`][s01]
+        in the front matter of the webring's section (`_index.md`) page. It can also be overridden
+        on a per member basis with [sref:`toroidal_class`][s02] in the member page's front matter.
+
+        [s01]: toroidal.content.section.toroidal_class
+        [s02]: toroidal.content.member.toroidal_class
     type: string
     default: ""
   mode:
@@ -106,9 +116,12 @@ properties:
         member page includes the webring's name as an `h2` at the top of the member's navigation.
 
         Set this value to `true` to hide the element on member pages for the site. You can override
-        this setting on a per-webring basis by setting [sref:`toroidal_hide_header`] in the
-        webring's section page front matter or by setting [sref:`toroidal_hide_header`] in the
+        this setting on a per-webring basis by setting [sref:`toroidal_hide_header`][s01] in the
+        webring's section page front matter or by setting [sref:`toroidal_hide_header`][s02] in the
         member page's front matter.
+
+        [s01]: toroidal.content.section.toroidal_hide_header
+        [s02]: toroidal.content.member.toroidal_hide_header
     type: boolean
     default: false
   admin_details:
@@ -157,8 +170,10 @@ properties:
         If the partial file name has the `.md` or `.markdown` extension, the partial renders the
         Markdown to HTML.
 
-        You can override this setting for any webring by setting [sref:`toroidal_admin_details`] in
+        You can override this setting for any webring by setting [sref:`toroidal_admin_details`][s01] in
         the administration page's front matter.
+
+        [s01]: toroidal.content.admin.toroidal_admin_details
     oneOf:
       - enum:
         - default

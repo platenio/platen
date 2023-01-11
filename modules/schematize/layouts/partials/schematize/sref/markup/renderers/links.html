@@ -1,11 +1,15 @@
-{{- $params      := .                                    -}}
-{{- $config      := site.Params.platen.markup.schematize -}}
-{{- $page        := $params.Page                         -}}
-{{- $destination := $params.Destination                  -}}
-{{- $title       := $params.Title                        -}}
-{{- $text        := $params.PlainText                    -}}
+{{- $Params      := .                                    -}}
+{{- $Page        := $Params.Page                         -}}
+{{- $Destination := $Params.Destination                  -}}
+{{- $title       := $Params.Title                        -}}
+{{- $text        := $Params.PlainText                    -}}
 {{- $prefix      := "sref:"                              -}}
 {{- $linkText    := ""                                   -}}
+{{- $Config      := site.Params.platen.markup.schematize -}}
+{{- if (partialCached "schematize/utils/canUsePlatenPartials" "" "check") -}}
+  {{- $ConfigKey := "platen.markup.schematize"                                       -}}
+  {{- $Config     = partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- end -}}
 
 {{/*
   Given the page has schematize: platen.content.post
@@ -16,7 +20,7 @@
 */}}
 
 {{- if hasPrefix $text $prefix -}}
-  {{- $destinationInfo  := split $destination ":" -}}
+  {{- $destinationInfo  := split $Destination ":" -}}
   {{- $reference := "" -}}
   {{- $refTarget := "schematize" -}}
   {{- if eq 1 (len $destinationInfo) -}}
@@ -25,7 +29,7 @@
     {{- $refTarget = index $destinationInfo 0 -}}
     {{- $reference = index $destinationInfo 1 -}}
   {{- else -}}
-    {{- with $params.Page.Params.schematize -}}
+    {{- with $Page.Params.schematize -}}
       {{- $reference = . -}}
     {{- else -}}
       {{- errorf "No schematize target or path found for sref link" -}}
@@ -42,11 +46,11 @@
   {{- end -}}
 
   {{- with $href -}}
-    {{- $text  := strings.TrimPrefix $prefix $params.Text -}}
+    {{- $text  := strings.TrimPrefix $prefix $Params.Text -}}
     {{- $class := print `class="schematize-sref"`}}
     {{- $href  := printf `href="%s"` ($href | safeURL) -}}
     {{- $title := "" -}}
-    {{- with $params.Title -}}
+    {{- with $Params.Title -}}
       {{- $title = printf ` title="%s"` . -}}
     {{- end -}}
     {{- $linkText = printf "<a %s %s%s>%s</a>" $class $href $title $text -}}

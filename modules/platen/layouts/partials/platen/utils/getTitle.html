@@ -1,18 +1,20 @@
 {{/*
   Partial to generate page name from Title or File name. Accepts Page as context
 */}}
-{{- $params  := .     -}}
-{{- $context := .     -}}
-{{- $title   := ""    -}}
+{{- $Params      := .                                                                -}}
+{{- $context     := .                                                                -}}
+{{- $title       := ""                                                               -}}
+{{- $ConfigKey   := "platen.features"                                                -}}
+{{- $Features    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 
-{{- if reflect.IsMap $params -}}
-  {{- $context = $params.Context -}}
+{{- if reflect.IsMap $Params -}}
+  {{- $context = $Params.Context -}}
 {{- end -}}
 
-{{- range $feature, $settings := site.Params.platen.features -}}
+{{- range $feature, $settings := $Features -}}
   {{- if and (eq "" $title) $settings.enabled -}}
     {{- with $settings.partials.title -}}
-      {{ $title = partial . $params }}
+      {{ $title = partial . $Params }}
     {{- end -}}
   {{- end -}}
 {{- end -}}

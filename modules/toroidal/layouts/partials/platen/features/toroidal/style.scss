@@ -1,6 +1,11 @@
-{{- $context := . -}}
+{{- $Context := .                    -}}
+{{- $Config  := site.Params.toroidal -}}
+{{- if (partialCached "toroidal/utils/canUsePlatenPartials" "" "check") -}}
+  {{- $ConfigKey := "toroidal"                                                       -}}
+  {{- $Config     = partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- end -}}
 {{- $themesToImport := slice -}}
-{{- range $theme, $enabled := site.Params.toroidal.themes -}}
+{{- range $theme, $enabled := $Config.themes -}}
   {{- if eq true $enabled -}}
     {{- $themesToImport = $themesToImport | append $theme -}}
   {{- else if $enabled -}}

@@ -1,0 +1,20 @@
+{{/*
+    This partial is used to retrieve the list of all registered shortcodes, optionally on returning
+    the disabled ones.
+*/}}
+{{- $Params       := .                                    -}}
+{{- $DisabledOnly := $Params.DisabledOnly | default false -}}
+
+{{- $registeredShortcodes := partialCached "platen/param/getKey" "platen.shortcodes" "platen.shortcodes" -}}
+
+{{- if $DisabledOnly -}}
+  {{- $disabledShortcodes := dict -}}
+  {{- range $shortcode, $settings := $registeredShortcodes -}}
+    {{- if eq $settings.enabled false -}}
+      {{- $disabledShortcodes = merge $disabledShortcodes (dict $shortcode $settings) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $registeredShortcodes = $disabledShortcodes -}}
+{{- end -}}
+
+{{- return $registeredShortcodes -}}

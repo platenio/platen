@@ -1,21 +1,21 @@
-{{- $params := . -}}
-
-{{- $renderedHeading := "" -}}
+{{- $Context         := .                                             -}}
+{{- $PlatenConfig      := partialCached "platen/param/getKey" "platen" "platen" -}}
+{{- $renderedHeading := ""                                            -}}
 
 {{/* Use renderers from features first */}}
-{{- range $feature := site.Params.platen.features -}}
+{{- range $feature := $PlatenConfig.features -}}
   {{- if and $feature.enabled (eq "" $renderedHeading) -}}
     {{- with $feature.partials.renderers.heading -}}
-      {{- $renderedHeading = partial . $params }}
+      {{- $renderedHeading = partial . $Context }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
 {{/* Use arbitrary renderers if no feature applied */}}
-{{- range $markup := site.Params.platen.markup -}}
+{{- range $markup := $PlatenConfig.markup -}}
   {{- if and $markup.enabled (eq "" $renderedHeading) -}}
     {{- with $markup.partials.renderers.heading -}}
-      {{- $renderedHeading = partial . $params }}
+      {{- $renderedHeading = partial . $Context }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -24,5 +24,5 @@
 {{- with $renderedHeading -}}
   {{- safeHTML $renderedHeading -}}
 {{- else -}}
-  {{- partial "platen/markup/_default/heading" $params -}}
+  {{- partial "platen/markup/_default/heading" $Context -}}
 {{- end -}}

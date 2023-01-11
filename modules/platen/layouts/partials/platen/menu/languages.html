@@ -1,12 +1,15 @@
+{{- $Context       := . -}}
+{{- $ConfigKey     := "platen.multilingual"                                            -}}
+{{- $LangConfig    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 <!-- Merge home and current page translations -->
-{{ $translatedOnly := default false site.Params.platen.multilingual.translated_only }}
+{{ $translatedOnly := $LangConfig.translated_only | default false }}
 {{ $translations := dict }}
-{{ if (eq $translatedOnly false ) }}
+{{ if (eq $translatedOnly false) }}
   {{ range site.Home.Translations }}
     {{ $translations = merge $translations (dict .Language.Lang .) }}
   {{ end }}
 {{ end }}
-{{ range .Translations }}
+{{ range $Context.Translations }}
   {{ $translations = merge $translations (dict .Language.Lang .) }}
 {{ end }}
 

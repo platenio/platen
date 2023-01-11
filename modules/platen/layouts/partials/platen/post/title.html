@@ -1,19 +1,21 @@
 {{/*
   Docs.Partial: title
 */}}
-{{- $context := . -}}
+{{- $Context := . -}}
 
 {{/* Determine whether the page already has an h1 */}}
-{{- $hasHeading := default site.Params.platen.display.header.title_as_heading
-                           $context.Params.platen.title_as_heading
--}}
-{{- $hasHeading  = default false $hasHeading -}}
+{{- $hasHeading := partial "platen/param/resolve" (
+  dict "Config"  "platen.display.header.title_as_heading"
+       "Param"   "platen.title_as_heading"
+       "Context" $Context
+       "Default" false
+) -}}
 
 {{/* Continue only if the post doesn't already have a title heading */}}
 {{- if not $hasHeading -}}
-  {{- $titleParams := dict "Context" $context "ForHeading" true    -}}
+  {{- $titleParams := dict "Context" $Context "ForHeading" true    -}}
   {{- $titleText   := partial "platen/utils/getTitle" $titleParams -}}
-  {{- $href        := $context.RelPermalink                        -}}
+  {{- $href        := $Context.RelPermalink                        -}}
 
   {{/* Define the attribute list for the link */}}
   {{- $attributes := slice                                                -}}

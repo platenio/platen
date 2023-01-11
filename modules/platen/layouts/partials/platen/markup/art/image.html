@@ -1,16 +1,18 @@
-{{- $Params      := .                               -}}
-{{- $Config      := site.Params.platen.markup.art   -}}
-{{- $Page        := $Params.Page                    -}}
-{{- $destination := $Params.Destination             -}}
-{{- $title       := $Params.Title                   -}}
-{{- $text        := $Params.PlainText               -}}
-{{- $IsBlock     := $Params.IsBlock                 -}}
-{{- $Ordinal     := $Params.Ordinal                 -}}
+{{- $Params      := .                                                                -}}
+{{- $Page        := $Params.Page                                                     -}}
+{{- $destination := $Params.Destination                                              -}}
+{{- $title       := $Params.Title                                                    -}}
+{{- $text        := $Params.PlainText                                                -}}
+{{- $IsBlock     := $Params.IsBlock                                                  -}}
+{{- $Ordinal     := $Params.Ordinal                                                  -}}
+{{- $ConfigKey   := "platen.markup.art"                                              -}}
+{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Aliases     := $Config.aliases                                                  -}}
 
 {{- $renderedImage := "" -}}
 
 {{- $prefixes := slice "art:" -}}
-{{- range $alias := $Config.aliases -}}
+{{- range $alias := $Aliases -}}
   {{- $prefixes = $prefixes | append (printf "%s:" $alias) -}}
 {{- end -}}
 

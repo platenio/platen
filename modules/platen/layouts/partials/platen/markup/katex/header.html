@@ -1,8 +1,10 @@
 {{- $Context := . -}}
-
+{{- $IntegrityPartial := "platen/utils/getIntegrityAttributes" -}}
+{{- $ConfigKey   := "platen.markup.katex" -}}
+{{- $KatexConfig := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 {{- $loadKatex := $Context.Store.Get "_hasKatex"
     | default $Context.Params.platen.markup.katex.always_load
-    | default site.Params.platen.markup.katex.always_load
+    | default $KatexConfig.always_load
 -}}
 
 {{- if $loadKatex -}}
@@ -11,7 +13,7 @@
                    | default (gt (findRE `\\ce\{(.|\s)+?\}` $Context.RawContent) 0)
   -}}
   {{/* Get the KaTeX URLs to use */}}
-  {{- $Version      := site.Params.platen.markup.katex.version | default "0.16.4"         -}}
+  {{- $Version      := $KatexConfig.version | default "0.16.4"                            -}}
   {{- $UrlPrefix    := "https://cdn.jsdelivr.net/npm/katex"                               -}}
   {{- $StyleUrl     := printf "%s@%s/dist/katex.min.css"              $UrlPrefix $Version -}}
   {{- $LibraryUrl   := printf "%s@%s/dist/katex.min.js"               $UrlPrefix $Version -}}
@@ -26,7 +28,7 @@
       | resources.Copy "katex/katex.min.css"
       | resources.Fingerprint
   -}}
-  {{- $styleIntegrity  := partial "platen/utils/getIntegrityAttributes" $style  -}}
+  {{- $styleIntegrity  := partialCached $IntegrityPartial $style "KatexStyle" -}}
   {{- $styleAttributes := slice `rel="stylesheet"`
       | append (printf `href="%s"` $style.RelPermalink)
       | append $styleIntegrity
@@ -39,7 +41,7 @@
       | resources.Copy "katex/katex.min.js"
       | resources.Fingerprint
   -}}
-  {{- $libraryIntegrity  := partial "platen/utils/getIntegrityAttributes" $library  -}}
+  {{- $libraryIntegrity  := partialCached $IntegrityPartial $library "KatexLibrary" -}}
   {{- $libraryAttributes := slice "defer"
       | append (printf `src="%s"` $library.RelPermalink)
       | append $libraryIntegrity
@@ -53,7 +55,7 @@
         | resources.Copy "katex/mhchem.min.js"
         | resources.Fingerprint
     -}}
-    {{- $chemistryIntegrity  := partial "platen/utils/getIntegrityAttributes" $chemistry  -}}
+    {{- $chemistryIntegrity  := partialCached $IntegrityPartial $chemistry "KatexChemistry" -}}
     {{- $chemistryAttributes := slice "defer"
         | append (printf `src="%s"` $chemistry.RelPermalink)
         | append $chemistryIntegrity
@@ -67,7 +69,7 @@
       | resources.Copy "katex/auto-render.min.js"
       | resources.Fingerprint
   -}}
-  {{- $renderIntegrity  := partial "platen/utils/getIntegrityAttributes" $render  -}}
+  {{- $renderIntegrity  := partialCached $IntegrityPartial $render "KatexRenderer" -}}
   {{- $renderAttributes := slice "defer"
       | append (printf `src="%s"` $render.RelPermalink)
       | append $renderIntegrity

@@ -4,9 +4,9 @@
 {{- $context := . -}}
 
 {{/* Retrieve settings from the site config */}}
-{{- $platenSettings := site.Params.platen                 -}}
-{{- $repoUrl        := $platenSettings.repository.url     -}}
-{{- $dateFormat     := $platenSettings.display.date_format -}}
+{{- $PlatenConfig := partialCached "platen/param/getKey" "platen" "platen" -}}
+{{- $repoUrl      := $PlatenConfig.repository.url     -}}
+{{- $dateFormat   := $PlatenConfig.display.date_format -}}
 
 {{/* Retrieve info from the page */}}
 {{- $gitInfo := $context.GitInfo -}}
@@ -16,7 +16,7 @@
 
 {{ if $shouldRender }}
   {{/* Define the commit path and date based on site config and git info */}}
-  {{- $commitPath     := default "commit" $platenSettings.repository.commit_path        -}}
+  {{- $commitPath     := default "commit" $PlatenConfig.repository.commit_path         -}}
   {{- $dateParams     := dict    "Date" $gitInfo.AuthorDate.Local "Format" $dateFormat -}}
   {{- $date           := partial "platen/utils/getFormattedDate" $dateParams           -}}
 

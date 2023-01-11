@@ -1,16 +1,22 @@
 {{/*
   This partial returns the link reference to a specified external header
 */}}
-{{- $params    := .                 -}}
-{{- $reference := $params.reference -}}
-{{- $target    := $params.target    -}}
-{{- $href      := ""                -}}
+{{- $params       := .                 -}}
+{{- $reference    := $params.reference -}}
+{{- $target       := $params.target    -}}
+{{- $href         := ""                -}}
 
-{{- with site.Params.schematize.reference_map -}}
+{{- $ReferenceMap := site.Params.schematize.reference_map -}}
+{{- if (partialCached "schematize/utils/canUsePlatenPartials" "" "check") -}}
+  {{- $ConfigKey   := "schematize.reference_map"                                       -}}
+  {{- $ReferenceMap = partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- end -}}
+
+{{- with $ReferenceMap -}}
   {{- $srefTarget := printf "%s.sref_base" $target -}}
-  {{- $indices    := split $srefTarget "."        -}}
-  {{- $srefMap    := .                            -}}
-  {{- $srefBase   := ""                           -}}
+  {{- $indices    := split $srefTarget "."         -}}
+  {{- $srefMap    := .                             -}}
+  {{- $srefBase   := ""                            -}}
 
   {{- range $index := $indices -}}
     {{- if eq "sref_base" $index -}}

@@ -1,0 +1,37 @@
+{{/*
+    This partial is a convenience partial to wrap calling `_resolve` and caching the results without
+    requiring the called to use a very long call. Without this partial, caching a resolution would
+    look like line 14 everywhere it's used, making for very long lines and continually repeated
+    boilerplate.
+
+    `_resolve` is used to canonically resolve a configuration option by merging the configuration
+    setting from data, Hugo's configuration (files and environment), a page's front matter, and a
+    default value.
+
+    When only a ConfigKey is provided, the value is a deep merge of the key's data over
+    configuration.
+
+    When only a ParamKey is provided, the value is pulled from the page's front matter. To use this
+    option, the caller must pass the page's context.
+
+    When a ConfigKey and ParamKey are provided, the value from the page's front matter is used if
+    it's available. If it isn't, the value defaults to the deep merge of the key's data over
+    configuration.
+
+    When a Default is provided, the value is set to the Default only if the value would otherwise
+    be nil.
+*/}}
+{{- $Input       := .              -}}
+{{- $Context     := $Input.Context -}}
+{{- $ConfigKey   := $Input.Config  -}}
+{{- $ParamKey    := $Input.Param   -}}
+{{- $value       := ""             -}}
+{{- $Partial     := "platen/param/_resolve"}}
+
+{{- with $Context -}}
+  {{- $value = partialCached $Partial $Input $Input $Context.Permalink -}}
+{{- else -}}
+  {{- $value = partialCached $Partial $Input $Input -}}
+{{- end -}}
+
+{{- return $value -}}

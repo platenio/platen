@@ -2,8 +2,8 @@
 {{- $context := . -}}
 
 {{/* Retrieve the registered shortcodes, process the disabled ones */}}
-{{- $params     := dict "DisabledOnly" true                                             -}}
-{{- $shortcodes := partialCached "platen/configuration/getRegisteredShortcodes" $params -}}
+{{- $params     := dict "DisabledOnly" true                                                     -}}
+{{- $shortcodes := partialCached "platen/param/getRegisteredShortcodes" $params "check" -}}
 
 {{- range $shortcode, $settings := $shortcodes -}}
   {{- $names := slice $shortcode -}}

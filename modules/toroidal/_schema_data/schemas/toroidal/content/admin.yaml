@@ -27,12 +27,12 @@ properties:
     schematize:
       weight: 2
       details: |
-        Uses Hugo's [output formats] to ensure that the Toroidal module can display the
+        Uses Hugo's [output formats][01] to ensure that the Toroidal module can display the
         administration page for members to get their HTML snippets from and the JSON for the
         webring's main list is created. Without the JSON, members have no way of getting updated
         member definitions and the random link functionality won't work.
 
-        [output formats]: https://gohugo.io/templates/output-formats/#configure-output-formats
+        [01]: https://gohugo.io/templates/output-formats/#configure-output-formats
     type: array
     default:
       - html
@@ -47,8 +47,8 @@ properties:
       details: |
         This setting defines the partial to use for the "About Member Administration" `details`
         element in a webring's administration page. It inherits the site's
-        [sref:`toroidal.admin_details`] setting. You can set it to `none` to intentionally exclude
-        the details.
+        [sref:`toroidal.admin_details`][s01] setting. You can set it to `none` to intentionally
+        exclude the details.
 
         The pre-defined options are:
 
@@ -85,6 +85,8 @@ properties:
 
         If the partial file name has the `.md` or `.markdown` extension, the partial renders the
         Markdown to HTML.
+
+        [s01]: toroidal.site.config.admin_details
     oneOf:
       - enum:
         - default

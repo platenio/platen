@@ -1,15 +1,18 @@
-{{- $context := . -}}
-{{- $searchJSFile := printf "%s.search.js" .Language.Lang }}
-{{- $searchJS := resources.Get "scripts/features/search/index.js"
-                 | resources.ExecuteAsTemplate $searchJSFile $context
-                 | resources.Fingerprint
+{{- $Context          := .                                            -}}
+{{- $IntegrityPartial := "platen/utils/getIntegrityAttributes"        -}}
+{{- $searchJSFile     := printf "%s.search.js" $Context.Language.Lang -}}
+{{- $searchJS         := resources.Get "scripts/features/search/index.js"
+                         | resources.ExecuteAsTemplate $searchJSFile $Context
+                         | resources.Fingerprint
 }}
-{{- $searchJSIntegrity := partial "platen/utils/getIntegrityAttributes" $searchJS -}}
+{{- $searchJSIntegrity := partialCached $IntegrityPartial $searchJS "SearchJS" -}}
 {{/* Get FlexSearch from CDN
 
   This is currently commented out because the transition to 0.7.0+ will require substantial rework.
 
-{{- $searchApiVersion   := default "0.7.31" site.Params.platen.features.search.flex_search_version -}}
+{{- $ConfigKey          := "platen.features.search.flex_search_version"                          -}}
+{{- $ConfigVersion      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey      -}}
+{{- $searchApiVersion   := $ConfigVersion | default "0.7.31"                                     -}}
 {{- $urlPrefix          := "https://rawcdn.githack.com/nextapps-de/flexsearch"                   -}}
 {{- $searchApiUrl       := printf "%s/%s/dist/flexsearch.bundle.js" $urlPrefix $searchApiVersion -}}
 {{- $searchApi          := resources.GetRemote $searchApiUrl | resources.Fingerprint             -}}
@@ -20,7 +23,7 @@
                            | resources.Copy "scripts/flexsearch.min.js"
                            | resources.Fingerprint
 -}}
-{{- $searchApiIntegrity := partial "platen/utils/getIntegrityAttributes" $searchApi -}}
+{{- $searchApiIntegrity := partialCached $IntegrityPartial $searchApi "SearchApi" -}}
 {{/* Render */}}
 <script defer src="{{ $searchApi.RelPermalink }}"
               {{ $searchApiIntegrity }}></script>

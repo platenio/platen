@@ -1,10 +1,13 @@
-{{- $platenSection := site.Params.platen.display.menu.root_section | default "/" -}}
-{{- if eq $platenSection "*" -}}
-  {{- $platenSection = "/" -}}{{/* Backward compatibility */}}
+{{- $Context       := . -}}
+{{- $ConfigKey     := "platen.display.menu"                                            -}}
+{{- $MenuConfig    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $PlatenSection := $MenuConfig.root_section | default "/"                           -}}
+{{- if eq $PlatenSection "*" -}}
+  {{- $PlatenSection = "/" -}}{{/* Backward compatibility */}}
 {{- end }}
 
-{{ with site.GetPage $platenSection }}
-  {{ template "platen-section-children" (dict "Section" . "CurrentPage" $) }}
+{{ with site.GetPage $PlatenSection }} {{ $Page := . }}
+  {{ template "platen-section-children" (dict "Section" $Page "CurrentPage" $Context) }}
 {{ end }}
 
 {{ define "platen-section-children" }}{{/* (dict "Section" .Section "CurrentPage" .CurrentPage) */}}

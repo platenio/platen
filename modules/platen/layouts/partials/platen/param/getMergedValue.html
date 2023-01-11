@@ -1,0 +1,34 @@
+{{/*
+    This partial is used to retrieve the canonicalized value of the site's configuration params by
+    merging the settings from data over Hugo's configuration (files and environment).
+*/}}
+{{- $Context := .                                           -}}
+{{- $Data    := $Context.Data   | default site.Data._params -}}
+{{- $Params  := $Context.Params | default site.Params       -}}
+{{- $Prefix  := $Context.Prefix | default ""                -}}
+{{- $config  := dict                                        -}}
+
+{{- range $paramKey, $paramValue := $Params -}}
+  {{- $value := $paramValue -}}
+  {{- if reflect.IsMap $paramValue -}}
+    {{- with index $Data $paramKey -}}
+      {{- $rContext := dict "Data" . "Params" $paramValue                               -}}
+      {{- $value     = partialCached "platen/param/getMergedValue" $rContext $rContext -}}
+    {{- end -}}
+  {{- else -}}
+    {{- with index $Data $paramKey -}}
+      {{/* Naive replacement for scalars and lists */}}
+      {{- $value = . -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $config = merge $config (dict $paramKey $value) -}}
+{{- end -}}
+
+{{- range $dataKey, $dataValue := $Data -}}
+  {{- with index $config $dataKey -}}
+  {{- else -}}
+    {{- $config = merge $config (dict $dataKey $dataValue) -}}
+  {{- end }}
+{{- end -}}
+
+{{- return $config -}}

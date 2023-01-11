@@ -9,8 +9,8 @@ schematize:
     reference documentation. An entry in the `sref_map` defines information for the shortcode
     and renderer to use when referencing external documentation.
 
-    The [sref:`sref_base`] setting defines the base URL for the reference. The
-    [sref:`sref_suffix`] setting defines an optional automatic postix to add to the link text
+    The [sref:`sref_base`][s01] setting defines the base URL for the reference. The
+    [sref:`sref_suffix`][s02] setting defines an optional automatic postix to add to the link text
     when using the shortcode and is ignored by the link renderer.
 
     You can arbitrarily nest maps within each other to keep references from the same source but
@@ -41,6 +41,8 @@ schematize:
     > Checkout [sref:`text-decoration`] in the MDN documentation.
 
     [sref:`text-decoration`]: mdn.css:text-decoration
+    [s01]: schematize.site.reference_map.sref_base
+    [s02]: schematize.site.reference_map.sref_suffix
 type: object
 properties:
   sref_suffix:

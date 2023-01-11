@@ -8,9 +8,11 @@ schematize:
     Defines optional settings for the Toroidal module on a section (`_index.md`) page using values
     in the page's front matter.
 
-    This is largely only useful for defining defaults for the webring through Hugo's `cascade`
+    This is largely only useful for defining defaults for the webring through Hugo's [`cascade`][01]
     feature, allowing you to define the values once at the section level and override or extend
     them for members as needed.
+
+    [01]: https://gohugo.io/content-management/front-matter/#front-matter-cascade
 type: object
 properties:
   cascade:
@@ -31,9 +33,15 @@ properties:
         schematize:
           weight: 1
           details: |
-            Specifies the name of the webring. This setting can be defined at the site, webring, and
-            member level, with the webring overriding the site and the member overriding both. If this
-            value isn't specified, the default name `Webring` is used.
+            Specifies the name of the webring. If this value isn't specified, the default name
+            `Webring` is used.
+
+            This setting overrides the [sref:`toroidal.webring_name`][s01] in the site's
+            configuration. You can override this setting on a per-member basis by setting
+            [sref:`toroidal_webring_name`][s02] in the member page's front matter.
+
+            [s01]: toroidal.site.config.webring_name
+            [s02]: toroidal.content.member.toroidal_webring_name
         type: string
       toroidal_random_member_link:
         title: Display Random Member
@@ -41,12 +49,16 @@ properties:
         schematize:
           weight: 2
           details: |
-            Specifies whether the navigation for a member should include a link to a random member of
-            the webring. This setting can be defined at the site, webring, and member level, with the
-            webring overriding the site and the member overriding both.
+            Specifies whether the navigation for a member should include a link to a random member
+            of the webring. Set this value to `true` to enable the random member link and `false` to
+            disable it. The default is `true`.
+            
+            This setting overrides the [sref:`toroidal.random_member_link`][s01] in the site's
+            configuration. You can override this setting on a per-member basis by setting
+            [sref:`toroidal_random_member_link`][s02] in the member page's front matter.
 
-            Set this value to `true` to enable the random member link and `false` to disable it. The
-            default is `true`.
+            [s01]: toroidal.site.config.random_member_link
+            [s02]: toroidal.content.member.toroidal_random_member_link
         type: boolean
         default: true
       toroidal_class:
@@ -55,9 +67,16 @@ properties:
         schematize:
           weight: 3
           details: |
-            Specifies one or more classes to append to the generated HTML for the webring. To specify
-            multiple classes, separate each class with a space. You can use this value with the defined
-            themes to style a webring more specifically.
+            Specifies one or more classes to append to the generated HTML for the webring. To
+            specify multiple classes, separate each class with a space. You can use this value with
+            the defined themes to style a webring more specifically.
+
+            This setting overrides the [sref:`toroidal.class`][s01] in the site's configuration. You
+            can override this setting on a per-member basis by setting [sref:`toroidal_class`][s02]
+            in the member page's front matter.
+
+            [s01]: toroidal.site.config.class
+            [s02]: toroidal.content.member.toroidal_class
         type: string
         default: ""
       toroidal_hide_header:
@@ -68,11 +87,14 @@ properties:
           details: |
             This setting specifies whether to hide the `h2` element on member pages. By default,
             every member page includes the webring's name as an `h2` at the top of the member's
-            navigation.
+            navigation. Set this value to `true` to hide the element on member pages for this
+            webring.
+            
+            This setting overrides the [sref:`toroidal.hide_header`][s01] in the site's
+            configuration. You can override this setting on a per-member basis by setting
+            [sref:`toroidal_hide_header`][s02] in the member page's front matter.
 
-            Set this value to `true` to hide the element on member pages for this webring. This
-            setting overrides the [sref`toroidal.hide_header`] in the site's configuration. You can
-            override this setting on a per-member basis by setting [sref:`toroidal_hide_header`] in
-            the member page's front matter.
+            [s01]: toroidal.site.config.hide_header
+            [s02]: toroidal.content.member.toroidal_hide_header
         type: boolean
         default: false

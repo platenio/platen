@@ -1,6 +1,3 @@
-{{- $platenSiteParams := site.Params.platen -}}
-{{- $platenPageParams := .Params.platen      -}}
-
 {{/*
   Determine if the ToC should be rendered:
 
@@ -8,17 +5,21 @@
   - If set in the site params but not the page, use that value.
   - If not set at all, default to true.
 */}}
-{{- $siteRenderToC := $platenSiteParams.display.table_of_contents.render     -}}
-{{- $pageRenderToC := $platenPageParams.table_of_contents.render             -}}
-{{- $renderToC     := $pageRenderToC | default $siteRenderToC | default true -}}
+{{- $Context   := . -}}
+{{- $renderToC := partial "platen/param/resolve" (
+  dict "Config"  "platen.display.table_of_contents.render"
+       "Param"   "platen.table_of_contents.render"
+       "Context" $Context
+       "Default" true
+) -}}
 
 {{/* Write the HTML */}}
 <!DOCTYPE html>
 <html lang="{{ site.LanguageCode | default site.Language.Lang  }}"
       dir="{{ site.Language.LanguageDirection | default "ltr" }}">
 <head>
-  {{ partial "platen/htmlHead" . }}
-  {{ partial "platen/inject/head" . }}
+  {{ partial "platen/htmlHead"    $Context }}
+  {{ partial "platen/inject/head" $Context }}
 </head>
 <body dir="{{ site.Language.LanguageDirection | default "ltr" }}">
   <input type="checkbox" class="hidden toggle" id="menu-control" />
@@ -26,79 +27,86 @@
   <main class="container flex">
     <aside class="platen-menu">
       <div class="platen-menu-content">
-        {{ template "menu" . }} <!-- Left menu Content -->
+        {{ template "menu" $Context }} <!-- Left menu Content -->
       </div>
     </aside>
 
     <div class="platen-page">
       <header class="platen-header">
-        {{ template "header" . }} <!-- Mobile layout header -->
+        {{ template "header" $Context }} <!-- Mobile layout header -->
       </header>
 
-      {{ partial "platen/inject/content-before" . }}
-      {{ template "main" . }} <!-- Page Content -->
-      {{ partial "platen/inject/content-after" . }}
+      {{ partial  "platen/inject/content-before" $Context }}
+      {{ template "main"                         $Context }} <!-- Page Content -->
+      {{ partial  "platen/inject/content-after"  $Context }}
 
       <footer class="platen-footer">
-        {{ template "footer" . }} <!-- Footer under page content -->
-        {{ partial "platen/inject/footer" . }}
+        {{ template "footer"               $Context }} <!-- Footer under page content -->
+        {{ partial  "platen/inject/footer" $Context }}
       </footer>
 
-      {{ template "comments" . }} <!-- Comments block -->
+      {{ template "comments" $Context }} <!-- Comments block -->
 
       <label for="menu-control" class="hidden platen-menu-overlay"></label>
     </div>
     {{ if $renderToC }}
     <aside class="platen-toc">
       <div class="platen-toc-content">
-        {{ template "toc" . }} <!-- Table of Contents -->
+        {{ template "toc" $Context }} <!-- Table of Contents -->
       </div>
     </aside>
     {{ end }}
   </main>
 
-  {{ partial "platen/inject/body" . }}
+  {{ partial "platen/inject/body" $Context }}
 </body>
 </html>
 
-{{ define "menu" }}
-  {{ partial "platen/menu" . }}
+{{ define "menu" }}{{ $Context := . }}
+  {{ partial "platen/menu" $Context }}
 {{ end }}
 
-{{ define "header" }}
-  {{ partial "platen/header" . }}
-
-  {{  $siteRenderToC := site.Params.platen.display.table_of_contents.render    -}}
-  {{- $pageRenderToC := .Params.platen.table_of_contents.render                -}}
-  {{- $renderToC     := $pageRenderToC | default $siteRenderToC | default true  }}
+{{ define "header" }}{{ $Context := . }}
+  {{- $renderToC := partial "platen/param/resolve" (
+        dict "Config"  "platen.display.table_of_contents.render"
+             "Param"   "platen.table_of_contents.render"
+             "Context" $Context
+             "Default" true
+      )
+  -}}
+  {{ partial "platen/header" $Context }}
   {{ if $renderToC }}
   <aside class="hidden clearfix">
-    {{ template "toc" . }}
+    {{ template "toc" $Context }}
   </aside>
   {{ end }}
 {{ end }}
 
-{{ define "footer" }}
-  {{ partial "platen/footer" . }}
+{{ define "footer" }}{{ $Context := . }}
+  {{ partial "platen/footer" $Context }}
 {{ end }}
 
-{{ define "comments" }}
-  {{ $commentsEnabled := .Params.platen.enable_comments
-                         | default site.Params.platen.features.comments.enabled
-  }}
-  {{ if and .Content (default false $commentsEnabled) }}
+{{ define "comments" }}{{ $Context := . }}
+  {{- $commentsEnabled := partial "platen/param/resolve" (
+        dict "Config"  "platen.features.comments.enabled"
+             "Param"   "platen.enable_comments"
+             "Context" $Context
+             "Default" false
+      )
+  -}}
+  {{ if and $Context.Content $commentsEnabled }}
   <div class="platen-comments">
-    {{- partial "platen/features/comments" . -}}
+    {{- partial "platen/features/comments" $Context -}}
   </div>
   {{ end }}
 {{ end }}
 
-{{ define "main" }}
+{{ define "main" }}{{ $Context := . }}
   <article class="markdown">
-    {{- .Content -}}
+    {{- $Context.Content -}}
   </article>
 {{ end }}
 
-{{ define "toc" }}
-  {{ partial "platen/toc" . }}
+{{ define "toc" }}{{ $Context := . }}
+  {{ partial "platen/toc" $Context }}
 {{ end }}
