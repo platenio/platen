@@ -4,9 +4,9 @@
 {{- $context := . -}}
 
 {{/* Retrieve settings from the site config */}}
-{{- $platenSettings := site.Params.platen                       -}}
-{{- $repoUrl        := $platenSettings.repository.url           -}}
-{{- $editPath       := $platenSettings.repository.edit_path     -}}
+{{- $RepoConfig   := partialCached "platen/param/getKey" "platen.repository" "platen.repository" -}}
+{{- $repoUrl      := $RepoConfig.url           -}}
+{{- $editPath     := $RepoConfig.edit_path     -}}
 
 {{/*
   Determine the repository-root-relative path to content directory.
@@ -18,10 +18,10 @@
      on `content`.
 */}}
 {{- $contentDir     := "content" -}}
-{{- with $platenSettings.repository.content_root -}}
+{{- with $RepoConfig.content_root -}}
   {{- $contentDir = . -}}
 {{- else -}}
-  {{- with site.Params.contentDir -}}
+  {{- with (partialCached "platen/param/getKey" "contentDir" "contentDir") -}}
     {{- $contentDir = . -}}
     {{- if (hasPrefix $contentDir "../") -}}
       {{- $contentDir = strings.TrimLeft "./" $contentDir  -}}
@@ -48,7 +48,7 @@
   */}}
   {{- $filePath := replace $file.Path "\\" "/" -}}
   {{- $notYetMunged := true -}}
-  {{- range $mountedMap := $platenSettings.repository.mounted_paths -}}
+  {{- range $mountedMap := $RepoConfig.mounted_paths -}}
     {{/*  {{- $target := default $mountedMap.target $mountedMap.Target -}}  */}}
     {{/*  {{- $source := default $mountedMap.source $mountedMap.Source -}}  */}}
     {{- if and $notYetMunged (hasPrefix $filePath $mountedMap.target) -}}

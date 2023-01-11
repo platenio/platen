@@ -1,0 +1,16 @@
+module:
+  hugoVersion:
+    extended: true
+    min: 0.108.0
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+    parser:
+      wrapStandAloneImageWithinParagraph: false
+      attribute:
+        block: true
+  tableOfContents:
+    startLevel: 1
+    endLevel: 6

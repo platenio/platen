@@ -2,17 +2,22 @@
   This partial writes the documentation for a JSON schema defined using the schematize helper
   properties as Data for a Hugo site.
 */}}
-{{- $params := . -}}
-{{- $page   := $params.Page -}}
+{{- $Params         := . -}}
+{{- $Page           := $Params.Page -}}
+{{- $SiteSchemaRoot := site.Params.schematize.schema_root -}}
+{{- if (partialCached "schematize/utils/canUsePlatenPartials" "" "check") -}}
+  {{- $ConfigKey     := "schematize.schema_root"                                         -}}
+  {{- $SiteSchemaRoot = partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- end -}}
 
-{{- $schema_path := $params.Get "path"
-                    | default ($params.Get 0)
-                    | default $page.Params.schematize
+{{- $schema_path := $Params.Get "path"
+                    | default ($Params.Get 0)
+                    | default $Page.Params.schematize
 -}}
-{{- $schema_root := $params.Get "root"
-                    | default ($params.Get 1)
-                    | default $page.Params.schematize_root
-                    | default site.Params.schematize.schema_root
+{{- $schema_root := $Params.Get "root"
+                    | default ($Params.Get 1)
+                    | default $Page.Params.schematize_root
+                    | default $SiteSchemaRoot
 -}}
 
 {{- with $schema_path -}}
@@ -29,12 +34,12 @@
   {{/* Merge the id into the schema data for the docs partials to use */}}
   {{- $schemaData = merge $schemaData (dict "_id" $id) -}}
   {{- if eq $schemaData.type "object" -}}
-    {{ partial "schematize/docs/object" (dict "property" $schemaData "page" $page) }}
+    {{ partial "schematize/docs/object" (dict "property" $schemaData "page" $Page) }}
   {{- else if eq $schemaData.type "array" -}}
     {{- $property := merge $schemaData (dict "_level" 0) -}}
-    {{ partial "schematize/docs/array" (dict "property" $property "page" $page) }}
+    {{ partial "schematize/docs/array" (dict "property" $property "page" $Page) }}
   {{- else if eq $schemaData.type nil -}}
-    {{- warnf "Couldn't find schema for path '%s' on page '%s'" $schema_path $page.Title -}}
+    {{- warnf "Couldn't find schema for path '%s' on page '%s'" $schema_path $Page.Title -}}
   {{- else -}}
     {{- warnf "Unhandled base schema type %s: %#v" $schemaData.type $schemaData -}}
     {{- highlight ($schemaData | jsonify (dict "indent" "  ")) "json" -}}

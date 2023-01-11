@@ -7,15 +7,18 @@
   Output: String.
 */}}
 
-{{- $context    := .  -}}
+{{- $Context    := .  -}}
 {{- $sourceHref := "" -}}
-
-{{- with site.Params.platen.repository.url                                      -}}
-  {{- $base       := site.Params.platen.repository.url                          -}}
-  {{- $editPath   := site.Params.platen.repository.edit_path                    -}}
-  {{- $contentDir := default "content" site.Params.contentDir                   -}}
-  {{- $filePath   := replace $context.File.Path "\\" "/"                        -}}
-  {{- $sourceHref  = printf "%s/%s/%s/%s" $base $editPath $contentDir $filePath -}}
+{{- if (partialCached "toroidal/utils/canUsePlatenPartials" "" "check") -}}
+  {{- $ConfigKey  := "platen.repository"                                              -}}
+  {{- $RepoConfig := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+  {{- with $RepoConfig.url -}}
+    {{- $Base       := $RepoConfig.url                                            -}}
+    {{- $EditPath   := $RepoConfig.edit_path                                      -}}
+    {{- $ContentDir := site.Params.contentDir | default "content"                 -}}
+    {{- $FilePath   := replace $Context.File.Path "\\" "/"                        -}}
+    {{- $sourceHref  = printf "%s/%s/%s/%s" $Base $EditPath $ContentDir $FilePath -}}
+  {{- end -}}
 {{- end -}}
 
 {{- return $sourceHref -}}

@@ -1,0 +1,6 @@
+{{/*
+    Use the config merging partial from platen is available as the canonical check. If this partial
+    is available, users can set their config from data as well as site config.
+*/}}
+{{- $MergeConfigPartial := "partials/platen/param/getMergedValue.html" -}}
+{{- return (templates.Exists $MergeConfigPartial) -}}

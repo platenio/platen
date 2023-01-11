@@ -14,11 +14,21 @@
      - The value of the site parameter `.toroidal.webring_name`, if set.
      - "Webring" if the parameter is not set.
 */ -}}
-{{- $context := . -}}
-
-{{- $webringName := default site.Params.toroidal.webring_name
-                            $context.Params.toroidal_webring_name
--}}
-{{- $webringName  = default "Webring" $webringName -}}
+{{- $Context     := .  -}}
+{{- $webringName := "" -}}
+{{- if partialCached "toroidal/utils/canUsePlatenPartials" "" "check" -}}
+  {{- $webringName = partial "platen/param/resolve" (
+        dict "Config"  "toroidal.webring_name"
+             "Param"   "toroidal_webring_name"
+             "Context" $Context
+             "Default" "Webring"
+      )
+  -}}
+{{- else -}}
+  {{- $webringName = $Context.Params.toroidal_webring_name
+                     | default site.Params.toroidal.webring_name
+                     | default "Webring"
+  -}}
+{{- end -}}
 
 {{- return $webringName -}}

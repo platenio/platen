@@ -43,9 +43,13 @@
     - `memberName`        - No override, member page only
     - `randomMemberLink   - Member page overrides site.
 */}}
-{{- $SiteConfig        := site.Params.toroidal                                               -}}
+{{- $SiteConfig := site.Params.toroidal -}}
+{{- if (partialCached "toroidal/utils/canUsePlatenPartials" "" "check") -}}
+  {{- $ConfigKey := "toroidal"                                                       -}}
+  {{- $SiteConfig = partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- end -}}
 {{- $PageConfig        := $context.Params                                                    -}}
-{{- $class             := $PageConfig.toroidal_class | default $SiteConfig.class             -}}
+{{- $class             := $PageConfig.toroidal_class       | default $SiteConfig.class       -}}
 {{- $hideHeader        := $PageConfig.toroidal_hide_header | default $SiteConfig.hide_header -}}
 {{- $memberDescription := $PageConfig.description                                            -}}
 {{- $memberHomePage    := $PageConfig.toroidal_home_page                                     -}}

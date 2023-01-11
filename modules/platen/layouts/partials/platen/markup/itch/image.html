@@ -1,11 +1,12 @@
-{{- $Params      := .                                  -}}
-{{- $Config      := site.Params.platen.markup.itch     -}}
-{{- $Page        := $Params.Page                       -}}
-{{- $destination := $Params.Destination                -}}
-{{- $title       := $Params.Title                      -}}
-{{- $text        := $Params.PlainText                  -}}
-{{- $IsBlock     := $Params.IsBlock                    -}}
-{{- $Ordinal     := $Params.Ordinal                    -}}
+{{- $Params      := .                                                                -}}
+{{- $Page        := $Params.Page                                                     -}}
+{{- $destination := $Params.Destination                                              -}}
+{{- $title       := $Params.Title                                                    -}}
+{{- $text        := $Params.PlainText                                                -}}
+{{- $IsBlock     := $Params.IsBlock                                                  -}}
+{{- $Ordinal     := $Params.Ordinal                                                  -}}
+{{- $ConfigKey   := "platen.markup.itch"                                             -}}
+{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 
 {{- $renderedImage := "" -}}
 

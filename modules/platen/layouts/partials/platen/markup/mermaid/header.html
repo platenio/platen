@@ -1,25 +1,28 @@
-{{- $context := . -}}
+{{- $Context := . -}}
 
-{{- if $context.Store.Get "_hasMermaid" -}}
+{{- if $Context.Store.Get "_hasMermaid" -}}
   {{/* Get the Mermaid URL */}}
-  {{- $Version       := default site.Params.platen.markup.mermaid.version
-                                $context.Params.platen.markup.mermaid.version
+  {{- $Version := partial "platen/param/resolve" (
+        dict "Config"  "platen.markup.mermaid.version"
+             "Param"   "platen.markup.mermaid.version"
+             "Context" $Context
+      )
   -}}
-  {{- $UrlPrefix     := "https://cdn.jsdelivr.net/npm"                                 -}}
+  {{- $UrlPrefix     := "https://cdn.jsdelivr.net/npm"                                      -}}
   {{- $libraryURL    := printf "%s/mermaid@%v/dist/mermaid.esm.min.mjs" $UrlPrefix $Version -}}
   {{- $library       := resources.GetRemote $libraryURL
                         | resources.Copy "mermaid/mermaid.esm.mjs"
                         | resources.Minify
                         | resources.Fingerprint
   -}}
-  {{- $libraryIntegrity        := partial "platen/utils/getIntegrityAttributes" $library -}}
+  {{- $libraryIntegrity  := partialCached "platen/utils/getIntegrityAttributes" $library "MermaidLib" -}}
   {{- $libraryAttributes := slice "defer"
                             | append (printf `src="%s"` $library.RelPermalink)
                             | append `type="module"`
                             | append $libraryIntegrity
   -}}
   {{- $attributeParams   := dict "Attributes" $libraryAttributes "IndentCount" 10     -}}
-  {{- $libraryAttributes  = partial "platen/utils/getSafeAttributes" $attributeParams -}}
+  {{- $libraryAttributes  = partialCached "platen/utils/getSafeAttributes" $attributeParams -}}
   {{- $libraryScript     := printf "<script %s></script>" $libraryAttributes          -}}
 
   {{/*  Mindmap is deactivated for now; it doesn't work as documented.  */}}
@@ -31,7 +34,7 @@
                   | resources.Minify
                   | resources.Fingerprint
   -}}
-  {{- $mindmapIntegrity  := partial "platen/utils/getIntegrityAttributes" $mindmap -}}
+  {{- $mindmapIntegrity  := partialCached "platen/utils/getIntegrityAttributes" $mindmap "mindMap" -}}
   {{- $mindmapAttributes := slice "defer"
                             | append (printf `src="%s"` $mindmap.RelPermalink)
                             | append `type="module"`

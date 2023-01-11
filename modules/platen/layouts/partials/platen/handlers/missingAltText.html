@@ -23,7 +23,7 @@
 {{- $suffix := $params.Suffix -}}
 
 {{/* Retrieve site accessibility settings */}}
-{{- $a11ySettings := site.Params.platen.accessibility -}}
+{{- $A11ySettings := partialCached "platen/param/getKey" "platen.accessibility" "platen.accessibility" -}}
 
 {{/* Set default message without context */}}
 {{- $message      := i18n "MissingAltText"               -}}
@@ -48,7 +48,7 @@
 {{- end -}}
 
 {{/* Write warning or error as configured */}}
-{{- if $a11ySettings.warn_on_missing_alt_text -}}
+{{- if $A11ySettings.warn_on_missing_alt_text -}}
   {{- warnf  $message -}}
 {{- else -}}
   {{- errorf $message -}}

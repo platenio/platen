@@ -1,11 +1,12 @@
-{{- $Params     := .                                   -}}
-{{- $Config     := site.Params.platen.markup.section   -}}
-{{- $Aliases    := $Config.aliases                     -}}
-{{- $Page       := $Params.Page                        -}}
-{{- $Position   := $Params.Position                    -}}
-{{- $definition := $Params.Inner                       -}}
-{{- $type       := $Params.Type | lower                -}}
-{{- $Attributes := $Params.Attributes                  -}}
+{{- $Params     := .                                                                -}}
+{{- $Page       := $Params.Page                                                     -}}
+{{- $Position   := $Params.Position                                                 -}}
+{{- $definition := $Params.Inner                                                    -}}
+{{- $type       := $Params.Type | lower                                             -}}
+{{- $Attributes := $Params.Attributes                                               -}}
+{{- $ConfigKey  := "platen.markup.section"                                          -}}
+{{- $Config     := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Aliases    := $Config.aliases                                                  -}}
 
 {{- $renderedCode := "" -}}
 

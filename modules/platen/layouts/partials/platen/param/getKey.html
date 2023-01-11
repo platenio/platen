@@ -1,0 +1,14 @@
+{{/*
+    This partial is used to retrieve the canonicalized value of a site configuration parameter by
+    merging the configuration setting from data over Hugo's configuration (files and environment).
+*/}}
+{{- $Key := . -}}
+
+{{- $Config := partialCached "platen/param/getMergedValue" (dict) "full" -}}
+
+{{- $value := $Config -}}
+{{- range $segment := split $Key "." -}}
+  {{- $value = index $value $segment -}}
+{{- end -}}
+
+{{- return $value -}}

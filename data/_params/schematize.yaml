@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=http://localhost:1313/modules/schematize/config/site/config/schema.json
+reference_map:
+  mdn:
+    sref_suffix: in the MDN documentation
+    sref_base: https://developer.mozilla.org/docs
+    css:
+      sref_base: https://developer.mozilla.org/docs/Web/CSS
+    html:
+      element:
+        sref_base: https://developer.mozilla.org/en-US/docs/Web/HTML/Element
+      attribute:
+        sref_base: https://developer.mozilla.org/docs/HTML/Attributes
+      global_attribute:
+        sref_base: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes

@@ -1,8 +1,10 @@
-{{- $context     := .                                            -}}
-{{- $title       := ""                                           -}}
-{{- $titleParams := dict "Context" $context "ForHtmlHead" true   -}}
+{{- $Context     := .                                                                -}}
+{{- $title       := ""                                                               -}}
+{{- $titleParams := dict "Context" $Context "ForHtmlHead" true                       -}}
+{{- $ConfigKey   := "platen.features"                                                -}}
+{{- $Features    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 
-{{- range $feature, $settings := site.Params.platen.features -}}
+{{- range $feature, $settings := $Features -}}
   {{- if and (eq "" $title) $settings.enabled -}}
     {{- with $settings.partials.title -}}
       {{ $title = partial . $titleParams }}

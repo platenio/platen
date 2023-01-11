@@ -1,0 +1,63 @@
+{{/*
+    This partial is used to canonically resolve a configuration option by merging the configuration
+    setting from data, Hugo's configuration (files and environment), a page's front matter, and a
+    default value.
+
+    When only a ConfigKey is provided, the value is a deep merge of the key's data over
+    configuration.
+
+    When only a ParamKey is provided, the value is pulled from the page's front matter. To use this
+    option, the caller must pass the page's context.
+
+    When a ConfigKey and ParamKey are provided, the value from the page's front matter is used if
+    it's available. If it isn't, the value defaults to the deep merge of the key's data over
+    configuration.
+
+    When a Default is provided, the value is set to the Default only if the value would otherwise
+    be nil.
+*/}}
+{{- $Input       := .              -}}
+{{- $Context     := $Input.Context -}}
+{{- $ConfigKey   := $Input.Config  -}}
+{{- $ParamKey    := $Input.Param   -}}
+{{- $value       := ""             -}}
+
+{{- if not (reflect.IsMap $Input) -}}
+  {{- errorf "%s: %s Was: %#v"
+             "Invalid input for 'utils/config/resolve'"
+             "Must be a map with 'Config' and/or 'Param' or a string (implicitly 'Config')."
+             $Input
+  -}}
+{{- end -}}
+
+{{- $resolving := dict "Config" $ConfigKey "Param" $ParamKey "Default" $Input.Default -}}
+
+{{- with $ConfigKey -}}
+  {{- $configValue := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+  {{- with $ParamKey -}}
+    {{- $paramValue := $Context.Params -}}
+    {{- range $segment := split $ParamKey "." -}}
+      {{- $paramValue = index $paramValue $segment -}}
+    {{- end -}}
+    {{- $value = $paramValue | default $configValue -}}
+  {{- end -}}
+{{- else -}}
+  {{- with $ParamKey -}}
+    {{- $value = $Context.Params -}}
+    {{- range $segment := split $ParamKey "." -}}
+      {{- $value = index $value $segment -}}
+    {{- end -}}
+  {{- else -}}
+    {{- errorf "%s: %s Was: %#v"
+               "Invalid input for 'utils/config/resolve'"
+               "Must be a map with 'Config' and/or 'Param' or a string (implicitly 'Config')."
+               $Input
+    -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if isset $Input "Default" -}}
+  {{- $value = $value | default $Input.Default -}}
+{{- end -}}
+
+{{- return $value -}}

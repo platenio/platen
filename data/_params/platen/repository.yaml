@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=http://localhost:1313/modules/platen/config/site/repository/settings/schema.json
+url: "https://github.com/platenio/platen" # BookRepo
+commit_path: commit                        # BookCommitPath
+edit_path: edit/main                       # BookEditPath
+content_root: 'content'
+mounted_paths:
+  - source: modules/platen/_docs
+    target: modules/platen
+  - source: modules/toroidal/_docs
+    target: modules/toroidal
+  - source: modules/schematize/_docs
+    target: modules/schematize

@@ -1,7 +1,8 @@
-{{- $features        := site.Params.platen.features -}}
-{{- $enabledFeatures := dict                        -}}
+{{- $ConfigKey       := "platen.features"                                                -}}
+{{- $Features        := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $enabledFeatures := dict                                                             -}}
 
-{{- range $feature, $settings := $features -}}
+{{- range $feature, $settings := $Features -}}
   {{- if $settings.enabled -}}
     {{- $enabledFeatures = merge $enabledFeatures (dict $feature $settings) -}}
   {{- end -}}

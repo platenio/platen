@@ -28,16 +28,27 @@
 
   Finally, the resulting text is passed through `safeHTML` and then returned.
 */}}
-{{- $context     := .  -}}
-{{- $detailsHTML := "" -}}
-{{- $detailsFile := default site.Params.toroidal.admin_details
-                            $context.Params.toroidal_admin_details
--}}
+{{- $Context      := .                                                           -}}
+{{- $IsPlatenSite := partialCached "toroidal/utils/canUsePlatenPartials" "" "check" -}}
+{{- $detailsHTML  := ""                                                          -}}
+{{- $detailsFile  := ""                                                          -}}
+{{- if $IsPlatenSite -}}
+  {{- $detailsFile = partial "platen/param/resolve" (
+        dict "Config"  "toroidal.admin_details"
+             "Param"   "toroidal_admin_details"
+             "Context" $Context
+             "Default" "default"
+      )
+  -}}
+{{- else -}}
+  {{- $detailsFile = $Context.Params.toroidal_admin_details
+                     | default site.Params.toroidal.admin_details
+                     | default "default"
+  -}}
+{{- end -}}
 
-{{- with (resources.Get "styles/platen.scss") -}}
-  {{- if eq "default" $detailsFile -}}
-    {{- $detailsFile = "platen" -}}
-  {{- end -}}
+{{- if and $IsPlatenSite (eq "default" $detailsFile) -}}
+  {{- $detailsFile = "platen" -}}
 {{- end -}}
 
 {{/* If no path prefix specified, assume default partial folder */}}
@@ -51,12 +62,12 @@
 {{- end -}}
 
 {{/* Process the details partial with the admin page's context */}}
-{{- $detailsHTML = partial $detailsFile $context -}}
+{{- $detailsHTML = partial $detailsFile $Context -}}
 
 {{/* If the partial is markdown, render it to HTML */}}
 {{- $markdownExtensions := slice ".markdown" ".md" -}}
 {{- if in $markdownExtensions (path.Ext $detailsFile) -}}
-  {{- $detailsHTML = $detailsHTML | $context.RenderString -}}
+  {{- $detailsHTML = $detailsHTML | $Context.RenderString -}}
 {{- end -}}
 
 {{- return ($detailsHTML | safeHTML) -}}

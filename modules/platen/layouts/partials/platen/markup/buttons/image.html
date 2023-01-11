@@ -1,16 +1,18 @@
-{{- $Params      := .                                  -}}
-{{- $Config      := site.Params.platen.markup.buttons  -}}
-{{- $Page        := $Params.Page                       -}}
-{{- $destination := $Params.Destination                -}}
-{{- $title       := $Params.Title                      -}}
-{{- $text        := $Params.Text                       -}}
-{{- $IsBlock     := $Params.IsBlock                    -}}
-{{- $Ordinal     := $Params.Ordinal                    -}}
+{{- $Params      := .                                                                -}}
+{{- $Page        := $Params.Page                                                     -}}
+{{- $destination := $Params.Destination                                              -}}
+{{- $title       := $Params.Title                                                    -}}
+{{- $text        := $Params.Text                                                     -}}
+{{- $IsBlock     := $Params.IsBlock                                                  -}}
+{{- $Ordinal     := $Params.Ordinal                                                  -}}
+{{- $ConfigKey   := "platen.markup.buttons"                                          -}}
+{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Aliases     := $Config.aliases                                                  -}}
 
 {{- $renderedImage := "" -}}
 
 {{- $prefixes := slice "button:" "btn:" -}}
-{{- range $alias := $Config.aliases -}}
+{{- range $alias := $Aliases -}}
   {{- $prefixes = $prefixes | append (printf "%s:" $alias) -}}
 {{- end -}}
 

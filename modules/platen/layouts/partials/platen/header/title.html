@@ -1,24 +1,24 @@
 {{/*
     Docs.Partial: title
 */}}
-{{- $Context                  := .                                                  -}}
-{{- $SiteConfigTitleAsHeading := site.Params.platen.display.header.title_as_heading -}}
-{{- $PageConfigTitleAsHeading := $Context.Params.platen.title_as_heading            -}}
+{{- $Context        := . -}}
 
 {{/* Get the title text */}}
 {{- $titleParams := dict "Context" $Context "ForHeader" true     -}}
 {{- $titleText   := partial "platen/utils/getTitle" $titleParams -}}
 
 {{/* Determine the element tag. */}}
-{{- $shouldBeHeader := $PageConfigTitleAsHeading
-                       | default $SiteConfigTitleAsHeading
-                       | default false
--}}
-{{- $elementTag     := cond $shouldBeHeader "h1" "strong" -}}
+{{- $ShouldBeHeader := partial "platen/param/resolve" (
+  dict "Config"  "platen.display.header.title_as_heading"
+       "Param"   "platen.title_as_heading"
+       "Context" $Context
+       "Default" false
+) -}}
+{{- $elementTag     := cond $ShouldBeHeader "h1" "strong"                                    -}}
 
 {{/* define the attributes for the tag */}}
-{{- $openTagAttributes := slice                              -}}
-{{- if $shouldBeHeader -}}
+{{- $openTagAttributes := slice -}}
+{{- if $ShouldBeHeader -}}
   {{- $id               := urlize (lower $titleText)                          -}}
   {{- $openTagAttributes = $openTagAttributes | append (printf `id="%s"` $id) -}}
 {{- end -}}

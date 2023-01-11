@@ -22,3 +22,8 @@ provide any default styling for them.
 Regardless of whether a member chooses the iframe or literal embed, unless the host changes their
 hosting URL or the member's site name, members should not have to update their embedded code very
 often, if ever.
+
+For members that are also [Platen][01] sites, they have one further option, which is copy a partial
+that they can use to add the webring navigation directly to their site menu.
+
+[01]: https://platen.io/

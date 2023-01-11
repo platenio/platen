@@ -1,7 +1,7 @@
-mediaTypes:
-  application/json:
-    suffixes:
-      - json
+module:
+  hugoVersion:
+    extended: true
+    min: 0.108.0
 
 outputFormats:
   toroidal:
@@ -17,10 +17,10 @@ params:
         partials:
           title: platen/features/toroidal/title
           style: platen/features/toroidal/style.scss
-          menu: platen/features/toroidal/menu/render
+          menu:  platen/features/toroidal/menu/render
   toroidal:
-    admin_details: default
+    admin_details:      default
     random_member_link: true
-    mode: auto
+    mode:               auto
     themes:
       default: true

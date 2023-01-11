@@ -1,16 +1,26 @@
-{{- $context            := . -}}
+{{- $Context            := . -}}
 {{- $webringName        := partial "toroidal/utils/getWebringName" . -}}
-{{- $webringMemberPages := where $context.CurrentSection.RegularPages
+{{- $webringMemberPages := where $Context.CurrentSection.RegularPages
                                  "Params.toroidal_home_page" "!=" nil
 -}}
-{{- $class              := default site.Params.toroidal.class
-                                   $context.Params.toroidal_class
--}}
+
+{{- $class := "" -}}
+{{- if (partialCached "toroidal/utils/canUsePlatenPartials" "" "check") -}}
+  {{- $class = partial "platen/param/resolve" (
+        dict "Config"  "toroidal.class"
+             "Param"   "toroidal_class"
+             "Context" $Context
+      )
+  -}}
+{{- else -}}
+  {{- $class = $Context.Params.toroidal_class | default site.Params.toroidal.class -}}
+{{- end -}}
+
 {{- with $class -}}
   {{- $class = printf " %s" $class | safeHTML -}}
 {{- end -}}
 {{/* Retrieve the details to include about member administration */}}
-{{- $adminDetails := partial "toroidal/utils/getAdminDetails" $context -}}
+{{- $adminDetails := partial "toroidal/utils/getAdminDetails" $Context -}}
 
 <div class="toroidal{{ $class }}">
   <header>

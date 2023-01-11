@@ -15,8 +15,8 @@
   {{- $siteStyle = $siteStyle | resources.Minify | resources.Fingerprint -}}
 {{- end -}}
 
-{{- $href      := $siteStyle.RelPermalink                                  -}}
-{{- $integrity := partial "platen/utils/getIntegrityAttributes" $siteStyle -}}
+{{- $href      := $siteStyle.RelPermalink                                                    -}}
+{{- $integrity := partialCached "platen/utils/getIntegrityAttributes" $siteStyle "SiteStyle" -}}
 
 {{/* Define the style link attribute list */}}
 {{- $attributes := slice                                                -}}

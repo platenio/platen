@@ -1,18 +1,21 @@
-{{- $context := . -}}
+{{- $Context      := .                                                           -}}
+{{- $IsPlatenSite := partialCached "toroidal/utils/canUsePlatenPartials" "" "check" -}}
 {{/* Only add page info for toroidal members; otherwise, error. */}}
-{{- with $context.Params.toroidal_home_page -}}
+{{- with $Context.Params.toroidal_home_page -}}
 {{- $lang := site.LanguageCode               | default site.Language.Lang -}}
 {{- $dir  := site.Language.LanguageDirection | default "ltr"              -}}
 <!DOCTYPE html>
 <html lang="{{ $lang }}" dir="{{ $dir }}">
-  {{- $info        := partial "toroidal/utils/getPageInfo" $context -}}
+  {{- $info        := partial "toroidal/utils/getPageInfo" $Context -}}
   {{- $webringName := $info.WebringName -}}
   {{- $memberName  := $info.MemberName  -}}
-  {{- $headParams  := dict "context" $context "memberName" $memberName "webringName" $webringName }}
+  {{- $headParams  := dict "context" $Context "memberName" $memberName "webringName" $webringName }}
   <head>
-  {{- with (resources.Get "styles/platen.scss") -}}
-    {{ if site.Params.platen.features.toroidal.enabled }}
-      {{ partial "toroidal/htmlHeadMember/platen" $context }}
+  {{- if $IsPlatenSite -}}
+    {{- $ConfigKey      := "platen.features.toroidal.enabled"                               -}}
+    {{- $FeatureEnabled := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+    {{ if $FeatureEnabled }}
+      {{ partial "toroidal/htmlHeadMember/platen" $Context }}
     {{ else }}
       {{ partial "toroidal/htmlHeadMember/default" $headParams }}
     {{ end }}

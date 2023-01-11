@@ -8,8 +8,8 @@ schematize:
     The Toroidal module includes a minimal default set of styles. Each item in this setting is a
     key-value pair. The key represents the name of the style and the value determines whether and
     how it's loaded into the style for Toroidal pages. When you import the module, only the
-    `Default` theme is defined. You can define additional key-value pairs and override the settings
-    for `Default`.
+    `default` theme is defined. You can define additional key-value pairs and override the settings
+    for `default`.
 
     If the value is set to `true`, the downcased name of the theme is used when importing the
     theme's style module. If the value is set to `false`, the theme's style module isn't imported.
@@ -18,23 +18,27 @@ schematize:
     For example:
 
     ```yaml
-    Themes:
-      Default: true  # imports `assets/toroidal/themes/_default.scss`
-      Unused: false  # not imported
-      Custom: fooBar # imports `assets/toroidal/themes/_fooBar.scss`
+    themes:
+      default: true  # imports `assets/toroidal/themes/_default.scss`
+      unused: false  # not imported
+      custom: fooBar # imports `assets/toroidal/themes/_fooBar.scss`
     ```
 
     ## Defining Style Modules
 
-    You can override the [sref:default style module] or define entirely new ones. When you define a
-    new style module, consider whether you want to extend the styling for all Toroidal content or
-    only a subset webring.
+    You can override the [sref:default style module][s01] or define entirely new ones. When you
+    define a new style module, consider whether you want to extend the styling for all Toroidal
+    content or only a subset webring.
 
     You can use `article.toroidal` to style content in the administration page and `nav.toroidal` to
     style the member page content. You can add another class to the selector, like
     `nav.toroidal .my-example` to target only a subset of content. You can inject classes into your
-    generated content with the [sref:`toroidal.class`] setting in the site configuration or
-    the [sref:`toroidal_class`] setting in a page's front matter.
+    generated content with the [sref:`toroidal.class`][s02] setting in the site configuration or the
+    [sref:`toroidal_class`][s03] setting in a page's front matter.
+
+    [s01]: toroidal.site.themes.default
+    [s02]: toroidal.site.config.class
+    [s03]: toroidal.content.member.toroidal_class
 type: object
 properties:
   default:

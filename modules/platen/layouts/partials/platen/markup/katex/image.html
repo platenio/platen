@@ -1,12 +1,13 @@
-{{- $Params      := .                                 -}}
-{{- $Config      := site.Params.platen.markup.katex   -}}
-{{- $Aliases     := $Config.aliases                   -}}
-{{- $Page        := $Params.Page                      -}}
-{{- $destination := $Params.Destination               -}}
-{{- $title       := $Params.Title                     -}}
-{{- $text        := $Params.PlainText                 -}}
-{{- $IsBlock     := $Params.IsBlock                   -}}
-{{- $Prdinal     := $Params.Ordinal                   -}}
+{{- $Params      := .                                                                -}}
+{{- $Page        := $Params.Page                                                     -}}
+{{- $destination := $Params.Destination                                              -}}
+{{- $title       := $Params.Title                                                    -}}
+{{- $text        := $Params.PlainText                                                -}}
+{{- $IsBlock     := $Params.IsBlock                                                  -}}
+{{- $Prdinal     := $Params.Ordinal                                                  -}}
+{{- $ConfigKey   := "platen.markup.katex"                                            -}}
+{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Aliases     := $Config.aliases                                                  -}}
 
 {{- $renderedImage := "" -}}
 
