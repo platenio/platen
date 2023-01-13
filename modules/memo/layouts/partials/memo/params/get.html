@@ -1,0 +1,70 @@
+{{/*
+    Expects either a page's context or a dict of options, all defaulting to true.
+
+    Options are:
+
+    - GetSite - whether the partial should retrieve the site's memo params.
+    - GetPage - whether the partial should retrieve the page's memo params. If this option is used,
+      the Context is required.
+    - Validate - whether the partial should pass the retrieved params through validation. Validation
+      raises warnings for invalid values and discards them from the map of params.
+
+    Returns a dict with the `Site` key for site settings and the `Page` key for page settings.
+
+*/}}
+{{- $Options  := .                                -}}
+{{- $Context  := $Options.Context                 -}}
+{{- $GetSite  := $Options.GetSite  | default true -}}
+{{- $GetPage  := $Options.GetPage  | default true -}}
+{{- $Validate := $Options.Validate | default true -}}
+
+{{/* The valid context for this partial is a page's context. */}}
+{{- $ValidContext := "*hugolib.pageState" -}}
+{{- $ContextType  := printf "%T" $Context -}}
+{{- $OptionsType  := printf "%T" $Options -}}
+
+{{/* If the input options was just a page context, use defaults and pass context through */}}
+{{- if eq $OptionsType $ValidContext -}}
+  {{- $Context = $Options -}}
+{{- end }}
+
+{{/* Initialize the return dictionary that will contain either/both site and page memo params */}}
+{{- $params := dict -}}
+
+{{- if $GetSite -}}
+  {{/* If this is a Platen site, merge site params with settings from data */}}
+  {{- $settings := site.Params.memo -}}
+  {{- if (partialCached "memo/utils/canUsePlatenPartials" "" "check") -}}
+    {{- $ConfigKey := "memo"                                                    -}}
+    {{- $settings   = partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+  {{- end -}}
+  
+  {{- with $settings -}}
+    {{- if $Validate -}}
+      {{- $settings = partialCached "memo/params/validate/site" $settings "validate" -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $params = merge $params (dict "Site" $settings) -}}
+{{- end -}}
+
+{{- if $GetPage -}}
+  {{/* Check and warn on invalid call to non-page context instead of behaving weirdly */}}
+  {{- if eq $ValidContext $ContextType -}}
+    {{- $settings := $Context.Params.memo | default (dict) -}}
+
+    {{- with $settings -}}
+      {{- if $Validate -}}
+        {{- $settings = partialCached "memo/params/validate/page" $settings $settings -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- $params = merge $params (dict "Page" $settings) -}}
+  {{- else -}}
+    {{- warnf "Trying to retrieve memo page params but context was '%s' instead of '%s'"
+              $ContextType $ValidContext
+    -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $params -}}

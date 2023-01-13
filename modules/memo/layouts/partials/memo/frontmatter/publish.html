@@ -1,0 +1,41 @@
+{{/*
+  Expects a dict with a page context, a set of valid front_matter params (site or page), and
+  an optional boolean for whether array values should be joined or replaced, defaulting to replace.
+
+  If a config has the `definition` key, it's treated as publishing a single config file. When the
+  `definition` key is specified without the `publish` key, the definition value is reused as the
+  path to publish the config to. This works well for site-relative assets.
+
+  If a config has the `merge` key, the listed values are parsed and merged together to publish a
+  single config file. When the `merge` key is specified, the `publish` key is required.
+*/}}
+{{- $Input      := .                                      -}}
+{{- $Context    := $Input.Context                         -}}
+{{- $FrontMatter:= $Input.FrontMatter                     -}}
+{{- $JoinArrays := $Input.JoinArrays | default false      -}}
+{{- $JsonOptions:= dict "indent" "  " "noHTMLEscape" true -}}
+
+{{- range $options := $FrontMatter.configs -}}
+  {{- $Definition := $options.definition                              -}}
+  {{- $Publish    := $options.publish                                 -}}
+  {{- $joinArrays := $options.join_arrays | default $Input.JoinArrays -}}
+  {{- $merge      := $options.merge                                   -}}
+  {{- if $Definition -}}
+    {{/* If the config defines definition without publish, reuse definition */}}
+    {{- $publish   := $Publish | default $Definition                   -}}
+    {{- $Resolving := dict "Context" $Context "ConfigPath" $Definition -}}
+    {{- with (partial "memo/frontmatter/resolve" $Resolving) -}}
+      {{- $json := . | resources.Copy $publish -}}
+      {{- $_    := $json.Permalink             -}}
+    {{- end -}}
+  {{- else if $merge -}}
+    {{- if not (reflect.IsSlice $merge) -}}
+      {{- $merge = slice $merge -}}
+    {{- end -}}
+    {{- $mergeParams  := dict "Context" $Context "ConfigPaths" $merge "JoinArrays" $joinArrays -}}
+    {{- $mergedSchema := partial "memo/frontmatter/merge" $mergeParams                         -}}
+    {{- $mergedSchema  = $mergedSchema | jsonify $JsonOptions                                  -}}
+    {{- $mergedSchema  = $mergedSchema | resources.FromString $Publish                         -}}
+    {{- $_            := $mergedSchema.Permalink                                               -}}
+  {{- end -}}
+{{- end -}}

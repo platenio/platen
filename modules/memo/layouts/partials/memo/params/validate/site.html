@@ -1,0 +1,17 @@
+{{/*
+    Expects the value of the `memo` key from a site's Params. It processes the values, validating
+    them and dropping any invalid values (while warning about misconfiguration).
+*/}}
+{{- $SiteParams  := . -}}
+{{- $validParams := . -}}
+
+{{- with $SiteParams.front_matter -}}
+  {{- $frontmatter := . -}}
+  {{- with $frontmatter.configs -}}
+    {{- $validConfigs := partial "memo/params/validate/front_matter/configs" $frontmatter -}}
+    {{- $frontmatter   = merge $frontmatter (dict "configs" $validConfigs)                -}}
+  {{- end -}}
+  {{- $validParams = merge $validParams (dict "configs" $frontmatter) -}}
+{{- end -}}
+
+{{- return $validParams -}}
