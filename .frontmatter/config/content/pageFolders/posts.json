@@ -1,0 +1,7 @@
+{
+  "name": "posts",
+  "title": "Platen blog posts",
+  "$schema": "https://beta.frontmatter.codes/config/content.pagefolders.schema.json",
+  "path": "[[workspace]]/content/posts",
+  "contentTypes": ["posts"]
+}

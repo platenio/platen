@@ -7,6 +7,14 @@ platen:
   title_as_heading: true
   menu:
     collapse_section: true
+Memo:
+  MungeTitle: false
+  front_matter:
+    configs:
+      - merge:
+          - ./block:frontmatter/codeblock.json
+          - ./inline:frontmatter/image.json
+        publish: /frontmatter/platen/content/snippets/katex.json
 ---
 
 Platen supports using [KaTeX markup][01] to add mathematical and scientific formulas to your pages.

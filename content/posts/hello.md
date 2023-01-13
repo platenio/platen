@@ -3,11 +3,12 @@ author: Mikey Lombardi
 title: Hello, World!
 linktitle: Hello, World! It's us, Platen!
 date: 2022-10-10
-summary: >
+summary: |
   A brief overview of Platen and its related projects.
 categories:
   - meta
 weight: 10
+type: posts
 ---
 
 For years now, analog tabletop games have been getting digital and physical releases. Unfortunately,

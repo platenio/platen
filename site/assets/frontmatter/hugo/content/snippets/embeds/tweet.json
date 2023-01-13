@@ -1,0 +1,28 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.content.snippets": {
+    "hugo-tweet": {
+      "title": "Tweet",
+      "description": "Embed a tweet.",
+      "body": "{{< tweet user=\"[[handle]]\" id=\"[[id]]\" />}}",
+      "fields": [
+        {
+          "name": "handle",
+          "title": "Tweet Author's Handle",
+          "description": "Specify the tweet author's handle.",
+          "type": "string",
+          "single": true,
+          "required": true
+        },
+        {
+          "name": "id",
+          "title": "Tweet ID",
+          "description": "Specify the unique ID of the tweet.",
+          "type": "string",
+          "single": true,
+          "required": true
+        }
+      ]
+    }
+  }
+}

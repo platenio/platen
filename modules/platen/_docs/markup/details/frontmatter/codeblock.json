@@ -1,0 +1,70 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.content.snippets": {
+    "platen-details": {
+      "title": "Details",
+      "description": "Insert a collapsible panel of Markdown content with a title.\nFor more information, see https://localhost:1313/modules/platen/markup/details",
+      "body": [
+        "```details",
+        "---",
+        "summary:  [[&summary]]",
+        "class:    [[class]]",
+        "id:       [[id]]",
+        "linkable: [[linkable]]",
+        "open:     [[open]]",
+        "---",
+        "[[&selection]]",
+        "```"
+      ],
+      "fields": [
+        {
+          "name": "summary",
+          "title": "Summary Markdown",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "selection",
+          "title": "Content Markdown",
+          "type": "string",
+          "default": "FM_SELECTED_TEXT"
+        },
+        {
+          "name": "class",
+          "title": "Zero or more classes to add to the details element as a space-separated list.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "id",
+          "title": "The custom ID to give the details element. Must have a `#` prefix.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "linkable",
+          "title": "Whether the details should have be linkable by ID.",
+          "type": "choice",
+          "choices": [
+            "true",
+            "false"
+          ],
+          "default": "true"
+        },
+        {
+          "name": "open",
+          "title": "Whether the details should be open when the page loads.",
+          "type": "choice",
+          "choices": [
+            "true",
+            "false"
+          ],
+          "default": "true"
+        }
+      ]
+    }
+  }
+}

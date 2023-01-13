@@ -1,0 +1,10 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.framework.id": "hugo",
+  "frontMatter.content.publicFolder": "static",
+  "frontMatter.preview.host": "http://localhost:1313",
+  "frontMatter.taxonomy.seoDescriptionField": "summary",
+  "frontMatter.taxonomy.seoDescriptionLength": 160,
+  "frontMatter.taxonomy.seoSlugLength": 60,
+  "frontMatter.taxonomy.seoTitleLength": 60
+}

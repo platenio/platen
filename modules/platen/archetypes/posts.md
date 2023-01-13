@@ -1,6 +1,7 @@
 ---
 title: "{{ .Name | humanize | title }}"
 date: {{ .Date }}
+type: posts
 # draft: true # Use this to commit content to the site without publishing it.
 # author: Specify the author's name here to attribute the post to them.
 # linktitle: Specify an alternate title to use here when linking externally.
