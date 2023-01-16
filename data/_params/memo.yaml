@@ -1,0 +1,84 @@
+front_matter:
+  configs:
+    # Hugo FM
+    - definition: /frontmatter/hugo/content/snippets/embeds/gist.json
+    - definition: /frontmatter/hugo/content/snippets/embeds/instagram.json
+    - definition: /frontmatter/hugo/content/snippets/embeds/tweet.json
+    - definition: /frontmatter/hugo/content/snippets/embeds/vimeo.json
+    - definition: /frontmatter/hugo/content/snippets/embeds/youtube.json
+    - merge:
+        - /frontmatter/hugo/content/snippets/embeds/gist.json
+        - /frontmatter/hugo/content/snippets/embeds/instagram.json
+        - /frontmatter/hugo/content/snippets/embeds/tweet.json
+        - /frontmatter/hugo/content/snippets/embeds/vimeo.json
+        - /frontmatter/hugo/content/snippets/embeds/youtube.json
+      publish: /frontmatter/hugo/content/snippets/embeds.json
+    - definition: /frontmatter/hugo/content/snippets/links/permalink-relative.json
+    - definition: /frontmatter/hugo/content/snippets/links/permalink.json
+    - merge:
+        - /frontmatter/hugo/content/snippets/links/permalink-relative.json
+        - /frontmatter/hugo/content/snippets/links/permalink.json
+      publish: /frontmatter/hugo/content/snippets/links.json
+    - definition: /frontmatter/hugo/content/snippets/figure.json
+    - definition: /frontmatter/hugo/content/snippets/highlight.json
+    - definition: /frontmatter/hugo/content/snippets/param.json
+    - merge:
+        - /frontmatter/hugo/content/snippets/embeds/gist.json
+        - /frontmatter/hugo/content/snippets/embeds/instagram.json
+        - /frontmatter/hugo/content/snippets/embeds/tweet.json
+        - /frontmatter/hugo/content/snippets/embeds/vimeo.json
+        - /frontmatter/hugo/content/snippets/embeds/youtube.json
+        - /frontmatter/hugo/content/snippets/links/permalink-relative.json
+        - /frontmatter/hugo/content/snippets/links/permalink.json
+        - /frontmatter/hugo/content/snippets/figure.json
+        - /frontmatter/hugo/content/snippets/highlight.json
+        - /frontmatter/hugo/content/snippets/param.json
+      publish: /frontmatter/hugo/content/snippets.json
+    # Schematize FM
+    - definition: /frontmatter/schematize/taxonomy/contentTypes/schematize.json
+    - merge:
+        - /frontmatter/schematize/taxonomy/contentTypes/schematize.json
+      publish: /frontmatter/schematize.json
+    # Toroidal FM
+    - definition: /frontmatter/toroidal/taxonomy/contentTypes/toroidal.json
+    - definition: /frontmatter/toroidal/taxonomy/contentTypes/toroidal-admin.json
+    - merge:
+        - /frontmatter/toroidal/taxonomy/contentTypes/toroidal.json
+        - /frontmatter/toroidal/taxonomy/contentTypes/toroidal-admin.json
+      publish: /frontmatter/toroidal.json
+    # Platen FM
+    - definition: /frontmatter/platen/taxonomy/contentTypes/default.json
+    - definition: /frontmatter/platen/taxonomy/contentTypes/posts.json
+    - definition: /frontmatter/platen/content/sorting/byWeight.json
+    - merge:
+        - /frontmatter/platen/config.json
+        - /frontmatter/platen/content/sorting/byWeight.json
+        - /frontmatter/platen/taxonomy/contentTypes/default.json
+        - /frontmatter/platen/taxonomy/contentTypes/posts.json
+        # Hugo Snippets
+        - /frontmatter/hugo/content/snippets/embeds/gist.json
+        - /frontmatter/hugo/content/snippets/embeds/instagram.json
+        - /frontmatter/hugo/content/snippets/embeds/tweet.json
+        - /frontmatter/hugo/content/snippets/embeds/vimeo.json
+        - /frontmatter/hugo/content/snippets/embeds/youtube.json
+        - /frontmatter/hugo/content/snippets/links/permalink-relative.json
+        - /frontmatter/hugo/content/snippets/links/permalink.json
+        - /frontmatter/hugo/content/snippets/figure.json
+        - /frontmatter/hugo/content/snippets/highlight.json
+        - /frontmatter/hugo/content/snippets/param.json
+        # Platen snippets
+        - /modules/platen/markup/art:frontmatter/image-local.json
+        - /modules/platen/markup/art:frontmatter/image-remote.json
+        - /modules/platen/markup/buttons:frontmatter/image.json
+        - /modules/platen/markup/columns:frontmatter/codeblock-entry.json
+        - /modules/platen/markup/columns:frontmatter/codeblock-group.json
+        - /modules/platen/markup/details:frontmatter/codeblock.json
+        - /modules/platen/markup/itch:frontmatter/image.json
+        - /modules/platen/markup/katex/block:frontmatter/codeblock.json
+        - /modules/platen/markup/katex/inline:frontmatter/image.json
+        - /modules/platen/markup/mermaid:frontmatter/codeblock.json
+        - /modules/platen/markup/section:frontmatter/codeblock.json
+        - /modules/platen/markup/tabs:frontmatter/codeblock-entry.json
+        - /modules/platen/markup/tabs:frontmatter/codeblock-group.json
+      publish:     /frontmatter/platen.json
+      join_arrays: true

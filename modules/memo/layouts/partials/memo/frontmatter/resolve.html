@@ -1,0 +1,81 @@
+{{- $Params      := .                  -}}
+{{- $Context     := $Params.Context    -}}
+{{- $ConfigPath  := $Params.ConfigPath -}}
+{{- $configAsset := dict               -}}
+
+{{/*
+    Determine the kind of asset by the path value. If it's a web URL, it's remote. If it has a
+    colon (:) in it, it's an asset for a specific page. If it starts with a leading slash (/),
+    it's an absolute asset (site or otherwise).
+
+    For example, from content/fm/index.md
+
+    - https://foo.bar/baz.json - remote                       - https://foo.bar/baz.json
+    - /foo/bar/baz.json        - absolute site asset          - assets/foo/bar/baz.json
+    - foo/bar/baz.json         - current page asset           - content/fm/foo/bar/baz.json
+    - /foo/bar:baz.json        - asset for site-relative page - content/foo/bar/baz.json
+    - foo/bar:baz.json         - asset for page-relative page - content/fm/foo/bar/baz.json
+
+    NB: While content/fm/foo/bar/baz.json is the eventual path for both foo/bar/baz.json and
+        foo/bar:baz.json, the latter requires that bar is a page bundle, like foo/bar/index.md
+
+    While this could've been split into using a map for this value, this is more convenient for now.
+*/}}
+{{- $IsRemoteAsset    := or (hasPrefix $ConfigPath "http://") (hasPrefix $ConfigPath "https://") -}}
+{{- $IsOtherPageAsset := and (not $IsRemoteAsset) (in $ConfigPath ":")                           -}}
+{{- $IsAbsoluteAsset  := hasPrefix $ConfigPath "/"                                               -}}
+
+{{- if $IsRemoteAsset -}} {{/* Retrieve from remote URL */}}
+  {{- with resources.GetRemote $ConfigPath -}}
+    {{- $configAsset = . -}}
+  {{- else -}}
+    {{- warnf "Could not retrieve remote config to merge: '%s'" $ConfigPath -}}
+  {{- end -}}
+{{- else if $IsOtherPageAsset -}} {{/* Find the page and retrieve the asset from it */}}
+  {{/* Split the path on the colon, using LHS as page path and RHS as config asset path */}}
+  {{- $parts := split $ConfigPath ":" -}}
+  {{- if eq 2 (len $parts) -}}
+    {{- $PagePath   := index $parts 0 -}}
+    {{- $ConfigPath := index $parts 1 -}}
+    {{- if $IsAbsoluteAsset -}}
+      {{- with site.GetPage $PagePath -}}
+        {{- $Page := . -}}
+        {{- with $Page.Resources.GetMatch $ConfigPath -}}
+          {{- $configAsset = . -}}
+        {{- else -}}
+          {{- warnf "Could not retrieve config '%s' from page '%s'" $ConfigPath $Page.File.Path -}}
+        {{- end -}}
+      {{- else -}}
+        {{- warnf "Couldn't find page at path '%s' from site root" $PagePath -}}
+      {{- end -}}
+    {{- else -}}
+      {{- with $Context.GetPage $PagePath -}}
+        {{- $Page := . -}}
+        {{- with $Page.Resources.GetMatch $ConfigPath -}}
+          {{- $configAsset = . -}}
+        {{- else -}}
+          {{- warnf "Could not retrieve config '%s' from page '%s'" $ConfigPath $Page.File.Path -}}
+        {{- end -}}
+      {{- else -}}
+        {{- warnf "Couldn't find page at path '%s' from page %s" $PagePath $Context.File.Path -}}
+      {{- end -}}
+    {{- end -}}
+  {{- else -}}
+    {{- warnf "Too many colons (:) in config path '%s' - only one allowed between relative path and asset path" $ConfigPath -}}
+  {{- end -}}
+{{- else if $IsAbsoluteAsset -}} {{/* Retrieve from site assets */}}
+  {{- $TrimmedSchemaPath := trim $ConfigPath "/" -}}
+  {{- with resources.Get $TrimmedSchemaPath -}}
+    {{- $configAsset = . -}}
+  {{- else -}}
+    {{- warnf "Could not retrieve config '%s' from site assets" $TrimmedSchemaPath -}}
+  {{- end -}}
+{{- else -}} {{/* Retrieve from this page's assets */}}
+  {{- with $Context.Resources.GetMatch $ConfigPath -}}
+    {{- $configAsset = . -}}
+  {{- else -}}
+    {{- warnf "Could not retrieve config '%s' from page '%s' assets to merge: '%s'" $ConfigPath $Context.File.Path -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $configAsset -}}

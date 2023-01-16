@@ -1,0 +1,52 @@
+{{/*
+    Expects to receive the value of `memo.front_matter` from page or site params to process.
+
+    If the input params has the `configs` key, it checks the values, discarding any invalid items
+    and returning only the slice of valid config items to publish, warning when an invalid item is
+    discovered.
+*/}}
+{{- $InputParams  := .     -}}
+{{- $validConfigs := slice -}}
+
+{{- with $InputParams.configs -}}
+  {{- range $options := $InputParams.configs -}}
+    {{- $json       := $options | jsonify (dict "indent" "  ") -}}
+    {{- if reflect.IsMap $options -}}
+      {{- $definition := $options.definition -}}
+      {{- $merge      := $options.merge      -}}
+      {{- $publish    := $options.publish    -}}
+      {{- $valid      := true                -}}
+
+      {{- if $publish -}}
+        {{- if and $definition $merge -}}
+          {{- warnf "Ope! Can only define 'definition' *or* 'merge' key! %s" $json -}}
+          {{- $valid = false -}}
+        {{- end -}}
+        
+        {{- range $key, $value := dict "definition" $definition "publish" $publish -}}
+          {{- if or (reflect.IsMap $value) (reflect.IsSlice $value) -}}
+            {{- warnf "Key '%s' must be a string but was a %T: %#v" $key $value $value -}}
+            {{- $valid = false -}}
+          {{- end -}}
+        {{- end -}}
+
+        {{- if reflect.IsMap $merge -}}
+          {{- warnf "Key 'merge' must be a string or array of strings" -}}
+          {{- $valid = false -}}
+        {{- end -}}
+      {{- else if $merge -}}
+        {{- warnf "Defined 'merge' key without mandatory 'publish' key: %s" $json -}}
+        {{- $valid = false -}}
+      {{- else if (not $definition) -}}
+        {{- warnf "Invalid value: no valid keys ('definition', 'merge', 'publish') defined: %s" $json -}}
+        {{- $valid = false -}}
+      {{- end -}}
+
+      {{- if $valid -}}
+        {{- $validConfigs = $validConfigs | append $options -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $validConfigs -}}

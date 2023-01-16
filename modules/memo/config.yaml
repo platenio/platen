@@ -7,3 +7,4 @@ params:
           title: platen/features/memo/title
           renderers:
             codeblock: platen/features/memo/codeblock
+          header: platen/features/memo/header

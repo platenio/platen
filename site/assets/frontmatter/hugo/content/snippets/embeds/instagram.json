@@ -1,0 +1,21 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.content.snippets": {
+    "hugo-instagram": {
+      "title": "Instagram",
+      "description": "Embed a photo from instagram.",
+      "body": "{{< instagram [[id]] />}}",
+      "fields": [
+        {
+          "name": "id",
+          "title": "Photo ID",
+          "description": "Specify the ID of the photo to embed.",
+          "type": "string",
+          "single": true,
+          "required": true,
+          "default": ""
+        }
+      ]
+    }
+  }
+}

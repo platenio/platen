@@ -1,0 +1,35 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.content.snippets": {
+    "platen-columns-group": {
+      "title": "Column Group",
+      "description": "Add a group of columns containing Markdown. Each column group must contain at least two columns.",
+      "body": [
+        "``````columns",
+        "---",
+        "id: [[id]]",
+        "class: [[class]]",
+        "---",
+        "",
+        "",
+        "``````"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "title": "ID: Specify the column group's ID. This value is mandatory and must be page-unique.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "class",
+          "title": "Class List: Specify any classes to add to the column group in a space-separated list.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        }
+      ]
+    }
+  }
+}

@@ -5,6 +5,25 @@ weight: 30
 platen:
   menu:
     collapse_section: true
+Memo:
+  MungeTitle: false
+  front_matter:
+    configs:
+      - merge:
+          - ./art:frontmatter/image-local.json
+          - ./art:frontmatter/image-remote.json
+          - ./buttons:frontmatter/image.json
+          - ./columns:frontmatter/codeblock-entry.json
+          - ./columns:frontmatter/codeblock-group.json
+          - ./details:frontmatter/codeblock.json
+          - ./itch:frontmatter/image.json
+          - ./katex/block:frontmatter/codeblock.json
+          - ./katex/inline:frontmatter/image.json
+          - ./mermaid:frontmatter/codeblock.json
+          - ./section:frontmatter/codeblock.json
+          - ./tabs:frontmatter/codeblock-entry.json
+          - ./tabs:frontmatter/codeblock-group.json
+        publish: /frontmatter/platen/content/snippets.json
 ---
 
 This section documents the special markup that Platen supports. The markup transforms your Markdown
@@ -15,6 +34,8 @@ markup for codeblocks, headings, images (both block and inline), and links.
 Codeblocks, headings, and block images support using attributes to pass options to the markup
 outside of your site or page configuration. For more information, see the [Attributes](#attributes)
 section.
+
+
 
 ## Codeblocks
 

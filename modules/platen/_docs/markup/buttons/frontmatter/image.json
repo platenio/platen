@@ -1,0 +1,36 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.content.snippets": {
+    "platen-button-link": {
+      "title": "Button",
+      "description": "Add a button linking to another page or external site.",
+      "body": [
+        "![button:[[&selection]]]([[&url]])",
+        "{ [[&class]] }"
+      ],
+      "fields": [
+        {
+          "name": "selection",
+          "title": "Button Text: This displays on the button itself.",
+          "type": "string",
+          "single": true,
+          "default": "FM_SELECTED_TEXT"
+        },
+        {
+          "name": "url",
+          "title": "Button Url: Specify the URL this button should lead to.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "class",
+          "title": "Class List: Specify any classes to add to the button in a space-separated list. Each class must have a period (`.`) prefix.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        }
+      ]
+    }
+  }
+}

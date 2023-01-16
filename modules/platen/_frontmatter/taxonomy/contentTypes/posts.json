@@ -1,0 +1,137 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.taxonomy.contentTypes": [
+    {
+      "name": "posts",
+      "pageBundle": false,
+      "previewPath": "posts",
+      "fields": [
+        {
+          "title": "Author's Name",
+          "name": "author",
+          "type": "string"
+        },
+        {
+          "title": "Title",
+          "name": "title",
+          "type": "string",
+          "single": true
+        },
+        {
+          "title": "Link Title",
+          "description": "Used as the title for this page when included in a list, like the section shortcode.",
+          "name": "linktitle",
+          "type": "string",
+          "single": true
+        },
+        {
+          "title": "Summary",
+          "description": "Displayed when paginated or in a list and as page description",
+          "name": "summary",
+          "type": "string"
+        },
+        {
+          "title": "Weight",
+          "description": "Determines order for pages; lower weight first",
+          "name": "weight",
+          "type": "number"
+        },
+        {
+          "title": "Publishing date",
+          "name": "date",
+          "type": "datetime",
+          "default": "{{now}}",
+          "isPublishDate": true
+        },
+        {
+          "title": "Content preview",
+          "name": "preview",
+          "type": "image"
+        },
+        {
+          "title": "Is in draft",
+          "name": "draft",
+          "type": "draft"
+        },
+        {
+          "title": "Platen",
+          "description": "These options override site-wide settings for this page. Don't specify a value if you want to inherit the site defaults.",
+          "type": "fields",
+          "name": "platen",
+          "fields": [
+            {
+              "title": "Render Page Title as Heading",
+              "description": "Use this setting to specify whether the page title should be rendered as an <h1> element instead of the default <strong> element.",
+              "name": "title_as_heading",
+              "type": "boolean"
+            },
+            {
+              "title": "Table of Contents Options",
+              "name": "table_of_contents",
+              "type": "fields",
+              "fields": [
+                {
+                  "title": "Render the Table of Contents",
+                  "description": "Specifies whether to render the table of contents for the page. This setting overrides the site's display.table_of_contents.render, if set.",
+                  "name": "render",
+                  "type": "boolean"
+                },
+                {
+                  "title": "Minimum Heading Level",
+                  "description": "Specify the minimum heading level to include in the page's table of contents, overriding the site's display.table_of_contents.minimum_level setting. This value only affects the table of contents when use_built_in is set to false.",
+                  "name": "minimum_level",
+                  "type": "number"
+                },
+                {
+                  "title": "Maximum Heading Level",
+                  "description": "Specify the maximum heading level to include in the page's table of contents, overriding the site's display.table_of_contents.maximum_level setting. This value only affects the table of contents when use_built_in is set to false.",
+                  "name": "maximum_level",
+                  "type": "number"
+                },
+                {
+                  "title": "Use Built-In",
+                  "description": "Choose whether to use Hugo's builtin table of contents or generate them with Platen, overriding the site's configuration for this page. This overrides the site's display.table_of_contents.use_built_in setting.",
+                  "name": "use_built_in",
+                  "type": "boolean"
+                },
+                {
+                  "title": "As Ordered List",
+                  "description": "Specify whether the table of contents should render its entries in an ordered list with numerals before each item. By default, the table of contents is rendered in an unordered list without any list markers, only with indents. This value overrides the site's display.table_of_contents.ordered_list setting.",
+                  "name": "ordered_list",
+                  "type": "boolean"
+                }
+              ]
+            },
+            {
+              "title": "Enable comments",
+              "name": "enable_comments",
+              "type": "boolean"
+            },
+            {
+              "title": "Exclude from site search",
+              "name": "exclude_from_search",
+              "type": "boolean"
+            }
+          ]
+        },
+        {
+          "title": "Tags",
+          "name": "tags",
+          "type": "tags"
+        },
+        {
+          "title": "Categories",
+          "name": "categories",
+          "type": "categories"
+        },
+        {
+          "title": "type",
+          "name": "type",
+          "type": "string",
+          "default": "posts",
+          "hidden": true
+        }
+      ]
+    }
+  ]
+}

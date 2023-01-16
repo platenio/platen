@@ -1,0 +1,20 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.content.snippets": {
+    "hugo-vimeo": {
+      "title": "Vimeo",
+      "description": "Embed a Vimeo video.",
+      "body": "{{< vimeo [[id]] />}}",
+      "fields": [
+        {
+          "name": "id",
+          "title": "Vimeo video ID",
+          "description": "Specify the unique ID of the video.",
+          "type": "string",
+          "single": true,
+          "required": true
+        }
+      ]
+    }
+  }
+}

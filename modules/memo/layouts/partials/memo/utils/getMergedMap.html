@@ -1,0 +1,39 @@
+{{/*
+    This partial is used to deeply merge two maps, overriding values in the BaseMap with those from
+    the MergingMap.
+*/}}
+{{- $Params     := .                                  -}}
+{{- $JoinArrays := $Params.JoinArrays | default false -}}
+{{- $BaseMap    := $Params.BaseMap    | default dict  -}}
+{{- $MergingMap := $Params.MergingMap | default dict  -}}
+{{- $mergedMap  := dict                               -}}
+
+{{- range $BaseKey, $BaseValue := $BaseMap -}}
+  {{- $value := $BaseValue -}}
+  {{- if reflect.IsMap $BaseValue -}}
+    {{- with index $MergingMap $BaseKey -}}
+      {{- $rContext := dict "MergingMap" . "BaseMap" $BaseValue                                -}}
+      {{- $value     = partialCached "memo/utils/getMergedMap" $rContext $rContext -}}
+    {{- end -}}
+  {{- else if (and (reflect.IsSlice $BaseValue) $JoinArrays) -}}
+    {{- with index $MergingMap $BaseKey -}}
+      {{/* Naive union for arrays - if the arrays care about uniqueness by key, oops! */}}
+      {{- $value = $value | append . | uniq -}}
+    {{- end -}}
+  {{- else -}}
+    {{- with index $MergingMap $BaseKey -}}
+      {{/* Naive replacement for scalars (and lists when JoinArrays is false) */}}
+      {{- $value = . -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $mergedMap = merge $mergedMap (dict $BaseKey $value) -}}
+{{- end -}}
+
+{{- range $MergingKey, $MergingValue := $MergingMap -}}
+  {{- with index $mergedMap $MergingKey -}}
+  {{- else -}}
+    {{- $mergedMap = merge $mergedMap (dict $MergingKey $MergingValue) -}}
+  {{- end }}
+{{- end -}}
+
+{{- return $mergedMap -}}

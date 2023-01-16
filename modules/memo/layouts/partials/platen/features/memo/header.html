@@ -1,0 +1,20 @@
+{{/*
+    Expects a page's context. If the page defines the `memo.front_matter` key, it processes it to
+    publish any FrontMatter configurations so users can leverage those instead of redefining the
+    values for themselves.
+*/}}
+{{- $Context := . -}}
+
+{{- $Params := partial "memo/params/get" (dict "Context" $Context) -}}
+{{- $SiteFM := $Params.Site.front_matter -}}
+{{- $PageFM := $Params.Page.front_matter -}}
+
+{{- with $SiteFM -}}
+  {{- $PublishParams := dict "Context" $Context "FrontMatter" $SiteFM       -}}
+  {{- partialCached "memo/frontmatter/publish" $PublishParams "SitePublish" -}}
+{{- end -}}
+
+{{- with $PageFM -}}
+  {{- $PublishParams := dict "Context" $Context "FrontMatter" $PageFM -}}
+  {{- partial "memo/frontmatter/publish" $PublishParams               -}}
+{{- end -}}

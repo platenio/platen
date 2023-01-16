@@ -1,0 +1,12 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.content.sorting": [
+    {
+      "id": "byWeight",
+      "title": "By Weight",
+      "name": "weight",
+      "order": "asc",
+      "type": "number"
+    }
+  ]
+}

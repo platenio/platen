@@ -1,0 +1,31 @@
+{{/*
+    Expects a dict with a page's context and an array of config paths. The caller can choose whether
+    arrays should be replaced (the default) or joined.
+
+    The order of the config paths is important. Paths defined later in the slice are applied over
+    earlier ones, favoring their values.
+*/}}
+
+{{- $Params      := .                                  -}}
+{{- $Context     := $Params.Context                    -}}
+{{- $ConfigPaths := $Params.ConfigPaths                -}}
+{{- $JoinArrays  := $Params.JoinArrays | default false -}}
+{{- $configs     := slice                              -}}
+{{- $merged      := dict                               -}}
+
+{{/* Retrieve the config asset so it's data can be unmarshalled for merging */}}
+{{- range $ConfigPath := $ConfigPaths -}}
+  {{- $Resolving := dict "Context" $Context "ConfigPath" $ConfigPath -}}
+  {{- with (partial "memo/frontmatter/resolve" $Resolving) -}}
+    {{- $data   := .Content | transform.Unmarshal -}}
+    {{- $configs = $configs | append $data        -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Loop over the unmarshalled data, merging the next config into the existing merge */}}
+{{- range $config := $configs -}}
+  {{- $mergeParams := dict "BaseMap" $merged "MergingMap" $config "JoinArrays" $JoinArrays -}}
+  {{- $merged       = partialCached "memo/utils/getMergedMap" $mergeParams $mergeParams    -}}
+{{- end -}}
+
+{{- return $merged -}}
