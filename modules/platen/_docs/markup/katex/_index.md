@@ -15,6 +15,10 @@ Memo:
           - ./block:frontmatter/codeblock.json
           - ./inline:frontmatter/image.json
         publish: /frontmatter/platen/content/snippets/katex.json
+      - merge:
+          - ./block:frontmatter/codeblock.json
+          - ./inline:frontmatter/image.json
+        publish: /frontmatter/platen/markup/katex.json
 ---
 
 Platen supports using [KaTeX markup][01] to add mathematical and scientific formulas to your pages.

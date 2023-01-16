@@ -14,6 +14,9 @@ Memo:
         publish:    /frontmatter/platen/content/snippets/buttons/image.json
       - merge:      frontmatter/image.json
         publish:    /frontmatter/platen/content/snippets/buttons.json
+      - merge:
+          - frontmatter/image.json
+        publish: /frontmatter/platen/markup/buttons.json
   Kind: Renderer.Image
   Aliases:
     - btn

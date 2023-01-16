@@ -15,6 +15,9 @@ Memo:
         publish:    /frontmatter/platen/content/snippets/section/codeblock.json
       - merge:      frontmatter/codeblock.json
         publish:    /frontmatter/platen/content/snippets/section.json
+      - merge:
+          - frontmatter/codeblock.json
+        publish: /frontmatter/platen/markup/section.json
   Kind: Renderer.Codeblock
   Data:
     root:
