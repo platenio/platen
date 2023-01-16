@@ -1,0 +1,18 @@
+{{- $Resolving   := .                  -}}
+{{- $Context     := $Resolving.Context -}}
+{{- $entry       := $Resolving.Entry   -}}
+{{- $mungedEntry := $entry             -}}
+
+{{- range $Key, $Value := $entry -}}
+  {{- $KeyIsSchema   := eq $Key "schema" -}}
+  {{- $ValueIsScalar := and (not (reflect.IsMap $Value)) (not (reflect.IsSlice $Value)) -}}
+  {{- if and $KeyIsSchema $ValueIsScalar -}}
+    {{- $Resolving := dict "Context" $Context "ConfigPath" $Value -}}
+    {{- with (partial "memo/frontmatter/resolve" $Resolving) -}}
+      {{- $mungedValue := .Content | transform.Unmarshal -}}
+      {{- $mungedEntry  = merge $mungedEntry (dict $Key $mungedValue) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $mungedEntry -}}

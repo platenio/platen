@@ -1,0 +1,18 @@
+{{- $Params       := .               -}}
+{{- $Context      := $Params.Context -}}
+{{- $Config       := $Params.Config  -}}
+{{- $mungedConfig := $Config         -}}
+
+{{- range $ConfigKey, $Entries := $Config -}}
+  {{- if in $ConfigKey ".data." -}}
+    {{- $mungedEntries := slice -}}
+    {{- range $entry := $Entries -}}
+      {{- $Munging      := dict "Context" $Context "Entry" $entry             -}}
+      {{- $munged       := partial "memo/frontmatter/schemas/_munge" $Munging -}}
+      {{- $mungedEntries = $mungedEntries | append $munged                    -}}
+    {{- end -}}
+    {{- $mungedConfig = merge $mungedConfig (dict $ConfigKey $mungedEntries) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $mungedConfig -}}

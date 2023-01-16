@@ -16,26 +16,40 @@
 {{- $JsonOptions:= dict "indent" "  " "noHTMLEscape" true -}}
 
 {{- range $options := $FrontMatter.configs -}}
-  {{- $Definition := $options.definition                              -}}
-  {{- $Publish    := $options.publish                                 -}}
-  {{- $joinArrays := $options.join_arrays | default $Input.JoinArrays -}}
-  {{- $merge      := $options.merge                                   -}}
+  {{- $Definition     := $options.definition                                  -}}
+  {{- $Publish        := $options.publish                                     -}}
+  {{- $ResolveSchemas := $options.resolve_schemas | default false             -}}
+  {{- $joinArrays     := $options.join_arrays     | default $Input.JoinArrays -}}
+  {{- $merge          := $options.merge                                       -}}
   {{- if $Definition -}}
     {{/* If the config defines definition without publish, reuse definition */}}
     {{- $publish   := $Publish | default $Definition                   -}}
     {{- $Resolving := dict "Context" $Context "ConfigPath" $Definition -}}
     {{- with (partial "memo/frontmatter/resolve" $Resolving) -}}
-      {{- $json := . | resources.Copy $publish -}}
-      {{- $_    := $json.Permalink             -}}
+      {{- if $ResolveSchemas -}}
+        {{- $config          := .Content | transform.Unmarshal                              -}}
+        {{- $ResolvingSchema := dict "Context" $Context "Config" $config                    -}}
+        {{- $config           = partial "memo/frontmatter/schemas/resolve" $ResolvingSchema -}}
+        {{- $config           = $config | jsonify $JsonOptions                              -}}
+        {{- $config           = $config | resources.FromString $Publish                     -}}
+        {{- $_               := $config.Permalink                                           -}}
+      {{- else -}}
+        {{- $json := . | resources.Copy $publish -}}
+        {{- $_    := $json.Permalink             -}}
+      {{- end -}}
     {{- end -}}
   {{- else if $merge -}}
     {{- if not (reflect.IsSlice $merge) -}}
       {{- $merge = slice $merge -}}
     {{- end -}}
-    {{- $mergeParams  := dict "Context" $Context "ConfigPaths" $merge "JoinArrays" $joinArrays -}}
-    {{- $mergedSchema := partial "memo/frontmatter/merge" $mergeParams                         -}}
-    {{- $mergedSchema  = $mergedSchema | jsonify $JsonOptions                                  -}}
-    {{- $mergedSchema  = $mergedSchema | resources.FromString $Publish                         -}}
-    {{- $_            := $mergedSchema.Permalink                                               -}}
+    {{- $mergeParams  := dict "Context"        $Context
+                              "ConfigPaths"    $merge
+                              "JoinArrays"     $joinArrays
+                              "ResolveSchemas" $ResolveSchemas
+    -}}
+    {{- $mergedSchema := partial "memo/frontmatter/merge" $mergeParams -}}
+    {{- $mergedSchema  = $mergedSchema | jsonify $JsonOptions          -}}
+    {{- $mergedSchema  = $mergedSchema | resources.FromString $Publish -}}
+    {{- $_            := $mergedSchema.Permalink                       -}}
   {{- end -}}
 {{- end -}}

@@ -6,18 +6,23 @@
     earlier ones, favoring their values.
 */}}
 
-{{- $Params      := .                                  -}}
-{{- $Context     := $Params.Context                    -}}
-{{- $ConfigPaths := $Params.ConfigPaths                -}}
-{{- $JoinArrays  := $Params.JoinArrays | default false -}}
-{{- $configs     := slice                              -}}
-{{- $merged      := dict                               -}}
+{{- $Params         := .                                      -}}
+{{- $Context        := $Params.Context                        -}}
+{{- $ConfigPaths    := $Params.ConfigPaths                    -}}
+{{- $JoinArrays     := $Params.JoinArrays     | default false -}}
+{{- $ResolveSchemas := $Params.ResolveSchemas | default false -}}
+{{- $configs        := slice                                  -}}
+{{- $merged         := dict                                   -}}
 
 {{/* Retrieve the config asset so it's data can be unmarshalled for merging */}}
 {{- range $ConfigPath := $ConfigPaths -}}
   {{- $Resolving := dict "Context" $Context "ConfigPath" $ConfigPath -}}
   {{- with (partial "memo/frontmatter/resolve" $Resolving) -}}
     {{- $data   := .Content | transform.Unmarshal -}}
+    {{- if $ResolveSchemas -}}
+      {{- $ResolvingSchema := dict "Context" $Context "Config" $data                      -}}
+      {{- $data             = partial "memo/frontmatter/schemas/resolve" $ResolvingSchema -}}
+    {{- end -}}
     {{- $configs = $configs | append $data        -}}
   {{- end -}}
 {{- end -}}
