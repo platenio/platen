@@ -74,11 +74,13 @@ front_matter:
         - /modules/platen/markup/columns:frontmatter/codeblock-group.json
         - /modules/platen/markup/details:frontmatter/codeblock.json
         - /modules/platen/markup/itch:frontmatter/image.json
+        - /modules/platen/markup/itch:frontmatter/preset.json
         - /modules/platen/markup/katex/block:frontmatter/codeblock.json
         - /modules/platen/markup/katex/inline:frontmatter/image.json
         - /modules/platen/markup/mermaid:frontmatter/codeblock.json
         - /modules/platen/markup/section:frontmatter/codeblock.json
         - /modules/platen/markup/tabs:frontmatter/codeblock-entry.json
         - /modules/platen/markup/tabs:frontmatter/codeblock-group.json
-      publish:     /frontmatter/platen.json
-      join_arrays: true
+      publish:         /frontmatter/platen.json
+      join_arrays:     true
+      resolve_schemas: true

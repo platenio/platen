@@ -26,6 +26,8 @@
 {{- end -}}
 
 {{- if $hasPrefix -}}
+  {{/* Presets contain settings from site data */}}
+  {{- $preset     := dict -}}
   {{/* Retrieve attributes for block syntax image only */}}
   {{- $attributes := dict -}}
 
@@ -37,8 +39,25 @@
   {{- $height := 167 -}}
   {{- $width  := 552 -}}
 
+  {{/* Set base URL */}}
+  {{- $BaseUrl := "https://itch.io/embed" -}}
+  {{- $url     := ""                      -}}
+
   {{- with $destination -}}
-    {{- $url := printf "https://itch.io/embed/%s" $destination -}}
+    {{- if not (findRE `^\d+$` $destination) -}}
+      {{- warnf "Destination is a preset: '%s'" $destination -}}
+      {{- with index site.Data.platen.embeds.itch $destination -}}
+        {{- $preset = . -}}
+        {{- with $preset.id -}}
+          {{- $url = printf "%s/%v" $BaseUrl . -}}
+        {{- end -}}
+      {{- else -}}
+        {{- errorf "Unable to find preset '%s' in site data 'platen.embeds.itch' - is '%s.yaml' defined?" -}}
+      {{- end -}}
+    {{- else -}}
+      {{- warnf "Destination is an ID:  '%s'" $destination -}}
+      {{- $url = printf "%s/%s" $BaseUrl $destination -}}
+    {{- end -}}
 
     {{/*
       Handle the alt text. If it's provided, use as title for iframe. Otherwise, assume the use of a
@@ -47,7 +66,11 @@
     {{- with $alt -}}
       {{- $title = $alt -}}
     {{- else -}}
-      {{/* Assume preset, implement later */}}
+      {{- with $preset.title -}}
+        {{- $title = . -}}
+      {{- else -}}
+        {{- errorf "Missing title for itch embed; no title specified as alt text or in preset from site data (platen.embeds.itch.%s)." $destination -}}
+      {{- end -}}
       {{- warnf "Finding itchio preset %s" $destination -}}
     {{- end -}}
 
@@ -55,15 +78,33 @@
     {{/* Both should set the url and title */}}
     {{- if $IsBlock -}}
       {{- $attributes       = $Params.Attributes -}}
-      {{- $dark            := $attributes.dark            | default false -}}
-      {{- $square          := $attributes.square          | default false -}}
-      {{- $linkback        := $attributes.linkback        | default false -}}
-      {{- $backgroundColor := $attributes.background_color                -}}
-      {{- $textColor       := $attributes.text_color                      -}}
-      {{- $buttonColor     := $attributes.button_color                    -}}
-      {{- $borderColor     := $attributes.border_color                    -}}
-      {{- $borderWidth     := $attributes.border_width                    -}}
-      {{- $urlQueryParams  := slice                                       -}}
+      {{- $dark            := $attributes.dark
+                              | default $preset.dark
+                              | default false
+      -}}
+      {{- $square          := $attributes.square
+                              | default $preset.square
+                              | default false
+      -}}
+      {{- $linkback        := $attributes.linkback
+                              | default $preset.linkback
+                              | default false
+      -}}
+      {{- $backgroundColor := $attributes.background_color | default $preset.background_color -}}
+      {{- $textColor       := $attributes.text_color       | default $preset.text_color       -}}
+      {{- $buttonColor     := $attributes.button_color     | default $preset.button_color     -}}
+      {{- $borderColor     := $attributes.border_color     | default $preset.border_color     -}}
+      {{- $borderWidth     := $attributes.border_width     | default $preset.border_width     -}}
+      {{- $urlQueryParams  := slice                                                           -}}
+
+      {{/* In this case the usage specified a preset that didn't define an id */}}
+      {{- if eq $url "" -}}
+        {{- with $attributes.id -}}
+          {{- $url = printf "%s/%s" $BaseUrl . -}}
+        {{- else -}}
+          {{- errorf "No ID specified for itch embed. Used preset '%s', which doesn't define an id, without specifying an ID attribute." $destination -}}
+        {{- end -}}
+      {{- end -}}
 
       {{- if $linkback -}}
         {{- $urlQueryParams = $urlQueryParams | append "linkback=true" -}}

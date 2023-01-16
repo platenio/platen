@@ -1,0 +1,17 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.data.types": [
+    {
+      "id": "platen-markup-itch-preset",
+      "schema": "/modules/platen/markup/itch:preset.schema.yaml"
+    }
+  ],
+  "frontMatter.data.folders": [
+    {
+      "id": "platen-markup-itch-presets",
+      "path": "[[workspace]]/data/platen/embeds/itch",
+      "singleEntry": true,
+      "type": "platen-markup-itch-preset"
+    }
+  ]
+}
