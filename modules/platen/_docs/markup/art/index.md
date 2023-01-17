@@ -17,6 +17,10 @@ Memo:
           - frontmatter/image-local.json
           - frontmatter/image-remote.json
         publish: /frontmatter/platen/content/snippets/art.json
+      - merge:
+          - frontmatter/image-local.json
+          - frontmatter/image-remote.json
+        publish: /frontmatter/platen/markup/art.json
   MungeTitle: false
   Kind: Renderer.Image
   Aliases: []

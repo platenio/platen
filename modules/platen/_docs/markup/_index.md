@@ -24,6 +24,24 @@ Memo:
           - ./tabs:frontmatter/codeblock-entry.json
           - ./tabs:frontmatter/codeblock-group.json
         publish: /frontmatter/platen/content/snippets.json
+      - merge:
+          - ./art:frontmatter/image-local.json
+          - ./art:frontmatter/image-remote.json
+          - ./buttons:frontmatter/image.json
+          - ./columns:frontmatter/codeblock-entry.json
+          - ./columns:frontmatter/codeblock-group.json
+          - ./details:frontmatter/codeblock.json
+          - ./itch:frontmatter/preset.json
+          - ./itch:frontmatter/image.json
+          - ./katex/block:frontmatter/codeblock.json
+          - ./katex/inline:frontmatter/image.json
+          - ./mermaid:frontmatter/codeblock.json
+          - ./section:frontmatter/codeblock.json
+          - ./tabs:frontmatter/codeblock-entry.json
+          - ./tabs:frontmatter/codeblock-group.json
+        publish:         /frontmatter/platen/markup.json
+        resolve_schemas: true
+        join_arrays:     true
 ---
 
 This section documents the special markup that Platen supports. The markup transforms your Markdown

@@ -18,6 +18,10 @@ Memo:
           - frontmatter/codeblock-group.json
           - frontmatter/codeblock-entry.json
         publish: /frontmatter/platen/content/snippets/columns.json
+      - merge:
+          - frontmatter/codeblock-group.json
+          - frontmatter/codeblock-entry.json
+        publish: /frontmatter/platen/markup/columns.json
   MungeTitle: false
   Kind: Renderer.Codeblock
   Attributes:

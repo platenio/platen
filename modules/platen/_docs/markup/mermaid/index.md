@@ -15,6 +15,9 @@ Memo:
         publish:    /frontmatter/platen/content/snippets/mermaid/codeblock.json
       - merge:      frontmatter/codeblock.json
         publish:    /frontmatter/platen/content/snippets/mermaid.json
+      - merge:
+          - frontmatter/codeblock.json
+        publish: /frontmatter/platen/markup/mermaid.json
   Kind: Renderer.Codeblock
   Attributes:
     container:
