@@ -1,0 +1,76 @@
+{{- $Params       := .                                    -}}
+{{- $Page         := $Params.Page                         -}}
+{{- $Options      := $Params.Options                      -}}
+{{- $DefaultStyle := site.Data.platen.art.styles._default -}}
+{{- $style        := dict                                 -}}
+{{- $canonical    := dict "Page" $Page                    -}}
+{{- $WorkPrefix  := "work:"                               -}}
+
+{{- with $Options.style -}}
+  {{- $styles := . -}}
+  {{- if not (reflect.IsSlice $styles) -}}
+    {{- $styles = slice $styles -}}
+  {{- end -}}
+
+  {{- range $stylePath := $styles -}}
+    {{- $mergingStyle := partialCached "platen/markup/art/getStyle" $stylePath $stylePath    -}}
+    {{- $mergeParams  := dict "BaseMap" $style "MergingMap" $mergingStyle                    -}}
+    {{- $style         = partialCached "platen/utils/getMergedMap" $mergeParams $mergeParams -}}
+  {{- end -}}
+
+  {{- $mergeParams := dict "BaseMap" $DefaultStyle "MergingMap" $style "JoinArrays" true  -}}
+  {{- $style        = partialCached "platen/utils/getMergedMap" $mergeParams $mergeParams -}}
+{{- else -}}
+  {{- $style = $DefaultStyle -}}
+{{- end -}}
+
+{{- with $Options.class -}}
+  {{- $figureClasses := $style.figure.classes -}}
+
+  {{- range $class := split $Options.class " " -}}
+    {{- $figureClasses = $figureClasses | append $class -}}
+  {{- end -}}
+
+  {{- $FigureStyle := merge $style.figure (dict "classes" $figureClasses) -}}
+  {{- $style        = merge $style        (dict "figure" $FigureStyle)    -}}
+{{- end -}}
+
+{{- with $Options.content_warning -}}
+  {{- $mergeParams := dict "BaseMap" $style "MergingMap" $style.content_warning "JoinArrays" true -}}
+  {{- $style        = partialCached "platen/utils/getMergedMap" $mergeParams $mergeParams         -}}
+  {{- $canonical = merge $canonical (dict "ContentWarning" . "Style" $style)                      -}}
+{{- else -}}
+  {{- $canonical = merge $canonical (dict "Style" $style) -}}
+{{- end -}}
+
+{{- with $Options.alt -}}
+  {{- $canonical = merge $canonical (dict "AltText" .) -}}
+{{- else -}}
+  {{/*  No alt text, use handler  */}}
+{{- end -}}
+
+{{- with $Options.src -}}
+  {{- $src         := .                                        -}}
+  {{- $IsRemote    := or (in $src "://") (hasPrefix $src "//") -}}
+  {{- $IsNotStatic := not (strings.HasPrefix $src "/")         -}}
+  {{- if $IsRemote -}}
+    {{- $src = (resources.GetRemote $src).RelPermalink -}}
+  {{- else if $IsNotStatic -}}
+    {{- $src = (resources.Get $src).RelPermalink }}
+  {{- end -}}
+  {{- $canonical = merge $canonical (dict "Source" $src) -}}
+{{- else -}}
+  {{/*  No source, error  */}}
+{{- end -}}
+
+{{- with $Options.caption -}}
+  {{- $TrimParams := dict "Text" . "TrimEOL" true                          -}}
+  {{- $Caption    := partial "platen/utils/getLeadTrimmedText" $TrimParams -}}
+  {{- $canonical   = merge $canonical (dict "Caption" $Caption)            -}}
+{{- end -}}
+
+{{- with $Options.id -}}
+  {{- $canonical = merge $canonical (dict "ID" .) -}}
+{{- end -}}
+
+{{- return $canonical -}}

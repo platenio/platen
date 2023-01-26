@@ -1,0 +1,17 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.data.types": [
+    {
+      "id": "platen-markup-art-preset-work",
+      "schema": "/modules/platen/markup/art:presets/work.schema.yaml"
+    }
+  ],
+  "frontMatter.data.folders": [
+    {
+      "id": "platen-markup-art-preset-works",
+      "path": "[[workspace]]/data/platen/art/works",
+      "singleEntry": true,
+      "type": "platen-markup-art-preset-work"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.data.types": [
+    {
+      "id": "platen-markup-art-preset-style",
+      "schema": "/modules/platen/markup/art:presets/style.schema.yaml"
+    }
+  ],
+  "frontMatter.data.folders": [
+    {
+      "id": "platen-markup-art-preset-styles",
+      "path": "[[workspace]]/data/platen/art/styles",
+      "singleEntry": true,
+      "type": "platen-markup-art-preset-style"
+    }
+  ]
+}

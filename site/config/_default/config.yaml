@@ -93,6 +93,8 @@ module:
           target: assets/frontmatter/platen
         - source: _schema_data
           target: data
+        - source: data
+          target: data
         - source: archetypes
           target: archetypes
         - source: assets

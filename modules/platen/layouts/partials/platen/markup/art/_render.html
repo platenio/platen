@@ -1,0 +1,85 @@
+{{- $Canonicalized  := .                             -}}
+{{- $Page           := $Canonicalized.Page           -}}
+{{- $Style          := $Canonicalized.Style          -}}
+{{- $AltText        := $Canonicalized.AltText        -}}
+{{- $Source         := $Canonicalized.Source         -}}
+{{- $Caption        := $Canonicalized.Caption        -}}
+{{- $ContentWarning := $Canonicalized.ContentWarning -}}
+{{- $ID             := $Canonicalized.ID             -}}
+
+{{/* Initialize the render strings */}}
+{{- $renderStrings := slice -}}
+
+{{/* Define the attribute list for the figure element */}}
+{{- $figureAttributes := slice -}}
+{{- with $ID -}}
+  {{- $figureAttributes = $figureAttributes | append (printf `id="%s"` $ID) -}}
+{{- end -}}
+{{- $FigureClasses   := delimit $Style.figure.classes " "                                -}}
+{{- $figureAttributes = $figureAttributes | append (printf `class="%s"` $FigureClasses)  -}}
+{{- $figureAttributes = partial "platen/utils/getSafeAttributes" $figureAttributes       -}}
+{{- $renderStrings    = $renderStrings | append (printf "<figure %s>" $figureAttributes) -}}
+
+{{/* Handle the content warning, if needed */}}
+{{- with $ContentWarning -}}
+  {{- $InputStyle      := $Style.input                                                          -}}
+  {{- $InputID         := printf "%s-%s" $InputStyle.id_prefix (lower $ContentWarning | urlize) -}}
+  {{- $InputName       := printf "%s-%s" $InputStyle.name_prefix $InputID                       -}}
+  {{- $InputClasses    := delimit $InputStyle.classes " "                                       -}}
+  {{- $inputAttributes := slice           `type="checkbox"`
+                         | append (printf `class="%s"`      $InputClasses)
+                         | append (printf `name="%s"`       $InputName)
+                         | append (printf `id="%s"`         $InputID)
+  -}}
+  {{- $AttributeParams := dict "Attributes" $inputAttributes "IndentCount" 9        -}}
+  {{- $inputAttributes  = partial "platen/utils/getSafeAttributes" $AttributeParams -}}
+  {{- $renderStrings    = $renderStrings
+                          | append (printf `  <input %s/>`                $inputAttributes)
+                          | append (printf `  <label for="%s">%s</label>` $InputID $ContentWarning)
+  -}}
+{{- end -}}
+
+{{/* Define the attibute list for the img element */}}
+{{- $imageAttributes := slice    (printf `src="%s"` $Source)
+                        | append (printf `alt="%s"` $AltText)
+-}}
+{{- with $Style.image.classes -}}
+  {{- $ImageClasses   := delimit $Style.image.classes " "                              -}}
+  {{- $imageAttributes = $imageAttributes | append (printf `class="%s"` $ImageClasses) -}}
+{{- end -}}
+{{- $imageAttributes = partial "platen/utils/getSafeAttributes" $imageAttributes      -}}
+{{- $renderStrings   = $renderStrings | append (printf `  <img %s>` $imageAttributes) -}}
+
+{{- with $Caption -}}
+  {{- $RenderParams := dict "Page"        $Page
+                            "Content"     $Caption
+                            "IndentCount" 4
+                            "AsBlock"     true
+  -}}
+  {{- $Renderedcaption := partial "platen/utils/getPrettyRender" $RenderParams -}}
+  {{- $figureCaption   := slice                                                -}}
+  {{- with $Style.caption.classes -}}
+    {{- $CaptionClasses    := delimit $Style.caption.classes " "                          -}}
+    {{- $captionAttributes := slice (printf `class="%s"` $CaptionClasses)                 -}}
+    {{- $captionAttributes  = partial "platen/utils/getSafeAttributes" $captionAttributes -}}
+    {{- $figureCaption      = $figureCaption |
+                              append (printf "  <figcaption %s>" $captionAttributes)
+    -}}
+  {{- else -}}
+    {{- $figureCaption = $figureCaption | append "  <figcaption>" -}}
+  {{- end -}}
+  {{- $figureCaption = $figureCaption | append (printf "    %s" $Renderedcaption) -}}
+  {{- $figureCaption = $figureCaption | append "  </figcaption>"                  -}}
+  {{- $figureCaption = delimit $figureCaption  "\n"                               -}}
+  {{- $renderStrings = $renderStrings | append $figureCaption                     -}}
+{{- end -}}
+
+{{/* Add the closing tag for the figure */}}
+{{- $renderStrings = $renderStrings | append "</figure>" -}}
+
+{{/* Combine render strings */}}
+{{- $renderString := delimit $renderStrings "\n"   -}}
+{{- $renderString  = printf  "%s\n\n" $renderString -}}
+
+{{/* Render */}}
+{{- return $renderString -}}
