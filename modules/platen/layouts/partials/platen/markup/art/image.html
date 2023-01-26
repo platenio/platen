@@ -1,13 +1,14 @@
 {{- $Params      := .                                                                -}}
 {{- $Page        := $Params.Page                                                     -}}
-{{- $destination := $Params.Destination                                              -}}
+{{- $Destination := $Params.Destination                                              -}}
 {{- $title       := $Params.Title                                                    -}}
 {{- $text        := $Params.PlainText                                                -}}
 {{- $IsBlock     := $Params.IsBlock                                                  -}}
 {{- $Ordinal     := $Params.Ordinal                                                  -}}
 {{- $ConfigKey   := "platen.markup.art"                                              -}}
-{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey        -}}
 {{- $Aliases     := $Config.aliases                                                  -}}
+{{- $WorkPrefix  := "work:"                                                          -}}
 
 {{- $renderedImage := "" -}}
 
@@ -27,67 +28,73 @@
 {{- end -}}
 
 {{- if $hasPrefix -}}
-  {{/* Retrieve attributes for block syntax image only */}}
-  {{- $attributes := dict -}}
-  {{- $src := "" -}}
+  {{/* Retrieve the defaults from data, init style and work opts */}}
+  {{- $passedOptions := dict -}}
+  {{- $mergedOptions := dict -}}
+  {{- $workOptions   := dict -}}
 
-  {{- with $destination -}}
-    {{- $asset    := dict                                                             -}}
-    {{- $isRemote := or (in $destination "://") (strings.HasPrefix $destination "//") -}}
-    {{- with $alt -}}
-      {{- if not $isRemote -}}
-        {{- $isStatic := strings.HasPrefix $destination "/"}}
-        {{- if $isStatic -}}
-          {{- $src = $destination -}}
-        {{- else -}}
-          {{- $asset = resources.Get $destination }}
-        {{- end -}}
-      {{- else -}}
-        {{- $asset = resources.GetRemote $destination -}}
-      {{- end -}}
+  {{- with $Destination -}}
+    {{- if hasPrefix $Destination $WorkPrefix -}}
+      {{- $WorkPath     := strings.TrimPrefix $WorkPrefix $Destination  -}}
+      {{- $passedOptions = merge $passedOptions (dict "work" $WorkPath) -}}
     {{- else -}}
-      {{/* Assume preset, implement later */}}
-      {{- warnf "Finding art preset %s" $destination -}}
+      {{- $passedOptions = merge $passedOptions (dict "src" $Destination) -}}
     {{- end -}}
-
-    {{/* If the image is an asset, you can process it before insertion */}}
-    {{- with $asset -}}
-      {{/* Handle processing */}}
-      {{- $src = $asset.RelPermalink -}}
-    {{- end -}}
-
-    {{/* If the image is a block, treat it like a figure; otherwise, warn about inline art. */}}
-    {{- if $IsBlock -}}
-      {{- $renderParams := dict "Source" $src "AltText" $alt "Page" $Page -}}
-      {{- $attributes   := $Params.Attributes -}}
-      
-      {{- with $attributes.class -}}
-        {{- $renderParams = merge $renderParams (dict "Class" .) -}}
-      {{- end -}}
-      
-      {{- with $attributes.content_warning -}}
-        {{- $renderParams = merge $renderParams (dict "ContentWarning" .) -}}
-      {{- end -}}
-      
-      {{- with $attributes.caption -}}
-        {{- $renderParams = merge $renderParams (dict "Caption" .) -}}
-      {{- else -}}
-        {{- $renderParams = merge $renderParams (dict "Caption" $title) -}}
-      {{- end -}}
-
-      {{- with $attributes.id -}}
-        {{- $renderParams = merge $renderParams (dict "ID" . ) -}}
-      {{- end -}}
-
-      {{- $renderedImage = partial "platen/markup/art/render" $renderParams -}}
-    {{- else -}}
-      {{- $message := i18n "ErrorArtInlineImage" (dict "src" $src "page" $Page) -}}
-      {{- errorf $message -}}
-    {{- end -}}
-  {{- else -}}
-    {{- $message := i18n "ErrorArtMissingSourceImage" (dict "page" $Page) -}}
-    {{- errorf $message -}}
   {{- end -}}
+
+  {{- with $alt -}}
+    {{- $passedOptions = merge $passedOptions (dict "alt" $alt) -}}
+  {{- end -}}
+
+  {{- with $title -}}
+    {{- $passedOptions = merge $passedOptions (dict "caption" $title) -}}
+  {{- end -}}
+
+  {{- if $IsBlock -}}
+    {{- $attributes := $Params.Attributes -}}
+    {{- warnf "Attributes: %s" ($attributes | jsonify (dict "indent" "  ")) -}}
+
+    {{- $ValidAttributes := slice "class" "id" "content_warning" "style" "work" -}}
+    {{- range $ValidAttribute := $ValidAttributes -}}
+      {{- with (index $attributes $ValidAttribute) -}}
+        {{- $passedOptions = merge $passedOptions (dict $ValidAttribute .) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- warnf "Passed options: %s" ($passedOptions | jsonify (dict "indent" "  ")) -}}
+  
+  {{- with $passedOptions.work -}}
+    {{- $workOptions = partialCached "platen/markup/art/getWork" . . -}}
+  {{- end -}}
+
+  {{- range $WorkKey, $WorkValue := $workOptions -}}
+    {{- warnf "Processing '%s' from work options as: %v" $WorkKey $WorkValue -}}
+    {{- $MergedValue  := index $passedOptions $WorkKey | default $WorkValue -}}
+    {{- warnf "Merged value for '%s' is: %v" $WorkKey $MergedValue -}}
+    {{- $mergedOptions = merge $mergedOptions (dict $WorkKey $MergedValue) -}}
+  {{- end -}}
+  {{- range $PassedKey, $PassedValue := $passedOptions -}}
+    {{- with index $mergedOptions $PassedKey -}}
+      {{/* Nothing to do, already merged */}}
+    {{- else -}}
+      {{/* Not defined in work options, add value from passed options */}}
+      {{- $mergedOptions = merge $mergedOptions (dict $PassedKey $PassedValue) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- warnf "Pre-canonicalized Options: %s" ($mergedOptions | jsonify (dict "indent" "  ")) -}}
+  {{- $Canonicalizing := dict "Page" $Page "Options" $mergedOptions                -}}
+  {{- $Canonicalized  := partial "platen/markup/art/_canonicalize" $Canonicalizing -}}
+  {{- $printable := dict -}}
+  {{- range $k, $v := $Canonicalized -}}
+    {{- if ne $k "Page" -}}
+      {{- $printable = merge $printable (dict $k $v) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- warnf "Canonicalized Options: %s" ($printable | jsonify (dict "indent" "  ")) -}}
+
+  {{/*  Canonicalized! now we just need to call render and fix error/warnings.  */}}
+  {{- $renderedImage = partial "platen/markup/art/_render" $Canonicalized -}}
 {{- end -}}
 
 {{- return $renderedImage -}}

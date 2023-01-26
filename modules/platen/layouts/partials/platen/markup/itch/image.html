@@ -45,7 +45,6 @@
 
   {{- with $destination -}}
     {{- if not (findRE `^\d+$` $destination) -}}
-      {{- warnf "Destination is a preset: '%s'" $destination -}}
       {{- with index site.Data.platen.embeds.itch $destination -}}
         {{- $preset = . -}}
         {{- with $preset.id -}}
@@ -55,7 +54,6 @@
         {{- errorf "Unable to find preset '%s' in site data 'platen.embeds.itch' - is '%s.yaml' defined?" -}}
       {{- end -}}
     {{- else -}}
-      {{- warnf "Destination is an ID:  '%s'" $destination -}}
       {{- $url = printf "%s/%s" $BaseUrl $destination -}}
     {{- end -}}
 
@@ -71,7 +69,6 @@
       {{- else -}}
         {{- errorf "Missing title for itch embed; no title specified as alt text or in preset from site data (platen.embeds.itch.%s)." $destination -}}
       {{- end -}}
-      {{- warnf "Finding itchio preset %s" $destination -}}
     {{- end -}}
 
     {{/* If the image is a block, handle the attributes. */}}
@@ -153,7 +150,7 @@
         {{- $iframeAttributes = $iframeAttributes | append (printf `title="%s"` $title) -}}
     {{- else -}}
       {{- $message := i18n "ErrorItchioMissingTitle"}}
-      {{- warnf "%s" $message -}}
+      {{- errorf "%s" $message -}}
     {{- end -}}
 
     {{- $iframeAttributes = $iframeAttributes | append `frameborder="0"`              -}}

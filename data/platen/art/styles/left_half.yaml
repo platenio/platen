@@ -1,0 +1,7 @@
+figure:
+  classes:
+    - half
+    - float-left
+image:
+  classes:
+    - example-sepia

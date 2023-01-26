@@ -25,6 +25,8 @@ Memo:
           - ./tabs:frontmatter/codeblock-group.json
         publish: /frontmatter/platen/content/snippets.json
       - merge:
+          - ./art:frontmatter/preset-style.json
+          - ./art:frontmatter/preset-work.json
           - ./art:frontmatter/image-local.json
           - ./art:frontmatter/image-remote.json
           - ./buttons:frontmatter/image.json

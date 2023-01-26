@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+# Can't have $schema - breaks frontmatter. Intellisense only works in VS Code
+# with the YAML extension directive at the top.
+# $schema: https://json-schema.org/draft/2020-12/schema
+$id: /modules/platen/markup/art/schemas/preset/work
+title: Art Work Preset
+description: |
+  Specifies a defined preset for reusing artwork in your Platen site.
+
+  https://platen.io/modules/platen/markup/art
+type: object
+properties:
+  alt:
+    title: Alt Text
+    description: |
+      Specify that alt text for the artwork.
+
+      https://platen.io/modules/platen/markup/art#alt_text
+    type: string
+  src:
+    title: Art Source
+    description: |
+      Specify the source for the artwork as a URL or URL fragment pointing to the image.
+
+      https://platen.io/modules/platen/markup/art#source
+    type: string
+  id:
+    title: Figure ID
+    description: |
+      Specify the value of the id attribute for the artwork's figure.
+
+      https://platen.io/modules/platen/markup/art#id
+    type: string
+  class:
+    title: Class List
+    description: |
+      Specify any additional classes to add to the figure containing the artwork.
+
+      https://platen.io/modules/platen/markup/art#class
+    type: array
+    items:
+      type: string
+  caption:
+    title: Figure Caption
+    description: |
+      Specify a caption for the artwork's figure.
+
+      https://platen.io/modules/platen/markup/art#title-as-caption
+    type: string
+  content_warning:
+    title: Content Warning
+    description: |
+      Specify a content warning for this artwork, if needed.
+
+      https://platen.io/modules/platen/markup/art#content_warning
+    type: string
+  style:
+    title: Style List
+    description: |
+      Specify any number of styles to apply to this artwork. They're merged in order.
+
+      https://platen.io/modules/platen/markup/art#preset-styles
+    type: array
+    items:
+      type: string

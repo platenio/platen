@@ -1,0 +1,146 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+# Can't have $schema - breaks frontmatter. Intellisense only works in VS Code
+# with the YAML extension directive at the top.
+# $schema: https://json-schema.org/draft/2020-12/schema
+$id: /modules/platen/markup/art/schemas/preset/style
+title: Art Style Preset
+description: |
+  Specifies a defined preset for styling artwork in your Platen site.
+
+  https://platen.io/modules/platen/markup/art/#preset-styles
+type: object
+properties:
+  figure:
+    title: Figure settings
+    description: |
+      Defines settings specific to the `<figure>` element artwork is added in.
+
+      https://platen.io/modules/platen/markup/art/#figure-style-options
+    type: object
+    properties:
+      classes:
+        title: Figure Classes
+        description: Specify one or more classes to add to the `<figure>` element.
+        type: array
+        items:
+          type: string
+          uniqueItems: true
+        default:
+          - platen-art
+  image:
+    title: Image settings
+    description: |
+      Defines settings specific to the `<img>` element artwork is added in.
+
+      https://platen.io/modules/platen/markup/art/#image-style-options
+    type: object
+    properties:
+      classes:
+        title: Image Classes
+        description: Specify one or more classes to add to the `<img>` element.
+        type: array
+        items:
+          type: string
+          uniqueItems: true
+        default: []
+  caption:
+    title: Caption settings
+    description: |
+      Defines settings specific to the `<figcaption>` element an artwork caption is added in.
+
+      https://platen.io/modules/platen/markup/art/#caption-style-options
+    type: object
+    properties:
+      classes:
+        title: Caption Classes
+        description: Specify one or more classes to add to the `<img>` element.
+        type: array
+        items:
+          type: string
+          uniqueItems: true
+        default: []
+  content_warning:
+    title: Content Warning Settings
+    description: |
+      These settings extend the other values when an artwork with this style specifies a content
+      warning.
+
+      https://platen.io/modules/platen/markup/art/#content-warning-style-options
+    type: object
+    properties:
+      figure:
+        title: Figure settings
+        description: |
+          Defines settings specific to the `<figure>` element artwork is added in.
+
+          https://platen.io/modules/platen/markup/art/#figure-style-options
+        type: object
+        properties:
+          classes:
+            title: Figure Classes
+            description: Specify one or more classes to add to the `<figure>` element.
+            type: array
+            items:
+              type: string
+              uniqueItems: true
+            default:
+              - platen-content-warning
+      image:
+        title: Image settings
+        description: |
+          Defines settings specific to the `<img>` element artwork is added in.
+
+          https://platen.io/modules/platen/markup/art/#image-style-options
+        type: object
+        properties:
+          classes:
+            title: Image Classes
+            description: Specify one or more classes to add to the `<img>` element.
+            type: array
+            items:
+              type: string
+              uniqueItems: true
+            default: []
+      input:
+        title: Input Settings
+        description: |
+          Defines settings specific to the `<input>` element added for artwork with a content warning.
+
+          https://platen.io/modules/platen/markup/art/#input-style-options
+        type: object
+        properties:
+          classes:
+            title: Input Classes
+            description: Specify one or more classes to add to the `<input>` element.
+            type: array
+            items:
+              type: string
+              uniqueItems: true
+            default:
+              - platen-content-warning
+          name_prefix:
+            title: Input Name Prefix
+            description: Foo
+            type: string
+            default: toggle
+          id_prefix:
+            title: Input ID Prefix
+            description: Foo
+            type: string
+            default: content-warning
+      caption:
+        title: Caption settings
+        description: |
+          Defines settings specific to the `<figcaption>` element an artwork caption is added in.
+
+          https://platen.io/modules/platen/markup/art/#caption-style-options
+        type: object
+        properties:
+          classes:
+            title: Caption Classes
+            description: Specify one or more classes to add to the `<img>` element.
+            type: array
+            items:
+              type: string
+              uniqueItems: true
+            default: []

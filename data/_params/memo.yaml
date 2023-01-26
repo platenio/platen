@@ -67,6 +67,8 @@ front_matter:
         - /frontmatter/hugo/content/snippets/highlight.json
         - /frontmatter/hugo/content/snippets/param.json
         # Platen snippets
+        - /modules/platen/markup/art:frontmatter/preset-style.json
+        - /modules/platen/markup/art:frontmatter/preset-work.json
         - /modules/platen/markup/art:frontmatter/image-local.json
         - /modules/platen/markup/art:frontmatter/image-remote.json
         - /modules/platen/markup/buttons:frontmatter/image.json

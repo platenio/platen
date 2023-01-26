@@ -1,0 +1,18 @@
+figure:
+  classes:
+    - platen-art
+image:
+  classes: []
+caption:
+  classes: []
+content_warning:
+  figure:
+    classes:
+      - platen-content-warning
+  input:
+    classes:
+      - platen-content-warning
+    id_prefix: content-warning
+    name_prefix: toggle
+  caption:
+    classes: []
