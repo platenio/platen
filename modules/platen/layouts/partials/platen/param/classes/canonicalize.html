@@ -1,0 +1,8 @@
+{{- $Context := . -}}
+
+{{- $classList := partial "platen/param/classes/_getList" $Context -}}
+
+{{- with $classList -}}
+  {{- $ClassAttribute := printf ` class="%s"` (delimit $classList " ") -}}
+  {{- $Context.Store.Set "PlatenBodyClassAttribute" $ClassAttribute    -}}
+{{- end -}}
