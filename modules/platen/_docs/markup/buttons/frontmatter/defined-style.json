@@ -1,0 +1,17 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.data.types": [
+    {
+      "id": "platen-markup-buttons-style",
+      "schema": "/modules/platen/markup/buttons:definitions/style.schema.yaml"
+    }
+  ],
+  "frontMatter.data.folders": [
+    {
+      "id": "platen-markup-buttons-styles",
+      "path": "[[workspace]]/data/platen/buttons/styles",
+      "singleEntry": true,
+      "type": "platen-markup-buttons-style"
+    }
+  ]
+}

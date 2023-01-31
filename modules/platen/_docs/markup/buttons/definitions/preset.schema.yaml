@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+# Can't have $schema - breaks frontmatter. Intellisense only works in VS Code
+# with the YAML extension directive at the top.
+# $schema: https://json-schema.org/draft/2020-12/schema
+$id: /modules/platen/markup/buttons/schemas/definitions/preset
+title: Button Preset Definition
+description: |
+  Specifies a defined preset for reusing buttons in your Platen site.
+
+  https://platen.io/modules/platen/markup/button#presets
+type: object
+properties:
+  text:
+    title: Button Text
+    description: |
+      Specify the Markdown text to render as the button's visible text.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-text
+    type: string
+  destination:
+    title: Button Destination
+    description: |
+      Specify the URL for where the button should take a visitor when clicked.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-destination
+    type: string
+  class:
+    title: Class List
+    description: |
+      Specify any additional classes to add to the bitton's anchor element.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-class
+    type: array
+    items:
+      type: string
+    uniqueItems: true
+  style:
+    title: Style List
+    description: |
+      Specify any number of styles to apply to this preset. They're merged in order.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-style
+    type: array
+    items:
+      type: string
+    uniqueItems: true

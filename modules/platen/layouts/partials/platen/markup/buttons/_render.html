@@ -1,0 +1,32 @@
+{{- $Canonicalized  := .                                        -}}
+{{- $Page           := $Canonicalized.Page                      -}}
+{{- $Style          := $Canonicalized.Style                     -}}
+{{- $Text           := $Canonicalized.Text                      -}}
+{{- $Destination    := $Canonicalized.Destination               -}}
+{{- $Classes        := delimit $Canonicalized.Style.classes " " -}}
+
+{{- $renderStrings := slice -}}
+
+{{- $attributes := slice
+                   | append (printf `href="%s"`  $Destination)
+                   | append (printf `class="%s"` $Classes)
+-}}
+
+
+{{- range $name, $value := $Style.html_attributes -}}
+  {{/*  {{- if ne nil $value -}}
+    {{- $attributes = $attributes | append (printf `%s="%s"` $name $value) -}}
+  {{- end -}}  */}}
+{{- end -}}
+
+{{- $attributeParams := dict "Attributes" $attributes "IndentCount" 3             -}}
+{{- $attributes       = partial "platen/utils/getSafeAttributes" $attributeParams -}}
+
+{{- $renderStrings = $renderStrings
+                     | append (printf `<a %s>` $attributes)
+                     | append (printf `  %s`   $Text)
+                     | append (printf `</a>`)
+-}}
+{{- $renderString := delimit $renderStrings "\n" -}}
+
+{{- return $renderString -}}

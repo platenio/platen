@@ -1,0 +1,51 @@
+{{- $Params       := .                                        -}}
+{{- $Page         := $Params.Page                             -}}
+{{- $Options      := $Params.Options                          -}}
+{{- $DefaultStyle := site.Data.platen.buttons.styles._default -}}
+{{- $style        := dict                                     -}}
+{{- $canonical    := dict "Page" $Page                        -}}
+
+{{- with $Options.style -}}
+  {{- $styles := . -}}
+  {{- if not (reflect.IsSlice $styles) -}}
+    {{- $styles = slice $styles -}}
+  {{- end -}}
+
+  {{- range $stylePath := $styles -}}
+    {{- $mergingStyle := partialCached "platen/markup/buttons/_getStyle" $stylePath $stylePath -}}
+    {{- $mergeParams  := dict "BaseMap" $style "MergingMap" $mergingStyle                      -}}
+    {{- $style         = partialCached "platen/utils/getMergedMap" $mergeParams $mergeParams   -}}
+  {{- end -}}
+
+  {{- $mergeParams := dict "BaseMap" $DefaultStyle "MergingMap" $style "JoinArrays" true  -}}
+  {{- $style        = partialCached "platen/utils/getMergedMap" $mergeParams $mergeParams -}}
+{{- else -}}
+  {{- $style = $DefaultStyle -}}
+{{- end -}}
+
+{{- with $Options.class -}}
+  {{- $styleClasses := $style.classes -}}
+
+  {{- range $class := split $Options.class " " -}}
+    {{- $styleClasses = $styleClasses | append $class -}}
+  {{- end -}}
+
+  {{- $style = merge $style (dict "classes" $styleClasses) -}}
+{{- end -}}
+
+{{- $canonical = merge $canonical (dict "Style" $style) -}}
+
+{{- with $Options.destination -}}
+  {{/* Test if valid? */}}
+  {{- $canonical = merge $canonical (dict "Destination" . ) -}}
+{{- else -}}
+  {{- errorf (i18n "ErrorButtonMissingDestination" .) -}}
+{{- end -}}
+
+{{- with $Options.text -}}
+  {{- $canonical = merge $canonical (dict "Text" .) -}}
+{{- else -}}
+  {{- $canonical = merge $canonical (dict "Text" "") -}}
+{{- end -}}
+
+{{- return $canonical -}}
