@@ -49,11 +49,28 @@ properties:
 
         [sref:`features.search.enabled`]: platen.site.features.search.enabled
     type: boolean
+  extra_classes:
+    title: Extra CSS Classes
+    description: A list of classes to inject to the page's body element
+    schematize:
+      weight: 4
+      details: |
+        Specifies a list of CSS classes to add to the page's `body` element. This enables you to add
+        styling to an entire page quickly without editing your theme.
+
+        The classes specified by this option are combined with those added by the site's
+        [sref:`display.section_classes`][s01] setting for this page.
+
+        [s01]: platen.site.display.settings.section_classes
+    type: array
+    uniqueItems: true
+    items:
+      type: string
   menu:
     title: Site Menu Options
     description: Alters this page's entry in the site menu
     schematize:
-      weight: 4
+      weight: 5
       skip_schema_render: true
       details: |
         Defines options for altering how this page is displayed in the site menu. Normal pages can
@@ -80,7 +97,7 @@ properties:
     title: Table of Contents
     description: Overrides the site's table of contents configuration for this page.
     schematize:
-      weight: 5
+      weight: 6
       skip_schema_render: true
       details: |
         Defines overrides the site's table of contents configuration for this page.
@@ -193,7 +210,7 @@ properties:
     title: Markup Options
     description: Control markup-specific behavior for this page, overriding site-level defaults.
     schematize:
-      weight: 6
+      weight: 7
       details: |
         Specifies a map of options for Platen markup, allowing you to override site-level defaults
         for a markup on a per-page basis.

@@ -1,0 +1,26 @@
+{{- $Context     := .                                                         -}}
+{{- $PageUrl     := $Context.RelPermalink                                     -}}
+{{- $ConfigKey   := "platen.display.section_classes"                          -}}
+{{- $ClassConfig := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+
+{{- $classList := slice -}}
+
+{{- range $Prefix, $Classes := $ClassConfig -}}
+  {{- if hasPrefix $PageUrl (printf "/%s" $Prefix) -}}
+    {{- if reflect.IsSlice $Classes -}}
+      {{- $classList = union $classList $Classes -}}
+    {{- else -}}
+      {{- $classList = $classList | append $Classes -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with $Context.Params.platen.extra_classes -}}
+  {{- if reflect.IsSlice . -}}
+    {{- $classList = union $classList . -}}
+  {{- else -}}
+    {{- $classList = $classList | append . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $classList -}}

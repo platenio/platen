@@ -99,11 +99,59 @@ properties:
     $ref: ./menu/settings.yaml
     schematize:
       weight: 4
+  section_classes:
+    title: Extra CSS Classes for Sections
+    description: Adds CSS classes to sections by URL prefix
+    schematize:
+      weight: 5
+      skip_schema_render: true
+      details: |
+        Defines a set of sections and the CSS classes to inject in the `body` element for every page
+        in that section. This enables you to add styling to an entire section quickly without
+        editing your theme. By default, the `body` element has no classes added to it.
+        
+        The keys for this option should be the section's URL prefix _without_ the
+        leading slash (`/`). For example, for the section defined in the `content/games/space/opera`
+        folder, the key name would be `games/space/opera`.
+
+        The values for this option should always be a list of classes to add to the `body` element.
+        When a section matches multiple keys in this setting, all classes added by those keys are
+        added to the page.
+
+        For example, given this configuration:
+
+        ```yaml
+        platen:
+          display:
+            section_classes:
+              games:
+                - playful
+              games/space:
+                - techno
+              games/space/opera:
+                - operatic
+        ```
+
+        Pages in defined in the `content/games/space/opera` folder would get the attribute
+        `class="playful techno operatic"` added to their `body` element.
+    type: object
+    patternProperties:
+      ".":
+        type: array
+        title: Section Class List
+        description: Fiddle fart foo bagel
+        schematize:
+          href: pattern-any
+          details: |
+            Specify one or more classes to add to the `body` element for pages in the section.
+        uniqueItems: true
+        items:
+          type: string
   table_of_contents:
     title: Table of Contents
     description: Controls the rendering of the table of contents for site pages.
     schematize:
-      weight: 5
+      weight: 6
       skip_schema_render: true
       details: |
         Controls the rendering of the table of contents for site pages. You can choose whether to
