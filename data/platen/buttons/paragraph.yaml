@@ -1,0 +1,9 @@
+destination: 'https://flagrant.garden'
+text: |-
+  This block of Markdown is much longer than you could typically fit into a
+  button. It might not be aesthetically pleasing to have a button with this
+  much text.
+
+  Notice that this does produce two paragraphs of text for the button because
+  Platen keeps the line breaks. The blank line between these paragraphs ensures
+  they're actually rendered as paragraphs.

@@ -1,14 +1,14 @@
-{{- $Params      := .                                                                -}}
-{{- $Page        := $Params.Page                                                     -}}
-{{- $Destination := $Params.Destination                                              -}}
-{{- $title       := $Params.Title                                                    -}}
-{{- $text        := $Params.PlainText                                                -}}
-{{- $IsBlock     := $Params.IsBlock                                                  -}}
-{{- $Ordinal     := $Params.Ordinal                                                  -}}
-{{- $ConfigKey   := "platen.markup.art"                                              -}}
-{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey        -}}
-{{- $Aliases     := $Config.aliases                                                  -}}
-{{- $WorkPrefix  := "work:"                                                          -}}
+{{- $Params      := .                                                         -}}
+{{- $Page        := $Params.Page                                              -}}
+{{- $Destination := $Params.Destination                                       -}}
+{{- $title       := $Params.Title                                             -}}
+{{- $text        := $Params.PlainText                                         -}}
+{{- $IsBlock     := $Params.IsBlock                                           -}}
+{{- $Ordinal     := $Params.Ordinal                                           -}}
+{{- $ConfigKey   := "platen.markup.art"                                       -}}
+{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Aliases     := $Config.aliases                                           -}}
+{{- $WorkPrefix  := "work:"                                                   -}}
 
 {{- $renderedImage := "" -}}
 
@@ -52,7 +52,6 @@
 
   {{- if $IsBlock -}}
     {{- $attributes := $Params.Attributes -}}
-    {{- warnf "Attributes: %s" ($attributes | jsonify (dict "indent" "  ")) -}}
 
     {{- $ValidAttributes := slice "class" "id" "content_warning" "style" "work" -}}
     {{- range $ValidAttribute := $ValidAttributes -}}
@@ -61,17 +60,14 @@
       {{- end -}}
     {{- end -}}
   {{- end -}}
-  {{- warnf "Passed options: %s" ($passedOptions | jsonify (dict "indent" "  ")) -}}
   
   {{- with $passedOptions.work -}}
-    {{- $workOptions = partialCached "platen/markup/art/getWork" . . -}}
+    {{- $workOptions = partialCached "platen/markup/art/_getWork" . . -}}
   {{- end -}}
 
   {{- range $WorkKey, $WorkValue := $workOptions -}}
-    {{- warnf "Processing '%s' from work options as: %v" $WorkKey $WorkValue -}}
     {{- $MergedValue  := index $passedOptions $WorkKey | default $WorkValue -}}
-    {{- warnf "Merged value for '%s' is: %v" $WorkKey $MergedValue -}}
-    {{- $mergedOptions = merge $mergedOptions (dict $WorkKey $MergedValue) -}}
+    {{- $mergedOptions = merge $mergedOptions (dict $WorkKey $MergedValue)  -}}
   {{- end -}}
   {{- range $PassedKey, $PassedValue := $passedOptions -}}
     {{- with index $mergedOptions $PassedKey -}}
@@ -82,16 +78,8 @@
     {{- end -}}
   {{- end -}}
 
-  {{- warnf "Pre-canonicalized Options: %s" ($mergedOptions | jsonify (dict "indent" "  ")) -}}
   {{- $Canonicalizing := dict "Page" $Page "Options" $mergedOptions                -}}
   {{- $Canonicalized  := partial "platen/markup/art/_canonicalize" $Canonicalizing -}}
-  {{- $printable := dict -}}
-  {{- range $k, $v := $Canonicalized -}}
-    {{- if ne $k "Page" -}}
-      {{- $printable = merge $printable (dict $k $v) -}}
-    {{- end -}}
-  {{- end -}}
-  {{- warnf "Canonicalized Options: %s" ($printable | jsonify (dict "indent" "  ")) -}}
 
   {{/*  Canonicalized! now we just need to call render and fix error/warnings.  */}}
   {{- $renderedImage = partial "platen/markup/art/_render" $Canonicalized -}}

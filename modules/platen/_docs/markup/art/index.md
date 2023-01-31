@@ -564,9 +564,9 @@ warning.
 Specify any number of styles to use for this artwork. The styles are applied in the order they're
 specified, with later styles overriding values from earlier ones.
 
-You can specify a single style as a string or any number of styles as a list
+You can specify a single style as a string or any number of styles as a list.
 
-`````````tabs { #work-property-class-strings }
+`````````tabs { #work-property-style-strings }
 ``````tab { name="Single Style" }
 ```yaml
 style: left_half

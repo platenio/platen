@@ -9,7 +9,9 @@
         "{",
         "  [[&class]]",
         "  [[&id]]",
-        "  content_warning = \"[[&content_warning]]\"]",
+        "  content_warning=\"[[&content_warning]]\"]",
+        "  style=\"[[style]]\"]",
+        "  work=\"[[work]]\"]",
         "}"
       ],
       "fields": [
@@ -44,6 +46,20 @@
         {
           "name": "id",
           "title": "ID: Specify an ID to add to the figure so it's directly linkable. The ID must have a hash (`#`) prefix.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "style",
+          "title": "Preset Style: Specify the dotpath to a defined style for this artwork to use.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "work",
+          "title": "Preset Style: Specify the dotpath to a defined artwork to use.",
           "type": "string",
           "single": true,
           "default": ""

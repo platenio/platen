@@ -1,0 +1,17 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.data.types": [
+    {
+      "id": "platen-markup-buttons-preset",
+      "schema": "/modules/platen/markup/buttons:definitions/preset.schema.yaml"
+    }
+  ],
+  "frontMatter.data.folders": [
+    {
+      "id": "platen-markup-buttons-presets",
+      "path": "[[workspace]]/data/platen/buttons",
+      "singleEntry": true,
+      "type": "platen-markup-buttons-preset"
+    }
+  ]
+}

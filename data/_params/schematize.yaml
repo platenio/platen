@@ -12,3 +12,6 @@ reference_map:
         sref_base: https://developer.mozilla.org/docs/HTML/Attributes
       global_attribute:
         sref_base: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
+    http:
+      headers:
+        sref_base: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers

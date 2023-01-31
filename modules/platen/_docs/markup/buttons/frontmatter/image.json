@@ -5,8 +5,12 @@
       "title": "Button",
       "description": "Add a button linking to another page or external site.",
       "body": [
-        "![button:[[&selection]]]([[&url]])",
-        "{ [[&class]] }"
+        "![button:[[&selection]]]([[&destination]])",
+        "{",
+        "  [[&class]]",
+        "  preset=\"[[preset]]\"",
+        "  style=\"[[style]]\"",
+        "}"
       ],
       "fields": [
         {
@@ -17,8 +21,8 @@
           "default": "FM_SELECTED_TEXT"
         },
         {
-          "name": "url",
-          "title": "Button Url: Specify the URL this button should lead to.",
+          "name": "destination",
+          "title": "Button Destination: Specify the URL this button should lead to. Alternatively, specify the dot-path of the preset you want to use after the prefix `preset:`, like `preset:foo`.",
           "type": "string",
           "single": true,
           "default": ""
@@ -26,6 +30,20 @@
         {
           "name": "class",
           "title": "Class List: Specify any classes to add to the button in a space-separated list. Each class must have a period (`.`) prefix.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "preset",
+          "title": "Preset: Specify the dot-path of the button preset you want to use, if any.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "style",
+          "title": "Style: Specify the dot-path of the button style you want to use, if any.",
           "type": "string",
           "single": true,
           "default": ""

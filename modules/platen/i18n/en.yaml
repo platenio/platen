@@ -13,6 +13,10 @@
 - id: PlatenSearchConfig
   translation: "{ cache: true }"
 
+- id: ErrorUnresolvableDotPath
+  translation: >-
+    Couldn't find '{{ .DotPath }}' in site data, does a file like '{{ .FilePath }}.yaml' exist?
+
 - id: ErrorArtMissingSourceImage
   translation: >-
     Specified art image link in '{{ .page.File.Path }}' without a source to use. All art images must

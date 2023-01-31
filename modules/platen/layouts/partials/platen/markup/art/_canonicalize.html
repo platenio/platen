@@ -4,7 +4,6 @@
 {{- $DefaultStyle := site.Data.platen.art.styles._default -}}
 {{- $style        := dict                                 -}}
 {{- $canonical    := dict "Page" $Page                    -}}
-{{- $WorkPrefix  := "work:"                               -}}
 
 {{- with $Options.style -}}
   {{- $styles := . -}}
@@ -13,7 +12,7 @@
   {{- end -}}
 
   {{- range $stylePath := $styles -}}
-    {{- $mergingStyle := partialCached "platen/markup/art/getStyle" $stylePath $stylePath    -}}
+    {{- $mergingStyle := partialCached "platen/markup/art/_getStyle" $stylePath $stylePath    -}}
     {{- $mergeParams  := dict "BaseMap" $style "MergingMap" $mergingStyle                    -}}
     {{- $style         = partialCached "platen/utils/getMergedMap" $mergeParams $mergeParams -}}
   {{- end -}}

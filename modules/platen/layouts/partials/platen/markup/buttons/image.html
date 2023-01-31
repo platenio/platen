@@ -1,13 +1,14 @@
-{{- $Params      := .                                                                -}}
-{{- $Page        := $Params.Page                                                     -}}
-{{- $destination := $Params.Destination                                              -}}
-{{- $title       := $Params.Title                                                    -}}
-{{- $text        := $Params.Text                                                     -}}
-{{- $IsBlock     := $Params.IsBlock                                                  -}}
-{{- $Ordinal     := $Params.Ordinal                                                  -}}
-{{- $ConfigKey   := "platen.markup.buttons"                                          -}}
-{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
-{{- $Aliases     := $Config.aliases                                                  -}}
+{{- $Params       := .                                                         -}}
+{{- $Page         := $Params.Page                                              -}}
+{{- $Destination  := $Params.Destination                                       -}}
+{{- $Title        := $Params.Title                                             -}}
+{{- $Text         := $Params.Text                                              -}}
+{{- $IsBlock      := $Params.IsBlock                                           -}}
+{{- $Ordinal      := $Params.Ordinal                                           -}}
+{{- $ConfigKey    := "platen.markup.buttons"                                   -}}
+{{- $Config       := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Aliases      := $Config.aliases                                           -}}
+{{- $PresetPrefix := "preset:"                                                 -}}
 
 {{- $renderedImage := "" -}}
 
@@ -17,49 +18,68 @@
 {{- end -}}
 
 {{- $hasPrefix := false -}}
-{{- $alt       := $text -}}
+{{- $alt       := $Text -}}
 
 {{- range $prefix := $prefixes -}}
-  {{- if and (not $hasPrefix) (hasPrefix $text $prefix) -}}
+  {{- if and (not $hasPrefix) (hasPrefix $Text $prefix) -}}
     {{- $hasPrefix = true                             -}}
-    {{- $alt       = strings.TrimPrefix $prefix $text -}}
+    {{- $alt       = strings.TrimPrefix $prefix $Text -}}
   {{- end -}}
 {{- end -}}
 
 {{- if $hasPrefix -}}
-  {{- with $destination -}}
-    {{/*
-      Handle the alt text. If it's provided, render as inner HTML. Otherwise, assume the use of a
-      preset which should define the text.
-    */}}
-    {{- $innerHTML := "" -}}
-    {{- with $alt -}}
-      {{- $innerHTML = $alt -}}
+  {{/* Retrieve the defaults from data, init style and preset opts */}}
+  {{- $passedOptions := dict -}}
+  {{- $mergedOptions := dict -}}
+  {{- $presetOptions := dict -}}
+
+  {{- with $Destination -}}
+    {{- if hasPrefix $Destination $PresetPrefix -}}
+      {{- $PresetPath   := strings.TrimPrefix $PresetPrefix $Destination    -}}
+      {{- $passedOptions = merge $passedOptions (dict "preset" $PresetPath) -}}
     {{- else -}}
-      {{/* Assume preset, implement later */}}
-      {{- warnf "Finding button preset %s" $destination -}}
+      {{- $passedOptions = merge $passedOptions (dict "destination" $Destination) -}}
     {{- end -}}
+  {{- end -}}
 
-    {{/* Initialize the list of button classes */}}
-    {{- $classes := slice "platen-btn" -}}
+  {{- with $alt -}}
+    {{- $passedOptions = merge $passedOptions (dict "text" $alt) -}}
+  {{- end -}}
 
-    {{/* If the image is a block, handle the attributes. */}}
-    {{- if $IsBlock -}}
-      {{- with $Params.Attributes.class -}}
-        {{- $classes = $classes | append (split . " ") -}}
+  {{- if $IsBlock -}}
+    {{- $attributes      := $Params.Attributes -}}
+    {{- $ValidAttributes := slice "class" "preset" "style" -}}
+    {{- range $ValidAttribute := $ValidAttributes -}}
+      {{- with (index $attributes $ValidAttribute) -}}
+        {{- $passedOptions = merge $passedOptions (dict $ValidAttribute .) -}}
       {{- end -}}
     {{- end -}}
-
-    {{- $buttonAttributes := slice (printf `href="%s"` $destination)
-                                   (printf `class="%s"` (delimit $classes " "))
-    -}}
-
-    {{- $attributeParams := dict "Attributes" $buttonAttributes "IndentCount" 3       -}}
-    {{- $buttonAttributes = partial "platen/utils/getSafeAttributes" $attributeParams -}}
-    {{- $renderedImage    = printf "<a %s>\n  %s\n</a>" $buttonAttributes $innerHTML  -}}
-  {{- else -}}
-    {{- errorf (i18n "ErrorButtonMissingDestination" .) -}}
   {{- end -}}
+
+  {{- with $passedOptions.preset -}}
+    {{- $presetOptions = partialCached "platen/markup/buttons/_getPreset" . . -}}
+  {{- end -}}
+
+  {{- range $PresetKey, $presetValue := $presetOptions -}}
+    {{- if eq "text" $PresetKey -}}
+      {{- $presetValue = $Page.RenderString $presetValue -}}
+    {{- end -}}
+    {{- $MergedValue  := index $passedOptions $PresetKey | default $presetValue -}}
+    {{- $mergedOptions = merge $mergedOptions (dict $PresetKey $MergedValue)  -}}
+  {{- end -}}
+  {{- range $PassedKey, $PassedValue := $passedOptions -}}
+    {{- with index $mergedOptions $PassedKey -}}
+      {{/* Nothing to do, already merged */}}
+    {{- else -}}
+      {{/* Not defined in preset options, add value from passed options */}}
+      {{- $mergedOptions = merge $mergedOptions (dict $PassedKey $PassedValue) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $Canonicalizing := dict "Page" $Page "Options" $mergedOptions                    -}}
+  {{- $Canonicalized  := partial "platen/markup/buttons/_canonicalize" $Canonicalizing -}}
+
+  {{- $renderedImage = partial "platen/markup/buttons/_render" $Canonicalized -}}
 {{- end -}}
 
 {{- return $renderedImage -}}
