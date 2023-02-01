@@ -78,7 +78,7 @@ properties:
     properties:
       url:
         title: Logo URL
-        description: Choose whether to use Hugo's builtin table of contents.
+        description: Specifies the path to the logo to use for the site's branding.
         schematize:
           details: |
             Defines the path to the logo file. You can specify the path to an image in the `assets`
@@ -90,11 +90,9 @@ properties:
             folder for ease-of-use. We don't recommend you use a remote image for your site's logo
             due to site performance impacts.
 
-            This value defaults to `/images/logo.svg`, which you can place in the `static` or
-            `assets` folder for your site.
+            This value isn't set by default.
           weight: 1
         type: string
-        default: /images/logo.svg
   menu:
     $ref: ./menu/settings.yaml
     schematize:
