@@ -160,8 +160,6 @@ platen:
     header:
       title_as_heading: false
     menu_root_section: /                        # BookSection
-    logo:
-      url: /images/logo.svg                   # BookLogo
   features:
     search:                                   # booksearch
       enabled: true

@@ -2,9 +2,9 @@
 table_of_contents:
   minimum_level: 1
   maximum_level: 6
-date_format: "January 2, 2006"             # BookDateFormat
+date_format: "January 2, 2006"
 menu:
-  root_section: /                          # BookSection
+  root_section: /
   before_injection:
     entries:
       - feature: toroidal
@@ -12,4 +12,4 @@ menu:
         page_path: sites/platen
         display_name: Platen Sites
 logo:
-  url: /images/logo.svg   
+  url: /images/logo.svg
