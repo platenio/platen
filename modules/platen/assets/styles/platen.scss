@@ -38,6 +38,14 @@
   {{ end }}
 }
 
+// Add custom CSS properties unrelated to the theme's mode.
+:root {
+  {{ range $name, $value := $theme.variables.custom_css }}
+    {{ $params := dict "Name" $name "Value" $value "IsCSS" true }}
+    {{ partial $variablesPartial $params }}
+  {{ end }}
+}
+
 // Load user defined variables before continuing. This is an alternative to
 // adding variables through the configuration.
 @import "variables";
