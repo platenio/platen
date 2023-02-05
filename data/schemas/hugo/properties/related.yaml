@@ -2,7 +2,7 @@
 $schema: https://json-schema.org/draft/2020-12/schema
 $id: /schemas/hugo/properties/related.yaml
 schematize:
-  noMungeDescription: true
+  no_munge_description: true
 title: Related Content Options
 description: |-
   The related content options

@@ -3,7 +3,7 @@ $schema: https://json-schema.org/draft/2020-12/schema
 $id: /schemas/related.schema.yaml
 title: Hugo Related Content Configuration
 schematize:
-  noMungeDescription: true
+  no_munge_description: true
 type: object
 anyOf:
   - $ref: ./hugo/properties/related.yaml

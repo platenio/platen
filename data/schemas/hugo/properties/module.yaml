@@ -7,7 +7,7 @@ description: |-
   https://gohugo.io/hugo-modules/configuration/
 type: object
 schematize:
-  noMungeDescription: true
+  no_munge_description: true
 default:
   noProxy: none
   noVendor: ""

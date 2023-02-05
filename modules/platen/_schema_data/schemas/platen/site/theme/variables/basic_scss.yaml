@@ -389,7 +389,7 @@ properties:
           https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
         schematize:
           href: pattern-any
-          noMungeDescription: true
+          no_munge_description: true
           details: |
             Specify a valid color. For more info, see [sref:`<color>`].
 
