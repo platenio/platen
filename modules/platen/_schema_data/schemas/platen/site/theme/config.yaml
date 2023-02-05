@@ -47,11 +47,14 @@ properties:
            values defined in `basic_scss` for convenience.
         3. [sref:`light_css`] and [sref:`dark_css`] are loaded next. They're independent of each
            other, but may rely on values defined in [sref:`basic_scss`] or [sref:`calculated_scss`].
+        4. Finally, [sref:`custom_css`] is loaded. These values are independent of [sref:`light_css`] and
+           [sref:`dark_css`] but may rely on values defined in [sref:`basic_scss`] or [sref:`calculated_scss`].
 
         [sref:`basic_scss`]: platen.site.theme.variables.basic_scss
         [sref:`calculated_scss`]: platen.site.theme.variables.calculated_scss
         [sref:`light_css`]: platen.site.theme.variables.light_css
         [sref:`dark_css`]: platen.site.theme.variables.dark_css
+        [sref:`custom_css`]: platen.site.theme.config.variables.custom_css
     type: object
     properties:
       basic_scss:
@@ -70,6 +73,51 @@ properties:
         $ref: ./variables/dark_css.yaml
         schematize:
           weight: 4
+      custom_css:
+        title: Custom CSS Variables
+        description: foo...
+        schematize:
+          weight: 5
+          skip_schema_render: true
+          details: |
+            In addition to the defined list of CSS variables related to the [sref:`mode`] for the site, you can define
+            an arbitrary set of CSS variables available in both modes. By default, this setting has no defined
+            variables.
+
+            Any key you specify for this setting creates a CSS variable with the same name whose value is the value you
+            specify for the setting. For example, this configuration:
+
+            ```yaml
+            theme:
+              variables:
+                custom_css:
+                  foo: sepia(1)
+                  bar: 16px
+            ```
+
+            Creates the following CSS:
+
+            ```css
+            :root {
+              --foo: sepia(1);
+              --bar: 16px;
+            }
+            ```
+
+            [sref:`mode`]: platen.site.theme.config.mode
+        type: object
+        patternProperties:
+          ".":
+            type: string
+            title: Valid Custom CSS Variables
+            description: |
+              Specify the value for the CSS variable. The key name is used as the variable name.
+
+              https://platen.io/modules/platen/config/site/theme/config/#variables.custom_css
+            schematize:
+              href: pattern-any
+              details: Specify the value for the CSS variable. The key name is used as the variable name.
+              no_munge_description: true
   styles:
     title: Styles
     description: SCSS Style modules

@@ -42,6 +42,7 @@ platen:
         body-background: "#343a40"
         body-font-color: "#e9ecef"
         icon-filter: brightness(0) invert(1)
+      custom_css:
     styles:
       base:
         html:
