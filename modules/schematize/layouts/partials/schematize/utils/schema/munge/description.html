@@ -44,9 +44,11 @@
     {{- $description := printf "%s\n\n%s%s" $schemaData.description $docsURL $postfix -}}
     {{- $schemaData = merge $schemaData (dict "description" $description) -}}
   {{- else if reflect.IsMap $value -}}
-    {{- $recursiveParams := dict "schemaData" $value "docsURL" $docsURL "postfix" $key "hrefPrefix" $prefix -}}
-    {{- $munged := partial "schematize/utils/schema/munge/description" $recursiveParams -}}
-    {{- $schemaData = merge $schemaData (dict $key $munged) -}}
+    {{- if not $value.schematize.no_munge_description -}}
+      {{- $recursiveParams := dict "schemaData" $value "docsURL" $docsURL "postfix" $key "hrefPrefix" $prefix -}}
+      {{- $munged := partial "schematize/utils/schema/munge/description" $recursiveParams -}}
+      {{- $schemaData = merge $schemaData (dict $key $munged) -}}
+    {{- end -}}
   {{- else if reflect.IsSlice $value -}}
     {{- $munged := slice -}}
     {{- range $item := $value -}}

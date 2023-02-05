@@ -3,7 +3,7 @@ $schema: https://json-schema.org/draft/2020-12/schema
 $id: /schemas/config.schema.yaml
 title: Hugo Configuration
 schematize:
-  noMungeDescription: true
+  no_munge_description: true
 type: object
 anyOf:
   - $ref: ./hugo/config.yaml
@@ -11,7 +11,7 @@ properties:
   params:
     type: object
     schematize:
-      noMungeDescription: true
+      no_munge_description: true
     properties:
       platen:
         $ref: ./platen/site/config.yaml

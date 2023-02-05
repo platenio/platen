@@ -9,7 +9,7 @@
   {{- $schemaData = index $schemaData $level -}}
 {{- end -}}
 {{/* Munge descriptions to link to their docs unless munging isn't desired. */}}
-{{- if not $schemaData.schematize.noMungeDescription -}}
+{{- if not $schemaData.schematize.no_munge_description -}}
   {{- $docsURL     := ($context.OutputFormats.Get "html").Permalink                    -}}
   {{- $mungeParams := dict "schemaData" $schemaData "docsURL" $docsURL                 -}}
   {{- $schemaData   = partial "schematize/utils/schema/munge/description" $mungeParams -}}

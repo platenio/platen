@@ -5,7 +5,7 @@ description: |-
   Hugo's configuration file.
   https://gohugo.io/getting-started/configuration/
 schematize:
-  noMungeDescription: true
+  no_munge_description: true
 type: object
 properties:
   archetypeDir:
