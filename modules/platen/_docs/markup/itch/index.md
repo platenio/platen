@@ -4,8 +4,6 @@ weight: 100
 summary: >-
   Documentation on the `itch` image link markup, which embeds an iframe linking to the itch page
   for a project.
-platen:
-  title_as_heading: true
 Memo:
   Name: itch
   MungeTitle: false

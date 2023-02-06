@@ -4,8 +4,6 @@ weight: 140
 summary: >-
   Documentation on the `mermaid` language ID for codeblocks, which renders Mermaid markup on a
   content page, allowing you to include flowcharts and other diagrams.
-platen:
-  title_as_heading: true
 Memo:
   Name: mermaid
   MungeTitle: false

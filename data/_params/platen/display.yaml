@@ -13,3 +13,5 @@ menu:
         display_name: Platen Sites
 logo:
   url: /images/logo.svg
+header:
+  title_as_heading: true

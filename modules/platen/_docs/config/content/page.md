@@ -6,6 +6,8 @@ summary: |
   front matter.
 weight: 1
 type: schematize
+platen:
+  title_as_heading: false
 schematize: platen.content.page
 outputs:
   - HTML

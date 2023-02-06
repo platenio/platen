@@ -4,7 +4,6 @@ weight: 120
 summary: >-
   Documentation on using math markup to include formulas in your text.
 platen:
-  title_as_heading: true
   menu:
     collapse_section: true
 Memo:
