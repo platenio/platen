@@ -1,0 +1,76 @@
+{{- $Params      := .                                                         -}}
+{{- $Page        := $Params.Page                                              -}}
+{{- $destination := $Params.Destination                                       -}}
+{{- $title       := $Params.Title                                             -}}
+{{- $text        := $Params.PlainText                                         -}}
+{{- $IsBlock     := $Params.IsBlock                                           -}}
+{{- $Ordinal     := $Params.Ordinal                                           -}}
+{{- $ConfigKey   := "platen.markup.key_combos"                                -}}
+{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+
+{{- $renderedImage := "" -}}
+
+{{- $prefixes := slice "kbd:" -}}
+{{- range $alias := $Config.aliases -}}
+  {{- $prefixes = $prefixes | append (printf "%s:" $alias) -}}
+{{- end -}}
+
+{{- $hasPrefix := false -}}
+{{- $alt       := $text -}}
+
+{{- range $prefix := $prefixes -}}
+  {{- if and (not $hasPrefix) (hasPrefix $text $prefix) -}}
+    {{- $hasPrefix = true                             -}}
+    {{- $alt       = strings.TrimPrefix $prefix $text -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $hasPrefix -}}
+  {{/* Presets contain settings from site data. Keys are written in nested kbd tags. */}}
+  {{- $preset := dict  -}}
+  {{- $keys   := slice -}}
+
+  {{- with $destination -}}
+    {{- with index site.Data.platen.key_combos $destination -}}
+      {{- $preset = . -}}
+    {{- else -}}
+      {{- errorf "Unable to find preset '%s' in site data 'platen.key_combos' - is '%s.yaml' defined?" -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/*
+    Handle the alt text. If it's provided, use as key combo. Otherwise, assume the use of a preset which should
+    define the keys.
+  */}}
+  {{- with $alt -}}
+    {{- $keys = split $alt "+" -}}
+  {{- else -}}
+    {{- with $preset.keys -}}
+      {{- $keys = split . "+" -}}
+    {{- else -}}
+      {{- $message := "Missing key list for key combo; no keys specified as alt text" -}}
+      {{- with $preset -}}
+        {{- $message = printf "%s or defined in site data (platen.key_combos.%s)." $message $destination -}}
+      {{- else -}}
+        {{- $message = printf "%s." $message -}}
+      {{- end -}}
+
+      {{- errorf $message -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- with $keys -}}
+    {{- $keyCombo := "" -}}
+    {{- range $Index, $Key := $keys -}}
+      {{- if gt $Index 0 -}}
+        {{- $keyCombo = printf "%s+" $keyCombo -}}
+      {{- end -}}
+      
+      {{- $keyCombo = printf "%s<kbd>%s</kbd>" $keyCombo $Key -}}
+    {{- end -}}
+
+    {{- $renderedImage = printf "<kbd>%s</kbd>" $keyCombo -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $renderedImage -}}

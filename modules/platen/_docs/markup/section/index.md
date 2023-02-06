@@ -4,8 +4,6 @@ weight: 200
 summary: >-
   Documentation on the `section` language ID for codeblocks, which adds a list of links to pages in
   a content section with their summary to provide context for those pages.
-platen:
-  title_as_heading: true
 Memo:
   Name: section
   MungeTitle: false

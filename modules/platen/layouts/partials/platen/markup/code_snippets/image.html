@@ -1,0 +1,92 @@
+{{- $Params      := .                                                         -}}
+{{- $Page        := $Params.Page                                              -}}
+{{- $destination := $Params.Destination                                       -}}
+{{- $title       := $Params.Title                                             -}}
+{{- $text        := $Params.PlainText                                         -}}
+{{- $IsBlock     := $Params.IsBlock                                           -}}
+{{- $Ordinal     := $Params.Ordinal                                           -}}
+{{- $ConfigKey   := "platen.markup.inline_code"                               -}}
+{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+
+{{- $renderedImage := "" -}}
+
+{{- $prefixes := slice "code" -}}
+{{- range $language := $Config.languages -}}
+  {{- $prefixes = $prefixes | append $language.prefix -}}
+{{- end -}}
+
+{{- $hasPrefix  := false -}}
+{{- $alt        := $text -}}
+{{- $usedPrefix := ""    -}}
+
+{{- range $prefix := $prefixes -}}
+  {{- $trimmablePrefix := printf "%s:" $prefix -}}
+  {{- if and (not $hasPrefix) (hasPrefix $text $trimmablePrefix) -}}
+    {{- $hasPrefix  = true                                      -}}
+    {{- $alt        = strings.TrimPrefix $trimmablePrefix $text -}}
+    {{- $usedPrefix = $prefix                                   -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $hasPrefix -}}
+  {{/* The code is the actual text to highlight while language is posibly pre-known for the highlight. */}}
+  {{- $code     := ""   -}}
+  {{- $language := ""   -}}
+  {{- $snippet  := dict -}}
+
+  {{- with $destination -}}
+    {{- if hasPrefix $destination "snippet:" -}}
+      {{- $snippetPath := strings.TrimPrefix $destination "snippet:" -}}
+      {{- with index site.Data.platen.code_snippets $destination -}}
+        {{- $snippet = . -}}
+        {{- with $snippet.language -}}
+          {{- $language = . -}}
+        {{- end -}}
+      {{- else -}}
+        {{- errorf "Unable to find snippet '%s' in site data 'platen.code_snippets' - is '%s.yaml' defined?" -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $language = $destination -}}
+    {{- end -}}
+  {{- else -}}
+    {{- if not (eq "code" $usedPrefix) -}}
+      {{- $prefixLanguage := index (where $Config.languages "prefix" $usedPrefix) 0 -}}
+      {{- $language        = $prefixLanguage.language | default $usedPrefix         -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/*
+    Handle the alt text. If it's provided, it's the text to highlight. Otherwise, assume the use of a preset which should
+    define the keys.
+  */}}
+  {{- with $alt -}}
+    {{- $code = . -}}
+  {{- else -}}
+    {{- with $snippet.code -}}
+      {{- $code = . -}}
+    {{- else -}}
+      {{- $message := "Missing text to highlight for inline code; no code specified as alt text" -}}
+      {{- with $snippet -}}
+        {{- $message = printf "%s or defined in site data (platen.code_snippets.%s)." $message $destination -}}
+      {{- else -}}
+        {{- $message = printf "%s." $message -}}
+      {{- end -}}
+
+      {{- errorf $message -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- with $code -}}
+    {{- $options := dict "hl_inline" true -}}
+    {{- with $language -}}
+      {{- $code = highlight $code $language $options -}}
+    {{- else -}}
+      {{- $options = merge $options (dict "guessSyntax" true) -}}
+      {{- $code = highlight $code "" $options -}}
+    {{- end -}}
+
+    {{- $renderedImage = $code -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $renderedImage -}}

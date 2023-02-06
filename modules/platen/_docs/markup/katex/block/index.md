@@ -4,8 +4,6 @@ weight: 10
 summary: >-
   Documentation on the `katex` language ID for codeblocks, which renders math markup on a content
   page, allowing you to include formulas and other advanced representations.
-platen:
-  title_as_heading: true
 Memo:
   Name: katex
   MungeTitle: false

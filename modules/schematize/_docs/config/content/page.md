@@ -7,6 +7,8 @@ summary: |
 weight: 1
 schematize: schematize.content.page
 type: schematize
+platen:
+  title_as_heading: false
 outputs:
   - HTML
   - Schematize

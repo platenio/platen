@@ -1,40 +1,29 @@
 ---
-title: Create a new Platen site
+title: Installing Prerequisites
 summary: >-
-  Learn how to create a new website for digital books with Platen and Hugo
-weight: 10
+  Install the local prerequisites for authoring a Platen site.
+weight: 1
+draft: true
 ---
-
-This article walks you through creating a new website for digital books with Platen and Hugo.
-
-[Hugo][01] is a tool for quickly creating static websites you can deploy anywhere. Static sites
-don't require setting up servers. Sites built with Hugo are fast, secure by default, and enable you
-to write your content in plain text without needing to learn HTML.
-
-Platen builds on Hugo, providing you with a set of tools that give you a clean and minimal theme you
-can fully customize, extend Markdown for interactive books, and simplify your workflow. With Platen,
-you can write your books once and then release them as web pages, EPUBs, and PDFs.
-
-## Install Prerequisites
 
 Setting up a Platen site locally requires a few different free tools. You'll need:
 
 Hugo
 : Platen relies on Hugo's extended version. We recommend running the latest available version. This
-  section includes quick installation options. For more information, read [Hugo's install docs][02].
+  section includes quick installation options. For more information, read [Hugo's install docs][01].
 
 Go
-: Platen is distributed as a [Hugo module][03]. Using Hugo modules requires [Go][04], the
+: Platen is distributed as a [Hugo module][02]. Using Hugo modules requires [Go][03], the
   programming language Hugo's written in. You won't need to write any code.
 
 Git
-: [Git][05] is a tool for managing the changes and versioning of project files. While not strictly
+: [Git][04] is a tool for managing the changes and versioning of project files. While not strictly
   necessary, you'll quickly find yourself struggling to keep track of things without it and many
   useful integrations rely on it.
 
 A text editor
 : You need an application to write and edit your content and site configuration with. You can use
-  any tool you like for this, but we recommend [VS Code][06].
+  any tool you like for this, but we recommend [VS Code][05].
 
 ````````````tabs { #install-per-platform }
   `````````tab { name="Windows" }
@@ -165,21 +154,57 @@ A text editor
     ```
   ``````
   `````````
+
+  `````````tab { name="Universal (Devcontainer)" }
+  If you've already got VS Code installed and are familiar with [Docker][u0],
+  you might prefer to use a [devcontainer][u1] instead of dealing with the
+  software installations locally.
+
+  You can use this definition:
+
+  ```json
+  {
+      "image": "mcr.microsoft.com/devcontainers/go",
+      "features": {
+          "ghcr.io/devcontainers/features/hugo:1": {
+              "extended": true
+          },
+          "ghcr.io/devcontainers/features/node:1": {
+              "version": "latest"
+          }
+      },
+      
+      "customizations": {
+          "vscode": {
+              "extensions": [
+                  "eliostruyf.vscode-front-matter-beta",
+                  "davidanson.vscode-markdownlint",
+                  "marvhen.reflow-markdown",
+                  "darkriszty.markdown-table-prettify",
+                  "wmaurer.change-case",
+                  "nhoizey.gremlins",
+                  "usernamehw.errorlens",
+                  "eamodio.gitlens",
+                  "tyriar.sort-lines",
+                  "jock.svg",
+                  "ms-vscode.wordcount",
+                  "redhat.vscode-yaml"
+              ]
+          }
+      },
+      "forwardPorts": [
+          1313
+      ]
+  }
+  ```
+
+  [u0]: https://www.docker.com/products/personal/
+  [u1]: https://code.visualstudio.com/docs/devcontainers/containers
+  `````````
 ````````````
 
-## Create a Platen Site
-
-To create a Platen site, you can use the `hugo new` command.
-
-## Add Configuration
-
-To configure your Platen site...
-
-## Next Steps
-
-[01]: https://gohugo.io/about/what-is-hugo
-[02]: https://gohugo.io/getting-started/installing/
-[03]: https://gohugo.io/hugo-modules/
-[04]: https://go.dev/learn/
-[05]: https://git-scm.com/
-[06]: https://code.visualstudio.com/
+[01]: https://gohugo.io/getting-started/installing/
+[02]: https://gohugo.io/hugo-modules/
+[03]: https://go.dev/learn/
+[04]: https://git-scm.com/
+[05]: https://code.visualstudio.com/

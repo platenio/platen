@@ -8,6 +8,8 @@ summary: |
   [hugo-multilingual]: https://gohugo.io/content-management/multilingual/
 weight: 16
 type: schematize
+platen:
+  title_as_heading: false
 schematize: platen.site.multilingual
 outputs:
   - HTML

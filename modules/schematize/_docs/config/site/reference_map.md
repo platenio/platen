@@ -5,6 +5,8 @@ summary: |
   Defines a map of reference targets for schematized documentation.
 weight: 2
 type: schematize
+platen:
+  title_as_heading: false
 schematize: schematize.site.reference_map
 outputs:
   - HTML

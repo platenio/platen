@@ -187,6 +187,11 @@ platen:
         renderers:
           image: platen/markup/buttons/image
       style: buttons
+    code_snippets:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/code_snippets/image
     columns:
       enabled: true
       partials:
@@ -213,6 +218,11 @@ platen:
         renderers:
           codeblock: platen/markup/katex/codeblock
           image: platen/markup/katex/image
+    key_combos:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/key_combos/image
     mermaid:
       enabled: true
       version: 9.3.0

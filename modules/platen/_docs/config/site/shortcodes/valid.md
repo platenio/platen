@@ -7,6 +7,8 @@ summary: |
   users to update their own site configuration or assets.
 weight: 100
 type: schematize
+platen:
+  title_as_heading: false
 schematize: platen.site.shortcodes.valid
 outputs:
   - HTML

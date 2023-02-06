@@ -23,7 +23,7 @@ MD011: true
 MD012:
   maximum: 1
 MD013:
-  line_length: 100
+  line_length: 120
   heading_line_length: 80
   code_block_line_length: 80
   code_blocks: true
