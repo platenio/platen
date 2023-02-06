@@ -5,22 +5,33 @@
 {{- $context     := .                                                                -}}
 {{- $title       := ""                                                               -}}
 {{- $ConfigKey   := "platen.features"                                                -}}
-{{- $Features    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Features    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey        -}}
+{{- $forMenu     := "" -}}
+{{- $forHeader   := "" -}}
+{{- $forHeading  := "" -}}
+{{- $forList     := "" -}}
+
 
 {{- if reflect.IsMap $Params -}}
-  {{- $context = $Params.Context -}}
+  {{- $context    = $Params.Context    -}}
+  {{- $forMenu    = $Params.ForMenu    -}}
+  {{- $forHeader  = $Params.ForHeader  -}}
+  {{- $forHeading = $Params.ForHeading -}}
+  {{- $forList    = $Params.ForList    -}}
 {{- end -}}
 
-{{- range $feature, $settings := $Features -}}
-  {{- if and (eq "" $title) $settings.enabled -}}
-    {{- with $settings.partials.title -}}
+{{- range $Feature, $Settings := $Features -}}
+  {{- if and (eq "" $title) $Settings.enabled -}}
+    {{- with $Settings.partials.title -}}
       {{ $title = partial . $Params }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
 {{- if eq "" $title -}}
-  {{- if $context.Title -}}
+  {{- if and $context.LinkTitle (or $forMenu $forList) -}}
+    {{- $title = $context.LinkTitle -}}
+  {{- else if $context.Title -}}
     {{- $title = $context.Title -}}
   {{- else if and $context.IsSection $context.File -}}
     {{- $title = path.Base $context.File.Dir | humanize | title -}}
