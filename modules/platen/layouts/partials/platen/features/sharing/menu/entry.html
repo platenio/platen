@@ -1,0 +1,45 @@
+{{- $Input          := .                                                              -}}
+{{- $Context        := $Input.Context                                                 -}}
+{{- $Options        := $Input.Options                                                 -}}
+{{- $ConfigKey      := "platen.features.sharing"                                      -}}
+{{- $Config         := partialCached "platen/param/getKey" $ConfigKey $ConfigKey      -}}
+{{- $PreviewText    := $Context.Params.platen.sharing.text | default $Context.Summary -}}
+
+{{/*  Handle when the entry options are a map or just the option name as a string  */}}
+{{- $OptionName := "" -}}
+{{- $EntryTitle := "" -}}
+{{- if reflect.IsMap $Options -}}
+  {{- $OptionName = $Options.name  -}}
+  {{- $EntryTitle = $Options.title -}}
+{{- else -}}
+  {{- $OptionName = $Options -}}
+{{- end -}}
+
+{{- $renderString := "" -}}
+
+{{- with (index $Config.options $OptionName) -}}
+  {{- $Option      := .                   -}}
+  {{- $url         := $Option.href_prefix -}}
+  {{- $OptionTitle := $EntryTitle
+                      | default $Option.title
+                      | default (title $OptionName)
+                      | $Context.Page.RenderString
+  -}}
+
+  {{/*  Handle query params  */}}
+  {{- $queryParams := slice -}}
+  {{- with $Option.text_key -}}
+    {{- $queryParams = $queryParams | append . | append $PreviewText -}}
+  {{- end -}}
+  {{- with $Option.url_key -}}
+    {{- $queryParams = $queryParams | append . | append $Context.Permalink -}}
+  {{- end -}}
+
+  {{/*  Build the url, then anchor, and finally place inside list item  */}}
+  {{- $queryParams  = querify $queryParams | safeURL                        -}}
+  {{- $url          = printf  "%s?%s" $url $queryParams | safeURL           -}}
+  {{- $anchor      := printf  `      <a href="%s">%s</a>` $url $OptionTitle -}}
+  {{- $renderString = delimit (slice "    <li>" $anchor "    </li>") "\n"   -}}
+{{- end -}}
+
+{{- return $renderString -}}

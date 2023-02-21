@@ -1,0 +1,13 @@
+{{/*
+    This partial returns a slice of the names for the defined social sharing
+    options. This makes it easier to check if a specified option exists.
+*/}}
+{{- $ConfigKey := "platen.features.sharing"                                 -}}
+{{- $Config    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+
+{{- $definedOptions := slice -}}
+{{- range $Option, $_ := $Config.options -}}
+  {{- $definedOptions = $definedOptions | append $Option -}}
+{{- end -}}
+
+{{- return $definedOptions -}}
