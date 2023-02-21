@@ -174,6 +174,60 @@ platen:
         header: platen/features/pwa/header
     portable_links:                            # BookPortableLinks
       enabled: true
+    sharing:
+      enabled: true
+      partials:
+        menu:  platen/features/sharing/menu/render
+      menu_text: Share to...
+      options:
+        blogger:
+          href_prefix: https://www.blogger.com/blog-this.g
+          text_key: t
+          url_key: u
+        evernote:
+          href_prefix: https://www.evernote.com/clip.action
+          text_key: title
+          url_key: url
+        facebook:
+          href_prefix: https://www.facebook.com/sharer/sharer.php
+          text_key: quote
+          url_key: u
+          by_default: true
+        hackernews:
+          href_prefix: https://news.ycombinator.com/submitlink
+          text_key: t
+          url_key: u
+        linkedin:
+          href_prefix: https://www.linkedin.com/sharing/share-offsite/
+          text_key: UNSUPPORTED
+          url_key: url
+        livejournal:
+          href_prefix: http://www.livejournal.com/update.bml
+          text_key: subject
+          url_key: event
+        pinterest:
+          href_prefix: https://pinterest.com/pin/create/button/
+          text_key: description
+          url_key: url
+        reddit:
+          href_prefix: https://www.reddit.com/submit?
+          text_key: title
+          url_key: url
+          by_default: true
+        telegram:
+          href_prefix: https://t.me/share/url
+          text_key: text
+          url_key: url
+        tumblr:
+          href_prefix: https://www.tumblr.com/widgets/share/tool
+          text_key: caption
+          url_key: canonicalUrl
+          by_default: true
+        twitter:
+          href_prefix: https://twitter.com/intent/tweet
+          text_key: text
+          url_key: url
+          by_default: true
   markup:
     art:
       enabled: true
@@ -204,6 +258,19 @@ platen:
         renderers:
           codeblock: platen/markup/details/codeblock
       style: details
+    # icons:
+    #   enabled: true
+    #   partials:
+    #     header: platen/markup/header/icons
+    #     renderers:
+    #       image: platen/markup/icons/image
+    #   sources:
+    #     font_awesome:
+    #       enabled: true
+    #       partials:
+    #         header: platen/markup/icons/fa/header
+    #         renderers:
+    #           image: platen/markup/icons/fa/image
     itch:
       enabled: true
       partials:

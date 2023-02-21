@@ -1,0 +1,90 @@
+{{- $Context        := .Context                                                          -}}
+{{- $Entry          := .entry                                                            -}}
+{{- $MenuCollapse   := $Entry.collapse                                                   -}}
+{{- $menuFlatten    := $Entry.flatten                                                    -}}
+{{- $class          := $Entry.class                                                      -}}
+{{- $ConfigKey      := "platen.features.sharing"                                         -}}
+{{- $Config         := partialCached "platen/param/getKey" $ConfigKey $ConfigKey         -}}
+{{- $DefinedOptions := partialCached "platen/features/sharing/menu/definedOptions" "" "" -}}
+{{- $EntryText      := $Entry.text | default $Config.menu_text                           -}}
+
+{{/*  Handle menu options  */}}
+{{- if and $menuFlatten $MenuCollapse -}}
+  {{- warnf "Specified both flatten and collapse for sharing entry in site menu. Preferring collapse instead." -}}
+  {{- $menuFlatten = false -}}
+{{- end -}}
+
+{{/*  The flatten and collapse options change how the entries appear in the site menu  */}}
+{{- if $menuFlatten -}}
+  {{- with $class -}}
+    {{- $class = " %s" $class -}}
+  {{- end -}}
+  {{- $class = printf `class="platen-section-flat%s"` $class -}}
+{{- else -}}
+  {{- with $class -}}
+    {{- $class = printf `class="%s"` $class -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+    Initialize the slices for entries. menuEntries holds the rendered entries,
+    weightedList and unweightedList hold their respective entry definitions.
+
+    This is needed so we can render weighted entries in order, then unweighted
+    entries.
+*/}}
+{{- $menuEntries    := slice -}}
+{{- $weightedList   := slice -}}
+{{- $unweightedList := slice -}}
+
+{{- with $Entry.options -}}
+  {{ range $option := . -}}
+    {{- if and (not (reflect.IsMap $option)) (in $DefinedOptions $option) -}}
+      {{- $unweightedList = $unweightedList | append $option -}}
+    {{- else if (in $DefinedOptions $option.name) -}}
+      {{- $weightedList = $weightedList | append $option -}}
+    {{- end -}}
+  {{- end -}}
+{{- else -}}
+  {{- range $Platform, $Settings := $Config.options -}}
+    {{- if eq true $Settings.by_default -}}
+      {{- $unweightedList = $unweightedList | append $Platform -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- range $Item := sort $weightedList "weight" -}}
+  {{- $Input      := dict "Context" $Context "Options" $Item             -}}
+  {{- $menuEntry  := partial "platen/features/sharing/menu/entry" $Input -}}
+  {{- $menuEntries = $menuEntries | append $menuEntry                    -}}
+{{- end -}}
+
+{{- range $Item := sort $unweightedList -}}
+  {{- $Input      := dict "Context" $Context "Options" $Item             -}}
+  {{- $menuEntry  := partial "platen/features/sharing/menu/entry" $Input -}}
+  {{- $menuEntries = $menuEntries | append $menuEntry                    -}}
+{{- end -}}
+
+{{- $renderStrings := slice -}}
+{{- if $menuFlatten -}}
+  {{- $renderStrings = $renderStrings | append (printf "<li %s>" ($class | safeHTMLAttr)) -}}
+  {{- $renderStrings = $renderStrings | append (printf "  <span>%s</span>" $EntryText)    -}}
+{{- else if $MenuCollapse -}}
+  {{- $id := printf "section-%s" (md5 $EntryText) -}}
+  {{- $renderStrings = $renderStrings | append (printf `<li %s>` ($class | safeHTMLAttr))                       -}}
+  {{- $renderStrings = $renderStrings | append (printf `  <input type="checkbox" id="%s" class="toggle">`  $id) -}}
+  {{- $renderStrings = $renderStrings | append (printf `  <label for="%s" class="flex justify-between" />` $id) -}}
+  {{- $renderStrings = $renderStrings | append (printf `    <a role="button">%s</a>` $EntryText)                -}}
+  {{- $renderStrings = $renderStrings | append ("  </label>")                                                   -}}
+{{- else -}}
+  {{- $renderStrings = $renderStrings | append (printf `<li %s>` ($class | safeHTMLAttr)) -}}
+  {{- $renderStrings = $renderStrings | append (printf `  <span>%s</span>` $EntryText)    -}}
+{{- end -}}
+{{- $renderStrings = $renderStrings | append "  <ul>" -}}
+{{- range $MenuEntry := $menuEntries -}}
+  {{- $renderStrings = $renderStrings | append $MenuEntry -}}
+{{- end -}}
+{{- $renderStrings = $renderStrings | append "  </ul>" -}}
+
+{{/*  Render the menu entries  */}}
+{{- delimit $renderStrings "\n" | safeHTML -}}
