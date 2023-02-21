@@ -1,0 +1,55 @@
+{{- $Params      := .                                                         -}}
+{{- $Page        := $Params.Page                                              -}}
+{{- $destination := $Params.Destination                                       -}}
+{{- $title       := $Params.Title                                             -}}
+{{- $text        := $Params.Text                                              -}}
+{{- $IsBlock     := $Params.IsBlock                                           -}}
+{{- $Ordinal     := $Params.Ordinal                                           -}}
+{{- $ConfigKey   := "platen.markup.subscript"                                 -}}
+{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Aliases     := $Config.aliases                                           -}}
+
+{{- $renderedImage := "" -}}
+
+{{- $prefixes := slice "styled:" -}}
+{{- range $alias := $Aliases -}}
+  {{- $prefixes = $prefixes | append (printf "%s:" $alias) -}}
+{{- end -}}
+
+{{- $hasPrefix := false -}}
+{{- $alt       := $text -}}
+{{- $class     := slice -}}
+
+{{- range $prefix := $prefixes -}}
+  {{- if and (not $hasPrefix) (hasPrefix $text $prefix) -}}
+    {{- $hasPrefix = true                             -}}
+    {{- $alt       = strings.TrimPrefix $prefix $text -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $hasPrefix -}}
+  {{/* Presets contain settings from site data */}}
+  {{- $preset     := dict -}}
+  {{/* Retrieve attributes for block syntax image only */}}
+  {{- $attributes := dict -}}
+
+  {{/* No defined class */}}
+  {{- $renderedImage = printf "<span>%s</span>" $alt -}}
+
+  {{/* Needs to be edited to find preset */}}
+    {{- with $destination -}}
+      {{- $class = $destination -}}
+
+    {{/* Adds class style */}}
+    {{- with $title -}}
+      {{- $class = printf "%s %s" $class $title -}}
+    {{- end -}}
+    
+    {{- $class = printf `class="%s"` $class -}}
+    
+    {{- $attributeParams := dict "Attributes" (slice $class) "IndentCount" 5          -}}
+    {{- $attributes       = partial "platen/utils/getSafeAttributes" $attributeParams -}}
+    {{- $renderedImage    = printf "<span %s>%s</span>" $attributes $alt                -}}    {{- end -}}
+  {{- end -}}
+    
+{{- return $renderedImage -}}

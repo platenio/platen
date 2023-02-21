@@ -265,6 +265,11 @@ platen:
       partials:
         renderers:
           image: platen/markup/superscripts/image
+    styled:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/styled/image
   repository:
     commit_path: commit                        # BookCommitPath
     edit_path: edit/main                       # BookEditPath
