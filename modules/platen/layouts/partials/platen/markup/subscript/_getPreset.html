@@ -1,0 +1,5 @@
+{{- $PresetPath := .                                                          -}}
+{{- $DotPath    := printf "platen.subscripts.%s" $PresetPath                  -}}
+{{- $Data       := partialCached "platen/utils/getDataPath" $DotPath $DotPath -}}
+
+{{- return $Data -}}

@@ -1,13 +1,14 @@
 {{- $Params      := .                                                         -}}
 {{- $Page        := $Params.Page                                              -}}
-{{- $destination := $Params.Destination                                       -}}
-{{- $title       := $Params.Title                                             -}}
+{{- $Destination := $Params.Destination                                       -}}
+{{- $Title       := $Params.Title                                             -}}
 {{- $text        := $Params.Text                                              -}}
 {{- $IsBlock     := $Params.IsBlock                                           -}}
 {{- $Ordinal     := $Params.Ordinal                                           -}}
 {{- $ConfigKey   := "platen.markup.subscript"                                 -}}
 {{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 {{- $Aliases     := $Config.aliases                                           -}}
+{{- $PresetPrefix := "preset:"                                                -}}
 
 {{- $renderedImage := "" -}}
 
@@ -28,29 +29,64 @@
 {{- end -}}
 
 {{- if $hasPrefix -}}
-  {{/* Presets contain settings from site data */}}
-  {{- $preset     := dict -}}
-  {{/* Retrieve attributes for block syntax image only */}}
-  {{- $attributes := dict -}}
+  {{/* Retrieve the defaults from data, init style and preset opts */}}
+  {{- $passedOptions := dict -}}
+  {{- $mergedOptions := dict -}}
+  {{- $presetOptions := dict -}}
 
-  {{/* No defined class */}}
-  {{- $renderedImage = printf "<sub>%s</sub>" $alt -}}
-
-  {{/* Needs to be edited to find preset */}}
-    {{- with $destination -}}
-      {{- $class = $destination -}}
-
-    {{/* Adds class style */}}
-    {{- with $title -}}
-      {{- $class = printf "%s %s" $class $title -}}
+  {{/*  Destination is required to use Title  */}}
+  {{- with $Destination -}}
+    {{- if hasPrefix $Destination $PresetPrefix -}}
+      {{- $PresetPath   := strings.TrimPrefix $PresetPrefix $Destination    -}}
+      {{- $passedOptions = merge $passedOptions (dict "preset" $PresetPath) -}}
+    {{- else if (ne $Destination ".") -}}
+      {{- $passedOptions = merge $passedOptions (dict "style" $Destination) -}}
     {{- end -}}
-    
-    {{- $class = printf `class="%s"` $class -}}
-    
-    {{- $attributeParams := dict "Attributes" (slice $class) "IndentCount" 5          -}}
-    {{- $attributes       = partial "platen/utils/getSafeAttributes" $attributeParams -}}
-    {{- $renderedImage    = printf "<sub %s>%s</sub>" $attributes $alt                -}}    {{- end -}}
-  {{- end -}}
-    
-{{- return $renderedImage -}}
 
+    {{/*  Title is always a list of classes, space-separated  */}}
+    {{- with $Title -}}
+      {{- $passedOptions = merge $passedOptions (dict "class" $Title) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/*  Alt text is always the actual subscript text  */}}
+  {{- with $alt -}}
+    {{- $passedOptions = merge $passedOptions (dict "text" $alt) -}}
+  {{- end -}}
+
+  {{- with $passedOptions.preset -}}
+    {{- $presetOptions = partialCached "platen/markup/subscript/_getPreset" . . -}}
+  {{- end -}}
+
+  {{/*  If there's a preset, add it to the merged options first.  */}}
+  {{- range $PresetKey, $presetValue := $presetOptions -}}
+    {{- if eq "text" $PresetKey -}}
+      {{/*  Text from passed options always arrived rendered, needs to be rendered from preset  */}}
+      {{- $presetValue   = $Page.RenderString $presetValue -}}
+    {{- end -}}
+
+    {{- $MergedValue  := index $passedOptions $PresetKey | default $presetValue -}}
+    {{- $mergedOptions = merge $mergedOptions (dict $PresetKey $MergedValue)    -}}
+  {{- end -}}
+
+  {{/*  Merge the passed options over the preset options (or just set them if no preset)  */}}
+  {{- range $PassedKey, $PassedValue := $passedOptions -}}
+    {{- with index $mergedOptions $PassedKey -}}
+      {{/* Nothing to do, already merged */}}
+    {{- else -}}
+      {{/* Not defined in preset options, add value from passed options */}}
+      {{- $mergedOptions = merge $mergedOptions (dict $PassedKey $PassedValue) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/*  Canonicalize the values; this handles style merging and option validation  */}}
+  {{- $Canonicalizing := dict "Page" $Page "Options" $mergedOptions                      -}}
+  {{- $Canonicalized  := partial "platen/markup/subscript/_canonicalize" $Canonicalizing -}}
+
+  {{/*  Convert the canonicalized attributes into the form needed for insertion and add.  */}}
+  {{- $attributeParams := dict "Attributes" $Canonicalized.Attributes "IndentCount" 4     -}}
+  {{- $attributes      := partial "platen/utils/getSafeAttributes" $attributeParams       -}}
+  {{- $renderedImage    = printf "<sub %s>\n  %s\n</sub>" $attributes $Canonicalized.Text -}}
+{{- end -}}
+
+{{- return $renderedImage -}}
