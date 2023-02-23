@@ -1,0 +1,35 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.content.snippets": {
+    "platen-subscript-image": {
+      "title": "Subscript",
+      "description": "Add text in a subscript element.",
+      "body": [
+        "![sub:[[&selection]]]([[&style]] '[[&class]]')"
+      ],
+      "fields": [
+        {
+          "name": "selection",
+          "title": "Subscript Text: This is the text for the subscript itself. The text may be any inline Markdown.",
+          "type": "string",
+          "single": true,
+          "default": "FM_SELECTED_TEXT"
+        },
+        {
+          "name": "style",
+          "title": "Style: Specify the name of the style to use, if any. Alternatively, specify the dot-path of the preset you want to use after the prefix `preset:`, like `preset:foo`.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "class",
+          "title": "Class List: Specify any classes to add to the subscript in a space-separated list. To specify classes with the default style, set style to '.'",
+          "type": "string",
+          "single": true,
+          "default": ""
+        }
+      ]
+    }
+  }
+}

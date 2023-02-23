@@ -83,6 +83,9 @@ front_matter:
         - /modules/platen/markup/katex/inline:frontmatter/image.json
         - /modules/platen/markup/mermaid:frontmatter/codeblock.json
         - /modules/platen/markup/section:frontmatter/codeblock.json
+        - /modules/platen/markup/subscript:frontmatter/defined-style.json
+        - /modules/platen/markup/subscript:frontmatter/defined-preset.json
+        - /modules/platen/markup/subscript:frontmatter/image.json
         - /modules/platen/markup/tabs:frontmatter/codeblock-entry.json
         - /modules/platen/markup/tabs:frontmatter/codeblock-group.json
       publish:         /frontmatter/platen.json
