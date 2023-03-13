@@ -1,0 +1,26 @@
+{{- $Context          := .                                                         -}}
+{{- $IntegrityPartial := "platen/utils/getIntegrityAttributes"                     -}}
+{{- $ConfigKey        := "platen.features.alpine"                                  -}}
+{{- $AlpineConfig     := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $loadAlpine       := $Context.Store.Get "_hasAlpine"
+    | default $Context.Params.platen.features.alpine.always_load
+    | default $AlpineConfig.always_load
+-}}
+
+{{- if $loadAlpine -}}
+  {{/* Get the Shoelace URLs to use */}}
+  {{- $Version       := $AlpineConfig.version | default "3.12.0"                     -}}
+  {{- $UrlPrefix     := "https://cdn.jsdelivr.net/npm/alpinejs"                      -}}
+  {{- $LibraryUrl    := printf "%s@%v/dist/cdn.min.js"           $UrlPrefix $Version -}}
+
+  {{/* Initialize the slice of strings to render */}}
+  {{- $renderStrings := slice -}}
+
+  {{- $LibraryAttributes := slice `defer` (printf `src="%s"` $LibraryUrl)    -}}
+  {{- $LibraryAttributes  = delimit $LibraryAttributes " "                   -}}
+  {{- $Library           := printf "<script %s></script>" $LibraryAttributes -}}
+  {{- $renderStrings      = $renderStrings | append $Library                 -}}
+
+  {{/* Render */}}
+  {{- delimit $renderStrings "\n" | safeHTML -}}
+{{- end }}
