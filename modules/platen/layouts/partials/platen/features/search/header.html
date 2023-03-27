@@ -1,8 +1,21 @@
 {{- $Context          := .                                            -}}
 {{- $IntegrityPartial := "platen/utils/getIntegrityAttributes"        -}}
+
+{{- $searchDataFile := printf "%s.search-data.json" .Language.Lang }}
+{{- $searchData     := resources.Get "scripts/features/search/data.json"
+                      | resources.ExecuteAsTemplate $searchDataFile .
+                      | resources.Minify
+                      | resources.Fingerprint
+-}}
+{{- $searchConfig    := i18n "PlatenSearchConfig" | default "{}" }}
+{{- $ContextSearchJS := dict "SearchDataUrl" $searchData.RelPermalink
+                            "SearchConfig"  $searchConfig
+-}}
+{{- $MakeItPub := $searchData.Publish -}}
+
 {{- $searchJSFile     := printf "%s.search.js" $Context.Language.Lang -}}
 {{- $searchJS         := resources.Get "scripts/features/search/index.js"
-                         | resources.ExecuteAsTemplate $searchJSFile $Context
+                         | resources.ExecuteAsTemplate $searchJSFile $ContextSearchJS
                          | resources.Fingerprint
 }}
 {{- $searchJSIntegrity := partialCached $IntegrityPartial $searchJS "SearchJS" -}}

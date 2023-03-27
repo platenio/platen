@@ -1,8 +1,7 @@
+{{- $pages := where site.Pages "Kind" "in" (slice "page" "section")      -}}
+{{- $pages  = where $pages "Params.platen.exclude_from_search" "!=" true -}}
+{{- $pages  = where $pages "Content" "!=" ""                             -}}
 [
-{{- $pages := where site.Pages "Kind" "in" (slice "page" "section") -}}
-{{- $pages = where $pages "Params.platen.exclude_from_search" "!=" true -}}
-{{- $pages = where $pages "Content" "not in" (slice nil "") -}}
-
 {{ range $index, $page := $pages }}
 {{ if gt $index 0}},{{end}} {
     "id": {{ $index }},
