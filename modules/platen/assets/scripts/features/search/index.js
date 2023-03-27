@@ -1,12 +1,11 @@
+{{- $Context      := .              -}}
+{{- $DataUrl      := .SearchDataUrl -}}
+{{- $Config       := .SearchConfig  -}}
 'use strict';
 
-{{ $searchDataFile := printf "%s.search-data.json" .Language.Lang }}
-{{ $searchData := resources.Get "scripts/features/search/data.json" | resources.ExecuteAsTemplate $searchDataFile . | resources.Minify | resources.Fingerprint }}
-{{ $searchConfig := i18n "PlatenSearchConfig" | default "{}" }}
-
 (function () {
-  const searchDataURL = '{{ $searchData.RelPermalink }}';
-  const indexConfig = Object.assign({{ $searchConfig }}, {
+  const searchDataURL = '{{ $DataUrl }}';
+  const indexConfig = Object.assign({{ $Config }}, {
     doc: {
       id: 'id',
       field: ['title', 'content'],
