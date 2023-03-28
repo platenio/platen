@@ -7,7 +7,7 @@ title: Subscript Style Definition
 description: |
   Specifies a defined option for styling subscripts in your Platen site.
 
-  https://platen.io/modules/platen/markup/button#styles
+  https://platen.io/modules/platen/markup/subscripts#styles
 type: object
 properties:
   classes:

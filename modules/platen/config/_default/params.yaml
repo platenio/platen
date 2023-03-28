@@ -260,11 +260,11 @@ platen:
       partials:
         renderers:
           image: platen/markup/subscripts/image
-    superscript:
+    superscripts:
       enabled: true
       partials:
         renderers:
-          image: platen/markup/superscript/image
+          image: platen/markup/superscripts/image
   repository:
     commit_path: commit                        # BookCommitPath
     edit_path: edit/main                       # BookEditPath

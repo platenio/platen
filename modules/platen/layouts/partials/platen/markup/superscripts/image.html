@@ -5,7 +5,7 @@
 {{- $text        := $Params.Text                                              -}}
 {{- $IsBlock     := $Params.IsBlock                                           -}}
 {{- $Ordinal     := $Params.Ordinal                                           -}}
-{{- $ConfigKey   := "platen.markup.superscript"                               -}}
+{{- $ConfigKey   := "platen.markup.superscripts"                              -}}
 {{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 {{- $Aliases     := $Config.aliases                                           -}}
 {{- $PresetPrefix := "preset:"                                                -}}
@@ -37,7 +37,7 @@
   {{/*  Destination is required to use Title  */}}
   {{- with $Destination -}}
     {{- if hasPrefix $Destination $PresetPrefix -}}
-      {{- $PresetPath   := strings.TrimPrefix $PresetPrefix $Destination     -}}
+      {{- $PresetPath   := strings.TrimPrefix $PresetPrefix $Destination    -}}
       {{- $passedOptions = merge $passedOptions (dict "preset" $PresetPath) -}}
     {{- else if (ne $Destination ".") -}}
       {{- $passedOptions = merge $passedOptions (dict "style" $Destination) -}}
@@ -55,7 +55,7 @@
   {{- end -}}
 
   {{- with $passedOptions.preset -}}
-    {{- $presetOptions = partialCached "platen/markup/superscript/_getPreset" . . -}}
+    {{- $presetOptions = partialCached "platen/markup/superscripts/_getPreset" . . -}}
   {{- end -}}
 
   {{/*  If there's a preset, add it to the merged options first.  */}}
@@ -80,8 +80,8 @@
   {{- end -}}
 
   {{/*  Canonicalize the values; this handles style merging and option validation  */}}
-  {{- $Canonicalizing := dict "Page" $Page "Options" $mergedOptions                        -}}
-  {{- $Canonicalized  := partial "platen/markup/superscript/_canonicalize" $Canonicalizing -}}
+  {{- $Canonicalizing := dict "Page" $Page "Options" $mergedOptions                         -}}
+  {{- $Canonicalized  := partial "platen/markup/superscripts/_canonicalize" $Canonicalizing -}}
 
   {{/*  Convert the canonicalized attributes into the form needed for insertion and add.  */}}
   {{- $attributeParams := dict "Attributes" $Canonicalized.Attributes "IndentCount" 4     -}}
