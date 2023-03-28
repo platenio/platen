@@ -126,18 +126,22 @@ properties:
         $ref: ./markup/section.yaml
         schematize:
           weight: 8
+      styled_text:
+        $ref: ./markup/styled_text.yaml
+        schematize:
+          weight: 9
       subscripts:
         $ref: ./markup/subscripts.yaml
         schematize:
-          weight: 9
+          weight: 10
       superscripts:
         $ref: ./markup/superscripts.yaml
         schematize:
-          weight: 10
+          weight: 11
       tabs:
         $ref: ./markup/tabs.yaml
         schematize:
-          weight: 11
+          weight: 12
     patternProperties:
       ".":
         $ref: ./markup/defining.yaml

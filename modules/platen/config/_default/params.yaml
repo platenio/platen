@@ -255,6 +255,11 @@ platen:
         renderers:
           codeblock: platen/markup/tabs/codeblock
       style: tabs
+    styled_text:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/styled_text/image
     subscripts:
       enabled: true
       partials:
@@ -265,11 +270,6 @@ platen:
       partials:
         renderers:
           image: platen/markup/superscripts/image
-    styled:
-      enabled: true
-      partials:
-        renderers:
-          image: platen/markup/styled/image
   repository:
     commit_path: commit                        # BookCommitPath
     edit_path: edit/main                       # BookEditPath

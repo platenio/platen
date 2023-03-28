@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+# Can't have $schema - breaks frontmatter. Intellisense only works in VS Code
+# with the YAML extension directive at the top.
+# $schema: https://json-schema.org/draft/2020-12/schema
+$id: /modules/platen/markup/styled_text/schemas/definitions/style
+title: Subscript Style Definition
+description: |
+  Specifies a defined option for styling spans of text in your Platen site.
+
+  https://platen.io/modules/platen/markup/styled_text#styles
+type: object
+properties:
+  classes:
+    title: Class List
+    description: |
+      Specify any additional classes to add to the styled text's element.
+
+      https://platen.io/modules/platen/markup/styled_text#style-property-class
+    type: array
+    items:
+      type: string
+    uniqueItems: true
+  html_attributes:
+    title: HTML Attributes
+    description: |
+      Defines the values for the HTML attributes of the styled text's element.
+
+      https://platen.io/modules/platen/markup/styled_text#style-property-html_attributes
+    type: object

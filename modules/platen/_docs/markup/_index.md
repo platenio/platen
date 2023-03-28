@@ -21,6 +21,7 @@ Memo:
           - ./katex/inline:frontmatter/image.json
           - ./mermaid:frontmatter/codeblock.json
           - ./section:frontmatter/codeblock.json
+          - ./styled_text:frontmatter/image.json
           - ./subscripts:frontmatter/image.json
           - ./superscripts:frontmatter/image.json
           - ./tabs:frontmatter/codeblock-entry.json
@@ -43,7 +44,14 @@ Memo:
           - ./katex/inline:frontmatter/image.json
           - ./mermaid:frontmatter/codeblock.json
           - ./section:frontmatter/codeblock.json
+          - ./styled_text:frontmatter/defined-preset.json
+          - ./styled_text:frontmatter/defined-style.json
+          - ./styled_text:frontmatter/image.json
+          - ./subscripts:frontmatter/defined-preset.json
+          - ./subscripts:frontmatter/defined-style.json
           - ./subscripts:frontmatter/image.json
+          - ./superscripts:frontmatter/defined-preset.json
+          - ./superscripts:frontmatter/defined-style.json
           - ./superscripts:frontmatter/image.json
           - ./tabs:frontmatter/codeblock-entry.json
           - ./tabs:frontmatter/codeblock-group.json

@@ -36,7 +36,7 @@ properties:
     schematize:
       weight: 2
       details: |
-        Define one or more prefixes to use in addition to the default prefix (`sup`) for button image links.
+        Define one or more prefixes to use in addition to the default prefix (`sup`) for superscript image links.
 
         You can specify a string or an array of strings. If the value is an array, each item in the array is added as
         an alias. Do not add a `:` suffix.

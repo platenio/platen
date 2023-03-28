@@ -1,0 +1,92 @@
+{{- $Params      := .                                                         -}}
+{{- $Page        := $Params.Page                                              -}}
+{{- $Destination := $Params.Destination                                       -}}
+{{- $Title       := $Params.Title                                             -}}
+{{- $text        := $Params.Text                                              -}}
+{{- $IsBlock     := $Params.IsBlock                                           -}}
+{{- $Ordinal     := $Params.Ordinal                                           -}}
+{{- $ConfigKey   := "platen.markup.styled_text"                               -}}
+{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Aliases     := $Config.aliases                                           -}}
+{{- $PresetPrefix := "preset:"                                                -}}
+
+{{- $renderedImage := "" -}}
+
+{{- $prefixes := slice "styled:" -}}
+{{- range $alias := $Aliases -}}
+  {{- $prefixes = $prefixes | append (printf "%s:" $alias) -}}
+{{- end -}}
+
+{{- $hasPrefix := false -}}
+{{- $alt       := $text -}}
+{{- $class     := slice -}}
+
+{{- range $prefix := $prefixes -}}
+  {{- if and (not $hasPrefix) (hasPrefix $text $prefix) -}}
+    {{- $hasPrefix = true                             -}}
+    {{- $alt       = strings.TrimPrefix $prefix $text -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $hasPrefix -}}
+  {{/* Retrieve the defaults from data, init style and preset opts */}}
+  {{- $passedOptions := dict -}}
+  {{- $mergedOptions := dict -}}
+  {{- $presetOptions := dict -}}
+
+  {{/*  Destination is required to use Title  */}}
+  {{- with $Destination -}}
+    {{- if hasPrefix $Destination $PresetPrefix -}}
+      {{- $PresetPath   := strings.TrimPrefix $PresetPrefix $Destination    -}}
+      {{- $passedOptions = merge $passedOptions (dict "preset" $PresetPath) -}}
+    {{- else if (ne $Destination ".") -}}
+      {{- $passedOptions = merge $passedOptions (dict "style" $Destination) -}}
+    {{- end -}}
+
+    {{/*  Title is always a list of classes, space-separated  */}}
+    {{- with $Title -}}
+      {{- $passedOptions = merge $passedOptions (dict "class" $Title) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/*  Alt text is always the actual subscript text  */}}
+  {{- with $alt -}}
+    {{- $passedOptions = merge $passedOptions (dict "text" $alt) -}}
+  {{- end -}}
+
+  {{- with $passedOptions.preset -}}
+    {{- $presetOptions = partialCached "platen/markup/styled_text/_getPreset" . . -}}
+  {{- end -}}
+
+  {{/*  If there's a preset, add it to the merged options first.  */}}
+  {{- range $PresetKey, $presetValue := $presetOptions -}}
+    {{- if eq "text" $PresetKey -}}
+      {{/*  Text from passed options always arrived rendered, needs to be rendered from preset  */}}
+      {{- $presetValue   = $Page.RenderString $presetValue -}}
+    {{- end -}}
+
+    {{- $MergedValue  := index $passedOptions $PresetKey | default $presetValue -}}
+    {{- $mergedOptions = merge $mergedOptions (dict $PresetKey $MergedValue)    -}}
+  {{- end -}}
+
+  {{/*  Merge the passed options over the preset options (or just set them if no preset)  */}}
+  {{- range $PassedKey, $PassedValue := $passedOptions -}}
+    {{- with index $mergedOptions $PassedKey -}}
+      {{/* Nothing to do, already merged */}}
+    {{- else -}}
+      {{/* Not defined in preset options, add value from passed options */}}
+      {{- $mergedOptions = merge $mergedOptions (dict $PassedKey $PassedValue) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/*  Canonicalize the values; this handles style merging and option validation  */}}
+  {{- $Canonicalizing := dict "Page" $Page "Options" $mergedOptions                        -}}
+  {{- $Canonicalized  := partial "platen/markup/styled_text/_canonicalize" $Canonicalizing -}}
+
+  {{/*  Convert the canonicalized attributes into the form needed for insertion and add.  */}}
+  {{- $attributeParams := dict "Attributes" $Canonicalized.Attributes "IndentCount" 4       -}}
+  {{- $attributes      := partial "platen/utils/getSafeAttributes" $attributeParams         -}}
+  {{- $renderedImage    = printf "<span %s>\n  %s\n</span>" $attributes $Canonicalized.Text -}}
+{{- end -}}
+
+{{- return $renderedImage -}}

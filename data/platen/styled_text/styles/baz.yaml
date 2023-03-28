@@ -1,0 +1,7 @@
+classes:
+  - baz
+html_attributes:
+  style: >-
+    background: violet;
+    border: 2px solid #e66465;
+    color: black;

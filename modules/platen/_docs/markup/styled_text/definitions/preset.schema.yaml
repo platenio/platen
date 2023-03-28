@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+# Can't have $schema - breaks frontmatter. Intellisense only works in VS Code
+# with the YAML extension directive at the top.
+# $schema: https://json-schema.org/draft/2020-12/schema
+$id: /modules/platen/markup/styled_text/schemas/definitions/preset
+title: Styled Text Preset Definition
+description: |
+  Specifies a defined preset for reusing styled text in your Platen site.
+
+  https://platen.io/modules/platen/markup/styled_text#presets
+type: object
+properties:
+  text:
+    title: Span Text
+    description: |
+      Specify the Markdown text to render as the styled text's text.
+
+      https://platen.io/modules/platen/markup/styled_text#preset-property-text
+    type: string
+  classes:
+    title: Class List
+    description: |
+      Specify any additional classes to add to the styled text's element.
+
+      https://platen.io/modules/platen/markup/styled_text#preset-property-class
+    type: array
+    items:
+      type: string
+    uniqueItems: true
+  styles:
+    title: Style List
+    description: |
+      Specify any number of styles to apply to this preset. They're merged in order.
+
+      https://platen.io/modules/platen/markup/styled_text#preset-property-style
+    type: array
+    items:
+      type: string
+    uniqueItems: true

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.data.types": [
+    {
+      "id": "platen-markup-styled_text-style",
+      "schema": "/modules/platen/markup/styled_text:definitions/style.schema.yaml"
+    }
+  ],
+  "frontMatter.data.folders": [
+    {
+      "id": "platen-markup-styled_text-styles",
+      "path": "[[workspace]]/data/platen/styled_text/styles",
+      "singleEntry": true,
+      "type": "platen-markup-styled_text-style"
+    }
+  ]
+}
