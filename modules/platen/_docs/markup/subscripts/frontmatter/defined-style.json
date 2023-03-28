@@ -3,7 +3,7 @@
   "frontMatter.data.types": [
     {
       "id": "platen-markup-subscripts-style",
-      "schema": "/modules/platen/markup/subscript:definitions/style.schema.yaml"
+      "schema": "/modules/platen/markup/subscripts:definitions/style.schema.yaml"
     }
   ],
   "frontMatter.data.folders": [

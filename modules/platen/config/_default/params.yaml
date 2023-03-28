@@ -255,11 +255,11 @@ platen:
         renderers:
           codeblock: platen/markup/tabs/codeblock
       style: tabs
-    subscript:
+    subscripts:
       enabled: true
       partials:
         renderers:
-          image: platen/markup/subscript/image
+          image: platen/markup/subscripts/image
     superscript:
       enabled: true
       partials:

@@ -5,7 +5,7 @@
 {{- $text        := $Params.Text                                              -}}
 {{- $IsBlock     := $Params.IsBlock                                           -}}
 {{- $Ordinal     := $Params.Ordinal                                           -}}
-{{- $ConfigKey   := "platen.markup.subscript"                                 -}}
+{{- $ConfigKey   := "platen.markup.subscripts"                                -}}
 {{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 {{- $Aliases     := $Config.aliases                                           -}}
 {{- $PresetPrefix := "preset:"                                                -}}
@@ -55,7 +55,7 @@
   {{- end -}}
 
   {{- with $passedOptions.preset -}}
-    {{- $presetOptions = partialCached "platen/markup/subscript/_getPreset" . . -}}
+    {{- $presetOptions = partialCached "platen/markup/subscripts/_getPreset" . . -}}
   {{- end -}}
 
   {{/*  If there's a preset, add it to the merged options first.  */}}
@@ -80,8 +80,8 @@
   {{- end -}}
 
   {{/*  Canonicalize the values; this handles style merging and option validation  */}}
-  {{- $Canonicalizing := dict "Page" $Page "Options" $mergedOptions                      -}}
-  {{- $Canonicalized  := partial "platen/markup/subscript/_canonicalize" $Canonicalizing -}}
+  {{- $Canonicalizing := dict "Page" $Page "Options" $mergedOptions                       -}}
+  {{- $Canonicalized  := partial "platen/markup/subscripts/_canonicalize" $Canonicalizing -}}
 
   {{/*  Convert the canonicalized attributes into the form needed for insertion and add.  */}}
   {{- $attributeParams := dict "Attributes" $Canonicalized.Attributes "IndentCount" 4     -}}

@@ -1,8 +1,8 @@
 ---
-title: Subscript
+title: Subscripts
 weight: 201
 summary: >-
-  Documentation on the `sup` image link markup, which renders an image link's
+  Documentation on the `sub` image link markup, which renders an image link's
   text as subscript.
 Memo:
   Name: sub
@@ -10,26 +10,26 @@ Memo:
   front_matter:
     configs:
       - definition: frontmatter/defined-style.json
-        publish:    /frontmatter/platen/data/subscript-styles.json
+        publish:    /frontmatter/platen/data/subscripts-styles.json
         resolve_schemas: true
       - definition: frontmatter/defined-preset.json
-        publish:    /frontmatter/platen/data/subscript-presets.json
+        publish:    /frontmatter/platen/data/subscripts-presets.json
         resolve_schemas: true
       - merge:
           - frontmatter/defined-style.json
           - frontmatter/defined-preset.json
-        publish:    /frontmatter/platen/data/subscript.json
+        publish:    /frontmatter/platen/data/subscripts.json
         resolve_schemas: true
         join_arrays:     true
       - definition: frontmatter/image.json
-        publish:    /frontmatter/platen/content/snippets/subscript/image.json
+        publish:    /frontmatter/platen/content/snippets/subscripts/image.json
       - merge:      frontmatter/image.json
-        publish:    /frontmatter/platen/content/snippets/subscript.json
+        publish:    /frontmatter/platen/content/snippets/subscripts.json
       - merge:
           - frontmatter/defined-style.json
           - frontmatter/defined-preset.json
           - frontmatter/image.json
-        publish: /frontmatter/platen/markup/subscript.json
+        publish: /frontmatter/platen/markup/subscripts.json
         resolve_schemas: true
         join_arrays:     true
   Kind: Renderer.Image
@@ -148,7 +148,7 @@ Then, in our markdown, we use the subscript markup and reference the preset:
 Which is processed to the equivalent YAML internally:
 
 ```yaml
-class: test
+classes: []
 preset: example
 text:   Override
 ```
@@ -159,9 +159,11 @@ Now that we have both the values from the preset and Markdown, Platen combines
 them into:
 
 ```yaml
-class:       foo bar
-style:       baz
-text:        Override
+classes:
+  - foo
+  - bar
+style: baz
+text:  Override
 ```
 
 Because both the preset and the markdown specify a value for `text`, the value
@@ -196,13 +198,13 @@ You can specify this value either as a string (if you only need to add one class
 `````````tabs { #preset-property-class-strings }
 ``````tab { name="Single Class" }
 ```yaml
-class: sepia
+classes: sepia
 ```
 ``````
 
 ``````tab { name="Multiple Classes" }
 ```yaml
-class:
+classes:
   - big
   - shadowed
 ```
@@ -309,7 +311,7 @@ override the default values by adding this file to your own site.
 
 ```details { summary="Careful when Overriding the Default File" .warning }
 When you add the `_default.yaml` file to your site data, you **completely replace**
-the default that Platen provides for all subscript.. Make sure to do so carefully.
+the default that Platen provides for all subscripts. Make sure to do so carefully.
 
 Most of the time, you'll just want to define new styles instead.
 ```
@@ -324,13 +326,13 @@ You can specify this value either as a string (if you only need to add one class
 `````````tabs { #style-property-class-strings }
 ``````tab { name="Single Class" }
 ```yaml
-class: sepia
+classes: sepia
 ```
 ``````
 
 ``````tab { name="Multiple Classes" }
 ```yaml
-class:
+classes:
   - big
   - shadowed
 ```

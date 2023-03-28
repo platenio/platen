@@ -20,7 +20,7 @@
   {{- end -}}
 
   {{- range $stylePath := $styles -}}
-    {{- $mergingStyle := partialCached "platen/markup/subscript/_getStyle" $stylePath $stylePath -}}
+    {{- $mergingStyle := partialCached "platen/markup/subscripts/_getStyle" $stylePath $stylePath -}}
     {{- $mergeParams  := dict "BaseMap" $style "MergingMap" $mergingStyle                        -}}
     {{- $style         = partialCached "platen/utils/getMergedMap" $mergeParams $mergeParams     -}}
   {{- end -}}
