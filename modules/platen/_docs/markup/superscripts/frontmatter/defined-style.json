@@ -1,0 +1,17 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.data.types": [
+    {
+      "id": "platen-markup-superscripts-style",
+      "schema": "/modules/platen/markup/superscripts:definitions/style.schema.yaml"
+    }
+  ],
+  "frontMatter.data.folders": [
+    {
+      "id": "platen-markup-superscripts-styles",
+      "path": "[[workspace]]/data/platen/superscripts/styles",
+      "singleEntry": true,
+      "type": "platen-markup-superscripts-style"
+    }
+  ]
+}

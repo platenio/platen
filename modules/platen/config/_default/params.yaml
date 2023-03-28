@@ -255,6 +255,16 @@ platen:
         renderers:
           codeblock: platen/markup/tabs/codeblock
       style: tabs
+    subscripts:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/subscripts/image
+    superscripts:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/superscripts/image
   repository:
     commit_path: commit                        # BookCommitPath
     edit_path: edit/main                       # BookEditPath

@@ -1,0 +1,6 @@
+text: >-
+  This line of Markdown is very long. It might not be aesthetically pleasing to
+  have a subscript with this much text.
+
+  Notice that even though this looks like two paragraphs in the preset, it is
+  treated as one very long line because of the `>-` syntax used.

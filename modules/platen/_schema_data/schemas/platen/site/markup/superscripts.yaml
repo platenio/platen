@@ -1,0 +1,107 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: superscript.schema.yaml
+title: Superscripts
+description: Defines the options for Platen's superscripts markup
+schematize:
+  details: |
+    Defines the map of options for Platen's [superscripts markup][01]. The existing value is a map that
+    includes whether or not to enable the image render hook and its style definition.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the
+    full list of all properties in your own configuration file. Only specify the values you want
+    to add or replace.
+
+    <!-- Reference Links -->
+    [01]: /modules/platen/markup/superscripts
+type: object
+properties:
+  enabled:
+    title: Enable the markup option
+    description: Whether to enable the Superscripts markup option for the site
+    schematize:
+      weight: 1
+      details: |
+        Choose whether the site renders image links with the `sup:` prefix in their alt text as superscripts or normal
+        image links. If this setting is set to `true`, any image links added with the prefix are rendered as superscript
+        ([sref:`<sup>`]) elements. If this setting is `false`, the image links are rendered as normal.
+
+        <!-- Reference Links -->
+        [sref:`<sup>`]: mdn.html.element:sup
+    type: boolean
+    default: true
+  aliases:
+    title: Aliases
+    description: Defines additional prefixes for the image render hook.
+    schematize:
+      weight: 2
+      details: |
+        Define one or more prefixes to use in addition to the default prefix (`sup`) for button image links.
+
+        You can specify a string or an array of strings. If the value is an array, each item in the array is added as
+        an alias. Do not add a `:` suffix.
+    oneOf:
+      - type: array
+        items:
+          type: string
+      - type: string
+  partials:
+    title: Markup Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when [sref:`enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`enabled`]: platen.site.markup.superscripts.enabled
+      weight: 100
+      skip_schema_render: true
+    type: object
+    properties:
+      renderers:
+        title: Renderer Partials
+        description: Registers one or more partials that act as render hooks.
+        type: object
+        schematize:
+          weight: 2
+          skip_schema_render: true
+          details: |
+            Defines a map of partials to use as Markdown render hooks. Like all partials, these are
+            only processed when [sref:`enabled`] is set to `true`.
+
+            Supported renderer partials include:
+
+            - `codeblock`, processed for fenced code blocks with a language ID
+            - `heading`, processed for headings
+            - `image`, processed for image links
+            - `link`, processed for non-image links
+
+            In all cases, all renderer partials for enabled features and markup options are checked
+            one after the other unless they return a render string. Only the first applicable
+            partial that returns a render string is processed and rendered.
+
+            <!-- Reference Links -->
+            [sref:`enabled`]: platen.site.markup.superscripts.enabled
+        properties:
+          image:
+            title: Image Render Hook Partial
+            description: Adds a partial to call when processing the image render hook.
+            schematize:
+              details: |
+                Adds support for rendering image links as superscripts in Platen. This render hook is only called if the
+                alt text for the image (i.e. `![altText](source "title")`) has the `sup:` prefix. If the image link
+                does have the prefix, it's processed for adding an superscript ([sref:`<sup>`]) element.
+
+                For more information about how to use this render partial, see [the reference documentation][01] for
+                this render hook.
+
+                For more information about defining image render hook partials, see
+                [Defining an Image Render Hook Partial][02] in the [Theme Guide][03].
+
+                <!-- Reference Links -->
+                [01]: /modules/platen/markup/superscripts
+                [02]: /styling
+                [03]: /styling
+            type: string
+            default: platen/markup/superscripts/image

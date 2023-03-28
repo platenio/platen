@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+# Can't have $schema - breaks frontmatter. Intellisense only works in VS Code
+# with the YAML extension directive at the top.
+# $schema: https://json-schema.org/draft/2020-12/schema
+$id: /modules/platen/markup/superscripts/schemas/definitions/preset
+title: Superscript Preset Definition
+description: |
+  Specifies a defined preset for reusing superscripts in your Platen site.
+
+  https://platen.io/modules/platen/markup/superscripts#presets
+type: object
+properties:
+  text:
+    title: Superscript Text
+    description: |
+      Specify the Markdown text to render as the superscript's text.
+
+      https://platen.io/modules/platen/markup/superscripts#preset-property-text
+    type: string
+  classes:
+    title: Class List
+    description: |
+      Specify any additional classes to add to the superscript's element.
+
+      https://platen.io/modules/platen/markup/superscripts#preset-property-class
+    type: array
+    items:
+      type: string
+    uniqueItems: true
+  styles:
+    title: Style List
+    description: |
+      Specify any number of styles to apply to this preset. They're merged in order.
+
+      https://platen.io/modules/platen/markup/superscripts#preset-property-style
+    type: array
+    items:
+      type: string
+    uniqueItems: true

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.data.types": [
+    {
+      "id": "platen-markup-subscripts-style",
+      "schema": "/modules/platen/markup/subscripts:definitions/style.schema.yaml"
+    }
+  ],
+  "frontMatter.data.folders": [
+    {
+      "id": "platen-markup-subscripts-styles",
+      "path": "[[workspace]]/data/platen/subscripts/styles",
+      "singleEntry": true,
+      "type": "platen-markup-subscripts-style"
+    }
+  ]
+}

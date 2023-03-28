@@ -1,0 +1,5 @@
+{{- $StylePath := .                                                          -}}
+{{- $DotPath   := printf "platen.superscripts.styles.%s" $StylePath          -}}
+{{- $Data      := partialCached "platen/utils/getDataPath" $DotPath $DotPath -}}
+
+{{- return $Data -}}
