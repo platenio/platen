@@ -1,11 +1,11 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: subscript.schema.yaml
-title: Subscripts
-description: Defines the options for Platen's subscripts markup
+$id: styled_text.schema.yaml
+title: Styled Text
+description: Defines the options for Platen's Styled Text markup.
 schematize:
   details: |
-    Defines the map of options for Platen's [subscripts markup][01]. The existing value is a map that
+    Defines the map of options for Platen's [Styled Text markup][01]. The existing value is a map that
     includes whether or not to enable the image render hook and its style definition.
 
     You can add new keys or replace the values for existing ones. You don't need to keep the
@@ -13,21 +13,21 @@ schematize:
     to add or replace.
 
     <!-- Reference Links -->
-    [01]: /modules/platen/markup/subscripts
+    [01]: /modules/platen/markup/styled_text
 type: object
 properties:
   enabled:
     title: Enable the markup option
-    description: Whether to enable the Subscripts markup option for the site
+    description: Whether to enable the Styled Text markup option for the site
     schematize:
       weight: 1
       details: |
-        Choose whether the site renders image links with the `sub:` prefix in their alt text as subscripts or normal
-        image links. If this setting is set to `true`, any image links added with the prefix are rendered as subscript
-        ([sref:`<sub>`]) elements. If this setting is `false`, the image links are rendered as normal.
+        Choose whether the site renders image links with the `styled:` prefix in their alt text as spans or normal
+        image links. If this setting is set to `true`, any image links added with the prefix are rendered as spans
+        ([sref:`<span>`]) elements. If this setting is `false`, the image links are rendered as normal.
 
         <!-- Reference Links -->
-        [sref:`<sub>`]: mdn.html.element:sub
+        [sref:`<span>`]: mdn.html.element:span
     type: boolean
     default: true
   aliases:
@@ -36,7 +36,7 @@ properties:
     schematize:
       weight: 2
       details: |
-        Define one or more prefixes to use in addition to the default prefix (`sub`) for subscript image links.
+        Define one or more prefixes to use in addition to the default prefix (`styled`) for styled text image links.
 
         You can specify a string or an array of strings. If the value is an array, each item in the array is added as
         an alias. Do not add a `:` suffix.
@@ -54,7 +54,7 @@ properties:
         injected when [sref:`enabled`] is set to `true`.
 
         <!-- Reference Links -->
-        [sref:`enabled`]: platen.site.markup.subscripts.enabled
+        [sref:`enabled`]: platen.site.markup.styled_text.enabled
       weight: 100
       skip_schema_render: true
     type: object
@@ -82,16 +82,16 @@ properties:
             partial that returns a render string is processed and rendered.
 
             <!-- Reference Links -->
-            [sref:`enabled`]: platen.site.markup.subscripts.enabled
+            [sref:`enabled`]: platen.site.markup.styled_text.enabled
         properties:
           image:
             title: Image Render Hook Partial
             description: Adds a partial to call when processing the image render hook.
             schematize:
               details: |
-                Adds support for rendering image links as subscripts in Platen. This render hook is only called if the
-                alt text for the image (i.e. `![altText](source "title")`) has the `sub:` prefix. If the image link
-                does have the prefix, it's processed for adding an subscript ([sref:`<sub>`]) element.
+                Adds support for rendering image links as styled text spans in Platen. This render hook is only called
+                if the alt text for the image (i.e. `![altText](source "title")`) has the `styled:` prefix. If the image
+                link does have the prefix, it's processed for adding a span ([sref:`<span>`]) element.
 
                 For more information about how to use this render partial, see [the reference documentation][01] for
                 this render hook.
@@ -100,8 +100,8 @@ properties:
                 [Defining an Image Render Hook Partial][02] in the [Theme Guide][03].
 
                 <!-- Reference Links -->
-                [01]: /modules/platen/markup/subscripts
+                [01]: /modules/platen/markup/styled_text
                 [02]: /styling
                 [03]: /styling
             type: string
-            default: platen/markup/subscripts/image
+            default: platen/markup/styled_text/image

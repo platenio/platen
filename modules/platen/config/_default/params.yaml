@@ -255,6 +255,11 @@ platen:
         renderers:
           codeblock: platen/markup/tabs/codeblock
       style: tabs
+    styled_text:
+      enabled: true
+      partials:
+        renderers:
+          image: platen/markup/styled_text/image
     subscripts:
       enabled: true
       partials:

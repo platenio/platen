@@ -1,0 +1,7 @@
+text: |-
+  This line of Markdown is very long. It might not be aesthetically pleasing to
+  have a subscript with this much text.
+
+  Notice that this does produce two paragraphs of text for the subscript because
+  Platen keeps the line breaks. The blank line between these paragraphs ensures
+  they're actually rendered as paragraphs.

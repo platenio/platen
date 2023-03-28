@@ -78,7 +78,7 @@ An![sub:](preset:example)
 
 ## Inputs
 
-This section describes how the normal markdown input for images works with the button render hook.
+This section describes how the normal markdown input for images works with the subscript render hook.
 
 Images use this syntax for their inputs:
 
@@ -191,7 +191,7 @@ or add another preset instead.
 
 ### `classes` { #preset-property-classes }
 
-Specify one or more classes to add to the button's element. By default, it has no classes.
+Specify one or more classes to add to the subscript's element. By default, it has no classes.
 
 You can specify this value either as a string (if you only need to add one class) or as a list of strings.
 
@@ -318,8 +318,8 @@ Most of the time, you'll just want to define new styles instead.
 
 ### `classes` { #style-property-classes }
 
-Specify one or more classes to add to the button's element. By default, it has only the `platen-btn` class. For styles
-other than the [default](#default-style), these values are added to the default list of classes.
+Specify one or more classes to add to the subscript's element. By default, it has no classes. For styles other than the
+[default](#default-style), these values are added to the default list of classes.
 
 You can specify this value either as a string (if you only need to add one class) or as a list of strings.
 
@@ -341,7 +341,7 @@ classes:
 
 ### `html_attributes` { #style-property-html_attributes }
 
-This property defines the values for the HTML attributes of the [sref:subscript element][s01] added by the button
+This property defines the values for the HTML attributes of the [sref:subscript element][s01] added by the subscript
 markup. By default, none of them are defined.
 
 You can add any of the [sref:global HTML attributes][s02] to the element. If your value needs to be split across multiple

@@ -1,16 +1,16 @@
 {
   "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
   "frontMatter.content.snippets": {
-    "platen-superscript-image": {
-      "title": "Superscript",
-      "description": "Add text in a superscript element.",
+    "platen-styled_text-image": {
+      "title": "Styled Text",
+      "description": "Add text in a styled span element.",
       "body": [
-        "![sup:[[&selection]]]([[&style]] '[[&class]]')"
+        "![styled:[[&selection]]]([[&style]] '[[&class]]')"
       ],
       "fields": [
         {
           "name": "selection",
-          "title": "Superscript Text: This is the text for the superscript itself. The text may be any inline Markdown.",
+          "title": "Text: This is the text for the span itself. The text may be any inline Markdown.",
           "type": "string",
           "single": true,
           "default": "FM_SELECTED_TEXT"
@@ -24,7 +24,7 @@
         },
         {
           "name": "class",
-          "title": "Class List: Specify any classes to add to the superscript in a space-separated list. To specify classes with the default style, set style to '.'",
+          "title": "Class List: Specify any classes to add to the span in a space-separated list. To specify classes with the default style, set style to '.'",
           "type": "string",
           "single": true,
           "default": ""

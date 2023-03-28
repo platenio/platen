@@ -1,0 +1,21 @@
+# May an array of classes
+# classes:
+#   - foo
+#   - bar
+#   - baz
+#
+# Left as an empty array
+classes: []
+
+# May be a map of any key-value pairs where the key is the name of the HTML
+# attribute and the value is the value of the attribute to be added in quotes.
+# For a list of available attributes, see:
+#    https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
+# html_attributes:
+#   data-x-init: |-
+#     { open: false }
+#   style: |-
+#     background: violet; border: 2px solid #e66465;
+#
+# Left as an empty map
+html_attributes: {}
