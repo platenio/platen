@@ -21,6 +21,9 @@ Memo:
     summary:
       Type: String.Markdown.Inline
       Required: false
+    heading_level:
+      Type: Integer
+      Required: false
   Data:
     linkable:
       Type: Boolean
@@ -90,8 +93,9 @@ Another _Markdown_ example.
 
 `````````memo-example-renderer { title="YAML Options Parameter Example" }
 This example ensures the block is loaded in its collapsed state instead of open
-and sets the `linkable` option to `false`. That prevents Platen from adding an
-ID to the summary.
+and sets the `heading_level` option to `4`. That ensures Platen writes the
+summary inside an `<h4>` element, meaning the details block can show up in the
+table of contents.
 
 Note that this example also uses more backticks (`` ` ``) for the codeblock.
 That lets you include nested codeblocks inside the details. Here it's used to
@@ -101,7 +105,7 @@ add a [mermaid diagram](mermaid.md).
 ``````details
 ---
 summary: With Nested Codeblock
-linkable: false
+heading_level: 4
 open: false
 ---
 
@@ -125,6 +129,17 @@ Specify a string for the [sref:`class`][04] attribute of the details element. By
 class and the div element containing the content has the `markdown-inner` class.
 
 {{< memo/renderer/attribute "class" >}}
+
+### `heading_level` { #attribute-heading_level }
+
+Specify a number for the level of [sref:heading element (`<h1>-<h6>`)][05] that the summary text should be rendered
+inside. By default, the summary text isn't rendered inside a heading element.
+
+When this value is set to a positive number, the rendered text is wrapped in a heading element inside the
+[sref:`<summary>`][02] element. When this value is set to `0` or a negative number, the rendered text is not wrapped.
+When this value is greater than `6`, it's treated as `6`.
+
+{{< memo/renderer/attribute "heading_level" >}}
 
 ### `id` { #attribute-id }
 
@@ -150,6 +165,17 @@ Specify a string for the [sref:`class`][04] attribute of the details element. By
 class and the `div` element containing the content has the `markdown-inner` class.
 
 {{< memo/renderer/option "class" >}}
+
+### `heading_level` { #option-heading_level }
+
+Specify a number for the level of [sref:heading element (`<h1>-<h6>`)][05] that the summary text should be rendered
+inside. By default, the summary text isn't rendered inside a heading element.
+
+When this value is set to a positive number, the rendered text is wrapped in a heading element inside the
+[sref:`<summary>`][02] element. When this value is set to `0` or a negative number, the rendered text is not wrapped.
+When this value is greater than `6`, it's treated as `6`.
+
+{{< memo/renderer/option "heading_level" >}}
 
 ### `id` { #option-id }
 
@@ -192,3 +218,4 @@ Markdown, including other codeblocks. To use nested codeblocks, you must have mo
 [02]: mdn.html.element:summary
 [03]: mdn.html.element:div
 [04]: mdn.html.global_attribute:class
+[05]: mdn.html.element:Heading_Elements
