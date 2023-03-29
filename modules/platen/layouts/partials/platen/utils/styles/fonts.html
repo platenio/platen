@@ -7,9 +7,10 @@
     The Settings key should be a map of options for defining selectors without having to write
     them in SCSS.
 */}}
-{{- $params       := .                -}}
-{{- $fontStyles   := $params.styles   -}}
-{{- $fontSettings := $params.settings -}}
+{{- $Params         := .                -}}
+{{- $FontStyles     := $Params.styles   -}}
+{{- $FontSettings   := $Params.settings -}}
+{{- $FontUrlPattern := `^https?:\/\/`   -}}
 
 {{/* Initialize the slice of strings to render */}}
 {{- $renderStrings := slice -}}
@@ -20,14 +21,14 @@
 */}}
 {{- $weightedFontStyles   := slice -}}
 {{- $unweightedFontStyles := slice -}}
-{{- range $style := $fontStyles -}}
-  {{- $isMap := reflect.IsMap $style -}}
-  {{- if (and $isMap (isset $style "weight")) -}}
-    {{- $weightedFontStyles = $weightedFontStyles | append $style -}}
-  {{- else if $isMap -}}
-    {{- $unweightedFontStyles = $unweightedFontStyles | append $style.import_name -}}
+{{- range $Style := $FontStyles -}}
+  {{- $IsMap := reflect.IsMap $Style -}}
+  {{- if (and $IsMap (isset $Style "weight")) -}}
+    {{- $weightedFontStyles = $weightedFontStyles | append $Style -}}
+  {{- else if $IsMap -}}
+    {{- $unweightedFontStyles = $unweightedFontStyles | append $Style.import_name -}}
   {{- else -}}
-    {{- $unweightedFontStyles = $unweightedFontStyles | append $style -}}
+    {{- $unweightedFontStyles = $unweightedFontStyles | append $Style -}}
   {{- end -}}
 {{- end -}}
 
@@ -35,30 +36,38 @@
   Add import statements for weighted font styles. If a style has an explicitly nil weight, it's
   functionally disabled, so ignore those.
 */}}
-{{- range $font := sort (where $weightedFontStyles "weight" "ne" nil) "weight" -}}
-  {{- $importLine   := printf `@import "fonts/%s";` $font.import_name -}}
+{{- range $Font := sort (where $weightedFontStyles "weight" "ne" nil) "weight" -}}
+  {{- $importLine   := printf `@import "fonts/%s";` $Font.import_name -}}
+  {{- if findRE $FontUrlPattern $Font.import_name -}}
+    {{- $importLine = printf `@import url('%s');` $Font.import_name -}}
+  {{- end -}}
+  
   {{- $renderStrings = $renderStrings | append $importLine           -}}
 {{ end }}
 
 {{/* Add import statements for unweighted font styles. */}}
-{{- range $font := sort $unweightedFontStyles -}}
-  {{- $importLine   := printf `@import "fonts/%s";` $font  -}}
+{{- range $Font := sort $unweightedFontStyles -}}
+  {{- $importLine   := printf `@import "fonts/%s";` $Font -}}
+  {{- if findRE $FontUrlPattern $Font -}}
+    {{- $importLine = printf `@import url('%s');` $Font -}}
+  {{- end -}}
+
   {{- $renderStrings = $renderStrings | append $importLine -}}
 {{- end -}}
 
 {{/*  Add selector declarations for every defined setting  */}}
-{{- range $name, $settings := $fontSettings -}}
-  {{- $selector       := default (lower $name) $settings.selector -}}
+{{- range $Name, $Settings := $FontSettings -}}
+  {{- $selector       := default (lower $Name) $Settings.selector -}}
   {{- $selectorString := slice (printf "%s {" $selector) -}}
 
   {{/* Add the family declaration, if any, for this selector */}}
-  {{- with $settings.family -}}
-    {{- $selectorString = $selectorString | append (printf "font-family: %s;" $settings.family) -}}
+  {{- with $Settings.family -}}
+    {{- $selectorString = $selectorString | append (printf "font-family: %s;" $Settings.family) -}}
   {{- end -}}
 
   {{/* Add every declared mixin for this selector */}}
-  {{- range $mixin := $settings.mixins -}}
-    {{- $selectorString = $selectorString | append (printf "@include %s;" $mixin) -}}
+  {{- range $MixIn := $Settings.mixins -}}
+    {{- $selectorString = $selectorString | append (printf "@include %s;" $MixIn) -}}
   {{- end -}}
 
   {{/* Close the selector and delimit it with appropriate indentation for rendering */}}

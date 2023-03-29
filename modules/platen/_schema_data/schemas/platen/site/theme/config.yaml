@@ -202,17 +202,30 @@ properties:
 
             1. **Simple Font Modules**
 
-               Simple font module declarations are strings matching the name of an SCSS module in
-               the `assets/fonts` folder. For example, to add the module in
-               `assets/fonts/_spectral.scss`, specify `spectral`. This value is case sensitive.
+               Simple font module declarations are strings that match the import name of the SCSS module that defines
+               the font or font family or the URL to import a web font.
+
+               The value must be a string that either:
+
+               - Matches the name of an SCSS module in the `assets/fonts` folder. For example, to add the module in
+                 `assets/fonts/_spectral.scss`, specify `spectral`. This value is case sensitive.
+               - Is the URL to a webfont that you can import. For example, to add the Montserrat Google font, this
+                 value would be `https://fonts.googleapis.com/css2?family=Montserrat&display=swap`.
             1. **Mapped Font Modules**
 
                [sref:Mapped font modules] provide more control over the importing of an SCSS module with
-               fonts. Add each item as a map with the [sref:`import_name`] key defined.
+               fonts or a web font. Add each item as a map with the [sref:`import_name`] key defined.
 
-               The [sref:`import_name`] must be a string that matches the name of an SCSS module in
-               the `assets/fonts` folder. For example, to add the module in
-               `assets/fonts/_spectral.scss`, specify `spectral`. This value is case sensitive.
+               The [sref:`import_name`] must be a string that matches the import name of the SCSS module that defines
+               the font or font family or the URL to import a web font. This setting is mandatory for each defined
+               font.
+
+               The value must be a string that either:
+
+               - Matches the name of an SCSS module in the `assets/fonts` folder. For example, to add the module in
+                 `assets/fonts/_spectral.scss`, specify `spectral`. This value is case sensitive.
+               - Is the URL to a webfont that you can import. For example, to add the Montserrat Google font, this
+                 value would be `https://fonts.googleapis.com/css2?family=Montserrat&display=swap`.
 
                You can also specify the [sref:`weight`] key to control the order the SCSS modules
                are loaded. All mapped declarations are loaded before unmapped modules. All weighted
@@ -227,8 +240,15 @@ properties:
           oneOf:
             - type: string
               description: >-
-                The name of an SCSS module in the `assets/fonts` folder. For example, to add the module in
-                `assets/fonts/_spectral.scss`, specify `spectral`. This value is case sensitive.
+                The import name of the SCSS module that defines the font or font family or the URL to import a web
+                font.
+
+                The value must be a string that either:
+
+                - Matches the name of an SCSS module in the `assets/fonts` folder. For example, to add the module in
+                  `assets/fonts/_spectral.scss`, specify `spectral`. This value is case sensitive.
+                - Is the URL to a webfont that you can import. For example, to add the Montserrat Google font, this
+                  value would be `https://fonts.googleapis.com/css2?family=Montserrat&display=swap`.
             - $ref: ./fonts/mapped_style.yaml
       settings:
         $ref: ./fonts/settings.yaml
