@@ -7,11 +7,12 @@
       "body": [
         "```details",
         "---",
-        "summary:  [[&summary]]",
-        "class:    [[class]]",
-        "id:       [[id]]",
-        "linkable: [[linkable]]",
-        "open:     [[open]]",
+        "summary:       [[&summary]]",
+        "class:         [[class]]",
+        "heading_level: [[level]]",
+        "id:            [[id]]",
+        "linkable:      [[linkable]]",
+        "open:          [[open]]",
         "---",
         "[[&selection]]",
         "```"
@@ -36,6 +37,12 @@
           "type": "string",
           "single": true,
           "default": ""
+        },
+        {
+          "name": "level",
+          "title": "The heading level to insert for the summary of the details element. This turns the details element into a collapsible section if the value is 1 through 6. The default (no heading) is 0.",
+          "type": "number",
+          "default": "0"
         },
         {
           "name": "id",

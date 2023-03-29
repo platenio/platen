@@ -8,11 +8,25 @@
       line-height: 1;
       padding: $padding-large;
       margin: -$padding-large;
+      list-style: none;
+
       cursor: pointer;
+      > * {
+        display: inline-block;
+        margin: 0;
+      }
+
+      &::after {
+        float: right;
+        content: "+";
+      }
     }
 
     &[open] summary {
       margin-bottom: 0;
+      &::after {
+        content: "-";
+      }
     }
 
     @each $name, $color in $details-colors {
@@ -23,3 +37,8 @@
     }
   }
 }
+
+body[dir="rtl"] .markdown details summary::after {
+  float: left;
+}
+

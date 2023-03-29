@@ -25,14 +25,37 @@
   {{- $info       := partial "platen/utils/getCodeblockInfo" $infoParams                       -}}
 
   {{/* Handle attributes and data */}}
-  {{- $class      := $info.Data.class    | default $Attributes.class                        -}}
-  {{- $summary    := $info.Data.summary  | default $Attributes.summary  | default "Details" -}}
-  {{- $linkable   := $info.Data.linkable | default $Attributes.linkable | default true      -}}
-  {{- $open       := $info.Data.open     | default $Attributes.open     | default true      -}}
-  {{- $id         := $info.Data.id
-                     | default $Attributes.id
-                     | default (lower $summary | urlize)
+  {{- $class        := $info.Data.class         | default $Attributes.class                             -}}
+  {{- $summary      := $info.Data.summary       | default $Attributes.summary       | default "Details" -}}
+  {{- $linkable     := $info.Data.linkable      | default $Attributes.linkable      | default true      -}}
+  {{- $open         := $info.Data.open          | default $Attributes.open          | default true      -}}
+  {{- $headingLevel := $info.Data.heading_level | default $Attributes.heading_level | default 0         -}}
+  {{- $id           := $info.Data.id
+                        | default $Attributes.id
+                        | default (lower $summary | urlize)
   -}}
+
+  {{/*  Munge heading levels - if string, make int. If invalid number, munge to closest.  */}}
+  {{- $headingLevel = int $headingLevel -}}
+  {{- if (lt $headingLevel 0) -}}
+    {{- $message := slice "Specified heading_level as %v for details markup at %s;"
+                          "valid values are 0-6, where zero isn't a heading."
+                          "Treating this value as 0."
+    -}}
+    {{- $message = delimit $message " " | print -}}
+    {{- warnf $message $headingLevel $Position  -}}
+    
+    {{- $headingLevel = 0 -}}
+  {{- else if (and (ne 0 $headingLevel) (gt $headingLevel 6)) -}}
+    {{- $message := slice "Specified heading_level as %v for details markup at %s;"
+                          "valid values are 0-6, where zero isn't a heading."
+                          "Treating this value as 6."
+    -}}
+    {{- $message = delimit $message " " | print -}}
+    {{- warnf $message $headingLevel $Position  -}}
+
+    {{- $headingLevel = 6 -}}
+  {{- end -}}
 
   {{/* Retrieve and trim the actual definition */}}
   {{- $trimParams   := dict "Text" $info.Markdown "TrimEOL" true                           -}}
@@ -46,9 +69,20 @@
   {{/* Build the list of attributes for the container element */}}
   {{- $detailsAttributes := slice -}}
   {{- $summaryAttributes := ""    -}}
-  {{- if $linkable -}}
+  {{/*  Headings always get IDs  */}}
+  {{- if or $linkable (ne 0 $headingLevel) -}}
     {{- $summaryAttributes = printf ` id="%s"` $id -}}
   {{- end -}}
+  
+  {{- $summaryHtml := printf "  <summary%s>\n    %s\n</summary>" $summaryAttributes $summary -}}
+  
+  {{/*  If the heading level is defined, place the summary text in the correct heading  */}}
+  {{- if ne 0 $headingLevel -}}
+    {{- $summaryHtml = printf `%s <a class="anchor" href="#%s">#</a>` $summary $id                          -}}
+    {{- $summaryHtml = printf "<h%v%s>%s</h%v>" $headingLevel $summaryAttributes $summaryHtml $headingLevel -}}
+    {{- $summaryHtml = printf "  <summary>\n    %s\n  </summary>" $summaryHtml                              -}}
+  {{- end -}}
+
   {{- $classes           := slice "platen-details" -}}
   {{- with $class -}}
     {{- $classes = $classes | append $class -}}
@@ -60,7 +94,7 @@
   {{- end -}}
   {{- $detailsAttributes = partial "platen/utils/getSafeAttributes" $detailsAttributes -}}
   {{- $lines := slice (printf "<details %s>" $detailsAttributes)
-                      (printf "  <summary%s>\n  %s\n</summary>" $summaryAttributes $summary)
+                      $summaryHtml
                       `  <div class="markdown-inner">`
                       (printf "    %s" $content)
                       "  </div>"
