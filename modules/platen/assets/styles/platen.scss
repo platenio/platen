@@ -77,6 +77,24 @@
 // shows the same mode as the site user's system preferences.
 @import "modes/{{ default "auto" $theme.mode }}";
 
+// Ensure theme mode variables propagate to shoelace
+{{ if and $shoelace.Enabled (in (slice "light" "auto") $theme.mode) }}
+  :host, sl-theme-light {
+    {{ range $name, $value := $theme.variables.light_css }}
+      {{ $params := dict "Name" $name "Value" $value "IsCSS" true }}
+      {{ partial $variablesPartial $params }}
+    {{ end }}
+  }
+{{ end }}
+{{ if and $shoelace.Enabled (in (slice "dark" "auto") $theme.mode) }}
+  :host, sl-theme-dark {
+    {{ range $name, $value := $theme.variables.dark_css }}
+      {{ $params := dict "Name" $name "Value" $value "IsCSS" true }}
+      {{ partial $variablesPartial $params }}
+    {{ end }}
+  }
+{{ end }}
+
 // Normalize the styles before applying specifics
 @import "normalize";
 
