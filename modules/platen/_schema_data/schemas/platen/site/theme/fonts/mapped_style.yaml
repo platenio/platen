@@ -22,12 +22,15 @@ properties:
     schematize:
       weight: 1
       details: |
-        Specify the import name of the SCSS module that defines the font or font family. This
-        setting is mandatory for each defined font.
+        Specify the import name of the SCSS module that defines the font or font family or the URL to import a web
+        font. This setting is mandatory for each defined font.
 
-        The value must be a string that matches the name of an SCSS module in the `assets/fonts`
-        folder. For example, to add the module in `assets/fonts/_spectral.scss`, specify `spectral`.
-        This value is case sensitive.
+        The value must be a string that either:
+        
+        - Matches the name of an SCSS module in the `assets/fonts` folder. For example, to add the module in
+          `assets/fonts/_spectral.scss`, specify `spectral`. This value is case sensitive.
+        - Is the URL to a webfont that you can import. For example, to add the Montserrat Google font, this value would
+          be `https://fonts.googleapis.com/css2?family=Montserrat&display=swap`.
     type: string
   weight:
     title: Weight
