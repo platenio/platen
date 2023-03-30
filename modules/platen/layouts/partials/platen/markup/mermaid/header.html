@@ -1,4 +1,5 @@
-{{- $Context := . -}}
+{{- $Context          := .                                     -}}
+{{- $IntegrityPartial := "platen/utils/getIntegrityAttributes" -}}
 
 {{- if $Context.Store.Get "_hasMermaid" -}}
   {{/* Get the Mermaid URL */}}
@@ -10,51 +11,31 @@
   -}}
   {{- $UrlPrefix     := "https://cdn.jsdelivr.net/npm"                                      -}}
   {{- $libraryURL    := printf "%s/mermaid@%v/dist/mermaid.esm.min.mjs" $UrlPrefix $Version -}}
-  {{- $library       := resources.GetRemote $libraryURL
-                        | resources.Copy "mermaid/mermaid.esm.mjs"
-                        | resources.Minify
-                        | resources.Fingerprint
-  -}}
-  {{- $libraryIntegrity  := partialCached "platen/utils/getIntegrityAttributes" $library "MermaidLib" -}}
   {{- $libraryAttributes := slice "defer"
-                            | append (printf `src="%s"` $library.RelPermalink)
+                            | append (printf `src="%s"` $libraryURL)
                             | append `type="module"`
-                            | append $libraryIntegrity
   -}}
   {{- $attributeParams   := dict "Attributes" $libraryAttributes "IndentCount" 10     -}}
   {{- $libraryAttributes  = partialCached "platen/utils/getSafeAttributes" $attributeParams -}}
   {{- $libraryScript     := printf "<script %s></script>" $libraryAttributes          -}}
 
-  {{/*  Mindmap is deactivated for now; it doesn't work as documented.  */}}
-  {{/*  {{- $mindmapURL := printf "%s/@mermaid-js/mermaid-mindmap@%v/dist/mermaid-mindmap.esm.min.mjs"
-                            $UrlPrefix $Version 
-  -}}
-  {{- $mindmap := resources.GetRemote $mindmapURL
-                  | resources.Copy "mermaid/mermaid-mindmap.esm.min.mjs"
-                  | resources.Minify
-                  | resources.Fingerprint
-  -}}
-  {{- $mindmapIntegrity  := partialCached "platen/utils/getIntegrityAttributes" $mindmap "mindMap" -}}
-  {{- $mindmapAttributes := slice "defer"
-                            | append (printf `src="%s"` $mindmap.RelPermalink)
-                            | append `type="module"`
-                            | append $mindmapIntegrity
-  -}}
-  {{- $attributeParams   := dict "Attributes" $mindmapAttributes "IndentCount" 10     -}}
-  {{- $mindmapAttributes  = partial "platen/utils/getSafeAttributes" $attributeParams -}}
-  {{- $mindmapScript     := printf "<script %s></script>" $mindmapAttributes          -}}  */}}
-
   {{/* Get the mermaid site config */}}
   {{- $mermaidConfig := resources.Get "scripts/markup/mermaid/config.json" -}}
 
   {{/* Build the mermaid script */}}
-  {{- $mermaidScript := slice `<script type="module">`
-                        | append (printf "import mermaid from '%s';" $library.RelPermalink)
-                        | append (printf "mermaid.initialize(%s);" $mermaidConfig.Content)
-                        | append "</script>"
+  {{- $ScriptParams := dict "Config"          $mermaidConfig.Content
+                            "LibraryUrl"      $libraryURL
+                            "WaitForShoelace" true
   -}}
-  {{- $mermaidScript  = delimit $mermaidScript "\n    " "\n  " -}}
+  {{- $ScriptResource   :=  resources.Get "scripts/markup/mermaid/init.js"
+                            | resources.ExecuteAsTemplate "scripts/mermaid/init.js" $ScriptParams
+                            | resources.Fingerprint
+  -}}
+  {{- $ScriptIntegrity  := partialCached $IntegrityPartial $ScriptResource "MermaidInit"      -}}
+  {{- $scriptAttributes := slice (printf `src="%s"` $ScriptResource.RelPermalink) $ScriptIntegrity `type="module"` -}}
+  {{- $scriptAttributes  = delimit $scriptAttributes " "                                           -}}
+  {{- $Script           := printf "<script %s></script>" $scriptAttributes                         -}}
 
   {{/* Render */}}
-  {{- delimit (slice $libraryScript $mermaidScript) "\n  " | safeHTML -}}
+  {{- delimit (slice $libraryScript $Script) "\n  " | safeHTML -}}
 {{- end -}}

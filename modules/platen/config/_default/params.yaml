@@ -237,7 +237,7 @@ platen:
           image: platen/markup/key_combos/image
     mermaid:
       enabled: true
-      version: 9.3.0
+      version: 10.0.2
       container: pre
       partials:
         header: platen/markup/mermaid/header
