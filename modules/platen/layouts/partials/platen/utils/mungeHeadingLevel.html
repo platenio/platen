@@ -1,0 +1,43 @@
+{{- $Input                 := .                                                                  -}}
+{{- $Key                   := $Input.Key | default "heading_level"                               -}}
+{{- $headingLevel          := $Input.HeadingLevel                                                -}}
+{{- $For                   := $Input.For                                                         -}}
+{{- $At                    := cond (isset $Input "Position") (printf " at %s" $Input.Position) "" -}}
+{{- $WarningInfo           := dict "Key" $Key "Level" $headingLevel "For" $For "At" $At          -}}
+{{- $HeadingLevelIsDefined := isset $Input "HeadingLevel"                                        -}}
+{{- $ForIsDefined          := isset $Input "For"                                                 -}}
+
+{{- if and $HeadingLevelIsDefined $ForIsDefined -}}
+  {{/*  Munge heading levels - if string, make int. If invalid number, munge to closest.  */}}
+  {{- $headingLevel = int $headingLevel -}}
+  {{- if (lt $headingLevel 0) -}}
+    {{/*  {{- $message := slice "Specified heading_level as %v for details markup at %s;"
+                          "valid values are 0-6, where zero isn't a heading."
+                          "Treating this value as 0."
+    -}}
+    {{- $message = delimit $message " " | print -}}  */}}
+    {{- $message := i18n "WarningMungeHeadingLevelTooLow" $WarningInfo -}}
+    {{- warnf $message  -}}
+    
+    {{- $headingLevel = 0 -}}
+  {{- else if (and (ne 0 $headingLevel) (gt $headingLevel 6)) -}}
+    {{/*  {{- $message := slice "Specified heading_level as %v for details markup at %s;"
+                          "valid values are 0-6, where zero isn't a heading."
+                          "Treating this value as 6."
+    -}}
+    {{- $message = delimit $message " " | print -}}  */}}
+    {{- $message := i18n "WarningMungeHeadingLevelTooHigh" $WarningInfo -}}
+    {{- warnf $message -}}
+
+    {{- $headingLevel = 6 -}}
+  {{- end -}}
+{{- else if $HeadingLevelIsDefined -}}
+  {{- errorf "Didn't specify 'For' when calling 'mungeHeadingLevel' - this value is mandatory." -}}
+{{- else if $ForIsDefined -}}
+  {{- errorf "Didn't specify 'HeadingLevel' when calling 'mungeHeadingLevel' - this value is mandatory." -}}
+{{- else -}}
+  {{- errorf "Didn't specify 'For' and 'HeadingLevel' when calling 'mungeHeadingLevel' - these values are mandatory." -}}
+{{- end -}}
+
+{{/*  Return the munged heading level  */}}
+{{- return $headingLevel -}}

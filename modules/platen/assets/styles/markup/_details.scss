@@ -1,3 +1,17 @@
+.markdown sl-details.platen-details {
+  // When custom icons are used, don't rotate.
+  &.no-rotate-icon::part(summary-icon) {
+    rotate: none;
+  }
+
+  // Ensure the summary element doesn't have vertical margins to keep the
+  // height standard.
+  [slot="summary"] > * {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
 .markdown {
   details {
     padding: $padding-large;
@@ -41,4 +55,3 @@
 body[dir="rtl"] .markdown details summary::after {
   float: left;
 }
-

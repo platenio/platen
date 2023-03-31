@@ -15,3 +15,11 @@ reference_map:
     http:
       headers:
         sref_base: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+  sl:
+    sref_base: https://shoelace.style
+    component:
+      sref_base: https://shoelace.style/components
+    token:
+      sref_base: https://shoelace.style/tokens
+    start:
+      sref_base: https://next.shoelace.style/getting-started

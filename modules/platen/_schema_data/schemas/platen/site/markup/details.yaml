@@ -5,18 +5,30 @@ title: Details
 description: Defines the options for Platen's details markup
 schematize:
   details: |
-    Defines the map of options for Platen's [details markup][01]. The existing value is a map that
-    includes whether or not to enable the codeblock render hook and its style definition.
+    Defines the map of options for Platen's [details markup][01]. The existing value is a map that includes whether or
+    not to enable the codeblock render hook and its style definition.
 
-    When this markup is enabled, you can add semantically collapsible content to a page with a
-    [codeblock][01].
+    When this markup is enabled, you can add semantically collapsible content to a page with a [codeblock][01].
 
-    You can add new keys or replace the values for existing ones. You don't need to keep the full
-    list of all properties in your own configuration file. Only specify the values you want to add
-    or replace.
+    Note that Platen is migrating from the [legacy template][02] to a new template that uses [sref:Shoelace][03] to add
+    a more customizable and extensible element to your site.
+
+    The legacy template has a more limited set of options than the new default template and it will eventually be
+    removed. We strongly recommend you set [sref:`use_legacy`][04] to `false` and migrate your site's custom styling
+    and scripting to use the new template.
+
+    For now, Platen defaults to using the legacy template but warns you that the legacy template will eventually be
+    removed. You can silence this warning by setting [sref:`warn_on_legacy`][05] to `false`.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the full list of all
+    properties in your own configuration file. Only specify the values you want to add or replace.
 
     <!-- Reference Links -->
     [01]: /modules/platen/markup/details
+    [02]: /modules/platen/markup/details#legacy-template
+    [03]: sl:
+    [04]: platen.site.markup.details.use_legacy
+    [05]: platen.site.markup.details.warn_on_legacy
 type: object
 properties:
   enabled:
@@ -24,9 +36,11 @@ properties:
     description: Choose whether details block rendering is available for the site.
     schematize:
       details: |
-        Choose whether the site renders codeblocks as [sref:`<details>`] elements, making the
-        content semantically collapsible. The default is `true`.
+        Choose whether the site renders codeblocks as [sref:`<sl-details>`] (or [sref:`<details>`] when using the
+        legacy template) elements, making the content semantically collapsible. The default is `true`.
 
+        <!-- Reference Link Definitions -->
+        [sref:`<sl-details>`]: sl.component:details
         [sref:`<details>`]: mdn.html.element:details
       weight: 1
     type: boolean
@@ -35,7 +49,7 @@ properties:
     title: Aliases
     description: Defines additional language IDs for the codeblock render hook.
     schematize:
-      weight: 4
+      weight: 2
       details: |
         Define one or more language IDs to use in addition to the default language IDs for codeblocks
         that render details blocks. The default language ID is `details`.
@@ -47,6 +61,183 @@ properties:
         items:
           type: string
       - type: string
+  custom:
+    title: Use Custom Rendering Template
+    description: Choose whether details block rendering uses a custom template.
+    schematize:
+      details: |
+        Choose whether details blocks are rendered with a custom template. The default value is `false`. When this
+        value is `true`, Platen uses the `platen/markup/details/templates/custom.html` partial template for the
+        rendering. When this value is a string, Platen uses that value as the name of the partial template in the
+        `platen/markup/details/templates` folder.
+
+        If a details markup defines the [`custom` option][01], the value defined on the markup overrides this setting.
+
+        For more information, see [Custom Templates][02].
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/details#option-custom
+        [02]: /modules/platen/markup/details#custom-templates
+      weight: 3
+    default: false
+    oneOf:
+      - type: boolean
+      - type: string
+  classes:
+    title: Default Classes
+    description: Add classes to details blocks unless overridden in the markup.
+    schematize:
+      details: |
+        You can add any number of classes to rendered details blocks by default. Specify one or more strings as items
+        in an array. They're inserted for all details blocks as if they had been specified with the `class`
+        [attribute][01] or [option][02] in the markup.
+        
+        If the attribute or option are specified for a details block, those values override the list defined by this
+        setting.
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/details#attribute-class
+        [02]: /modules/platen/markup/details#option-class
+      weight: 4
+    default: []
+    type: array
+    items:
+      type: string
+  icons:
+    title: Default Icons
+    description: Define default icons displayed on rendered details blocks.
+    schematize:
+      skip_schema_render: true
+      details: |
+        Use this setting to define default icons for the rendered details blocks. By default, Platen renders the
+        details blocks with a caret that rotates when the block expands and collapses. When you define the `expand` and
+        `collapse` icons, those are used instead and the rotation is disabled.
+
+        This setting is only valid when using the non-legacy template.
+        
+        If you define one icon, you **must** define the other. If you only define one icon, Platen raises a warning and
+        ignores this setting.
+
+        To override this default in your markup, set the [`icon_collapse`][01] or [`icon_expand`][02] option to `null` or
+        an empty string (`''`).
+
+        <!-- Reference Link Definitions -->
+        [01]: /modules/platen/markup/details#option-icon_collapse
+        [02]: /modules/platen/markup/details#option-icon_expand
+      weight: 5
+    type: object
+    required:
+      - collapse
+      - expand
+    properties:
+      collapse:
+        title: Collapse Icon
+        description: Define an icon to display when the details block can be collapsed.
+        schematize:
+          details: |
+            Use this setting to define an icon to display when the details block can be collapsed. You can find the
+            list of available icons in [sref:the Shoelace documentation][01].
+
+            If you specify a value for the [`icon_collapse` option][02] for a details markup in your content, that
+            value overrides this one.
+
+            <!-- Reference Link Definitions -->
+            [01]: sl.component:icon?id=default-icons
+            [02]: /modules/platen/markup/details#option-icon_collapse
+        type: string
+      expand:
+        title: Expand Icon
+        description: Define an icon to display when the details block can be expanded.
+        schematize:
+          details: |
+            Use this setting to define an icon to display when the details block can be expanded. You can find the
+            list of available icons in [sref:the Shoelace documentation][01].
+
+            If you specify a value for the [`icon_expand` option][02] for a details markup in your content, that
+            value overrides this one.
+
+            <!-- Reference Link Definitions -->
+            [01]: sl.component:icon?id=default-icons
+            [02]: /modules/platen/markup/details#option-icon_expand
+        type: string
+  linkable:
+    title: Make Details Blocks Linkable
+    description: Set whether rendered details blocks are linkable by default.
+    schematize:
+      details: |
+        Use this setting to configure whether details blocks are linkable by default. When the value is `true`, an
+        ID is generated and applied to rendered block so you can link directly to it. The default value is `true`.
+
+        If you specify the [`linkable` option][01] for a details markup in your content, the value of that option
+        overrides this setting for that details block.
+
+        For more information on how this setting affects your markup, see the documentation for the
+        [`linkable` option][01] in the markup's reference documentation.
+
+        <!-- Reference Link Definitions -->
+        [01]: /modules/platen/markup/details#option-linkable
+      weight: 6
+    default: true
+    type: boolean
+  open:
+    title: Make Details Blocks Open
+    description: Set whether rendered details blocks are open by default.
+    schematize:
+      details: |
+        Use this option to configure whether details blocks are rendered in their open (expanded) state. Set this
+        value to `false` to render them collapsed. The default value is `true`.
+
+        If you specify the [`open` option][01] for a details markup in your content, the value of that option
+        overrides this setting for that details block.
+
+        <!-- Reference Link Definitions -->
+        [01]: /modules/platen/markup/details#option-open
+      weight: 7
+    default: true
+    type: boolean
+  use_legacy:
+    title: Use Legacy Template
+    description: Set whether rendered details blocks use the legacy template by default.
+    schematize:
+      details: |
+        Use this setting to configure whether Platen uses the [legacy template][01] for details markup. The default
+        value is `true`. Set this value to `false` to use the new template by default.
+
+        The legacy template has a more limited set of options than the new default template and it will eventually
+        be removed. We strongly recommend you set this value to `true` and migrate your site's custom styling and
+        scripting to use the new template.
+
+        If you use the [`legacy` option][02] for details markup in your content, this value is overriden by that
+        option.
+
+        For more information, see [Legacy Template][01] in the reference documentation for this markup.
+
+        <!-- Reference Link Definitions -->
+        [01]: /modules/platen/markup/details#legacy-template
+        [02]: /modules/platen/markup/details#option-legacy
+      weight: 8
+    default: true
+    type: boolean
+  warn_on_legacy:
+    title: Warn When Using the Legacy Template
+    description: Set whether Platen warns when you use the legacy template.
+    schematize:
+      details: |
+        Use this setting to configure whether Platen raises a warning when you use a [legacy template][01] for your
+        details markup. Set this value to `false` to disable the warning. The default value is `true`.
+
+        The legacy template has a more limited set of options than the new default template and it will eventually be
+        removed. We strongly recommend you set [sref:`use_legacy`][02] to `true` and migrate your site's custom styling
+        and scripting to use the new template.
+
+        For more information, see [Legacy Template][01] in the reference documentation for this markup.
+
+        <!-- Reference Link Definitions -->
+        [01]: /modules/platen/markup/details#legacy-template
+        [02]: platen.site.markup.details.use_legacy
+      weight: 9
+    default: true
+    type: boolean
   partials:
     title: Markup Partials
     description: Define a map of partials for Platen to inject as needed.
@@ -120,14 +311,33 @@ properties:
     title: Markup Simple Style Module
     description: Defines the markup's simple style module
     schematize:
-      weight: 100
+      weight: 200
       skip_schema_render: true
       details: |
         Defines default styling for columns created by the codeblock.
 
         When you use the [`details`][01] codeblock, the following SCSS is applied:
 
+        ``````details { summary="SCSS Source"}
         ```scss
+        .markdown sl-details.platen-details {
+          // When custom icons are used, don't rotate.
+          &.no-rotate-icon::part(summary-icon) {
+            rotate: none;
+          }
+
+          // Ensure the summary element doesn't have a margin - keeps the height standard.
+          [slot="summary"] > * {
+            margin: 0;
+          }
+
+          // Remove top padding - we always add block elements and the extra padding
+          // leaves too much space.
+          &::part(content) {
+            padding-top: 0;
+          }
+        }
+
         .markdown {
           details {
             padding: $padding-large;
@@ -138,29 +348,51 @@ properties:
               line-height: 1;
               padding: $padding-large;
               margin: -$padding-large;
+              list-style: none;
+
               cursor: pointer;
+              > * {
+                display: inline-block;
+                margin: 0;
+              }
+
+              &::after {
+                float: right;
+                content: "+";
+              }
             }
 
             &[open] summary {
               margin-bottom: 0;
+              &::after {
+                content: "-";
+              }
+            }
+
+            @each $name, $color in $details-colors {
+              &.#{$name} {
+                border-color: $color;
+                background-color: rgba($color, 0.1);
+              }
             }
           }
         }
+
+        body[dir="rtl"] .markdown details summary::after {
+          float: left;
+        }
         ```
+        ``````
 
-        This applies to the `details` element and its children in Markdown content, as added with
-        the `details` codeblock markup.
-
-        You can overwrite this definition for your own site or theme by creating the file
-        `styles/markup/_details.scss` in your [assets folder][02], which defaults to `assets` in
-        your project root.
+        You can overwrite this definition for your own site or theme by creating the file `styles/markup/_details.scss`
+        in your [assets folder][02], which defaults to `assets` in your project root.
         
-        You can also create a new style module in the `styles/markup` folder and set this value to
-        that module's name. If you do, omit the leading `_` and trailing `.scss`. For example, the
-        name for the style module `assets/styles/markup/_foo.scss` is `foo`.
+        You can also create a new style module in the `styles/markup` folder and set this value to that module's name.
+        If you do, omit the leading `_` and trailing `.scss`. For example, the name for the style module
+        `assets/styles/markup/_foo.scss` is `foo`.
 
         ```details { .danger summary="Careful!" }
-        Note that if you override the style module or this setting,you
+        Note that if you override the style module or this setting, you
         _entirely overwrite_ the default from the theme.
         ```
 

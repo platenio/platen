@@ -65,3 +65,13 @@
   translation: >-
     Specify the 'alt' parameter as an attribute or in the data section of the definition. For more
     information, see the documentation at https://platen.io/modules/platen/renderers/art/.
+
+- id: WarningMungeHeadingLevelTooLow
+  translation: >-
+    Specified {{ .Key }} as {{ .Level }} for {{ .For }}{{ .At }}; valid values are 0-6, where zero isn't a heading.
+    Treating this value as 0.
+
+- id: WarningMungeHeadingLevelTooHigh
+  translation: >-
+    Specified {{ .Key }} as {{ .Level }} for {{ .For }}{{ .At }}; valid values are 0-6, where zero isn't a heading.
+    Treating this value as 6.

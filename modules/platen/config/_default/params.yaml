@@ -212,6 +212,15 @@ platen:
       style: columns
     details:
       enabled: true
+      custom: false
+      classes: []
+      # icons:
+      #   collapse: null
+      #   expand: null
+      linkable: true
+      open: true
+      use_legacy: true
+      warn_on_legacy: true
       partials:
         renderers:
           codeblock: platen/markup/details/codeblock

@@ -1,0 +1,28 @@
+{{/*
+    This custom template is a stub. It's here for your convenience only. If
+    you want to define your own template, copy this one to start from. The
+    inputs for your template are limited to the ones defined here, but your
+    template can do whatever you need it to.
+*/}}
+{{- $Context      := .                     -}}
+{{- $Page         := $Context.Page         -}}
+{{- $Position     := $Context.Position     -}}
+{{- $Attributes   := $Context.Attributes   -}}
+{{- $Config       := $Context.Config       -}}
+{{- $Data         := $Context.Data         -}}
+{{- $Classes      := $Context.Classes      -}}
+{{- $Summary      := $Context.Summary      -}}
+{{- $HeadingLevel := $Context.HeadingLevel -}}
+
+{{/*
+    The default custom template raises an error because it's not
+    actually implemented. This stub is for your convenience.
+*/}}
+{{- errorf "Used custom details template at %s, but no template defined." $Position -}}
+
+{{/*
+    You don't need to do a return statement, you can just use
+    a custom HTML template if you want. This return is included
+    so Platen doesn't break if the custom template isn't defined.
+*/}}
+{{- return "" -}}

@@ -1,0 +1,46 @@
+
+{{/*
+    This partial expects to receive input for merging aliases into default IDs
+    for markup render hooks. The value for Default and Aliases can either be
+    strings or a slice of strings.
+
+    If Suffix is passed, the values are all given the configured suffix.
+
+    The partial returns the combined list as a slice.
+*/}}
+{{- $Params     := .               -}}
+{{- $Default    := $Params.Default -}}
+{{- $Aliases    := $Params.Aliases -}}
+{{- $Suffix     := $Params.Suffix  -}}
+
+{{/*  Initialize the ID list  */}}
+{{- $validIDs := slice -}}
+
+{{/* Set the ID list to include the default(s) first */}}
+{{- with $Default -}}
+  {{- if reflect.IsSlice $Default -}}
+    {{- $validIDs = $Default -}}
+  {{- else -}}
+    {{- $validIDs = $validIDs | append $Default -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Add the aliases after the defaults  */}}
+{{- with $Aliases -}}
+  {{- if reflect.IsSlice $Aliases -}}
+    {{- $validIDs = union $validIDs $Aliases -}}
+  {{- else -}}
+    {{- $validIDs = $validIDs | append $Aliases -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  If suffix is defined, add it to every value  */}}
+{{- with $Suffix }}
+  {{- $mungedIDs := slice -}}
+  {{- range $ID := $validIDs -}}
+    {{- $mungedIDs = $mungedIDs | append (printf "%s:" $ID) -}}
+  {{- end -}}
+  {{- $validIDs = $mungedIDs -}}
+{{- end -}}
+
+{{- return $validIDs -}}

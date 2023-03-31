@@ -1,0 +1,10 @@
+{{- $Context           := .                                         -}}
+{{- $DetailsAttributes := $Context.DetailsAttributes | safeHTMLAttr -}}
+{{- $SummaryHTML       := $Context.SummaryHTML       | safeHTML     -}}
+{{- $Content           := $Context.Content           | safeHTML     -}}
+<details {{ $DetailsAttributes }}>
+  {{ $SummaryHTML }}
+  <div class="markdown-inner">
+    {{ $Content }}
+  </div>
+</details>
