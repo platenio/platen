@@ -13,6 +13,7 @@ reference_map:
       global_attribute:
         sref_base: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
     http:
+      sref_base: https://developer.mozilla.org/en-US/docs/Web/HTTP
       headers:
         sref_base: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
   sl:

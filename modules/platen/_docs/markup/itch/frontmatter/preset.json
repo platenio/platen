@@ -3,7 +3,7 @@
   "frontMatter.data.types": [
     {
       "id": "platen-markup-itch-preset",
-      "schema": "/modules/platen/markup/itch:preset.schema.yaml"
+      "schema": "/modules/platen/markup/itch:definitions/preset.schema.yaml"
     }
   ],
   "frontMatter.data.folders": [

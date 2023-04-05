@@ -49,6 +49,50 @@ properties:
         items:
           type: string
       - type: string
+  dark:
+    title: Default to Dark Theme
+    description: Set itch embeds to render with the dark theme by default.
+    schematize:
+      weight: 3
+      details: |
+        Specifies whether the embed widgets should use itch's default dark theme instead of the default light theme.
+        This value is overridden if the `dark` [attribute][01] or [preset property][02] is set for the markup.
+
+        <!-- Reference Link Definitions -->
+        [01]: /modules/platen/markup/itch#dark
+        [02]: /modules/platen/markup/itch#preset-property-dark
+    type: boolean
+    default: false
+  linkback:
+    title: Default to Include Linkback
+    description: Set itch embeds to include a link to the project page on its cover image by default.
+    schematize:
+      weight: 4
+      details: |
+        Specifies whether the project's cover image should be a clickable link to the project page on itch. When this
+        value is `false`, the cover image isn't a link. This value is overridden if the `linkback` [attribute][01] or
+        [preset property][02] is set for the markup.
+
+        <!-- Reference Link Definitions -->
+        [01]: /modules/platen/markup/itch#linkback
+        [02]: /modules/platen/markup/itch#preset-property-linkback
+    type: boolean
+    default: false
+  square:
+    title: Default to Square Embed
+    description: Set itch embeds to render as squares with the project's cover image and purchase button by default.
+    schematize:
+      weight: 5
+      details: |
+        Specifies that the embed widget should display as a square instead of the long rectangle. In this display, only
+        the cover is visible with the button for buying the project. This value is overridden if the `square`
+        [attribute][01] or [preset property][02] is set for the markup.
+
+        <!-- Reference Link Definitions -->
+        [01]: /modules/platen/markup/itch#square
+        [02]: /modules/platen/markup/itch#preset-property-square
+    type: boolean
+    default: false
   partials:
     title: Markup Partials
     description: Define a map of partials for Platen to inject as needed.

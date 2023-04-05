@@ -7,6 +7,7 @@
       "body": [
         "![itch:[[&title]]]([[&id]])",
         "{",
+        "  preset           = [[preset]]",
         "  dark             = [[dark]]",
         "  square           = [[square]]",
         "  linkback         = [[linkback]]",
@@ -28,6 +29,13 @@
         {
           "name": "id",
           "title": "ID: Specify the ID for the project's embeddable iframe",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "preset",
+          "title": "Preset: Specify the dot-path to a preset embed definition relative to the 'data/platen/embeds/itch' folder in your repo",
           "type": "string",
           "single": true,
           "default": ""

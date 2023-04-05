@@ -1,0 +1,108 @@
+{{- $Params              := .                              -}}
+{{- $Config              := $Params.Config                 -}}
+{{- $Page                := $Params.Page                   -}}
+{{- $options             := $Params.Options                -}}
+{{- $TemplateFolder      := "platen/markup/itch/templates" -}}
+{{- $canonical           := dict                           -}}
+{{- $template            := "default"                      -}}
+{{/* Set default values */}}
+{{- $height := 167 -}}
+{{- $width  := 552 -}}
+{{/* Set base URL */}}
+{{- $BaseUrl := "https://itch.io/embed" -}}
+{{- $url     := ""                      -}}
+
+{{/*
+    Canonicalize options with config defaults, using the value from the config
+    unless specified by the markup options (already merged with preset).
+*/}}
+{{- $ConfigOptions := slice "dark" "square" "linkback" -}}
+{{- range $OptionKey := $ConfigOptions -}}
+  {{- if isset $Config $OptionKey -}}
+    {{- $value  := index $Config $OptionKey                   -}}
+    {{- $value   = index $options $OptionKey | default $value -}}
+    {{- $options = merge $options (dict $OptionKey $value)    -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+    Canonicalize the alt text/title. This needs to be unescaped since it's
+    plain text.
+*/}}
+{{- $title := "" -}}
+{{- with $options.title -}}
+  {{- $title = htmlUnescape $options.title -}}
+{{- else -}}
+  {{- $message := slice "Missing title for itch embed;"
+                        "no title specified as alt text or in preset from site data"
+                        (printf "(platen.embeds.itch.%s)." $options.id)
+  -}}
+  {{- $message = delimit $message " " -}}
+  {{- errorf (print $message)         -}}
+{{- end -}}
+{{- $canonical = merge $canonical (dict "Title" $title) -}}
+
+{{/*
+    Canonicalize the size of the iframe. The only value that changes is the
+    width, when displaying as a square instead of the long rectangle.
+*/}}
+{{- if $options.square -}}
+  {{- $width = 208 -}}
+{{- end -}}
+{{- $canonical = merge $canonical (dict "Height" $height) -}}
+{{- $canonical = merge $canonical (dict "Width"  $width)  -}}
+
+{{- with $options.id -}}
+  {{- $url = printf "%s/%s" $BaseUrl (print $options.id) -}} 
+{{- else -}}
+  {{- errorf (i18n "ErrorItchioMissingID" (dict "page" $Page)) -}}
+{{- end -}}
+
+{{/*  Build the list of query params for itch to use when styling the iframe  */}}
+{{- $urlQueryParams := slice -}}
+{{- if $options.linkback -}}
+  {{- $urlQueryParams = $urlQueryParams | append "linkback=true" -}}
+{{- end -}}
+{{- if $options.dark -}}
+  {{- $urlQueryParams = $urlQueryParams | append "dark=true" -}}
+{{- end -}}
+{{/*  The color options need to have the leading # trimmed for the URL query, if specified  */}}
+{{- with $options.background_color -}}
+  {{- $backgroundColor := strings.TrimPrefix "#" $options.background_color                 -}}
+  {{- $urlQueryParams   = $urlQueryParams | append (printf "bg_color=%s" $backgroundColor) -}}
+{{- end -}}
+{{- with $options.text_color -}}
+  {{- $textColor     := strings.TrimPrefix "#" $options.text_color                 -}}
+  {{- $urlQueryParams = $urlQueryParams | append (printf "fg_color=%s" $textColor) -}}
+{{- end -}}
+{{- with $options.button_color -}}
+  {{- $buttonColor   := strings.TrimPrefix "#" $options.button_color                   -}}
+  {{- $urlQueryParams = $urlQueryParams | append (printf "link_color=%s" $buttonColor) -}}
+{{- end -}}
+{{- with $options.border_color -}}
+  {{- $borderColor   := strings.TrimPrefix "#" $options.border_color                     -}}
+  {{- $urlQueryParams = $urlQueryParams | append (printf "border_color=%s" $borderColor) -}}
+{{- end -}}
+{{/*  If specified, the border width needs to be between 0 and 5, inclusive.  */}}
+{{- with $options.border_width -}}
+  {{- $borderWidth := int $options.border_width -}}
+  {{- if and (ge $borderWidth 0) (le $borderWidth 5) -}}
+    {{- $urlQueryParams = $urlQueryParams | append (printf "border_width=%v" $borderWidth) -}}
+  {{- else -}}
+    {{- errorf "%s" (i18n "ErrorItchioInvalidBorderWidth" (print $borderWidth)) -}}
+  {{- end -}}
+{{- end -}}
+{{/*  The query params need to be joined before appending to the URL  */}}
+{{- $urlQueryParams = delimit $urlQueryParams "&" -}}
+{{/* Add the query parameters to the url, if any */}}
+{{- with $urlQueryParams -}}
+  {{- $url = printf "%s?%s" $url $urlQueryParams -}}
+{{- end -}}
+{{/*  Add the canonical URL  */}}
+{{- $canonical = merge $canonical (dict "URL" $url) -}}
+
+{{/*  Canonicalize the template to render  */}}
+{{- $template  = printf "%s/%s" $TemplateFolder $template     -}}
+{{- $canonical = merge $canonical (dict "Template" $template) -}}
+
+{{- return $canonical -}}

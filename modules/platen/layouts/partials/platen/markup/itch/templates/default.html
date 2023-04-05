@@ -1,0 +1,13 @@
+{{- $Params               := .                                           -}}
+{{- $URL                  := $Params.URL                  | safeHTMLAttr -}}
+{{- $Title                := $Params.Title                | safeHTMLAttr -}}
+{{- $Height               := $Params.Height               | safeHTMLAttr -}}
+{{- $Width                := $Params.Width                | safeHTMLAttr -}}
+{{- $AdditionalAttributes := $Params.AdditionalAttributes | safeHTMLAttr -}}
+
+<iframe src="{{ $URL }}"
+        title="{{ $Title }}"
+        frameborder="0"
+        height="{{ $Height }}"
+        width="{{ $Width }}"
+        {{- $AdditionalAttributes -}}></iframe>

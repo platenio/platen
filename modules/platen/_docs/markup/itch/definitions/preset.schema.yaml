@@ -1,0 +1,132 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+# Can't have $schema - breaks frontmatter. Intellisense only works in VS Code
+# with the YAML extension directive at the top.
+# $schema: https://json-schema.org/draft/2020-12/schema
+$id: /modules/platen/markup/itch/schemas/preset
+title: Itch Embed Preset
+description: >-
+  Specifies a defined preset for embedding an itch project's widget in your Platen site.
+
+  https://platen.io/modules/platen/markup/itch
+type: object
+properties:
+  allow:
+    title: Allow Permissions Policy
+    description: |
+      Specifies a permissions policy for the embed's iframe.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-allow
+    type: string
+  background_color:
+    title: Background Color
+    description: >-
+      Specifies the background color for the embed widget.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-background_color
+    type: string
+  border_color:
+    title: Background Color
+    description: >-
+      Specifies color of the border for the embed widget.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-border_color
+    type: string
+  border_width:
+    title: Border Width
+    description: >-
+      Specifies the width of the embed widget's border in pixels, from 0 to 5.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-border_width
+    type: integer
+    minimum: 0
+    maximum: 5
+    default: 0
+  button_color:
+    title: Button Color
+    description: >-
+      Specifies the background color for the purchase button on the embed widget.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-button_color
+    type: string
+  dark:
+    title: Use Dark Theme
+    description: >-
+      Specifies that the embed widget should use itch's default dark theme.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-dark
+    type: boolean
+    default: false
+  id:
+    title: Itch Project ID
+    description: |
+      Specify the itch project ID.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-id
+    type: integer
+  linkback:
+    title: Add Linkback
+    description: >-
+      Specifies that clicking the embed widget should go to the project page.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-linkback
+    type: boolean
+    default: false
+  loading:
+    title: Loading Behavior
+    description: >-
+      Specify `lazy` to defer loading of the embed iframe or `eager` to load immediately.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-loading
+    type: string
+    enum:
+      - eager
+      - lazy
+    default: lazy
+  sandbox:
+    title: Sandbox the Embed
+    description: >-
+      Specify an empty string to fully restrict the embed's iframe or a list of permissions to allow.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-sandbox
+    type: array
+    items:
+      type: string
+      enum:
+        - allow-downloads
+        - allow-downloads-without-user-activation
+        - allow-forms
+        - allow-modals
+        - allow-orientation-lock
+        - allow-pointer-lock
+        - allow-popups
+        - allow-popups-to-escape-sandbox
+        - allow-presentation
+        - allow-same-origin
+        - allow-scripts
+        - allow-storage-access-by-user-activation
+        - allow-top-navigation
+        - allow-top-navigation-by-user-activation
+        - allow-top-navigation-to-custom-protocols
+    uniqueItems: true
+  square:
+    title: Display as Square
+    description: >-
+      Specifies that the embed widget should display as a square.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-square
+    type: boolean
+    default: false
+  text_color:
+    title: Text Color
+    description: >-
+      Specifies the text color for the embed widget.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-text_color
+    type: string
+  title:
+    title: Title
+    description: >-
+      Specifies the title attribute for the embed's iframe.
+
+      https://platen.io/modules/platen/markup/itch#preset-property-title
+    type: string

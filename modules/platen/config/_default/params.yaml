@@ -233,7 +233,10 @@ platen:
           codeblock: platen/markup/details/codeblock
       style: details
     itch:
-      enabled: true
+      enabled:  true
+      dark:     false
+      linkback: false
+      square:   false
       partials:
         renderers:
           image: platen/markup/itch/image
