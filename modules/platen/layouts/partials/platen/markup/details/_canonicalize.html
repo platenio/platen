@@ -1,0 +1,248 @@
+{{- $Params         := .                                 -}}
+{{- $Config         := $Params.Config                    -}}
+{{- $Position       := $Params.Position                  -}}
+{{- $Page           := $Params.Page                      -}}
+{{- $Markdown       := $Params.Markdown                  -}}
+{{- $options        := $Params.Options                   -}}
+{{- $TemplateFolder := "platen/markup/details/templates" -}}
+{{- $canonical      := dict                              -}}
+{{- $template       := "default"                         -}}
+{{/*  Define partials for easier calling/renaming  */}}
+{{- $getCodeblockInfo   := "platen/utils/getCodeblockInfo"     -}}
+{{- $mungeHeadingLevel  := "platen/utils/mungeHeadingLevel"    -}}
+{{- $getLeadTrimmedText := "platen/utils/getLeadTrimmedText"   -}}
+{{- $getMergedClasses   := "platen/utils/getMergedClasses"     -}}
+{{- $getMergedMarkupIDs := "platen/utils/getMergedMarkupIDs"   -}}
+{{- $getPrettyRender    := "platen/utils/getPrettyRender"      -}}
+{{- $getSafeAttributes  := "platen/utils/getSafeAttributes"    -}}
+
+{{/*
+    Canonicalize options with config defaults, using the value from the config
+    unless specified by the markup options (already merged with preset).
+*/}}
+{{- $ConfigOptions := slice "classes" "custom" "icons.collapse" "icons.expand" "linkable" "open" "use_legacy" -}}
+{{- range $OptionKey := $ConfigOptions -}}
+  {{- if isset $Config $OptionKey -}}
+    {{- $key   := $OptionKey               -}}
+    {{- $value := index $Config $OptionKey -}}
+    {{- if eq "classes" $OptionKey -}} {{/* details.classes => `class` option */}}
+      {{- $key   = "class"                         -}}
+      {{- $value = $options.class | default (delimit $value " ") -}}
+    {{- else if (eq "use_legacy" $OptionKey) -}} {{/* details.use_legacy => `legacy` option */}}
+      {{- $key   = "legacy"                         -}}
+      {{- $value = $options.legacy | default $value -}}
+    {{- else -}} {{/* All others translate directly */}}
+      {{- $value = index $options $OptionKey | default $value -}}
+    {{- end -}}
+    {{/*  Merge the munged value in  */}}
+    {{- $options = merge $options (dict $key $value) -}}
+  {{- else if (in $OptionKey ".") -}}
+    {{/*
+        This section is for config options that aren't at the top level. We
+        default to using the path, replacing the dots with underscores, as
+        the key name. So `foo.bar.baz` becomes `foo_bar_baz`.
+    */}}
+    {{- $key   := replace $OptionKey "." "_" -}}
+    {{/*  Retrieve the value from the config if defined  */}}
+    {{- $value := $Config                    -}}
+    {{- range $Segment := split $OptionKey "." -}}
+      {{- $value = index $value $Segment -}}
+    {{- end -}}
+    {{/*  If the value was defined, process it for merging  */}}
+    {{- if ne nil $value -}}
+      {{- if eq "icons.collapse" $OptionKey -}} {{/* details.icons.collapse => `icon_collapse` option */}}
+        {{- $key = "icon_collapse" -}}
+      {{- else if (eq "icons.expand" $OptionKey) -}}  {{/* details.icons.expand => `icon_expand` option */}}
+        {{- $key = "icon_expand" -}}
+      {{- end -}}
+      {{/*  Merge the config value over the options if not set explicitly in the markup  */}}
+      {{- $value   = index $options $key | default $value -}}
+      {{- $options = merge $options (dict $key $value)    -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Loop over the default values that aren't defined by the configuration and set if needed  */}}
+{{- $NonConfigDefaults := dict "disabled" false "heading_level" 0 "summary" "Details" -}}
+{{- range $Key, $Value := $NonConfigDefaults -}}
+  {{- if not (isset $options $Key) -}}
+    {{- $options = merge $options (dict $Key $Value) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Munge the ID to the urlized summary unless specified  */}}
+{{- $ID     := $options.id | default (lower $options.summary | urlize) -}}
+{{- $options = merge $options (dict "id" $ID)                          -}}
+
+{{/*  Munge heading levels - if string, make int. If invalid number, munge to closest.  */}}
+{{- $HeadingMungeParams := dict "HeadingLevel" $options.heading_level "For" "details markup" "Position" $Position -}}
+{{- $HeadingLevel       := partial $mungeHeadingLevel $HeadingMungeParams                                         -}}
+{{- $options             = merge $options (dict "heading_level" $HeadingLevel)                                    -}}
+
+{{/* Handle icons; we're only raising errors and munging to unset if needed here. */}}
+{{- $hasIconCollapse := false -}}
+{{- $hasIconExpand   := false -}}
+{{- with $options.icon_collapse -}}
+  {{- $hasIconCollapse = true -}}
+{{- end -}}
+{{- with $options.icon_expand -}}
+  {{- $hasIconExpand = true -}}
+{{- end -}}
+{{- $hasBothIcons := and $hasIconCollapse $hasIconExpand -}}
+{{- if and $options.legacy (or $hasIconCollapse $hasIconExpand) -}}
+  {{- warnf "Specified an icon for a legacy details at %s, but legacy can't use icons. Ignoring." $Position -}}
+  {{- $iconCollapse = "" -}}
+  {{- $iconExpand   = "" -}}
+{{- else if $hasBothIcons -}}
+  {{/*  Need to add .NoRotateIcon class for custom icons  */}}
+  {{- with $options.class -}}
+    {{- $options = merge $options (dict "class" (printf "no-rotate-icon %s" $options.class)) -}}
+  {{- else -}}
+    {{- $options = merge $options (dict "class" "no-rotate-icon") -}}
+  {{- end -}}
+{{- else if $hasIconCollapse -}}
+  {{- warnf "Specified a collapse icon without an expand icon at %s. Ignoring." $Position -}}
+  {{- $iconCollapse = "" -}}
+{{- else if $hasIconExpand -}}
+  {{- warnf "Specified a expand icon without a collapse icon at %s. Ignoring." $Position -}}
+  {{- $iconExpand = "" -}}
+{{- end -}}
+
+{{/* Retrieve and trim the actual content definition and pretty-render it */}}
+{{- with $Markdown -}}
+  {{- $TrimParams   := dict "Text" $Markdown "TrimEOL" true                                -}}
+  {{- $content      := partial $getLeadTrimmedText $TrimParams                             -}}
+  {{- $RenderParams := dict "Page" $Page "Content" $content "IndentCount" 4 "AsBlock" true -}}
+  {{- $content       = partial $getPrettyRender $RenderParams                              -}}
+  {{- $canonical     = merge $canonical (dict "Content" $content)                          -}}
+{{- else -}}
+    {{- errorf "Can't render details at %s without Markdown for the content." $Position -}}
+{{- end -}}
+
+
+{{/*  Build the class list for the details element  */}}
+{{- $Classes := partial $getMergedClasses (dict "Default" "platen-details" "Additional" $options.class) -}}
+
+{{/* Pre-render the summary */}}
+{{- $summary := $options.summary | $Page.RenderString -}}
+
+{{/*  Build the shared list of summary attributes  */}}
+{{- $summaryAttributes := slice -}}
+
+{{/*  Build the shared list of details attributes  */}}
+{{- $detailsAttributes := slice (printf `class="%s"` $Classes) -}}
+{{- if $options.open -}}
+  {{- $detailsAttributes = $detailsAttributes | append "open" -}}
+{{- end -}}
+
+{{/*  Handle custom, legacy, and default separately  */}}
+{{- if $options.custom -}}
+  {{/*
+      Define context to pass; We forward the munged options, classes, content,
+      and summary along with the metadata for the markup.
+  */}}
+  {{- $canonical = merge $canonical (
+        dict "Page"    $Page    "Position" $Position  "Config"  $Config
+             "Options" $options "Classes" $Classes    "Summary" $summary
+      )
+  -}}
+  {{/*
+      Set the render template; a default custom template is provided that users can copy and override.
+      If the user specified a value other than `true`, that's assumed to be the name of the template
+      in `partials/platen/markup/details/templates`.
+  */}}
+  {{- if eq true $options.custom -}}
+    {{- $template = "custom" -}}
+  {{- else -}}
+    {{- $template = $options.custom -}}
+  {{- end -}}
+{{- else if $options.legacy -}}
+  {{- if $Config.warn_on_legacy -}}
+    {{- $message := slice "Used legacy template for details markup."
+                          "This template is deprecated and will eventually be removed."
+                          "For more information, see"
+                          "https://platen.io/modules/platen/markup/details/#legacy-template"
+    -}}
+    {{- warnf (delimit $message " " | print) -}}
+  {{- end -}}
+  {{/*  Process the details attributes; legacy has no special handling  */}}
+  {{- $detailsAttributes = partial $getSafeAttributes $detailsAttributes                  -}}
+  {{- $canonical         = merge $canonical (dict "DetailsAttributes" $detailsAttributes) -}}
+
+  {{/*  Process the summary attributes; headings always get IDs  */}}
+  {{- if or $options.linkable (ne 0 $options.heading_level) -}}
+    {{- $summaryAttributes = $summaryAttributes | append (printf ` id="%s"` $options.id) -}}
+  {{- end -}}
+  {{- $summaryAttributes = partial $getSafeAttributes $summaryAttributes -}}
+
+  {{/*  Define the default summary HTML  */}}
+  {{- $summaryHtml := printf "<summary%s>\n    %s\n  </summary>" $summaryAttributes $summary -}}
+
+  {{/*  If the heading level is defined, place the summary text in the correct heading  */}}
+  {{- if ne 0 $options.heading_level -}}
+    {{- $summaryAnchor  := printf `<a class="anchor" href="#%s">#</a>` $options.id                -}}
+    {{- $summaryInner   := printf "%s\n      %s" $summary $summaryAnchor                          -}}
+    {{- $summaryOpen    := printf "<h%v%s>" $options.heading_level $summaryAttributes             -}}
+    {{- $summaryClose   := printf "</h%v>"  $options.heading_level                                -}}
+    {{- $summaryHeading := printf "%s\n      %s\n    %s" $summaryOpen $summaryInner $summaryClose -}}
+    {{- $summaryHtml     = printf "<summary>\n    %s\n  </summary>" $summaryHeading               -}}
+  {{- end -}}
+
+  {{/*  Add the summary HTML to the template context for use  */}}
+  {{- $canonical = merge $canonical (dict "SummaryHTML" $summaryHtml) -}}
+
+  {{/*  Set the render template to legacy  */}}
+  {{- $template = "legacy" -}}
+{{- else -}}
+  {{/*  Using shoelace, make sure the page gets marked for it.  */}}
+  {{- $Page.Store.Set "_hasShoelace" true -}}
+
+  {{/*  Process the details attributes:
+
+        - If disabled is true, add it.
+  */}}
+  {{- if $options.disabled -}}
+    {{- $detailsAttributes = $detailsAttributes | append "disabled" -}}
+  {{- end -}}
+
+  {{- $detailsAttributes = partial $getSafeAttributes $detailsAttributes                  -}}
+  {{- $canonical         = merge $canonical (dict "DetailsAttributes" $detailsAttributes) -}}
+
+  {{- $summaryAttributes = $summaryAttributes | append `slot="summary"` -}}
+  {{- $NoHeading := eq 0 $options.heading_level -}}
+  {{- if and $options.linkable $NoHeading -}}
+    {{- $summaryAttributes = $summaryAttributes | append (printf ` id="%s"` $options.id) -}}
+  {{- end -}}
+  {{- $summaryAttributes  = partial $getSafeAttributes $summaryAttributes   -}}
+
+  {{/*  Build the summary HTML starting from the rendered summary  */}}
+  {{- $summaryHtml := $summary -}}
+  {{/*
+      If the heading level is defined, Place the summary text in the correct
+      heading. Make it match the normal headings for Platen so that it can be
+      correctly handled by the TOC generator.
+  */}}
+  {{- if ne 0 $options.heading_level -}}
+    {{- $summaryAnchor := printf `<a class="anchor" href="#%s">#</a>` $options.id                -}}
+    {{- $summaryInner  := printf "%s\n      %s" $summary $summaryAnchor                          -}}
+    {{- $summaryOpen   := printf `<h%v id="%s">` $options.heading_level $options.id              -}}
+    {{- $summaryClose  := printf `</h%v>`        $options.heading_level                          -}}
+    {{- $summaryHtml    = printf "%s\n      %s\n    %s" $summaryOpen $summaryInner $summaryClose -}}
+  {{- end -}}
+  {{/*  For shoelace, the summary is *always* rendered in a div with the slot defined  */}}
+  {{- $summaryHtml = printf "<div %s>\n    %s\n  </div>" $summaryAttributes $summaryHtml -}}
+  {{- if $hasBothIcons -}}
+    {{- $collapseHtml := printf `<sl-icon name="%s" slot="collapse-icon"></sl-icon>` $options.icon_collapse -}}
+    {{- $expandHtml   := printf `<sl-icon name="%s" slot="expand-icon"></sl-icon>`   $options.icon_expand   -}}
+    {{- $summaryHtml   = printf "%s\n  %s\n  %s" $expandHtml $collapseHtml $summaryHtml                     -}}
+  {{- end -}}
+
+  {{/*  Add the summary HTML to the template context for use  */}}
+  {{- $canonical = merge $canonical (dict "SummaryHTML" $summaryHtml) -}}
+{{- end -}}
+
+{{/*  Add the canonicalized template to render  */}}
+{{- $template  = printf "%s/%s" $TemplateFolder $template     -}}
+{{- $canonical = merge $canonical (dict "Template" $template) -}}
+
+{{- return $canonical -}}

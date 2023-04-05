@@ -37,188 +37,22 @@
   {{- $infoParams := dict "Definition" $definition "SupportsData" true "SupportsMarkdown" true -}}
   {{- $info       := partial $getCodeblockInfo $infoParams                                     -}}
 
-  {{/* Handle attributes and data */}}
-  {{- $class        := $info.Data.class         | default $Attributes.class   | default $Config.classes    -}}
-  {{- $custom       := $info.Data.custom        | default $Attributes.custom  | default $Config.custom     -}}
-  {{- $disabled     := $info.Data.disabled      | default false                                            -}}
-  {{- $headingLevel := $info.Data.heading_level | default 0                                                -}}
-  {{- $iconCollapse := $info.Data.icon_collapse | default $Config.icons.collapse                           -}}
-  {{- $iconExpand   := $info.Data.icon_expand   | default $Config.icons.expand                             -}}
-  {{- $legacy       := $info.Data.legacy        | default $Attributes.legacy  | default $Config.use_legacy -}}
-  {{- $linkable     := $info.Data.linkable      | default $Config.linkable                                 -}}
-  {{- $open         := $info.Data.open          | default $Config.open                                     -}}
-  {{- $summary      := $info.Data.summary       | default $Attributes.summary | default "Details"          -}}
-  {{- $id           := $info.Data.id
-                       | default $Attributes.id
-                       | default (lower $summary | urlize)
+  {{- $Merging := dict "Attributes" $Attributes
+                       "YamlOptions" $info.Data
+                       "Position"   $Position
+                       "PresetDotPathPrefix" "platen.details"
   -}}
+  {{- $Merged         := partial "platen/utils/getMergedCodeblockOptions" $Merging -}}
+  {{- $Canonicalizing := dict "Config"   $Config
+                              "Position" $Position
+                              "Page"     $Page
+                              "Options"  $Merged
+                              "Markdown" $info.Markdown
+  -}}
+  {{- $Canonicalized  := partial "platen/markup/details/_canonicalize" $Canonicalizing -}}
 
-  {{/*  Munge heading levels - if string, make int. If invalid number, munge to closest.  */}}
-  {{- $headingMungeParams := dict "HeadingLevel" $headingLevel "For" "details markup" "Position" $Position -}}
-  {{- $headingLevel        = partial $mungeHeadingLevel $headingMungeParams                                -}}
-
-  {{/* Handle icons; we're only raising errors and munging to unset if needed here. */}}
-  {{- $hasIconCollapse := false -}}
-  {{- $hasIconExpand   := false -}}
-  {{- with $iconCollapse -}}
-    {{- $hasIconCollapse = true -}}
-  {{- end -}}
-  {{- with $iconExpand -}}
-    {{- $hasIconExpand = true -}}
-  {{- end -}}
-  {{- $hasBothIcons := and $hasIconCollapse $hasIconExpand -}}
-  {{- if and $legacy (or $hasIconCollapse $hasIconExpand) -}}
-    {{- warnf "Specified an icon for a legacy details at %s, but legacy can't use icons. Ignoring." $Position -}}
-    {{- $iconCollapse = "" -}}
-    {{- $iconExpand   = "" -}}
-  {{- else if $hasBothIcons -}}
-    {{/*  Need to add .NoRotateIcon class for custom icons  */}}
-    {{- with $class -}}
-      {{- $class = printf "no-rotate-icon %s" $class -}}
-    {{- else -}}
-      {{- $class = "no-rotate-icon" -}}
-    {{- end -}}
-  {{- else if $hasIconCollapse -}}
-    {{- warnf "Specified a collapse icon without an expand icon at %s. Ignoring." $Position -}}
-    {{- $iconCollapse = "" -}}
-  {{- else if $hasIconExpand -}}
-    {{- warnf "Specified a expand icon without a collapse icon at %s. Ignoring." $Position -}}
-    {{- $iconExpand = "" -}}
-  {{- end -}}
-
-  {{/* Retrieve and trim the actual definition */}}
-  {{- $TrimParams   := dict "Text" $info.Markdown "TrimEOL" true                           -}}
-  {{- $content      := partial $getLeadTrimmedText $TrimParams                             -}}
-  {{- $RenderParams := dict "Page" $Page "Content" $content "IndentCount" 4 "AsBlock" true -}}
-  {{- $content       = partial $getPrettyRender $RenderParams                              -}}
-
-  {{/*  Build the class list for the details element  */}}
-  {{- $Classes := partial $getMergedClasses (dict "Default" "platen-details" "Additional" $class) -}}
-
-  {{/* Pre-render the summary */}}
-  {{- $summary = $summary | $Page.RenderString -}}
-
-  {{/*  Build the shared list of summary attributes  */}}
-  {{- $summaryAttributes := slice -}}
-
-  {{/*  Build the shared list of details attributes  */}}
-  {{- $detailsAttributes := slice (printf `class="%s"` $Classes) -}}
-  {{- if $open -}}
-    {{- $detailsAttributes = $detailsAttributes | append "open" -}}
-  {{- end -}}
-
-  {{/*  Initialize the template context for rendering.  */}}
-  {{- $templateContext := dict "Content" $content -}}
-
-  {{/*  Handle custom, legacy, and default separately  */}}
-  {{- if $custom -}}
-    {{/*
-        Define context to pass; We forward the markup input, then the convenient
-        info we've already processed.
-    */}}
-    {{- $templateContext = merge $templateContext (
-          dict "Page"    $Page    "Position" $Position  "Attributes" $Attributes
-               "Config"  $Config  "Data"     $info.Data
-               "Classes" $Classes "Summary"  $summary   "HeadingLevel" $headingLevel
-        )
-    -}}
-    {{/*
-        Set the render template; a default custom template is provided that users can copy and override.
-        If the user specified a value other than `true`, that's assumed to be the name of the template
-        in `partials/platen/markup/details/templates`.
-    */}}
-    {{- if eq true $custom -}}
-      {{- $renderTemplate = printf "%s/custom" $TemplateFolder -}}
-    {{- else -}}
-      {{- $renderTemplate = printf "%s/%s" $TemplateFolder $custom -}}
-    {{- end -}}
-  {{- else if $legacy -}}
-    {{- if $Config.warn_on_legacy -}}
-      {{- $message := slice "Used legacy template for details markup."
-                            "This template is deprecated and will eventually be removed."
-                            "For more information, see"
-                            "https://platen.io/modules/platen/markup/details/#legacy-template"
-      -}}
-      {{- warnf (delimit $message " " | print) -}}
-    {{- end -}}
-    {{/*  Process the details attributes; legacy has no special handling  */}}
-    {{- $detailsAttributes = partial $getSafeAttributes $detailsAttributes                        -}}
-    {{- $templateContext   = merge $templateContext (dict "DetailsAttributes" $detailsAttributes) -}}
-
-    {{/*  Process the summary attributes; headings always get IDs  */}}
-    {{- if or $linkable (ne 0 $headingLevel) -}}
-      {{- $summaryAttributes = $summaryAttributes | append (printf ` id="%s"` $id) -}}
-    {{- end -}}
-    {{- $summaryAttributes = partial $getSafeAttributes $summaryAttributes -}}
-
-    {{/*  Define the default summary HTML  */}}
-    {{- $summaryHtml := printf "<summary%s>\n    %s\n  </summary>" $summaryAttributes $summary -}}
-
-    {{/*  If the heading level is defined, place the summary text in the correct heading  */}}
-    {{- if ne 0 $headingLevel -}}
-      {{- $summaryAnchor  := printf `<a class="anchor" href="#%s">#</a>` $id                        -}}
-      {{- $summaryInner   := printf "%s\n      %s" $summary $summaryAnchor                          -}}
-      {{- $summaryOpen    := printf "<h%v%s>" $headingLevel $summaryAttributes                      -}}
-      {{- $summaryClose   := printf "</h%v>"  $headingLevel                                         -}}
-      {{- $summaryHeading := printf "%s\n      %s\n    %s" $summaryOpen $summaryInner $summaryClose -}}
-      {{- $summaryHtml     = printf "<summary>\n    %s\n  </summary>" $summaryHeading               -}}
-    {{- end -}}
-
-    {{/*  Add the summary HTML to the template context for use  */}}
-    {{- $templateContext = merge $templateContext (dict "SummaryHTML" $summaryHtml) -}}
-
-    {{/*  Set the render template to legacy  */}}
-    {{- $renderTemplate = printf "%s/legacy" $TemplateFolder -}}
-  {{- else -}}
-    {{/*  Using shoelace, make sure the page gets marked for it.  */}}
-    {{- $Page.Store.Set "_hasShoelace" true -}}
-
-    {{/*  Process the details attributes:
-          
-          - If disabled is true, add it.
-          - If 
-    */}}
-    {{- if $disabled -}}
-      {{- $detailsAttributes = $detailsAttributes | append "disabled" -}}
-    {{- end -}}
-
-    {{- $detailsAttributes = partial $getSafeAttributes $detailsAttributes                        -}}
-    {{- $templateContext   = merge $templateContext (dict "DetailsAttributes" $detailsAttributes) -}}
-
-    {{- $summaryAttributes = $summaryAttributes | append `slot="summary"` -}}
-    {{- $HasHeading := eq 0 $headingLevel -}}
-    {{- if and $linkable $HasHeading -}}
-      {{- $summaryAttributes = $summaryAttributes | append (printf ` id="%s"` $id) -}}
-    {{- end -}}
-    {{- $summaryAttributes  = partial $getSafeAttributes $summaryAttributes   -}}
-
-    {{/*  Build the summary HTML starting from the rendered summary  */}}
-    {{- $summaryHtml := $summary -}}
-    {{/*
-        If the heading level is defined, Place the summary text in the correct
-        heading. Make it match the normal headings for Platen so that it can be
-        correctly handled by the TOC generator.
-    */}}
-    {{- if ne 0 $headingLevel -}}
-      {{- $summaryAnchor := printf `<a class="anchor" href="#%s">#</a>` $id                        -}}
-      {{- $summaryInner  := printf "%s\n      %s" $summary $summaryAnchor                          -}}
-      {{- $summaryOpen   := printf `<h%v id="%s">` $headingLevel $id                               -}}
-      {{- $summaryClose  := printf `</h%v>`        $headingLevel                                   -}}
-      {{- $summaryHtml    = printf "%s\n      %s\n    %s" $summaryOpen $summaryInner $summaryClose -}}
-    {{- end -}}
-    {{/*  For shoelace, the summary is *always* rendered in a div with the slot defined  */}}
-    {{- $summaryHtml = printf "<div %s>\n    %s\n  </div>" $summaryAttributes $summaryHtml -}}
-    {{- if $hasBothIcons -}}
-      {{- $collapseHtml := printf `<sl-icon name="%s" slot="collapse-icon"></sl-icon>` $iconCollapse -}}
-      {{- $expandHtml   := printf `<sl-icon name="%s" slot="expand-icon"></sl-icon>`   $iconExpand   -}}
-      {{- $summaryHtml   = printf "%s\n  %s\n  %s" $expandHtml $collapseHtml $summaryHtml            -}}
-    {{- end -}}
-
-    {{/*  Add the summary HTML to the template context for use  */}}
-    {{- $templateContext = merge $templateContext (dict "SummaryHTML" $summaryHtml) -}}
-  {{- end -}}
-
-  {{- $renderedCode = partial $renderTemplate $templateContext -}}
+  {{/*  Render the codeblock with the template from the canonicalized info  */}}
+  {{- $renderedCode = partial $Canonicalized.Template $Canonicalized -}}
 {{- end -}}
 
 {{- return $renderedCode -}}
