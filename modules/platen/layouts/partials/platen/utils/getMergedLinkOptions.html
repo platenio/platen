@@ -1,0 +1,106 @@
+{{/*
+    Use this partial for munging the passed options with a preset for link and
+    image link render hooks. This makes the preset/style pattern more reusable
+    for link and image link render hooks.
+
+    It first processes the normal inputs - Destination, Text, and Title - before
+    adding the attributes. Then it checks for whether the markup uses a preset,
+    retrieving it if needed.
+
+    Finally, it merges the passed options over the preset options and returns
+    the merged map. In the process, any keys marked as requiring rendering from
+    the preset are sent to the RenderString function and the rendered value is
+    used. Only keys from the preset are rendered - keys from actual input may
+    already be rendered and double-rendering can break things.
+*/}}
+{{- $Params              := .                                                   -}}
+{{- $Attributes          := $Params.Attributes                                  -}}
+{{- $Destination         := $Params.Destination                                 -}}
+{{- $DestinationKey      := $Params.DestinationKey      | default "destination" -}}
+{{- $Page                := $Params.Page                                        -}}
+{{- $PresetKey           := $Params.PresetKey           | default "preset"      -}}
+{{- $PresetKeysToRender  := $Params.PresetKeysToRender                          -}}
+{{- $PresetPrefix        := $Params.PresetPrefix        | default "preset:"     -}}
+{{- $PresetDotPathPrefix := $Params.PresetDotPathPrefix                         -}}
+{{- $Text                := $Params.Text                                        -}}
+{{- $TextKey             := $Params.TextKey              | default "text"       -}}
+{{- $Title               := $Params.Title                                       -}}
+{{- $TitleKey            := $Params.TitleKey            | default "title"       -}}
+{{- $ValidAttributes     := $Params.ValidAttributes                             -}}
+
+{{/*  Initialize the maps for filling/merging  */}}
+{{- $mergedOptions := dict -}}
+{{- $passedOptions := dict -}}
+{{- $presetOptions := dict -}}
+
+{{/*
+    Add the destination to the passed options with the correct key name. If the
+    destination starts with the preset prefix, add it with the preset key name
+    instead.
+*/}}
+{{- with $Destination -}}
+  {{- if hasPrefix $Destination $PresetPrefix -}}
+    {{- $PresetPath   := strings.TrimPrefix $PresetPrefix $Destination      -}}
+    {{- $passedOptions = merge $passedOptions (dict $PresetKey $PresetPath) -}}
+  {{- else -}}
+    {{- $passedOptions = merge $passedOptions (dict $DestinationKey $Destination) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Add the alt text to the passed options with the correct key name.  */}}
+{{- with $Text -}}
+  {{- $passedOptions = merge $passedOptions (dict $TextKey $Text) -}}
+{{- end -}}
+
+{{/*  Add the title to the passed options with the correct key name.  */}}
+{{- with $Title -}}
+  {{- $passedOptions = merge $passedOptions (dict $TitleKey $Title) -}}
+{{- end -}}
+
+{{/*
+    Handle the attributes; if only a subset of attributes are valid, merge only
+    those attributes into the passed options.
+*/}}
+{{- with $Attributes -}}
+  {{- range $ValidAttribute := $ValidAttributes -}}
+    {{- if (isset $Attributes $ValidAttribute) -}}
+      {{- $AttributeValue := index $Attributes $ValidAttribute                           -}}
+      {{- $passedOptions   = merge $passedOptions (dict $ValidAttribute $AttributeValue) -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $passedOptions = merge $passedOptions $Attributes -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  If the preset key is in the passed options, retrieve the preset options.  */}}
+{{- with index $passedOptions $PresetKey -}}
+  {{- $PresetDotPath := printf "%s.%s" $PresetDotPathPrefix .                                  -}}
+  {{- $presetOptions  = partialCached "platen/utils/getDataPath" $PresetDotPath $PresetDotPath -}}
+{{- end -}}
+
+{{/*
+    If the preset options are populated, add them to the merged options map,
+    using the value from passed options if set and only falling back to the
+    preset options if needed. If any keys from the preset need to be rendered,
+    do so before inserting them into the merged map.
+*/}}
+{{- range $Key, $value := $presetOptions -}}
+  {{- if in $PresetKeysToRender $Key -}}
+    {{- $value = $Page.RenderString $value -}}
+  {{- end -}}
+  {{- $MergedValue  := index $passedOptions $Key | default $value    -}}
+  {{- $mergedOptions = merge $mergedOptions (dict $Key $MergedValue) -}}
+{{- end -}}
+
+{{/*  Merge the passed options into the merged map if they're not already set. */}}
+{{- range $Key, $Value := $passedOptions -}}
+  {{- with index $mergedOptions $Key -}}
+    {{/* Nothing to do, already merged */}}
+  {{- else -}}
+    {{/* Not defined in preset options, add value from passed options */}}
+    {{- $mergedOptions = merge $mergedOptions (dict $Key $Value) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  return the map of merged options to the caller  */}}
+{{- return $mergedOptions -}}

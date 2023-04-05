@@ -5,48 +5,145 @@
       "title": "Button",
       "description": "Add a button linking to another page or external site.",
       "body": [
-        "![button:[[&selection]]]([[&destination]])",
+        "![button:[[&selection]]]([[&destination]] '[[&label_icon]]')",
         "{",
         "  [[&class]]",
+        "  circle=\"[[circle]]\"",
+        "  download_name=\"[[download_name]]\"",
+        "  legacy=\"[[legacy]]\"",
+        "  outline=\"[[outline]]\"",
+        "  pill=\"[[pill]]\"",
+        "  prefix_icon=\"[[prefix_icon]]\"",
         "  preset=\"[[preset]]\"",
-        "  style=\"[[style]]\"",
+        "  size=\"[[size]]\"",
+        "  suffix_icon=\"[[suffix_icon]]\"",
+        "  variant=\"[[variant]]\"",
         "}"
       ],
       "fields": [
         {
           "name": "selection",
-          "title": "Button Text: This displays on the button itself.",
+          "title": "Button Label Text",
+          "description": "Specify the Markdown text to render as the button's visible text.",
           "type": "string",
           "single": true,
           "default": "FM_SELECTED_TEXT"
         },
         {
           "name": "destination",
-          "title": "Button Destination: Specify the URL this button should lead to. Alternatively, specify the dot-path of the preset you want to use after the prefix `preset:`, like `preset:foo`.",
+          "title": "Button Destination",
+          "description": "Specify the URL this button should lead to. Alternatively, specify the dot-path of the preset you want to use after the prefix `preset:`, like `preset:foo`.",
           "type": "string",
           "single": true,
           "default": ""
         },
         {
+          "name": "label_icon",
+          "title": "Button Label Icon",
+          "description": "Specify the name of the icon you want to display instead of text for the button label.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "circle",
+          "title": "Display as Circle",
+          "description": "Specify whether the button should be rendered as a circle around an icon. Only valid when `label_icon` is set.",
+          "type": "choice",
+          "choices": ["true", "false"],
+          "default": ""
+        },
+        {
           "name": "class",
-          "title": "Class List: Specify any classes to add to the button in a space-separated list. Each class must have a period (`.`) prefix.",
+          "title": "Class List",
+          "description": "Specify any classes to add to the button in a space-separated list. Each class must have a period (`.`) prefix.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "download_name",
+          "title": "File Download Name",
+          "description": "Use this attribute to tell the browser to download the linked file with this name.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "legacy",
+          "title": "Use Legacy Template",
+          "description": "Specify whether Platen should render this button with the legacy template.",
+          "type": "choice",
+          "choices": ["true", "false"],
+          "default": ""
+        },
+        {
+          "name": "outline",
+          "title": "Render with Outline",
+          "description": "Specify whether Platen should render this button with an outline instead of as a solid block.",
+          "type": "choice",
+          "choices": ["true", "false"],
+          "default": ""
+        },
+        {
+          "name": "pill",
+          "title": "Render as Pill",
+          "description": "Specify whether Platen should render this button with rounded corners.",
+          "type": "choice",
+          "choices": ["true", "false"],
+          "default": ""
+        },
+        {
+          "name": "prefix_icon",
+          "title": "Prefix Icon",
+          "description": "Use this property to insert an icon before your label text.",
           "type": "string",
           "single": true,
           "default": ""
         },
         {
           "name": "preset",
-          "title": "Preset: Specify the dot-path of the button preset you want to use, if any.",
+          "title": "Preset",
+          "description": "Specify the dot-path of the button preset you want to use, if any.",
           "type": "string",
           "single": true,
           "default": ""
         },
         {
-          "name": "style",
-          "title": "Style: Specify the dot-path of the button style you want to use, if any.",
+          "name": "size",
+          "title": "Button Size",
+          "description": "Use this property to define the size of the rendered button.",
+          "type": "choice",
+          "choices": [
+            "small",
+            "medium",
+            "large"
+          ],
+          "default": ""
+        },
+        {
+          "name": "suffix_icon",
+          "title": "Suffix Icon",
+          "description": "Use this attribute to insert an icon before your label text.",
           "type": "string",
           "single": true,
           "default": ""
+        },
+        {
+          "name": "variant",
+          "title": "Button Variant",
+          "description": "Use this attribute to change the theme of the rendered button.",
+          "default": "",
+          "choices": [
+            "default",
+            "primary",
+            "success",
+            "neutral",
+            "warning",
+            "danger",
+            "text"
+          ],
+          "type": "choice"
         }
       ]
     }

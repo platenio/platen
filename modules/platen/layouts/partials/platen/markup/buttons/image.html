@@ -1,85 +1,59 @@
-{{- $Params       := .                                                         -}}
-{{- $Page         := $Params.Page                                              -}}
-{{- $Destination  := $Params.Destination                                       -}}
-{{- $Title        := $Params.Title                                             -}}
-{{- $Text         := $Params.Text                                              -}}
-{{- $IsBlock      := $Params.IsBlock                                           -}}
-{{- $Ordinal      := $Params.Ordinal                                           -}}
-{{- $ConfigKey    := "platen.markup.buttons"                                   -}}
-{{- $Config       := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
-{{- $Aliases      := $Config.aliases                                           -}}
-{{- $PresetPrefix := "preset:"                                                 -}}
+{{- $Params          := .                   -}}
+{{- $Page            := $Params.Page        -}}
+{{- $Attributes      := $Params.Attributes  -}}
+{{- $Destination     := $Params.Destination -}}
+{{- $Title           := $Params.Title       -}}
+{{- $Text            := $Params.Text        -}}
+{{- $Ordinal         := $Params.Ordinal     -}}
+{{/*  Retrieve settings from configuration  */}}
+{{- $ConfigKey       := "platen.markup.buttons"                                   -}}
+{{- $Config          := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Aliases         := $Config.aliases                                           -}}
+{{- $DefaultPrefixes := slice "button" "btn"                                      -}}
+{{/*  Define parameters for the getMergedLinkOptions partial  */}}
+{{- $PresetDotPathPrefix := "platen.buttons"               -}}
+{{- $PresetKeysToRender  := slice "text"                   -}}
+{{- $TextKey             := "label_text"                   -}}
+{{- $TitleKey            := "label_icon"                   -}}
+{{- $ValidAttributes     := slice "circle"     "class"       "download_name" "height"
+                                  "label_icon" "legacy"      "outline"       "outline"
+                                  "pill"       "prefix_icon" "preset"        "rel"
+                                  "size"       "style"       "suffix_icon"   "target"
+                                  "type"       "variant"     "width"
+-}}
+{{/*  Define partials for easier calling/renaming  */}}
+{{- $getMergedMarkupIDs      := "platen/utils/getMergedMarkupIDs"      -}}
+{{- $getPrefixTrimmedAltText := "platen/utils/getPrefixTrimmedAltText" -}}
+{{- $getMergedLinkOptions    := "platen/utils/getMergedLinkOptions"    -}}
+{{- $canonicalize            := "platen/markup/buttons/_canonicalize"  -}}
+{{- $render                  := "platen/markup/buttons/_render"        -}}
 
 {{- $renderedImage := "" -}}
 
-{{- $prefixes := slice "button:" "btn:" -}}
-{{- range $alias := $Aliases -}}
-  {{- $prefixes = $prefixes | append (printf "%s:" $alias) -}}
-{{- end -}}
+{{- $MarkupIDParams := dict "Default" $DefaultPrefixes "Aliases" $Aliases "Suffix" true -}}
+{{- $Prefixes       := partialCached $getMergedMarkupIDs $MarkupIDParams "button"       -}}
 
-{{- $hasPrefix := false -}}
-{{- $alt       := $Text -}}
+{{- $alt := partial $getPrefixTrimmedAltText (dict "Prefixes" $Prefixes "Text" $Text) -}}
 
-{{- range $prefix := $prefixes -}}
-  {{- if and (not $hasPrefix) (hasPrefix $Text $prefix) -}}
-    {{- $hasPrefix = true                             -}}
-    {{- $alt       = strings.TrimPrefix $prefix $Text -}}
-  {{- end -}}
-{{- end -}}
+{{- with $alt -}}
+  {{/*  Retrieve and merge the passed options with the preset options  */}}
+  {{- $mergeParams := dict "Attributes"          $Attributes
+                           "Destination"         $Destination
+                           "Page"                $Page
+                           "PresetDotPathPrefix" $PresetDotPathPrefix
+                           "PresetKeysToRender"  $PresetKeysToRender
+                           "Text"                $alt.Value
+                           "TextKey"             $TextKey
+                           "Title"               $Title
+                           "TitleKey"            $TitleKey
+                           "ValidAttributes"     $ValidAttributes
+  -}}
+  {{- $mergedOptions  := partial $getMergedLinkOptions $mergeParams                  -}}
+  {{- $Canonicalizing := dict "Page" $Page "Options" $mergedOptions "Config" $Config -}}
+  {{- $Canonicalized  := partial $canonicalize $Canonicalizing                       -}}
 
-{{- if $hasPrefix -}}
-  {{/* Retrieve the defaults from data, init style and preset opts */}}
-  {{- $passedOptions := dict -}}
-  {{- $mergedOptions := dict -}}
-  {{- $presetOptions := dict -}}
-
-  {{- with $Destination -}}
-    {{- if hasPrefix $Destination $PresetPrefix -}}
-      {{- $PresetPath   := strings.TrimPrefix $PresetPrefix $Destination    -}}
-      {{- $passedOptions = merge $passedOptions (dict "preset" $PresetPath) -}}
-    {{- else -}}
-      {{- $passedOptions = merge $passedOptions (dict "destination" $Destination) -}}
-    {{- end -}}
-  {{- end -}}
-
-  {{- with $alt -}}
-    {{- $passedOptions = merge $passedOptions (dict "text" $alt) -}}
-  {{- end -}}
-
-  {{- if $IsBlock -}}
-    {{- $attributes      := $Params.Attributes -}}
-    {{- $ValidAttributes := slice "class" "preset" "style" -}}
-    {{- range $ValidAttribute := $ValidAttributes -}}
-      {{- with (index $attributes $ValidAttribute) -}}
-        {{- $passedOptions = merge $passedOptions (dict $ValidAttribute .) -}}
-      {{- end -}}
-    {{- end -}}
-  {{- end -}}
-
-  {{- with $passedOptions.preset -}}
-    {{- $presetOptions = partialCached "platen/markup/buttons/_getPreset" . . -}}
-  {{- end -}}
-
-  {{- range $PresetKey, $presetValue := $presetOptions -}}
-    {{- if eq "text" $PresetKey -}}
-      {{- $presetValue = $Page.RenderString $presetValue -}}
-    {{- end -}}
-    {{- $MergedValue  := index $passedOptions $PresetKey | default $presetValue -}}
-    {{- $mergedOptions = merge $mergedOptions (dict $PresetKey $MergedValue)  -}}
-  {{- end -}}
-  {{- range $PassedKey, $PassedValue := $passedOptions -}}
-    {{- with index $mergedOptions $PassedKey -}}
-      {{/* Nothing to do, already merged */}}
-    {{- else -}}
-      {{/* Not defined in preset options, add value from passed options */}}
-      {{- $mergedOptions = merge $mergedOptions (dict $PassedKey $PassedValue) -}}
-    {{- end -}}
-  {{- end -}}
-
-  {{- $Canonicalizing := dict "Page" $Page "Options" $mergedOptions                    -}}
-  {{- $Canonicalized  := partial "platen/markup/buttons/_canonicalize" $Canonicalizing -}}
-
-  {{- $renderedImage = partial "platen/markup/buttons/_render" $Canonicalized -}}
+  {{/*  Render the image with the template from the canonicalized info  */}}
+  {{- $renderedImage = partial $Canonicalized.Template $Canonicalized -}}
 {{- end -}}
 
 {{- return $renderedImage -}}

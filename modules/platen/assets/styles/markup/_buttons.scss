@@ -1,3 +1,20 @@
+// Shoelace button styling
+.markdown sl-button.platen-btn {
+  &[data-custom-height="true"] {
+    &::part(base) {
+      height: var(--custom-height);
+      align-items: center;
+    }
+  }
+  &[data-custom-width="true"] {
+    width: var(--custom-width);
+    &::part(base) {
+      white-space: normal;
+    }
+  }
+}
+
+// Legacy button styling
 .markdown a.platen-btn {
   display: inline-block;
   font-size: $font-size-medium;

@@ -227,8 +227,8 @@ properties:
         details markup. Set this value to `false` to disable the warning. The default value is `true`.
 
         The legacy template has a more limited set of options than the new default template and it will eventually be
-        removed. We strongly recommend you set [sref:`use_legacy`][02] to `true` and migrate your site's custom styling
-        and scripting to use the new template.
+        removed. We strongly recommend you set [sref:`use_legacy`][02] to `false` and migrate your site's custom
+        styling and scripting to use the new template.
 
         For more information, see [Legacy Template][01] in the reference documentation for this markup.
 

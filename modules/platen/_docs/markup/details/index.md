@@ -152,7 +152,7 @@ This option is included to allow folks to intentionally transition from the
 legacy implementation to shoelace, which will become the default in the future.
 Eventually, the legacy implementation will be removed.
 
-For more information, see 
+For more information, see [Legacy Template](#legacy-template).
 
 <!--- Example Start -->
 ```details { summary="Legacy Details" legacy=true }
@@ -561,9 +561,9 @@ The rest of this section is a list of selectors you might find useful when styli
 You can completely override the provided style by defining the `styles/markup/_details.scss` file in your
 [assets folder][h04].
 
-You can also create a new style module in the `styles/markup` folder and set [sref:`platen.markup.details.style`] in
-your site configuration to that module's name. If you do, omit the leading `_` and trailing `.scss`. For example, the
-name for the style module `assets/styles/markup/_foo.scss` is `foo`.
+You can also create a new style module in the `styles/markup` folder and set [sref:`platen.markup.details.style`][c08]
+in your site configuration to that module's name. If you do, omit the leading `_` and trailing `.scss`. For example,
+the name for the style module `assets/styles/markup/_foo.scss` is `foo`.
 
 <!-- Link References -->
 [01]: mdn.html.element:details
@@ -582,6 +582,7 @@ name for the style module `assets/styles/markup/_foo.scss` is `foo`.
 [c05]: platen.site.markup.details.open
 [c06]: platen.site.markup.details.use_legacy
 [c07]: platen.site.markup.details.warn_on_legacy
+[c08]: platen.site.markup.details.style
 [c99]: platen.site.markup.details
 [h01]: https://gohugo.io/variables/page/
 [h02]: https://gohugo.io/templates/render-hooks/#render-hooks-for-code-blocks

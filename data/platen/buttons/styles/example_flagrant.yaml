@@ -1,6 +1,0 @@
-# yaml-language-server: $schema=C:\code\personal\platen\modules\platen\_docs\markup\buttons\definitions\style.schema.yaml
-classes:
-  - example
-  - flagrant
-html_attributes:
-  target: _blank

@@ -1,0 +1,38 @@
+{{/*
+    This partial expects to get a list of prefixes and plaintext to search for them.
+    It loops over the prefixes, looking for a match. On first match, it sets result
+    to a map with the Value key set to the text with the prefix trimmed.
+
+    If no prefixes are found, it returns an empty map.
+
+    This partial uses the map for returning values instead of just returning the
+    trimmed string because an empty string is a valid value. This lets the caller
+    use the `with` function for falsy checks and a more understandable logic at
+    the cost of needing to access the actual value from the map.
+
+    This is necessary because Hugo doesn't support multi-assignment in partials;
+    otherwise we would return both hasPrefix and the trimmed text, but returning
+    a slice now would require capturing the result and then accessing both
+    values independently. This implementation is more concise.
+*/}}
+{{- $Params    := .                -}}
+{{- $prefixes  := $Params.Prefixes -}}
+{{- $Text      := $Params.Text     -}}
+{{- $result    := dict             -}}
+
+{{/*  If the prefix list isn't already a slice, make it one.  */}}
+{{- if not (reflect.IsSlice $prefixes) -}}
+  {{- $prefixes = slice $prefixes -}}
+{{- end -}}
+
+{{/*
+    Loop over the prefixes looking for a match, trimming and breaking the loop
+    after setting the value on the first match.
+*/}}
+{{- range $Prefix := $prefixes -}}
+  {{- if and (not (isset $result "Value")) (hasPrefix $Text $Prefix) -}}
+    {{- $result = dict "Value" (strings.TrimPrefix $Prefix $Text) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $result -}}

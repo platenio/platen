@@ -7,6 +7,7 @@
 {{- $ConfigKey  := "platen.markup.details"                                          -}}
 {{- $Config     := partialCached "platen/param/getKey" $ConfigKey $ConfigKey        -}}
 {{- $Aliases    := $Config.aliases                                                  -}}
+{{- $DefaultIDs := slice "details"                                                  -}}
 
 {{/*  Define partials for easier calling/renaming  */}}
 {{- $getCodeblockInfo   := "platen/utils/getCodeblockInfo"     -}}
@@ -28,8 +29,8 @@
 {{- $renderedCode := "" -}}
 
 {{/*  Retrieve the valid language IDs  */}}
-{{- $MarkupIDParams   := dict "Default" "details" "Aliases" $Aliases       -}}
-{{- $validLanguageIDs := partialCached $getMergedMarkupIDs $MarkupIDParams -}}
+{{- $MarkupIDParams   := dict "Default" $DefaultIDs "Aliases" $Aliases               -}}
+{{- $validLanguageIDs := partialCached $getMergedMarkupIDs $MarkupIDParams "details" -}}
 
 {{- if in $validLanguageIDs $type -}}
   {{/* Parse the definition for data and markdown */}}
@@ -132,6 +133,14 @@
       {{- $renderTemplate = printf "%s/%s" $TemplateFolder $custom -}}
     {{- end -}}
   {{- else if $legacy -}}
+    {{- if $Config.warn_on_legacy -}}
+      {{- $message := slice "Used legacy template for details markup."
+                            "This template is deprecated and will eventually be removed."
+                            "For more information, see"
+                            "https://platen.io/modules/platen/markup/details/#legacy-template"
+      -}}
+      {{- warnf (delimit $message " " | print) -}}
+    {{- end -}}
     {{/*  Process the details attributes; legacy has no special handling  */}}
     {{- $detailsAttributes = partial $getSafeAttributes $detailsAttributes                        -}}
     {{- $templateContext   = merge $templateContext (dict "DetailsAttributes" $detailsAttributes) -}}

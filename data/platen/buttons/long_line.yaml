@@ -1,8 +1,10 @@
 destination: https://flagrant.garden
-text: >-
+label_text: >-
   This line of Markdown is much longer than you could typically fit into a
   button. It might not be aesthetically pleasing to have a button with this
   much text.
 
   Notice that even though this looks like two paragraphs in the work, it is
   treated as one very long line because of the `>-` syntax used.
+height: auto
+width: 100%

@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 # Can't have $schema - breaks frontmatter. Intellisense only works in VS Code
 # with the YAML extension directive at the top.
-# $schema: https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
 $id: /modules/platen/markup/buttons/schemas/definitions/preset
 title: Button Preset Definition
 description: |
@@ -10,13 +10,6 @@ description: |
   https://platen.io/modules/platen/markup/button#presets
 type: object
 properties:
-  text:
-    title: Button Text
-    description: |
-      Specify the Markdown text to render as the button's visible text.
-
-      https://platen.io/modules/platen/markup/buttons#preset-property-text
-    type: string
   destination:
     title: Button Destination
     description: |
@@ -24,23 +17,234 @@ properties:
 
       https://platen.io/modules/platen/markup/buttons#preset-property-destination
     type: string
+  circle:
+    title: Display as Circle
+    description: |
+      Specify whether the button should be rendered as a circle around an icon. Only valid when `label_icon` is set.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-circle
+    type: boolean
   class:
     title: Class List
     description: |
-      Specify any additional classes to add to the bitton's anchor element.
+      Specify any additional classes to add to the button.
 
       https://platen.io/modules/platen/markup/buttons#preset-property-class
     type: array
     items:
       type: string
     uniqueItems: true
-  style:
-    title: Style List
+  download_name:
+    title: File Download Name
     description: |
-      Specify any number of styles to apply to this preset. They're merged in order.
+      Use this property to tell the browser to download the linked file with this name.
 
-      https://platen.io/modules/platen/markup/buttons#preset-property-style
-    type: array
-    items:
-      type: string
-    uniqueItems: true
+      https://platen.io/modules/platen/markup/buttons#preset-property-download_name
+    type: string
+  height:
+    title: Custom Button Height
+    description: |
+      Use this property to set a custom height for the button, overriding it's `size`.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-height
+    type: string
+  label_icon:
+    title: Button Label Icon
+    description: |
+      Specify the name of the icon you want to display instead of text for the button label.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-label_icon
+    oneOf:
+      - type: object
+        oneOf:
+          - required: name
+          - required: src
+        properties:
+          name:
+            title: Icon Name
+            description: |
+              Specify the name of the icon.
+
+              https://platen.io/modules/platen/markup/buttons#preset-property-label_icon-name
+            type: string
+          label:
+            title: Icon Label
+            description: |
+              Specify an alternate description to use for assistive devices.
+
+              https://platen.io/modules/platen/markup/buttons#preset-property-label_icon-label
+            type: string
+          src:
+            title: Icon Source
+            description: |
+              Specify the URL of an SVG file to use as the icon.
+
+              https://platen.io/modules/platen/markup/buttons#preset-property-label_icon-src
+            type: string
+        patternProperties:
+          ".":
+            type: string
+      - type: string
+  label_text:
+    title: Button Label Text
+    description: |
+      Specify the Markdown text to render as the button's visible text.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-label_text
+    type: string
+  legacy:
+    title: Use Legacy Template
+    description: |
+      Specify whether Platen should render this button with the legacy template.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-legacy
+    type: boolean
+  outline:
+    title: Render with Outline
+    description: |
+      Specify whether Platen should render this button with an outline instead of as a solid block.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-outline
+    type: boolean
+  pill:
+    title: Render as Pill
+    description: |
+      Specify whether Platen should render this button with rounded corners.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-pill
+    type: boolean
+  prefix_icon:
+    title: Prefix Icon
+    description: |
+      Use this property to insert an icon before your label text.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-prefix_icon
+    oneOf:
+      - type: object
+        oneOf:
+          - required: name
+          - required: src
+        properties:
+          name:
+            title: Icon Name
+            description: |
+              Specify the name of the icon.
+
+              https://platen.io/modules/platen/markup/buttons#preset-property-prefix_icon-name
+            type: string
+          label:
+            title: Icon Label
+            description: |
+              Specify an alternate description to use for assistive devices.
+
+              https://platen.io/modules/platen/markup/buttons#preset-property-prefix_icon-label
+            type: string
+          src:
+            title: Icon Source
+            description: |
+              Specify the URL of an SVG file to use as the icon.
+
+              https://platen.io/modules/platen/markup/buttons#preset-property-prefix_icon-src
+            type: string
+        patternProperties:
+          ".":
+            type: string
+      - type: string
+  rel:
+    title: Relationship Attribute
+    description: |
+      Use this property to define the relationship of the linked URL as a list of link types.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-rel
+    type: string
+  size:
+    title: Button Size
+    description: |
+      Use this property to define the size of the rendered button.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-size
+    type: string
+    enum:
+      - small
+      - medium
+      - large
+  suffix_icon:
+    title: Suffix Icon
+    description: |
+      Use this property to insert an icon before your label text.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-suffix_icon
+    oneOf:
+      - type: object
+        oneOf:
+          - required: name
+          - required: src
+        properties:
+          name:
+            title: Icon Name
+            description: |
+              Specify the name of the icon.
+
+              https://platen.io/modules/platen/markup/buttons#preset-property-suffix_icon-name
+            type: string
+          label:
+            title: Icon Label
+            description: |
+              Specify an alternate description to use for assistive devices.
+
+              https://platen.io/modules/platen/markup/buttons#preset-property-suffix_icon-label
+            type: string
+          src:
+            title: Icon Source
+            description: |
+              Specify the URL of an SVG file to use as the icon.
+
+              https://platen.io/modules/platen/markup/buttons#preset-property-suffix_icon-src
+            type: string
+        patternProperties:
+          ".":
+            type: string
+      - type: string
+  target:
+    title: Link Target
+    description: |
+      Use this property to tell the browser where to open the link. Must be used with the `rel` property.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-target
+    type: string
+    enum:
+      - _blank
+      - _parent
+      - _self
+      - _top
+  variant:
+    title: Button Variant
+    description: |
+      Use this property to change the theme of the rendered button.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-variant
+    type: string
+    enum:
+      - default
+      - primary
+      - success
+      - neutral
+      - warning
+      - danger
+      - text
+  width:
+    title: Button Width
+    description: |
+      Use this property to set a custom width for the rendered button.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-width
+    type: string
+  html_attributes:
+    title: Arbitrary HTML Attributes
+    description: |
+      Use this property to add any number of HTML attributes to the button element.
+
+      https://platen.io/modules/platen/markup/buttons#preset-property-html_attributes
+    patternProperties:
+      ".":
+        type: string

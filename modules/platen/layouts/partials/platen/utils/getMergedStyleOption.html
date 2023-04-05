@@ -1,0 +1,33 @@
+{{- $Params              := .                                         -}}
+{{- $Options             := $Params.Options                           -}}
+{{- $StylesDotPathPrefix := $Params.StylesDotPathPrefix               -}}
+{{- $DefaultStyleDotPath := printf "%s._default" $StylesDotPathPrefix -}}
+{{/*  Define partials for easier calling/renaming  */}}
+{{- $getDataPath  := "platen/utils/getDataPath"  -}}
+{{- $getMergedMap := "platen/utils/getMergedMap" -}}
+{{- $style := dict -}}
+
+{{/*  Retrieve the default style  */}}
+{{- $DefaultStyle := partialCached $getDataPath $DefaultStyleDotPath $DefaultStyleDotPath -}}
+
+{{- with $Options.style -}}
+  {{/*  The value from options could be one style or multiple.  */}}
+  {{- $styles := . -}}
+  {{- if not (reflect.IsSlice $styles) -}}
+    {{- $styles = slice $styles -}}
+  {{- end -}}
+
+  {{- range $StylePath := $styles -}}
+    {{- $StyleDotPath := printf "%s.%s" $StylesDotPathPrefix $StylePath        -}}
+    {{- $MergingStyle := partialCached $getDataPath $StyleDotPath $StyleDotPath -}}
+    {{- $mergeParams  := dict "BaseMap" $style "MergingMap" $MergingStyle       -}}
+    {{- $style         = partialCached $getMergedMap $mergeParams $mergeParams  -}}
+  {{- end -}}
+
+  {{- $mergeParams := dict "BaseMap" $DefaultStyle "MergingMap" $style "JoinArrays" true -}}
+  {{- $style        = partialCached $getMergedMap $mergeParams $mergeParams              -}}
+{{- else -}}
+  {{- $style = $DefaultStyle -}}
+{{- end -}}
+
+{{- return $style -}}

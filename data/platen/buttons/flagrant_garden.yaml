@@ -1,5 +1,6 @@
-style:
-  - example_flagrant
-text: _Flagrant Garden_
-destination: 'https://flagrant.garden'
-
+destination: https://flagrant.garden
+label_text:  _Flagrant Garden_
+prefix_icon:
+  name: flower3
+  style: >-
+    filter: invert(.7)sepia(1)saturate(.5)hue-rotate(270deg);

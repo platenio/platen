@@ -1,0 +1,7 @@
+{{- $Params     := .                                 -}}
+{{- $Attributes := $Params.Attributes | safeHTMLAttr -}}
+{{- $Label      := $Params.Label      | safeHTML     -}}
+
+<a {{ $Attributes }}>
+  {{ $Label }}
+</a>
