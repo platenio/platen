@@ -27,12 +27,17 @@
 {{- $getMergedLinkOptions    := "platen/utils/getMergedLinkOptions"    -}}
 {{- $canonicalize            := "platen/markup/buttons/_canonicalize"  -}}
 {{- $render                  := "platen/markup/buttons/_render"        -}}
-
+{{/*  Initialize rendered image string for returning  */}}
 {{- $renderedImage := "" -}}
-
+{{/*  Get the list of valid prefixes for this markup  */}}
 {{- $MarkupIDParams := dict "Default" $DefaultPrefixes "Aliases" $Aliases "Suffix" true -}}
 {{- $Prefixes       := partialCached $getMergedMarkupIDs $MarkupIDParams "button"       -}}
-
+{{/*
+    Check to see if the image link is this markup. If it is, the Value key will
+    be set to the trimmed alt text. If it isn't, this will be an empty dict;
+    this lets us use the `with` operator even when the trimmed alt text is an
+    empty string.
+*/}}
 {{- $alt := partial $getPrefixTrimmedAltText (dict "Prefixes" $Prefixes "Text" $Text) -}}
 
 {{- with $alt -}}

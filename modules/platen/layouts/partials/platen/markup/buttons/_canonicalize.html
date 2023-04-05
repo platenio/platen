@@ -156,7 +156,6 @@
   {{- $prefixAttributes := slice -}}
   {{- with $options.prefix_icon -}}
     {{- if reflect.IsMap $options.prefix_icon -}}
-      {{- warnf "Processing prefix_icon: %s" ($options.prefix_icon | jsonify (dict "indent" "  ")) -}}
       {{- range $AttributeName, $AttributeValue := $options.prefix_icon -}}
         {{- $prefixAttributes = $prefixAttributes | append (printf `%s="%s"` $AttributeName (print $AttributeValue)) -}}
       {{- end -}}

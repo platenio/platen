@@ -303,6 +303,11 @@ This value must start with the prefix `button:`. For example, with `![button:Pla
 Specify the URL for where the button should take a visitor when clicked. This value is used as the
 [sref:`href`][s02] attribute of the button's element.
 
+You can also use this value to specify a [Preset](#presets) for the button by prefixing the value with `preset:`.
+Specify the name of the [preset](#presets), like `![button:](preset:foo)`. If the preset is defined in a subfolder,
+specify the dot-path relative to `data/platen/buttons`. For example, the preset defined in
+`data/platen/buttons/flagrant_garden/home` would be specified like `![button:](preset:flagrant_garden.home)`.
+
 {{< memo/renderer/input "source" >}}
 
 ### `title` (as `label_icon`)
@@ -1041,7 +1046,7 @@ is site-wide, every configuration setting can by overridden by the attributes in
 The default values for this markup's rendering options are defined below:
 
 ```yaml
-details:
+buttons:
   classes: []
   size: null
   outline: null
