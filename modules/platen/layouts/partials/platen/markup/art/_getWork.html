@@ -1,5 +1,0 @@
-{{- $WorkPath := .                                                          -}}
-{{- $DotPath  := printf "platen.art.works.%s" $WorkPath                     -}}
-{{- $Data     := partialCached "platen/utils/getDataPath" $DotPath $DotPath -}}
-
-{{- return $Data -}}

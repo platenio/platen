@@ -1,0 +1,12 @@
+{{- $Params            := .                                        -}}
+{{- $FigureAttributes  := $Params.FigureAttributes  | safeHTMLAttr -}}
+{{- $ImageAttributes   := $Params.ImageAttributes   | safeHTMLAttr -}}
+{{- $CaptionAttributes := $Params.CaptionAttributes | safeHTMLAttr -}}
+{{- $CaptionRendered   := $Params.CaptionRendered   | safeHTML     -}}
+
+<figure {{ $FigureAttributes }}>
+  <img {{ $ImageAttributes }}>
+  <figcaption {{ $CaptionAttributes }}>
+    {{ $CaptionRendered }}
+  </figcaption>
+</figure>

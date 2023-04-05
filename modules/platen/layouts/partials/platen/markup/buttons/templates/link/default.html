@@ -1,0 +1,15 @@
+{{- $Params           := .                                        -}}
+{{- $Attributes       := $Params.Attributes       | safeHTMLAttr  -}}
+{{- $Label            := $Params.Label            | safeHTML      -}}
+{{- $PrefixAttributes := $Params.PrefixAttributes | safeHTMLAttr  -}}
+{{- $SuffixAttributes := $Params.SuffixAttributes | safeHTMLAttr  -}}
+
+<sl-button {{ $Attributes }}>
+  {{- with $PrefixAttributes }}
+    <sl-icon slot="prefix" {{ $PrefixAttributes }}></sl-icon>
+  {{- end -}}
+  {{- with $SuffixAttributes }}
+    <sl-icon slot="suffix" {{ $SuffixAttributes }}></sl-icon>
+  {{- end }}
+  {{ $Label }}
+</sl-button>

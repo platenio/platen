@@ -1,28 +1,22 @@
-{{- $Params       := .                                    -}}
-{{- $Page         := $Params.Page                         -}}
-{{- $Options      := $Params.Options                      -}}
-{{- $DefaultStyle := site.Data.platen.art.styles._default -}}
-{{- $style        := dict                                 -}}
-{{- $canonical    := dict "Page" $Page                    -}}
+{{- $Params         := .                             -}}
+{{- $Page           := $Params.Page                  -}}
+{{- $Options        := $Params.Options               -}}
+{{- $TemplateFolder := "platen/markup/art/templates" -}}
+{{- $canonical      := dict                          -}}
+{{- $style          := dict                          -}}
+{{- $template       := "default"                     -}}
 
-{{- with $Options.style -}}
-  {{- $styles := . -}}
-  {{- if not (reflect.IsSlice $styles) -}}
-    {{- $styles = slice $styles -}}
-  {{- end -}}
+{{/*  Define partials for easier calling/renaming  */}}
+{{- $getMergedMap         := "platen/utils/getMergedMap"         -}}
+{{- $getMergedStyleOption := "platen/utils/getMergedStyleOption" -}}
+{{- $getSafeAttributes    := "platen/utils/getSafeAttributes"    -}}
+{{- $getLeadTrimmedText   := "platen/utils/getLeadTrimmedText"   -}}
+{{- $getPrettyRender      := "platen/utils/getPrettyRender"      -}}
 
-  {{- range $stylePath := $styles -}}
-    {{- $mergingStyle := partialCached "platen/markup/art/_getStyle" $stylePath $stylePath    -}}
-    {{- $mergeParams  := dict "BaseMap" $style "MergingMap" $mergingStyle                    -}}
-    {{- $style         = partialCached "platen/utils/getMergedMap" $mergeParams $mergeParams -}}
-  {{- end -}}
-
-  {{- $mergeParams := dict "BaseMap" $DefaultStyle "MergingMap" $style "JoinArrays" true  -}}
-  {{- $style        = partialCached "platen/utils/getMergedMap" $mergeParams $mergeParams -}}
-{{- else -}}
-  {{- $style = $DefaultStyle -}}
-{{- end -}}
-
+{{/*  Canonicalize the styles first so we can use them in the various attributes.  */}}
+{{- $styleParams := dict "Options" $Options "StylesDotPathPrefix" "platen.art.styles" -}}
+{{- $style        = partial $getMergedStyleOption $styleParams                        -}}
+{{/*  Any classes passed directly in the options are added to the figure.  */}}
 {{- with $Options.class -}}
   {{- $figureClasses := $style.figure.classes -}}
 
@@ -34,21 +28,21 @@
   {{- $style        = merge $style        (dict "figure" $FigureStyle)    -}}
 {{- end -}}
 
-{{- with $Options.content_warning -}}
-  {{- $mergeParams := dict "BaseMap" $style "MergingMap" $style.content_warning "JoinArrays" true -}}
-  {{- $style        = partialCached "platen/utils/getMergedMap" $mergeParams $mergeParams         -}}
-  {{- $canonical = merge $canonical (dict "ContentWarning" . "Style" $style)                      -}}
-{{- else -}}
-  {{- $canonical = merge $canonical (dict "Style" $style) -}}
-{{- end -}}
-
+{{/*
+    Handle the image attributes as early as possible to error if the art is
+    missing the alt text or source.
+*/}}
+{{- $imageAttributes := slice -}}
 {{- with $Options.alt -}}
-  {{- $canonical = merge $canonical (dict "AltText" .) -}}
+  {{- $imageAttributes = $imageAttributes | append (printf `alt="%s"` .) -}}
 {{- else -}}
   {{/*  No alt text, use handler  */}}
 {{- end -}}
-
 {{- with $Options.src -}}
+  {{/*
+      We need slightly different handling for sources as remote resources,
+      local resources, and static resources.
+  */}}
   {{- $src         := .                                        -}}
   {{- $IsRemote    := or (in $src "://") (hasPrefix $src "//") -}}
   {{- $IsNotStatic := not (strings.HasPrefix $src "/")         -}}
@@ -57,19 +51,87 @@
   {{- else if $IsNotStatic -}}
     {{- $src = (resources.Get $src).RelPermalink }}
   {{- end -}}
-  {{- $canonical = merge $canonical (dict "Source" $src) -}}
+  {{- $imageAttributes = $imageAttributes | append (printf `src="%s"` $src) -}}
 {{- else -}}
   {{/*  No source, error  */}}
 {{- end -}}
+{{/*  If the style defines extra classes for the image, add them in.  */}}
+{{- with $style.image.classes -}}
+  {{- $ImageClasses   := delimit $style.image.classes " "                              -}}
+  {{- $imageAttributes = $imageAttributes | append (printf `class="%s"` $ImageClasses) -}}
+{{- end -}}
+{{- $imageAttributes = partial $getSafeAttributes $imageAttributes                -}}
+{{- $canonical       = merge $canonical (dict "ImageAttributes" $imageAttributes) -}}
 
+{{/*
+    Handle the content warning, if needed. This needs to be done before the rest
+    of the handling because a content warning munges the figure's style.
+*/}}
+{{- with $Options.content_warning -}}
+  {{/*  Switch the template from default to content_warning  */}}
+  {{- $template         = "content_warning"        -}}
+  {{- $ContentWarning  := $Options.content_warning -}}
+  {{/*  Merge the styles for content warning art into the base style.  */}}
+  {{- $mergeParams     := dict "BaseMap" $style "MergingMap" $style.content_warning "JoinArrays" true -}}
+  {{- $style            = partialCached $getMergedMap $mergeParams $mergeParams                       -}}
+  {{/*  Define the attributes for the input - this is what controls the content warning.  */}}
+  {{- $InputID         := printf "%s-%s" $style.input.id_prefix (lower $ContentWarning | urlize) -}}
+  {{- $InputName       := printf "%s-%s" $style.input.name_prefix $InputID                       -}}
+  {{- $InputClasses    := delimit $style.input.classes " "                                       -}}
+  {{- $inputAttributes := slice           `type="checkbox"`
+                         | append (printf `class="%s"`      $InputClasses)
+                         | append (printf `name="%s"`       $InputName)
+                         | append (printf `id="%s"`         $InputID)
+  -}}
+  {{- $AttributeParams := dict "Attributes" $inputAttributes "IndentCount" 9 -}}
+  {{- $inputAttributes  = partial $getSafeAttributes $AttributeParams        -}}
+  {{- $LabelAttributes := printf `for="%s"` $InputID                         -}}
+  {{/*  With the content warning and attributes defined, add them as canonical  */}}
+  {{- $canonical        = merge $canonical (
+        dict "ContentWarning"  $ContentWarning
+             "InputAttributes" $inputAttributes
+             "LabelAttributes" $LabelAttributes
+      )
+  -}}
+{{- end -}}
+
+{{/* Define the attribute list for the figure element */}}
+{{- $figureAttributes := slice -}}
+{{/*  The figure only gets an ID if the author specified one.  */}}
+{{- with $Options.ID -}}
+  {{- $figureAttributes = $figureAttributes | append (printf `id="%s"` $Options.ID) -}}
+{{- end -}}
+{{- $FigureClasses   := delimit $style.figure.classes " "                               -}}
+{{- $figureAttributes = $figureAttributes | append (printf `class="%s"` $FigureClasses) -}}
+{{- $figureAttributes = partial $getSafeAttributes $figureAttributes                    -}}
+{{- $canonical        = merge $canonical (dict "FigureAttributes" $figureAttributes)    -}}
+
+{{/*  Handle the caption, if needed.  */}}
 {{- with $Options.caption -}}
-  {{- $TrimParams := dict "Text" . "TrimEOL" true                          -}}
-  {{- $Caption    := partial "platen/utils/getLeadTrimmedText" $TrimParams -}}
-  {{- $canonical   = merge $canonical (dict "Caption" $Caption)            -}}
+  {{/*  Set the template to be a caption variant  */}}
+  {{- $template    = printf "%sCaption" $template -}}
+  {{/*  Trim the text for the caption before rendering it.  */}}
+  {{- $TrimParams := dict "Text" . "TrimEOL" true -}}
+  {{- $Caption    := partial $getLeadTrimmedText $TrimParams -}}
+  {{- $RenderParams := dict "Page"        $Page
+                            "Content"     $Caption
+                            "IndentCount" 4
+                            "AsBlock"     true
+  -}}
+  {{- $CaptionRendered := partial $getPrettyRender $RenderParams                     -}}
+  {{- $canonical        = merge $canonical (dict "CaptionRendered" $CaptionRendered) -}}
+  {{/*  If the caption has classes defined, add them to the attributes string.  */}}
+  {{- $captionAttributes := "" -}}
+  {{- with $style.caption.classes -}}
+    {{- $CaptionClasses    := delimit $style.caption.classes " "            -}}
+    {{- $captionAttributes := slice (printf `class="%s"` $CaptionClasses)   -}}
+    {{- $captionAttributes  = partial $getSafeAttributes $captionAttributes -}}
+  {{- end -}}
+  {{- $canonical = merge $canonical (dict "CaptionAttributes" $captionAttributes) -}}
 {{- end -}}
 
-{{- with $Options.id -}}
-  {{- $canonical = merge $canonical (dict "ID" .) -}}
-{{- end -}}
+{{/*  Canonicalize the template in the correct folder so Platen can call it.  */}}
+{{- $template  = printf "%s/%s" $TemplateFolder $template     -}}
+{{- $canonical = merge $canonical (dict "Template" $template) -}}
 
 {{- return $canonical -}}
