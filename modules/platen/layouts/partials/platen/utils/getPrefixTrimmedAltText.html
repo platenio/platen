@@ -16,23 +16,30 @@
     values independently. This implementation is more concise.
 */}}
 {{- $Params    := .                -}}
-{{- $prefixes  := $Params.Prefixes -}}
+{{- $Prefixes  := $Params.Prefixes -}}
 {{- $Text      := $Params.Text     -}}
 {{- $result    := dict             -}}
-
-{{/*  If the prefix list isn't already a slice, make it one.  */}}
-{{- if not (reflect.IsSlice $prefixes) -}}
-  {{- $prefixes = slice $prefixes -}}
-{{- end -}}
 
 {{/*
     Loop over the prefixes looking for a match, trimming and breaking the loop
     after setting the value on the first match.
 */}}
-{{- range $Prefix := $prefixes -}}
-  {{- if and (not (isset $result "Value")) (hasPrefix $Text $Prefix) -}}
-    {{- $result = dict "Value" (strings.TrimPrefix $Prefix $Text) -}}
+{{- if reflect.IsMap $Prefixes -}}
+  {{- range $_, $List := $Prefixes -}}
+    {{- range $Prefix := $List -}}
+      {{- if and (not (isset $result "Value")) (hasPrefix $Text $Prefix) -}}
+        {{- $result = dict "Value" (strings.TrimPrefix $Prefix $Text) "Prefix" $Prefix -}}
+      {{- end -}}
+    {{- end -}}
   {{- end -}}
+{{- else if (reflect.IsSlice $Prefixes) -}}
+  {{- range $Prefix := $Prefixes -}}
+    {{- if and (not (isset $result "Value")) (hasPrefix $Text $Prefix) -}}
+      {{- $result = dict "Value" (strings.TrimPrefix $Prefix $Text) "Prefix" $Prefix -}}
+    {{- end -}}
+  {{- end -}}
+{{- else if (hasPrefix $Text $Prefixes) -}}
+  {{- $result = dict "Value" (strings.TrimPrefix $Prefixes $Text) "Prefix" $Prefixes -}}
 {{- end -}}
 
 {{- return $result -}}

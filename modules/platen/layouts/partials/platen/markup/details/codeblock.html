@@ -1,24 +1,124 @@
-{{- $Params     := .                                                                -}}
-{{- $Page       := $Params.Page                                                     -}}
-{{- $Position   := $Params.Position                                                 -}}
-{{- $definition := $Params.Inner                                                    -}}
-{{- $type       := $Params.Type | lower                                             -}}
-{{- $Attributes := $Params.Attributes                                               -}}
-{{- $ConfigKey  := "platen.markup.details"                                          -}}
-{{- $Config     := partialCached "platen/param/getKey" $ConfigKey $ConfigKey        -}}
-{{- $Aliases    := $Config.aliases                                                  -}}
-{{- $DefaultIDs := slice "details"                                                  -}}
+{{- $Params     := .                    -}}
+{{- $Page       := $Params.Page         -}} {{/* The Page object the codeblock markup was included in               */}}
+{{- $Position   := $Params.Position     -}} {{/* The Position of the codeblock markup in the page                   */}}
+{{- $Definition := $Params.Inner        -}} {{/* The text inside the codeblock (between the fences)                 */}}
+{{- $Type       := $Params.Type | lower -}} {{/* The language ID for the codeblock                                  */}}
+{{- $Attributes := $Params.Attributes   -}} {{/* The attributes added to the codeblock after the ID in curly braces */}}
+{{- $Ordinal    := $Params.Ordinal      -}} {{/* The 0-based ordinal for codeblocks in the page the markup's from   */}}
+{{- $MarkupName := "details"            -}} {{/* The name of the markup, usually the same as the parent folder      */}}
+{{/*
+    Retrieve settings from configuration.
 
-{{/*  Define partials for easier calling/renaming  */}}
-{{- $getCodeblockInfo   := "platen/utils/getCodeblockInfo"     -}}
-{{- $mungeHeadingLevel  := "platen/utils/mungeHeadingLevel"    -}}
-{{- $getLeadTrimmedText := "platen/utils/getLeadTrimmedText"   -}}
-{{- $getMergedClasses   := "platen/utils/getMergedClasses"     -}}
-{{- $getMergedMarkupIDs := "platen/utils/getMergedMarkupIDs"   -}}
-{{- $getPrettyRender    := "platen/utils/getPrettyRender"      -}}
-{{- $getSafeAttributes  := "platen/utils/getSafeAttributes"    -}}
-{{- $TemplateFolder     := "platen/markup/details/templates"   -}}
-{{- $renderTemplate     := printf "%s/default" $TemplateFolder -}}
+    Make sure to replace NAME with the name of the markup in the site config.
+    If your default ID isn't the same as the markup name, edit that too.
+
+    Markup should always have at least one default ID and support aliases. If
+    the markup supports differently grouped language IDs, specify the DefaultIDs
+    as a map instead of a slice and set the DefaultKey to the key that is added
+    from aliases when aliases is a slice or string instead of a map.
+*/}}
+{{- $ConfigKey  := printf "platen.markup.%s"  $MarkupName                    -}}
+{{- $Config     := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Aliases    := $Config.aliases                                           -}}
+{{- $DefaultIDs := slice $MarkupName                                         -}}
+{{- $DefaultKey := ""                                                        -}}
+{{/*
+    Define partials for easier calling/renaming.
+
+    - getMergedMarkupIDs returns the canonical list of language IDs that Platen
+      will use to see if a codeblock should be rendered as this markup.
+
+    - getCodeblockInfo parses a codeblock to return the YAML options, if defined,
+      and the Markdown for the codeblock. This makes it possible to implement
+      codeblock markup that can have a larger list of options defined in a YAML
+      block before the inner content instead of a scrolling line of attributes.
+
+    - getMergedCodeblockOptions handles merging the YAML options with the
+      attributes on the codeblock, preferring values set in the YAML options
+      over the attributes.
+
+    - isValidLanguageID loops over the valid language IDs, handling maps and
+      slices both, to see whether a codeblock is valid for this markup. If it
+      is, it returns true.
+
+    - _canonicalize is always markup-specific and must handle selecting the
+      template to render, merging in any site configuration settings that apply
+      to the markup when the markup doesn't override the value, munging the
+      options as needed, and building the list of canonical values to send to
+      the template.
+*/}}
+{{- $getMergedMarkupIDs        := "platen/utils/getMergedMarkupIDs"                   -}}
+{{- $getCodeblockInfo          := "platen/utils/getCodeblockInfo"                     -}}
+{{- $getMergedCodeblockOptions := "platen/utils/getMergedCodeblockOptions"            -}}
+{{- $isValidLanguageID         := "platen/utils/isValidLanguageID"                    -}}
+{{- $canonicalize              := printf "platen/markup/%s/_canonicalize" $MarkupName -}}
+{{/*
+    Define parameters for retrieving info from the codeblock.
+
+    Set SupportsData to false if your markup doesn't support YAML options.
+    Set SupportsMarkdown to false if your markup is data-only.
+*/}}
+{{- $SupportsData     := true -}}
+{{- $SupportsMarkdown := true -}}
+{{- $InfoParameters   := dict "Definition"       $Definition
+                              "SupportsData"     $SupportsData
+                              "SupportsMarkdown" $SupportsMarkdown
+-}}
+{{/*
+    Define base parameters for merging the YAML options with attributes. The
+    YamlOptions key is always added after the codeblock info is retrieved.
+
+    Delete the lines for PresetDotPathPrefix and PresetKey if your markup
+    doesn't use presets.
+
+    Delete the lines for ValidKeys if you don't want to validate the keys to a
+    strict list of valid options.
+
+    Attributes and Position always need to be passed.
+*/}}
+{{- $PresetDotPathPrefix := printf "platen.%s" $MarkupName -}}
+{{- $PresetKey           := "preset"                       -}}
+{{- $ValidKeys           := slice                          -}}
+{{- $mergeParameters     := dict "Attributes"          $Attributes
+                                 "Position"            $Position
+                                 "PresetDotPathPrefix" $PresetDotPathPrefix
+                                 "PresetKey"           $PresetKey
+                                 "ValidKeys"           $ValidKeys
+-}}
+
+{{/*
+    Define options for trimming the rendered output. Set TrimLeadingWhitespace
+    to false to leave any leading whitespace for the rendered output. Set
+    TrimTrailingWhitespace to false to leave any trailing whitespace for the
+    rendered output.
+
+    Unless specifically desired, we trim leading and trailing whitespace so the
+    rendered output is more readable.
+*/}}
+{{- $TrimLeadingWhitespace  := true -}}
+{{- $TrimTrailingWhitespace := true -}}
+
+{{/*  From this point on, everything should stay the same as defined here.  */}}
+
+{{/*  Retrieve the valid language IDs  */}}
+{{- $MarkupIDParams   := dict "Default" $DefaultIDs "DefaultKey" $DefaultKey "Aliases" $Aliases -}}
+{{- $CacheKey         := printf "%s-codeblock" $MarkupName                                      -}}
+{{- $ValidLanguageIDs := partialCached $getMergedMarkupIDs $MarkupIDParams $CacheKey            -}}
+{{- $CheckIDParams    := dict "ValidLanguageIDs" $ValidLanguageIDs "LanguageID" $Type           -}}
+
+{{/*
+    Define base parameters for canonicalizing the codeblock.
+
+    The Options and Definition keys are always added after the codeblock info is
+    retrieved and the attributes are merged with the YAML options.
+*/}}
+{{- $canonicalizing := dict "Config"   $Config
+                            "Position" $Position
+                            "Page"     $Page
+                            "ValidIDs" $ValidLanguageIDs
+                            "ID"       $Type
+                            "Kind"     "codeblock"
+-}}
 
 {{/*
     Initialize the rendered code string. This is returned to the caller. If it's empty,
@@ -28,31 +128,30 @@
 */}}
 {{- $renderedCode := "" -}}
 
-{{/*  Retrieve the valid language IDs  */}}
-{{- $MarkupIDParams   := dict "Default" $DefaultIDs "Aliases" $Aliases               -}}
-{{- $validLanguageIDs := partialCached $getMergedMarkupIDs $MarkupIDParams "details" -}}
-
-{{- if in $validLanguageIDs $type -}}
-  {{/* Parse the definition for data and markdown */}}
-  {{- $infoParams := dict "Definition" $definition "SupportsData" true "SupportsMarkdown" true -}}
-  {{- $info       := partial $getCodeblockInfo $infoParams                                     -}}
-
-  {{- $Merging := dict "Attributes" $Attributes
-                       "YamlOptions" $info.Data
-                       "Position"   $Position
-                       "PresetDotPathPrefix" "platen.details"
-  -}}
-  {{- $Merged         := partial "platen/utils/getMergedCodeblockOptions" $Merging -}}
-  {{- $Canonicalizing := dict "Config"   $Config
-                              "Position" $Position
-                              "Page"     $Page
-                              "Options"  $Merged
-                              "Markdown" $info.Markdown
-  -}}
-  {{- $Canonicalized  := partial "platen/markup/details/_canonicalize" $Canonicalizing -}}
+{{/*  If the codeblock is valid for this markup, process it.  */}}
+{{- if (partial $isValidLanguageID $CheckIDParams) -}}
+  {{/*
+      Parse the definition for data and markdown, then merge the attributes
+      with the YAML options. Next, canonicalize the information to select the
+      template to render and provide the values the templates need to render
+      the markup.
+  */}}
+  {{- $info           := partial $getCodeblockInfo $InfoParameters                                   -}}
+  {{- $mergeParameters = merge $mergeParameters (dict "YamlOptions" $info.Data)                      -}}
+  {{- $Merged         := partial $getMergedCodeblockOptions $mergeParameters                         -}}
+  {{- $canonicalizing := merge $canonicalizing (dict "Options"  $Merged "Definition" $info.Markdown) -}}
+  {{- $Canonicalized  := partial $canonicalize $canonicalizing                                       -}}
 
   {{/*  Render the codeblock with the template from the canonicalized info  */}}
   {{- $renderedCode = partial $Canonicalized.Template $Canonicalized -}}
+
+  {{/*  Trim the rendered codeblock as needed  */}}
+  {{- if $TrimLeadingWhitespace -}}
+    {{- $renderedCode = strings.TrimLeft "\n " $renderedCode -}}
+  {{- end -}}
+  {{- if $TrimTrailingWhitespace -}}
+    {{- $renderedCode = strings.TrimRight "\n " $renderedCode -}}
+  {{- end -}}
 {{- end -}}
 
 {{- return $renderedCode -}}

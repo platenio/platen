@@ -605,21 +605,11 @@ Specify one or more classes to add to the button's element. By default, it has o
 
 You can specify this value either as a string (if you only need to add one class) or as a list of strings.
 
-`````````tabs { #preset-property-class-strings }
-``````tab { name="Single Class" }
-```yaml
-class: sepia
+```tabs
+---
+preset: docs.presets.property_class_strings
+---
 ```
-``````
-
-``````tab { name="Multiple Classes" }
-```yaml
-class:
-  - big
-  - shadowed
-```
-``````
-`````````
 
 You can also define the default classes for your buttons with the `platen.markup.buttons.classes` setting for
 your site configuration. Values from your site configuration are overridden by this property in your preset. For more

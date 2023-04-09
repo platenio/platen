@@ -1,0 +1,11 @@
+{{- $Params          := .                                      -}}
+{{- $LibraryUrl      := $Params.LibraryUrl      | safeHTMLAttr -}}
+{{- $ScriptSrc       := $Params.ScriptSrc       | safeHTMLAttr -}}
+{{- $ScriptIntegrity := $Params.ScriptIntegrity | safeHTMLAttr -}}
+
+<script defer
+        type="module"
+        src="{{ $LibraryUrl }}"></script>
+<script type="module"
+        src="{{ $ScriptSrc }}"
+        {{ $ScriptIntegrity }}></script>

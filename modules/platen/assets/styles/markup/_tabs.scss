@@ -1,4 +1,18 @@
-.markdown .platen-tabs {
+.markdown sl-tab-group.platen-tabs {
+  &::part(body) {
+    padding: 1rem;
+  }
+  sl-tab-panel {
+    > :first-child {
+      margin-top: 0;
+    }
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.markdown div.platen-tabs {
   margin-top: $padding-large;
   margin-bottom: $padding-large;
 

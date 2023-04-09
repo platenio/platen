@@ -1,0 +1,9 @@
+{{- $Params            := .                                        -}}
+{{- $FormulaAttributes := $Params.FormulaAttributes | safeHTMLAttr -}}
+{{- $FormulaOpen       := $Params.FormulaOpen       | safeHTML     -}}
+{{- $FormulaClose      := $Params.FormulaClose      | safeHTML     -}}
+{{- $Definition        := $Params.Definition        | safeHTML     -}}
+
+<span {{ $FormulaAttributes }}>\{{ $FormulaOpen }}{{ $Definition }}\{{ $FormulaClose }}</span>
+
+{{- $null := "This line only exists to force trimming the text after the span." -}}

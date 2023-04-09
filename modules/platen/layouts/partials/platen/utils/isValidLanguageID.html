@@ -1,0 +1,20 @@
+{{- $Params           := .                        -}}
+{{- $ValidLanguageIDs := $Params.ValidLanguageIDs -}}
+{{- $LanguageID       := $Params.LanguageID       -}}
+{{- $isValid          := false                    -}}
+
+{{- if reflect.IsMap $ValidLanguageIDs -}}
+  {{- range $_, $List := $ValidLanguageIDs -}}
+    {{- if in $List $LanguageID -}}
+      {{- $isValid = true -}}
+    {{- end -}}
+  {{- end -}}
+{{- else if reflect.IsSlice $ValidLanguageIDs -}}
+  {{- if in $ValidLanguageIDs $LanguageID -}}
+    {{- $isValid = true -}}
+  {{- end -}}
+{{- else if (eq $ValidLanguageIDs $LanguageID) -}}
+  {{- $isValid = true -}}
+{{- end -}}
+
+{{- return $isValid -}}

@@ -17,7 +17,7 @@ properties:
 
       https://platen.io/modules/platen/markup/subscripts#preset-property-text
     type: string
-  classes:
+  class:
     title: Class List
     description: |
       Specify any additional classes to add to the subscript's element.
@@ -27,7 +27,7 @@ properties:
     items:
       type: string
     uniqueItems: true
-  styles:
+  style:
     title: Style List
     description: |
       Specify any number of styles to apply to this preset. They're merged in order.

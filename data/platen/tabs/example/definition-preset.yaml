@@ -1,0 +1,22 @@
+placement: start
+definition: |
+  ```tab
+  ---
+  name: Normal
+  ---
+  This is a normal tab.
+  ```
+  ```tab
+  ---
+  name: Closable
+  closable: true
+  ---
+  This is a normal tab.
+  ```
+  ```tab
+  ---
+  name: Disabled
+  disabled: true
+  ---
+  This is a normal tab.
+  ```

@@ -1,0 +1,25 @@
+{{- $Params              := .                                          -}}
+{{- $StyleUrl            := $Params.StyleUrl            | safeHTMLAttr -}}
+{{- $StyleIntegrity      := $Params.StyleIntegrity      | safeHTMLAttr -}}
+{{- $LibraryUrl          := $Params.LibraryUrl          | safeHTMLAttr -}}
+{{- $LibraryIntegrity    := $Params.LibraryIntegrity    | safeHTMLAttr -}}
+{{- $ChemistryUrl        := $Params.ChemistryUrl        | safeHTMLAttr -}}
+{{- $ChemistryIntegrity  := $Params.ChemistryIntegrity  | safeHTMLAttr -}}
+{{- $AutoRenderUrl       := $Params.AutoRenderUrl       | safeHTMLAttr -}}
+{{- $AutoRenderIntegrity := $Params.AutoRenderIntegrity | safeHTMLAttr -}}
+
+<link rel="stylesheet"
+      href="{{ $StyleUrl }}"
+      {{ $StyleIntegrity }} />
+<script defer
+        src="{{ $LibraryUrl }}"
+        {{ $LibraryIntegrity }}></script>
+{{ with $ChemistryUrl -}}
+<script defer
+        src="{{ $ChemistryUrl }}"
+        {{ $ChemistryIntegrity }}></script>
+{{- end }}
+<script defer
+        onload="renderMathInElement(document.body);"
+        src="{{ $AutoRenderUrl }}"
+        {{ $AutoRenderIntegrity }}></script>

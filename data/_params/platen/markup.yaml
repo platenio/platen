@@ -5,3 +5,6 @@ details:
 buttons:
   use_legacy: false
   warn_on_legacy: false
+tabs:
+  use_legacy: false
+  warn_on_legacy: false

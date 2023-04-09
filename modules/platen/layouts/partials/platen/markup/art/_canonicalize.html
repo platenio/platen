@@ -1,26 +1,172 @@
-{{- $Params         := .                             -}}
-{{- $Page           := $Params.Page                  -}}
-{{- $Options        := $Params.Options               -}}
-{{- $TemplateFolder := "platen/markup/art/templates" -}}
-{{- $canonical      := dict                          -}}
-{{- $style          := dict                          -}}
-{{- $template       := "default"                     -}}
+{{- $Params     := .                  -}}
+{{- $Config     := $Params.Config     -}} {{/* The markup's site configuration, like platen.markup.foo     */}}
+{{- $Position   := $Params.Position   -}} {{/* The markup's position in the Markdown - only for codeblocks */}}
+{{- $Page       := $Params.Page       -}} {{/* The Page object for the Markdown document the markup is in  */}}
+{{- $ValidIDs   := $Params.ValidIDs   -}} {{/* The map or slice of valid IDs for the markup                */}}
+{{- $ID         := $Params.ID         -}} {{/* The used language ID (codeblock) or prefix (image/link)     */}}
+{{- $Kind       := $Params.Kind       -}} {{/* The kind of markup: codeblock, image, link, etc             */}}
+{{- $Definition := $Params.Definition -}} {{/* The non-yaml text of the markup - only for codeblocks       */}}
+{{- $options    := $Params.Options    -}} {{/* The pre-merged options, attributes, and preset properties   */}}
+{{/*
+    Define partials for easier calling/renaming. If there's any that you don't
+    need, you can delete them or leave them here.
 
-{{/*  Define partials for easier calling/renaming  */}}
+    - mungeHeadingLevel converts a value for a heading level to between 0 and 6,
+      inclusive. A value of 0 indicates that the markup shouldn't be rendered
+      as a heading. If the value is less than 0, it's munged to 0. If it's
+      greater than 6, it's munged to 6.
+
+    - getLeadTrimmedText takes a block of text and trims the leading whitespace
+      for the first line from the remaining lines. Use this to ensure Markdown
+      in a nested codeblock can be rendered correctly.
+
+    - getMergedClasses merges one or more default classes with a list of
+      additional classes, returning the union of the two lists (no duplicate
+      values). It's space-delimited by default, but you can pass Delimit as false
+      to return the values as a slice.
+
+    - getPrettyRender renders a line or block of Markdown and munges it for line
+      length and indentation. You can use the AsBlock option in the parameters
+      to always render the Markdown as a block, even when it's only one line.
+      You can set the indent count with the IndentCount option.
+
+    - getSafeAttributes takes a slice of HTML element attributes as strings and
+      returns them as a single space-delimited string, marked as safe for
+      insertion into HTML attributes.
+*/}}
+{{- $mungeHeadingLevel    := "platen/utils/mungeHeadingLevel"    -}}
+{{- $getLeadTrimmedText   := "platen/utils/getLeadTrimmedText"   -}}
+{{- $getMergedClasses     := "platen/utils/getMergedClasses"     -}}
 {{- $getMergedMap         := "platen/utils/getMergedMap"         -}}
 {{- $getMergedStyleOption := "platen/utils/getMergedStyleOption" -}}
-{{- $getSafeAttributes    := "platen/utils/getSafeAttributes"    -}}
-{{- $getLeadTrimmedText   := "platen/utils/getLeadTrimmedText"   -}}
 {{- $getPrettyRender      := "platen/utils/getPrettyRender"      -}}
+{{- $getSafeAttributes    := "platen/utils/getSafeAttributes"    -}}
+{{/*  Define the template folder and default template for this markup  */}}
+{{- $TemplateFolder := "platen/markup/art/templates" -}}
+{{- $template       := "default"                     -}}
+{{/*
+    Define the list of valid config options that can be used as defaults for
+    the markup when not supplied directly or by a preset. Delete this section
+    if the markup doesn't use defaults from the site config.
+
+    You can specify values with dotpath notation as needed, but they should
+    always be relative to the markup's configuration key. So far the config
+    setting 'platen.markup.foo.bar.baz', specify the key as "foo.bar.baz"
+*/}}
+{{- $ConfigOptions := slice -}}
+{{/*
+    Define the list of default values for the options that aren't pulled from
+    the site configuration. Delete this section if you don't need it.
+
+    If you need to define defaults, add them to the dictionary using the
+    option's key and default value. For example, to default the legacy option
+    to false, add this to the $NonConfigDefaults dictionary:
+
+        "legacy" false
+*/}}
+{{- $NonConfigDefaults := dict -}}
+{{/*  Initialize the return value for this partial  */}}
+{{- $canonical := dict -}}
+
+{{/*
+    Canonicalize options with config defaults, using the value from the config
+    unless specified by the markup options (already merged with preset).
+
+    Delete this section if the markup doesn't use defaults from the site config.
+
+    It loops over the list of config options to see if they're set. Then it uses
+    those values as the default for the matching value from the merged options,
+    ignoring the value from config if it was set in the markup's attribute,
+    options, or preset properties.
+
+    You can check the name of the key to do specific munging if the values in
+    the configuration don't match the value type for the options. Here we left
+    the handling for classes, where the configuration specifies `classes` as an
+    array but markup always uses `class` due to the built-in handling of class
+    attributes by Hugo. It space-delimits the values from config and uses them
+    as a default if `class` isn't defined in the options.
+
+    You can do similar handling for other keys by adding an 'else if' statement
+    before the end of the conditional, like:
+
+        {{- else if (eq "use_legacy" $OptionKey) -}}
+          {{- $key   = "legacy"                         -}}
+          {{- $value = $options.legacy | default $value -}}
+        {{- else -}}
+
+    Which would check for a key called 'use_legacy' and use its value for the
+    'legacy' key in the options.
+*/}}
+{{- range $OptionKey := $ConfigOptions -}}
+  {{- if isset $Config $OptionKey -}}
+    {{- $key   := $OptionKey               -}}
+    {{- $value := index $Config $OptionKey -}}
+    {{- if eq "classes" $OptionKey -}}
+      {{- $key   = "class"                         -}}
+      {{- $value = $options.class | default (delimit $value " ") -}}
+    {{- else -}}
+      {{- $value = index $options $OptionKey | default $value -}}
+    {{- end -}}
+    {{/*  Merge the munged value in  */}}
+    {{- $options = merge $options (dict $key $value) -}}
+  {{- else if (in $OptionKey ".") -}}
+    {{/*
+        This section is for config options that aren't at the top level. We
+        default to using the path, replacing the dots with underscores, as
+        the key name. So `foo.bar.baz` becomes `foo_bar_baz`.
+
+        If your markup doesn't have any config items that are nested and need
+        to be accessed with the dot path, you can delete this conditional block.
+
+        As with the top-level keys, you can add handling for specific keys by
+        checking the key name and munging either or both the key and value to
+        insert into the options.
+    */}}
+    {{- $key   := replace $OptionKey "." "_" -}}
+    {{/*  Retrieve the value from the config if defined  */}}
+    {{- $value := $Config                    -}}
+    {{- range $Segment := split $OptionKey "." -}}
+      {{- $value = index $value $Segment -}}
+    {{- end -}}
+    {{/*  If the value was defined, process it for merging  */}}
+    {{- if ne nil $value -}}
+      {{/*
+          Add handling for specific keys here, like:
+
+              {{- if eq "icons.collapse" $OptionKey -}}
+                {{- $key = "icon_collapse" -}}
+              {{- else if (eq "icons.expand" $OptionKey) -}}
+                {{- $key = "icon_expand" -}}
+              {{- end -}}
+      */}}
+      {{/*  Merge the config value over the options if not set explicitly  */}}
+      {{- $value   = index $options $key | default $value -}}
+      {{- $options = merge $options (dict $key $value)    -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+    Loop over the default values that aren't defined by the configuration and
+    set if needed.
+
+    You can delete this section if your markup doesn't support default values
+    for the options that aren't sourced from the configuration.
+*/}}
+{{- range $Key, $Value := $NonConfigDefaults -}}
+  {{- if not (isset $options $Key) -}}
+    {{- $options = merge $options (dict $Key $Value) -}}
+  {{- end -}}
+{{- end -}}
 
 {{/*  Canonicalize the styles first so we can use them in the various attributes.  */}}
-{{- $styleParams := dict "Options" $Options "StylesDotPathPrefix" "platen.art.styles" -}}
-{{- $style        = partial $getMergedStyleOption $styleParams                        -}}
+{{- $styleParams := dict "Options" $options "StylesDotPathPrefix" "platen.art.styles" -}}
+{{- $style       := partial $getMergedStyleOption $styleParams                        -}}
 {{/*  Any classes passed directly in the options are added to the figure.  */}}
-{{- with $Options.class -}}
+{{- with $options.class -}}
   {{- $figureClasses := $style.figure.classes -}}
 
-  {{- range $class := split $Options.class " " -}}
+  {{- range $class := split $options.class " " -}}
     {{- $figureClasses = $figureClasses | append $class -}}
   {{- end -}}
 
@@ -33,12 +179,12 @@
     missing the alt text or source.
 */}}
 {{- $imageAttributes := slice -}}
-{{- with $Options.alt -}}
+{{- with $options.alt -}}
   {{- $imageAttributes = $imageAttributes | append (printf `alt="%s"` .) -}}
 {{- else -}}
   {{/*  No alt text, use handler  */}}
 {{- end -}}
-{{- with $Options.src -}}
+{{- with $options.src -}}
   {{/*
       We need slightly different handling for sources as remote resources,
       local resources, and static resources.
@@ -54,6 +200,7 @@
   {{- $imageAttributes = $imageAttributes | append (printf `src="%s"` $src) -}}
 {{- else -}}
   {{/*  No source, error  */}}
+  {{- errorf "Sourceless art in '%s': %s" $Page.File.Path ($options | jsonify (dict "indent" "  ")) -}}
 {{- end -}}
 {{/*  If the style defines extra classes for the image, add them in.  */}}
 {{- with $style.image.classes -}}
@@ -67,10 +214,10 @@
     Handle the content warning, if needed. This needs to be done before the rest
     of the handling because a content warning munges the figure's style.
 */}}
-{{- with $Options.content_warning -}}
+{{- with $options.content_warning -}}
   {{/*  Switch the template from default to content_warning  */}}
   {{- $template         = "content_warning"        -}}
-  {{- $ContentWarning  := $Options.content_warning -}}
+  {{- $ContentWarning  := $options.content_warning -}}
   {{/*  Merge the styles for content warning art into the base style.  */}}
   {{- $mergeParams     := dict "BaseMap" $style "MergingMap" $style.content_warning "JoinArrays" true -}}
   {{- $style            = partialCached $getMergedMap $mergeParams $mergeParams                       -}}
@@ -98,8 +245,8 @@
 {{/* Define the attribute list for the figure element */}}
 {{- $figureAttributes := slice -}}
 {{/*  The figure only gets an ID if the author specified one.  */}}
-{{- with $Options.ID -}}
-  {{- $figureAttributes = $figureAttributes | append (printf `id="%s"` $Options.ID) -}}
+{{- with $options.id -}}
+  {{- $figureAttributes = $figureAttributes | append (printf `id="%s"` $options.id) -}}
 {{- end -}}
 {{- $FigureClasses   := delimit $style.figure.classes " "                               -}}
 {{- $figureAttributes = $figureAttributes | append (printf `class="%s"` $FigureClasses) -}}
@@ -107,7 +254,7 @@
 {{- $canonical        = merge $canonical (dict "FigureAttributes" $figureAttributes)    -}}
 
 {{/*  Handle the caption, if needed.  */}}
-{{- with $Options.caption -}}
+{{- with $options.caption -}}
   {{/*  Set the template to be a caption variant  */}}
   {{- $template    = printf "%sCaption" $template -}}
   {{/*  Trim the text for the caption before rendering it.  */}}

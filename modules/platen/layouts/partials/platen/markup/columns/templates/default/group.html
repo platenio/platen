@@ -1,0 +1,9 @@
+{{- $Params          := .                                      -}}
+{{- $ID              := $Params.ID              | safeHTMLAttr -}}
+{{- $Classes         := $Params.Classes         | safeHTMLAttr -}}
+{{- $RenderedColumns := $Params.RenderedColumns | safeHTML     -}}
+
+<div id="{{ $ID }}"
+     class="{{ $Classes }}">
+  {{ $RenderedColumns }}
+</div>

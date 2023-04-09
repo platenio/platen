@@ -1,0 +1,20 @@
+{{- $Params          := .                                      -}}
+{{- $Name            := $Params.Name            | safeHTMLAttr -}}
+{{- $TabAttributes   := $Params.TabAttributes   | safeHTMLAttr -}}
+{{- $TabContent      := $Params.TabContent      | safeHTML     -}}
+{{- $PanelAttributes := $Params.PanelAttributes | safeHTMLAttr -}}
+{{- $PanelContent    := $Params.PanelContent    | safeHTML     -}}
+
+<sl-tab slot="nav"
+        panel="{{ $Name }}"
+        {{- with $TabAttributes }}
+        {{ $TabAttributes }}
+        {{- end -}}>
+  <span>{{ $TabContent}}</span>
+</sl-tab>
+<sl-tab-panel name="{{ $Name }}"
+              {{- with $PanelAttributes }}
+              {{ $PanelAttributes }}
+              {{- end -}}>
+  {{ $PanelContent }}
+</sl-tab-panel>

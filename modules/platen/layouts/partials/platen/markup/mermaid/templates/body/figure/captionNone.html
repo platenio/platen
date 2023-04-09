@@ -1,0 +1,30 @@
+{{- $Params  := . -}}
+{{/*
+    These values are all from the example implementation of the canonicalize
+    partial. Make sure to actually implement the template to your needs.
+
+    Always pass the values through safeHTML, safeHTMLAttr (for attributes),
+    safeCSS, safeJS, or safeURL so your values aren't munged unexpectedly.
+*/}}
+{{- $Container         := $Params.Container         | safeHTML     -}}
+{{- $Definition        := $Params.Definition        | safeHTML     -}}
+{{- $FigureAttributes  := $Params.FigureAttributes  | safeHTMLAttr -}}
+{{- $MermaidAttributes := $Params.MermaidAttributes | safeHTMLAttr -}}
+{{- $MermaidClasses    := $Params.MermaidClasses    | safeHTMLAttr -}}
+
+{{- $ContainerClose := printf "</%s>" $Container | safeHTML                -}}
+{{- $containerOpen  := printf `<%s class="%s">` $Container $MermaidClasses -}}
+{{- with $MermaidAttributes -}}
+  {{- $containerOpen  = printf "<%s %s>" $Container $MermaidAttributes -}}
+{{- end -}}
+{{- $containerOpen = $containerOpen | safeHTML -}}
+
+{{- with $FigureAttributes -}}
+  <figure {{ $FigureAttributes }}>
+{{- else -}}
+  <figure>
+{{- end }}
+  {{ $containerOpen }}
+{{ $Definition }}
+  {{ $ContainerClose }}
+</figure>

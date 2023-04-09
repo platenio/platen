@@ -2,45 +2,110 @@
 {{/*
     This partial expects to receive input for merging aliases into default IDs
     for markup render hooks. The value for Default and Aliases can either be
-    strings or a slice of strings.
+    strings, slices of strings, or maps of strings.
+
+    If the Default is a map and Aliases is a map, the keys are expected to
+    match. If Default is a map and Aliases is a slice, the DefaultKey parameter
+    is used to determine which key to add the aliases to.
 
     If Suffix is passed, the values are all given the configured suffix.
 
     The partial returns the combined list as a slice.
 */}}
-{{- $Params     := .               -}}
-{{- $Default    := $Params.Default -}}
-{{- $Aliases    := $Params.Aliases -}}
-{{- $Suffix     := $Params.Suffix  -}}
+{{- $Params     := .                  -}}
+{{- $Default    := $Params.Default    -}}
+{{- $DefaultKey := $Params.DefaultKey -}}
+{{- $Aliases    := $Params.Aliases    -}}
+{{- $Suffix     := $Params.Suffix     -}}
 
 {{/*  Initialize the ID list  */}}
 {{- $validIDs := slice -}}
 
-{{/* Set the ID list to include the default(s) first */}}
+{{/*
+    Set the ID list to include the default(s) first.
+
+    If the default is a slice, add it. If it's a scalar, make it a slice and
+    add it.
+
+    If it's a map, we're going to return a map of valid IDs by group instead.
+*/}}
 {{- with $Default -}}
   {{- if reflect.IsSlice $Default -}}
     {{- $validIDs = $Default -}}
+  {{- else if (reflect.IsMap $Default) -}}
+    {{- $validIDs = dict -}}
+    {{- range $Key, $Value := $Default -}}
+      {{- if reflect.IsSlice $Value -}}
+        {{- $validIDs = merge $validIDs (dict $Key $Value) -}}
+      {{- else -}}
+        {{- $validIDs = merge $validIDs (dict $Key (slice $Value)) -}}
+      {{- end -}}
+    {{- end -}}
   {{- else -}}
     {{- $validIDs = $validIDs | append $Default -}}
   {{- end -}}
 {{- end -}}
 
-{{/*  Add the aliases after the defaults  */}}
+{{/*
+    Add the aliases after the defaults. There's some special handling here for
+    mapped IDs.
+
+    If the return is a map and Aliases is a map, add the entries for each key
+    to the return list.
+
+    If the return is a map and Aliases is a slice or string, add the aliases to
+    the default key in the map.
+
+    If the return is a slice, add the aliases to it.
+*/}}
 {{- with $Aliases -}}
-  {{- if reflect.IsSlice $Aliases -}}
+  {{- if reflect.IsMap $validIDs -}}
+    {{- if reflect.IsMap $Aliases -}} {{/* return and aliases are maps */}}
+      {{- range $Key, $Value := $Aliases -}}
+        {{- $merged := slice -}}
+        {{- if reflect.IsSlice $Value -}}
+          {{- $merged = union (index $validIDs $Key) $Value -}}
+        {{- else -}}
+          {{- $merged = index $validIDs $Key | append $Value -}}
+        {{- end -}}
+        {{- $validIDs = merge $validIDs (dict $Key $merged) -}}
+      {{- end -}}
+    {{- else if (reflect.IsSlice $Aliases) -}} {{/* return is a map and aliases a slice*/}}
+      {{- $Merged  := union (index $validIDs $DefaultKey) $Aliases -}}
+      {{- $validIDs = merge $validIDs (dict $DefaultKey $Merged)   -}}
+    {{- else -}} {{/* return is a map and aliases a scalar */}}
+      {{- $Merged  := union (index $validIDs $DefaultKey) $Aliases -}}
+      {{- $validIDs = merge $validIDs (dict $DefaultKey $Merged)   -}}
+    {{- end -}}
+  {{- else if reflect.IsSlice $Aliases -}} {{/* return and aliases are slices */}}
     {{- $validIDs = union $validIDs $Aliases -}}
-  {{- else -}}
+  {{- else -}} {{/* return is a slice and aliases is a string */}}
     {{- $validIDs = $validIDs | append $Aliases -}}
   {{- end -}}
 {{- end -}}
 
-{{/*  If suffix is defined, add it to every value  */}}
+{{/*
+    If suffix is defined, add it to every value. For maps, iterate over the keys
+    to munge each item in their slice value. For slices, iterate over each item.
+
+    This returns the adjusted slice or map.
+*/}}
 {{- with $Suffix }}
-  {{- $mungedIDs := slice -}}
-  {{- range $ID := $validIDs -}}
-    {{- $mungedIDs = $mungedIDs | append (printf "%s:" $ID) -}}
+  {{- if reflect.IsMap $validIDs -}}
+    {{- range $Key, $List := $validIDs -}}
+      {{- $mungedIDs := slice -}}
+      {{- range $ID := $List -}}
+        {{- $mungedIDs = $mungedIDs | append (printf "%s:" $ID) -}}
+      {{- end -}}
+      {{- $validIDs = merge $validIDs (dict $Key $mungedIDs) -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $mungedIDs := slice -}}
+    {{- range $ID := $validIDs -}}
+      {{- $mungedIDs = $mungedIDs | append (printf "%s:" $ID) -}}
+    {{- end -}}
+    {{- $validIDs = $mungedIDs -}}
   {{- end -}}
-  {{- $validIDs = $mungedIDs -}}
 {{- end -}}
 
 {{- return $validIDs -}}

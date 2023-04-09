@@ -1,0 +1,482 @@
+{{- $Params     := .                  -}}
+{{- $Config     := $Params.Config     -}} {{/* The markup's site configuration, like platen.markup.foo     */}}
+{{- $Position   := $Params.Position   -}} {{/* The markup's position in the Markdown - only for codeblocks */}}
+{{- $Page       := $Params.Page       -}} {{/* The Page object for the Markdown document the markup is in  */}}
+{{- $ValidIDs   := $Params.ValidIDs   -}} {{/* The map or slice of valid IDs for the markup                */}}
+{{- $ID         := $Params.ID         -}} {{/* The used language ID (codeblock) or prefix (image/link)     */}}
+{{- $Kind       := $Params.Kind       -}} {{/* The kind of markup: codeblock, image, link, etc             */}}
+{{- $definition := $Params.Definition -}} {{/* The non-yaml text of the markup - only for codeblocks       */}}
+{{- $options    := $Params.Options    -}} {{/* The pre-merged options, attributes, and preset properties   */}}
+{{/*
+    Define partials for easier calling/renaming. If there's any that you don't
+    need, you can delete them or leave them here.
+
+    - mungeHeadingLevel converts a value for a heading level to between 0 and 6,
+      inclusive. A value of 0 indicates that the markup shouldn't be rendered
+      as a heading. If the value is less than 0, it's munged to 0. If it's
+      greater than 6, it's munged to 6.
+
+    - getLeadTrimmedText takes a block of text and trims the leading whitespace
+      for the first line from the remaining lines. Use this to ensure Markdown
+      in a nested codeblock can be rendered correctly.
+
+    - getMergedClasses merges one or more default classes with a list of
+      additional classes, returning the union of the two lists (no duplicate
+      values). It's space-delimited by default, but you can pass Delimit as false
+      to return the values as a slice.
+
+    - getPrettyRender renders a line or block of Markdown and munges it for line
+      length and indentation. You can use the AsBlock option in the parameters
+      to always render the Markdown as a block, even when it's only one line.
+      You can set the indent count with the IndentCount option.
+
+    - getSafeAttributes takes a slice of HTML element attributes as strings and
+      returns them as a single space-delimited string, marked as safe for
+      insertion into HTML attributes.
+*/}}
+{{- $mungeHeadingLevel                := "platen/utils/mungeHeadingLevel"                -}}
+{{- $addDataOptionsToNestedCodeblocks := "platen/utils/addDataOptionsToNestedCodeblocks" -}}
+{{- $getCodeblockFromInfo             := "platen/utils/getCodeblockFromInfo"             -}}
+{{- $getCodeblockInfo                 := "platen/utils/getCodeblockInfo"                 -}}
+{{- $getIndentedContent               := "platen/utils/getIndentedContent"               -}}
+{{- $getLeadTrimmedText               := "platen/utils/getLeadTrimmedText"               -}}
+{{- $getMergedClasses                 := "platen/utils/getMergedClasses"                 -}}
+{{- $getMergedMap                     := "platen/utils/getMergedMap"                     -}}
+{{- $getMergedStyleOption             := "platen/utils/getMergedStyleOption"             -}}
+{{- $getPrettyRender                  := "platen/utils/getPrettyRender"                  -}}
+{{- $getSafeAttributes                := "platen/utils/getSafeAttributes"                -}}
+{{/*  Define the template folder and default template for this markup  */}}
+{{- $TemplateFolder := "platen/markup/tabs/templates" -}}
+{{- $template       := "default"                      -}}
+{{/*  Determine whether this canonicalize call is for the group or an entry  */}}
+{{- $IsGroup := in $ValidIDs.group $ID -}}
+{{- $IsEntry := in $ValidIDs.entry $ID -}}
+{{/*
+    Define the list of valid config options that can be used as defaults for
+    the markup when not supplied directly or by a preset. Delete this section
+    if the markup doesn't use defaults from the site config.
+
+    You can specify values with dotpath notation as needed, but they should
+    always be relative to the markup's configuration key. So far the config
+    setting 'platen.markup.foo.bar.baz', specify the key as "foo.bar.baz"
+*/}}
+{{- $ConfigOptions := slice -}}
+{{/*  Only tab groups get setting defaults from config  */}}
+{{- if $IsGroup -}}
+  {{- $ConfigOptions = slice "classes" "use_legacy" "placement" "activation" "no_scroll_controls" -}}
+{{- end -}}
+{{/*
+    Define the list of default values for the options that aren't pulled from
+    the site configuration. Delete this section if you don't need it.
+
+    If you need to define defaults, add them to the dictionary using the
+    option's key and default value. For example, to default the legacy option
+    to false, add this to the $nonConfigDefaults dictionary:
+
+        "legacy" false
+*/}}
+{{- $nonConfigDefaults := dict "legacy" false -}}
+{{- if and $options.legacy $IsEntry -}}
+  {{- $nonConfigDefaults = merge $nonConfigDefaults (dict "checked" false) -}}
+{{- end -}}
+{{/*  Initialize the return value for this partial  */}}
+{{- $canonical := dict -}}
+
+{{/*
+    Canonicalize options with config defaults, using the value from the config
+    unless specified by the markup options (already merged with preset).
+
+    Delete this section if the markup doesn't use defaults from the site config.
+
+    It loops over the list of config options to see if they're set. Then it uses
+    those values as the default for the matching value from the merged options,
+    ignoring the value from config if it was set in the markup's attribute,
+    options, or preset properties.
+
+    You can check the name of the key to do specific munging if the values in
+    the configuration don't match the value type for the options. Here we left
+    the handling for classes, where the configuration specifies `classes` as an
+    array but markup always uses `class` due to the built-in handling of class
+    attributes by Hugo. It space-delimits the values from config and uses them
+    as a default if `class` isn't defined in the options.
+
+    You can do similar handling for other keys by adding an 'else if' statement
+    before the end of the conditional, like:
+
+        {{- else if (eq "use_legacy" $OptionKey) -}}
+          {{- $key   = "legacy"                         -}}
+          {{- $value = $options.legacy | default $value -}}
+        {{- else -}}
+
+    Which would check for a key called 'use_legacy' and use its value for the
+    'legacy' key in the options.
+*/}}
+{{- range $OptionKey := $ConfigOptions -}}
+  {{- if isset $Config $OptionKey -}}
+    {{- $key   := $OptionKey               -}}
+    {{- $value := index $Config $OptionKey -}}
+    {{- if eq "classes" $OptionKey -}}
+      {{- $key   = "class"                         -}}
+      {{- $value = $options.class | default (delimit $value " ") -}}
+    {{- else if (eq "use_legacy" $OptionKey) -}}
+      {{- $key   = "legacy"                         -}}
+      {{- $value = $options.legacy | default $value -}}
+    {{- else -}}
+      {{- $value = index $options $OptionKey | default $value -}}
+    {{- end -}}
+    {{/*  Merge the munged value in  */}}
+    {{- $options = merge $options (dict $key $value) -}}
+  {{- else if (in $OptionKey ".") -}}
+    {{/*
+        This section is for config options that aren't at the top level. We
+        default to using the path, replacing the dots with underscores, as
+        the key name. So `foo.bar.baz` becomes `foo_bar_baz`.
+
+        If your markup doesn't have any config items that are nested and need
+        to be accessed with the dot path, you can delete this conditional block.
+
+        As with the top-level keys, you can add handling for specific keys by
+        checking the key name and munging either or both the key and value to
+        insert into the options.
+    */}}
+    {{- $key   := replace $OptionKey "." "_" -}}
+    {{/*  Retrieve the value from the config if defined  */}}
+    {{- $value := $Config                    -}}
+    {{- range $Segment := split $OptionKey "." -}}
+      {{- $value = index $value $Segment -}}
+    {{- end -}}
+    {{/*  If the value was defined, process it for merging  */}}
+    {{- if ne nil $value -}}
+      {{/*
+          Add handling for specific keys here, like:
+
+              {{- if eq "icons.collapse" $OptionKey -}}
+                {{- $key = "icon_collapse" -}}
+              {{- else if (eq "icons.expand" $OptionKey) -}}
+                {{- $key = "icon_expand" -}}
+              {{- end -}}
+      */}}
+      {{/*  Merge the config value over the options if not set explicitly  */}}
+      {{- $value   = index $options $key | default $value -}}
+      {{- $options = merge $options (dict $key $value)    -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+    Loop over the default values that aren't defined by the configuration and
+    set if needed.
+
+    You can delete this section if your markup doesn't support default values
+    for the options that aren't sourced from the configuration.
+*/}}
+{{- range $Key, $Value := $nonConfigDefaults -}}
+  {{- if not (isset $options $Key) -}}
+    {{- $options = merge $options (dict $Key $Value) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  The rest of this file is specific handling for the markup  */}}
+
+{{- $HasGroupID := isset $options "group_id" -}}
+{{- $HasID      := isset $options "id"       -}}
+{{- $HasName    := isset $options "name"     -}}
+
+{{/*  Set template and handle mandatory options for legacy tabs  */}}
+{{- if $options.legacy -}}
+  {{- $template = "legacy" -}}
+  {{- if $Config.warn_on_legacy -}}
+    {{- $message := slice "Used legacy template for buttons markup."
+                          "This template is deprecated and will eventually be removed."
+                          "For more information, see"
+                          "https://platen.io/modules/platen/markup/buttons/#legacy-template"
+    -}}
+    {{- warnf (delimit $message " " | print) -}}
+  {{- end -}}
+  {{- if and $IsGroup (not $HasID) -}}
+    {{- errorf "Missing mandatory ID for legacy tab markup at %s" $Position -}}
+  {{- end -}}
+  {{- if $IsEntry -}}
+    {{- if not $HasGroupID -}}
+      {{- errorf "Missing group ID for legacy tab at '%s'. Is it inside a `tabs` codeblock?" $Position -}}
+    {{- end -}}
+    {{- if and (not $HasID) (not $HasName) -}}
+      {{- errorf "Missing name and ID for legacy tab at '%s'. Must specify at least one." $Position -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Handle the definition, which might be passed directly or through a preset  */}}
+{{- with $definition -}}
+  {{/*  Has an input definition, nothing to do  */}}
+{{- else -}}
+  {{- with $options.definition -}}
+    {{/*  Use the definition from a preset  */}}
+    {{- $definition = $options.definition -}}
+  {{- else -}}
+    {{- errorf
+        "Missing definition for '%s' markup at %s. Specify a definition in the markup or with a preset."
+                                $ID            $Position
+    }}
+  {{- end -}}
+{{- end -}}
+
+{{/*  If not legacy, make sure to mark the page as requiring shoelace  */}}
+{{- if not $options.legacy -}}
+  {{- $Page.Store.Set "_hasShoelace" true -}}
+{{- end -}}
+
+{{/*  Initialize the attributes slice  */}}
+{{- $attributes := slice -}}
+
+{{- if $IsGroup -}}
+  {{/*  Ensure the right template is called  */}}
+  {{- $template = printf "%s/group" $template -}}
+
+  {{/*  Canonicalize the shared attributes: class and id  */}}
+  {{- $Classes := partial $getMergedClasses (dict "Default" "platen-tabs" "Additional" $options.class) -}}
+  {{- with $Classes -}}
+    {{- $attributes = $attributes | append (printf `class="%s"` $Classes) -}}
+  {{- end -}}
+  {{- with $options.id -}}
+    {{- $attributes = $attributes | append (printf `id="%s"` $options.id) -}}
+  {{- end -}}
+
+  {{- if not $options.legacy -}}
+    {{/*  Handle the non-legacy options  */}}
+    {{- with $options.placement -}}
+      {{- $ValidPlacements := slice "top" "bottom" "start" "end" -}}
+      {{- $DefaultPlacement := $Config.placement | default "top" -}}
+
+      {{- if not (in $ValidPlacements $options.placement) -}}
+        {{- $message := slice
+            (printf "Specified placement '%s' in tabs markup at %s is invalid." $options.placement $Position)
+            (printf "Must be one of: '%s'." (delimit $ValidPlacements "', '" "', or'"))
+            (printf "Defaulting to '%s'." $DefaultPlacement)
+        -}}
+        {{- warnf (delimit $message " ") -}}
+        {{- $options = merge $options (dict "placement" $DefaultPlacement) -}}
+      {{- end -}}
+
+      {{- $attributes = $attributes | append (printf `placement="%s"` $options.placement) -}}
+    {{- end -}}
+
+    {{- with $options.activation -}}
+      {{- $ValidActivations  := slice "auto" "manual"               -}}
+      {{- $DefaultActivation := $Config.activation | default "auto" -}}
+
+      {{- if not (in $ValidActivations $options.activation) -}}
+        {{- $message := slice
+            (printf "Specified activation '%s' in tabs markup at %s is invalid." $options.activation $Position)
+            (printf "Must be one of: '%s'." (delimit $ValidActivations "', '" "', or'"))
+            (printf "Defaulting to '%s'." $DefaultActivation)
+        -}}
+        {{- warnf (delimit $message " ") -}}
+        {{- $options = merge $options (dict "activation" $DefaultActivation) -}}
+      {{- end -}}
+
+      {{- $attributes = $attributes | append (printf `activation="%s"` $options.activation) -}}
+    {{- end -}}
+
+    {{- if isset $options "no_scroll_controls" -}}
+      {{- $attributes = $attributes | append (printf `noScrollControls="%v"` $options.no_scroll_controls) -}}
+    {{- end -}}
+  {{- end -}}
+  {{/*  Canonicalize the attributes for the tabs container  */}}
+  {{- $AttributeIndent := cond $options.legacy 5 14                                    -}}
+  {{- $AttributeParams := dict "Attributes" $attributes "IndentCount" $AttributeIndent -}}
+  {{- $attributes       = partial $getSafeAttributes $AttributeParams                  -}}
+  {{- $canonical        = merge $canonical (dict "Attributes" $attributes)             -}}
+{{- else -}}
+  {{/*  Ensure the right template is called  */}}
+  {{- $template = printf "%s/tab" $template -}}
+  {{/*  Handle legacy specifically  */}}
+  {{- if $options.legacy -}}
+    {{/*  Add automatic name/id if needed  */}}
+    {{- if and $HasName $HasID -}}
+      {{/*  Nothing to do, use specified name and ID  */}}
+    {{- else if $HasName -}}
+      {{- $AutoID := printf "%s-%s" $options.group_id (lower $options.name | urlize) -}}
+      {{- $options = merge $options (dict "id" $AutoID)                              -}}
+    {{- else if $HasID -}}
+      {{- $AutoName := replaceRE `(-|_)` " " $options.id | title -}}
+      {{- $options   = merge $options (dict "name" $AutoName)    -}}
+    {{- end -}}
+
+    {{/*  Canonicalize classes  */}}
+    {{- $DefaultClasses   := dict "Div"   (slice "platen-tabs-content" "markdown-inner")
+                                  "Input" (slice "toggle")
+                                  "Label" (slice)
+    -}}
+    {{- range $Element, $Defaults := $DefaultClasses -}}
+      {{- $ClassKey := printf "%sClasses" $Element                                                      -}}
+      {{- $Classes  := partial $getMergedClasses (dict "Default" $Defaults "Additional" $options.class) -}}
+      {{- $canonical = merge $canonical (dict $ClassKey $Classes)                                       -}}
+    {{- end -}}
+
+    {{/*  Canonicalize label's name (group id), id, and content  */}}
+    {{- $canonical = merge $canonical (dict "GroupID" $options.group_id)                       -}}
+    {{- $canonical = merge $canonical (dict "ID" $options.id)                                  -}}
+    {{- $canonical = merge $canonical (dict "LabelContent" ($Page.RenderString $options.name)) -}}
+
+    {{/*  Canonicalize whether the tab is checked  */}}
+    {{- $canonical = merge $canonical (dict "Checked" $options.checked) -}}
+
+    {{/*  Canonicalize tab content  */}}
+    {{- $RenderParams    := dict "Page" $Page "Content" $definition "IndentCount" 2 "AsBlock" true -}}
+    {{- $RenderedContent := partial $getPrettyRender $RenderParams                                 -}}
+    {{- $canonical        = merge $canonical (dict "RenderedContent" $RenderedContent)             -}}
+  {{- else -}}
+      {{/*  If name is specified, render it as the content and use the plaintext as the name */}}
+      {{- with $options.name -}}
+        {{- $TabContent := $Page.RenderString $options.name                 -}}
+        {{- $canonical   = merge $canonical (dict "TabContent" $TabContent) -}}
+        {{- $Name       := plainify $TabContent                             -}}
+        {{- $canonical   = merge $canonical (dict "Name" $Name)             -}}
+      {{- else -}}
+        {{/*  If id is specified without name, titleize the ID for the content and name */}}
+        {{- with $options.id -}}
+          {{- $TabContent := replaceRE `(-|_)` " " $options.id | title        -}}
+          {{- $canonical   = merge $canonical (dict "TabContent" $TabContent) -}}
+          {{- $canonical   = merge $canonical (dict "Name" $options.id)       -}}
+        {{- else -}}
+          {{- errorf "Missing name and ID for tab at '%s'. Must specify at least one." $Position -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{/*
+          Define the delimiter for the attributes. We do this instead of calling
+          getSafeAttributes here because the attributes are already displayed in
+          a list form, one per line, and these attributes are added to that list
+          instead of defining the entire list.
+
+          The getSafeAttributes partial is used to generate full list of HTML
+          attributes, handling whether or not they should be broken across lines
+          and indenting as needed.
+      */}}
+      {{- $AttributeDelimiter := printf "\n%s" (strings.Repeat 8 " ") -}}
+
+      {{/*  Canonicalize tab attribute list  */}}
+      {{- $tabAttributes := slice -}}
+      {{- with $options.class -}}
+        {{- $tabAttributes = $tabAttributes | append (printf `class="%s"` $options.class) -}}
+      {{- end -}}
+      {{- with $options.id -}}
+        {{- $tabAttributes = $tabAttributes | append (printf `id="%s"` $options.id) -}}
+      {{- end -}}
+      {{- if $options.closable -}}
+        {{- $tabAttributes = $tabAttributes | append "closable" -}}
+        {{/*  Closable tabs requires a script to work; mark the page so the script is loaded.  */}}
+        {{- $Page.Store.Set "_hasClosableTabs" true -}}
+      {{- end -}}
+      {{- if $options.disabled -}}
+        {{- $tabAttributes = $tabAttributes | append "disabled" -}}
+      {{- end -}}
+      {{- $tabAttributes       = delimit $tabAttributes $AttributeDelimiter             -}}
+      {{- $canonical           = merge $canonical (dict "TabAttributes" $tabAttributes) -}}
+
+      {{/*  Canonicalize the panel attribute list  */}}
+      {{- $panelAttributes := slice -}}
+      {{- with $options.class -}}
+        {{- $panelAttributes = $panelAttributes | append (printf `class="%s"` $options.class) -}}
+      {{- end -}}
+      {{- $panelAttributes = delimit $panelAttributes $AttributeDelimiter               -}}
+      {{- $canonical       = merge $canonical (dict "PanelAttributes" $panelAttributes) -}}
+
+      {{/*  Canonicalize tab panel content  */}}
+      {{- $RenderParams    := dict "Page" $Page "Content" $definition "IndentCount" 2 "AsBlock" true -}}
+      {{- $RenderedContent := partial $getPrettyRender $RenderParams                                 -}}
+      {{- $canonical        = merge $canonical (dict "PanelContent" $RenderedContent)                -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+    When rendering nested tabs, we need to munge the data options for the
+    blocks. We always need to forward the legacy setting from the group to the
+    nested tabs so things render correctly and legacy tabs require more munging.
+
+    Once the blocks are munged, render them for insertion in the template.
+*/}}
+{{- if $IsGroup -}}
+  {{- $mungeParams := dict
+                      "AsSlice"    true
+                      "Definition" $definition
+                      "Position"   $Position
+                      "ValidIDs"   $ValidIDs.entry
+  -}}
+  {{- $errorMessage := printf "No tab specified in tabs block at %s" $Position -}}
+  {{- $mungeOptions := dict "legacy" $options.legacy                           -}}
+  {{- $indexOptions := dict                                                    -}}
+  {{/*
+      Add extra options for legacy blocks; every block needs the group id and
+      the first block needs checked set to true.
+  */}}
+  {{- if $options.legacy -}}
+    {{- $GroupID     := printf "%s-%s" $ID $options.id                                 -}}
+    {{- $mungeOptions = merge $mungeOptions (dict "group_id" $GroupID)                 -}}
+    {{- $indexOptions = merge $indexOptions (dict "0" (dict "checked" true))           -}}
+    {{- $errorMessage = printf "No tab specified in legacy tabs block at %s" $Position -}}
+  {{- end -}}
+
+  {{/*  Add the options, index options, and error messages to the param map  */}}
+  {{- $mungeParams = merge $mungeParams (dict "Options"        $mungeOptions) -}}
+  {{- $mungeParams = merge $mungeParams (dict "IndexedOptions" $indexOptions) -}}
+  {{- $mungeParams = merge $mungeParams (dict "ErrorMessage"   $errorMessage) -}}
+  {{/*  Munge the nested tab codeblocks before rendering  */}}
+  {{- $mungedTabs := partial $addDataOptionsToNestedCodeblocks $mungeParams   -}}
+
+  {{/*
+      Iterate over the munged tabs, rendering them. Then concatenate them into
+      a slice of tabs before turning them into a single block and indenting the
+      entire block for consistent indentation. Finally, canonicalize.
+  */}}
+  {{- $renderedTabs := slice -}}
+  {{- range $MungedTab := $mungedTabs -}}
+    {{- $renderedTab  := $MungedTab | $Page.RenderString (dict "display" "block") -}}
+    {{- $renderedTab   = trim $renderedTab "\n"                                   -}}
+    {{- $renderedTabs  = $renderedTabs | append $renderedTab                      -}}
+  {{- end -}}
+  {{- $renderedTabs  = delimit $renderedTabs "\n"                            -}}
+  {{- $IndentParams := dict "IndentCount" 2 "Content" $renderedTabs          -}}
+  {{- $renderedTabs  = partial $getIndentedContent $IndentParams             -}}
+  {{- $canonical     = merge $canonical (dict "RenderedTabs" $renderedTabs)  -}}
+{{- end -}}
+
+{{/*
+    This section provides a pattern for handling custom templates. You can
+    delete the conditional if you only use one template, or rework it to
+    match your needs if selecting from multiple templates.
+*/}}
+{{- if $options.custom -}}
+  {{/*
+      Define context to pass; it's best to pass as much useful info as you can
+      for a custom template, since you don't know what they'll find useful. In
+      this case, we add the page, position, configuration, and munged options
+      to the canonical map.
+
+      Do what makes sense to you.
+  */}}
+  {{- $canonical = merge $canonical (dict "Page"       $Page)       -}}
+  {{- $canonical = merge $canonical (dict "Position"   $Position)   -}}
+  {{- $canonical = merge $canonical (dict "Config"     $Config)     -}}
+  {{- $canonical = merge $canonical (dict "Options"    $options)    -}}
+  {{- $canonical = merge $canonical (dict "Definition" $definition) -}}
+  {{/*
+      Set the render template; this assumes that the markup provides a default
+      custom template that users can copy and override. If the user specified a
+      value other than `true`, that's assumed to be the name of the template
+      in `partials/platen/markup/NAME/templates`.
+  */}}
+  {{- if eq true $options.custom -}}
+    {{- $template = "custom" -}}
+  {{- else -}}
+    {{- $template = $options.custom -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  As the last step, add the canonicalized template to render  */}}
+{{- $template  = printf "%s/%s" $TemplateFolder $template     -}}
+{{- $canonical = merge $canonical (dict "Template" $template) -}}
+
+{{/*  Return the canonicalized values to the markup for rendering  */}}
+{{- return $canonical -}}

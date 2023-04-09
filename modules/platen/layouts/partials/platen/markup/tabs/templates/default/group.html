@@ -1,0 +1,7 @@
+{{- $Params       := .                                 -}}
+{{- $Attributes   := $Params.Attributes | safeHTMLAttr -}}
+{{- $RenderedTabs := $Params.RenderedTabs | safeHTML   -}}
+
+<sl-tab-group {{- with $Attributes }} {{ $Attributes -}} {{- end -}}>
+  {{ $RenderedTabs }}
+</sl-tab-group>

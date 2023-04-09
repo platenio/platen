@@ -1,0 +1,24 @@
+definition: |
+  ```tab { name="The First Tab" }
+  This is the first tab.
+  ```
+
+  ```tab { name="The Second Tab"}
+  This is the second tab.
+  ```
+
+  ```tab { name="The Third Tab" }
+  This is the third tab.
+  ```
+
+  ```tab { name="The Fourth Tab" }
+  This is the fourth tab.
+  ```
+
+  ```tab { name="The Fifth Tab" }
+  This is the fifth tab.
+  ```
+
+  ```tab { name="The Sixth Tab" }
+  This is the sixth tab.
+  ```

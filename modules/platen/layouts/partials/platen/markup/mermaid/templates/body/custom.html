@@ -1,0 +1,53 @@
+{{/*
+    This custom template is a stub. It's here for your convenience only. If
+    you want to define your own template, copy this one to start from. The
+    inputs for your template are limited to the ones defined here, but your
+    template can do whatever you need it to.
+*/}}
+{{- $Params  := . -}}
+{{/*
+    These values are provided from the canonicalize partial. They've been
+    pre-validated for you where possible.
+
+    Always pass the values meant to be insertable directly in the HTML through
+    safeHTML, safeHTMLAttr (for attributes), safeCSS, safeJS, or safeURL so
+    your values aren't munged unexpectedly.
+
+    Container is the configured HTML element tag name to add the Mermaid graph
+    definition inside. You can use that setting or ignore it.
+
+    Definition is the Mermaid graph definition, trimmed and ready for insertion.
+    You want to make sure there's no leading space on the line for a directive,
+    or Mermaid breaks. Always add the Definition without indentation.
+
+    MermaidClasses is the list of passed classes with `mermaid` added at the
+    beginning of the list so the script can render it.
+
+    Options is the list of merged, validated, and munged options available for
+    the markup.
+
+    Page is the Hugo page object for where this markup is being rendered.
+
+    Position is the Hugo-provided position for where the markup was used in the
+    Markdown file.
+*/}}
+{{- $Config         := $Params.Config                        -}}
+{{- $Container      := $Params.Container                     -}}
+{{- $Definition     := $Params.Definition     | safeHTML     -}}
+{{- $MermaidClasses := $Params.MermaidClasses | safeHTMLAttr -}}
+{{- $Options        := $Params.Options                       -}}
+{{- $Page           := $Params.Page                          -}}
+{{- $Position       := $Params.Position                      -}}
+
+{{/*
+    The default custom template raises an error because it's not
+    actually implemented. This stub is for your convenience.
+*/}}
+{{- errorf "Used custom mermaid template at %s, but no template defined." $Position -}}
+
+{{/*
+    You don't need to do a return statement, you can just use
+    a custom HTML template if you want. This return is included
+    so Platen doesn't break if the custom template isn't defined.
+*/}}
+{{- return "" -}}

@@ -1,41 +1,53 @@
-{{- $Context          := .                                     -}}
-{{- $IntegrityPartial := "platen/utils/getIntegrityAttributes" -}}
+{{- $Context              := .                                                                -}}
+{{- $StoreKey             := "_hasMermaid"                                                    -}}
+{{- $VersionKey           := "platen.markup.mermaid.version"                                  -}}
+{{- $ResolveVersionParams := dict "Context" $Context "Config" $VersionKey "Param" $VersionKey -}}
+{{- $UrlPrefix            := "https://cdn.jsdelivr.net/npm"                                   -}}
+{{- $UrlSuffix            := "dist/mermaid.esm.min.mjs"                                       -}}
 
-{{- if $Context.Store.Get "_hasMermaid" -}}
-  {{/* Get the Mermaid URL */}}
-  {{- $Version := partial "platen/param/resolve" (
-        dict "Config"  "platen.markup.mermaid.version"
-             "Param"   "platen.markup.mermaid.version"
-             "Context" $Context
-      )
-  -}}
-  {{- $UrlPrefix     := "https://cdn.jsdelivr.net/npm"                                      -}}
-  {{- $libraryURL    := printf "%s/mermaid@%v/dist/mermaid.esm.min.mjs" $UrlPrefix $Version -}}
-  {{- $libraryAttributes := slice "defer"
-                            | append (printf `src="%s"` $libraryURL)
-                            | append `type="module"`
-  -}}
-  {{- $attributeParams   := dict "Attributes" $libraryAttributes "IndentCount" 10     -}}
-  {{- $libraryAttributes  = partialCached "platen/utils/getSafeAttributes" $attributeParams -}}
-  {{- $libraryScript     := printf "<script %s></script>" $libraryAttributes          -}}
+{{- $SiteConfigAssetPath  := "scripts/markup/mermaid/config.json"                             -}}
+{{- $ScriptAssetPath      := "scripts/markup/mermaid/init.js"                                 -}}
+{{- $ScriptPublishPath    := "scripts/mermaid/init.js"                                        -}}
+
+{{- $scriptParams := dict "WaitForShoelace" true -}}
+{{- $renderParams := dict                        -}}
+{{/*
+    Define partials for easier calling/renaming.
+*/}}
+{{- $getIntegrityAttributes := "platen/utils/getIntegrityAttributes"    -}}
+{{- $paramResolve           := "platen/param/resolve"                   -}}
+{{- $Template               := "platen/markup/mermaid/templates/header" -}}
+
+{{- if $Context.Store.Get $StoreKey -}}
+  {{/*
+      Get the URL to the mermaid library; we don't handle it as a remote resource
+      because the v10+ implementation does some magic loading that breaks - we
+      would need to pull everything, which isn't feasible without heavier
+      rewriting to vendor it in.
+
+      We may support a "Vendored" version option in the future, which looks for
+      the code vendored in place.
+  */}}
+  {{- $Version       := partial $paramResolve $ResolveVersionParams              -}}
+  {{- $LibraryUrl    := printf "%s/mermaid@%v/%s" $UrlPrefix $Version $UrlSuffix -}}
+  {{- $renderParams   = merge $renderParams (dict "LibraryUrl" $LibraryUrl)      -}}
 
   {{/* Get the mermaid site config */}}
-  {{- $mermaidConfig := resources.Get "scripts/markup/mermaid/config.json" -}}
+  {{- $MermaidConfig := resources.Get $SiteConfigAssetPath -}}
 
-  {{/* Build the mermaid script */}}
-  {{- $ScriptParams := dict "Config"          $mermaidConfig.Content
-                            "LibraryUrl"      $libraryURL
-                            "WaitForShoelace" true
+  {{/*
+      Build the mermaid script, using the config and library. Because this is an
+      internal script, we can fingerprint it for integrity.
+  */}}
+  {{- $scriptParams   := merge $scriptParams (dict "Config" $MermaidConfig.Content "LibraryUrl" $LibraryUrl) -}}
+  {{- $ScriptResource :=  resources.Get $ScriptAssetPath
+                          | resources.ExecuteAsTemplate $ScriptPublishPath $scriptParams
+                          | resources.Fingerprint
   -}}
-  {{- $ScriptResource   :=  resources.Get "scripts/markup/mermaid/init.js"
-                            | resources.ExecuteAsTemplate "scripts/mermaid/init.js" $ScriptParams
-                            | resources.Fingerprint
-  -}}
-  {{- $ScriptIntegrity  := partialCached $IntegrityPartial $ScriptResource "MermaidInit"      -}}
-  {{- $scriptAttributes := slice (printf `src="%s"` $ScriptResource.RelPermalink) $ScriptIntegrity `type="module"` -}}
-  {{- $scriptAttributes  = delimit $scriptAttributes " "                                           -}}
-  {{- $Script           := printf "<script %s></script>" $scriptAttributes                         -}}
+  {{- $ScriptIntegrity  := partialCached $getIntegrityAttributes $ScriptResource "MermaidInit"                  -}}
+  {{- $ScriptSrc        := $ScriptResource.RelPermalink                                                         -}}
+  {{- $renderParams      = merge $renderParams (dict "ScriptSrc" $ScriptSrc "ScriptIntegrity" $ScriptIntegrity) -}}
 
   {{/* Render */}}
-  {{- delimit (slice $libraryScript $Script) "\n  " | safeHTML -}}
+  {{- partialCached $Template $renderParams $renderParams -}}
 {{- end -}}

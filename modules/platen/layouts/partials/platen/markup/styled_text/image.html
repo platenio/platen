@@ -1,92 +1,187 @@
-{{- $Params      := .                                                         -}}
-{{- $Page        := $Params.Page                                              -}}
-{{- $Destination := $Params.Destination                                       -}}
-{{- $Title       := $Params.Title                                             -}}
-{{- $text        := $Params.Text                                              -}}
-{{- $IsBlock     := $Params.IsBlock                                           -}}
-{{- $Ordinal     := $Params.Ordinal                                           -}}
-{{- $ConfigKey   := "platen.markup.styled_text"                               -}}
-{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
-{{- $Aliases     := $Config.aliases                                           -}}
-{{- $PresetPrefix := "preset:"                                                -}}
+{{- $Params      := .                   -}}
+{{- $Page        := $Params.Page        -}} {{/* The Page the image markup was added to                           */}}
+{{- $Attributes  := $Params.Attributes  -}} {{/* The attributes added between curly braces after the markup       */}}
+{{- $Destination := $Params.Destination -}} {{/* The Source input for the image link markup                       */}}
+{{- $Title       := $Params.Title       -}} {{/* The Title input for the image link markup                        */}}
+{{- $Text        := $Params.Text        -}} {{/* The rendered Alt Text input for the image link markup            */}}
+{{- $Ordinal     := $Params.Ordinal     -}} {{/* The 0-based ordinal for codeblocks in the page the markup's from */}}
+{{- $MarkupName  := "styled_text"       -}} {{/* The name of the markup, usually the same as the parent folder    */}}
+{{/*
+    Retrieve settings from configuration.
 
+    Make sure to replace NAME with the name of the markup in the site config.
+    If your default prefix isn't the same as the markup name, edit that too.
+
+    Markup should always have at least one default prefix and support aliases.
+    If the markup supports differently grouped prefixes, specify the
+    DefaultPrefixes as a map instead of a slice and set the DefaultKey to the
+    key that is added from aliases when aliases is a slice or string instead
+    of a map.
+*/}}
+{{- $ConfigKey       := printf "platen.markup.%s" $MarkupName                     -}}
+{{- $Config          := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Aliases         := $Config.aliases                                           -}}
+{{- $DefaultPrefixes := slice "styled"                                            -}}
+{{- $DefaultKey      := ""                                                        -}}
+{{/*
+    Define partials for easier calling/renaming.
+
+    - getMergedMarkupIDs returns the canonical list of language IDs or prefixes
+      that Platen will use to see if a codeblock or image should be rendered as
+      this markup. For images, we always pass the Suffix option as true so it
+      appends the semi-colon for us.
+
+    - getPrefixTrimmedAltText checks to see if the image link is this markup.
+      If it is, the Value key will be set to the trimmed alt text. If it isn't,
+      it returns an empty dict; this lets us use the `with` operator even when
+      the trimmed alt text is an empty string. That can be valid when the
+      markup supports presets.
+    
+    - getMergedLinkOptions handles merging preset options with the attributes
+      on the markup, preferring values set in the attributes over the properties
+      from the preset, if any.
+    
+    - _canonicalize is always markup-specific and must handle selecting the
+      template to render, merging in any site configuration settings that apply
+      to the markup when the markup doesn't override the value, munging the
+      options as needed, and building the list of canonical values to send to
+      the template.
+*/}}
+{{- $getMergedMarkupIDs      := "platen/utils/getMergedMarkupIDs"                   -}}
+{{- $getPrefixTrimmedAltText := "platen/utils/getPrefixTrimmedAltText"              -}}
+{{- $getMergedLinkOptions    := "platen/utils/getMergedLinkOptions"                 -}}
+{{- $canonicalize            := printf "platen/markup/%s/_canonicalize" $MarkupName -}}
+{{/*
+    Get the list of valid prefixes for this markup. If the markup supports more
+    than one kind, the prefixes and language IDs must be shared.
+*/}}
+{{- $MarkupIDParams := dict "Default"    $DefaultPrefixes
+                            "DefaultKey" $DefaultKey
+                            "Aliases"    $Aliases
+                            "Suffix"     true
+-}}
+{{- $CacheKey := printf "%s-image" $MarkupName                               -}}
+{{- $Prefixes := partialCached $getMergedMarkupIDs $MarkupIDParams $CacheKey -}}
+{{/*
+    Check to see if the image link is this markup. If it is, the Value key will
+    be set to the trimmed alt text. If it isn't, this will be an empty dict;
+    this lets us use the `with` operator even when the trimmed alt text is an
+    empty string.
+
+    This also returns the matching prefix in the Prefix key, which is useful
+    when you need to take additional actions based on the prefix itself during
+    canonicalization.
+*/}}
+{{- $PrefixCheckParams := dict "Prefixes" $Prefixes "Text" $Text              -}}
+{{- $MarkupInfo        := partial $getPrefixTrimmedAltText $PrefixCheckParams -}}
+{{/*
+    Define base parameters for merging the preset options with attributes and
+    inputs. Preset options are always overridden by the inputs which are
+    overridden by the attributes.
+
+    Make sure that the values for DestinationKey and TextKey are what you want.
+    They can be renamed to anything, but the partial expects to use that name
+    for merging the values from preset options, inputs, and attributes. If
+    you're using the Title input, make sure the TitleKey is correct too.
+
+    Delete the lines for Preset* variables if your markup doesn't use presets.
+    If your markup does use presets, make sure to set the PresetDotPathPrefix
+    to the dot-path root for your presets in the site data. For example, if you
+    want to support finding the preset "bar.baz" in "data/platen/foo", the value
+    should be "platen.foo"
+
+    Delete the lines for Title and TitleKey if your markup ignores that input.
+
+    Delete the lines for ValidAttributes if you don't want to validate the keys
+    to a strict list of valid options. Otherwise, add the valid names to the
+    slice.
+
+    Attributes, Destination, Page, and Text always need to be passed.
+
+    The values pre-assigned to the variables represent the defaults for the
+    partial. If you're using the defaults you can delete them or leave them
+    here.
+*/}}
+{{- $DestinationKey      := "style"                        -}}
+{{- $PresetDotPathPrefix := printf "platen.%s" $MarkupName -}}
+{{- $PresetKey           := "preset"                       -}}
+{{- $PresetKeysToRender  := slice "text"                   -}}
+{{- $PresetPrefix        := "preset:"                      -}}
+{{- $TextKey             := "text"                         -}}
+{{- $TitleKey            := "class"                        -}}
+{{- $ValidAttributes     := slice                          -}}
+{{- $MergeParameters     := dict "Attributes"          $Attributes
+                                 "Destination"         $Destination
+                                 "DestinationKey"      $DestinationKey
+                                 "Page"                $Page
+                                 "PresetDotPathPrefix" $PresetDotPathPrefix
+                                 "PresetKey"           $PresetKey
+                                 "PresetKeysToRender"  $PresetKeysToRender
+                                 "PresetPrefix"        $PresetPrefix
+                                 "Text"                $MarkupInfo.Value
+                                 "TextKey"             $TextKey
+                                 "Title"               $Title
+                                 "TitleKey"            $TitleKey
+                                 "ValidAttributes"     $ValidAttributes
+-}}
+
+{{/*
+    Define options for trimming the rendered output. Set TrimLeadingWhitespace
+    to false to leave any leading whitespace for the rendered output. Set
+    TrimTrailingWhitespace to false to leave any trailing whitespace for the
+    rendered output.
+
+    Unless specifically desired, we trim leading and trailing whitespace so the
+    rendered output is more readable.
+*/}}
+{{- $TrimLeadingWhitespace  := true -}}
+{{- $TrimTrailingWhitespace := true -}}
+
+{{/*  From this point on, everything should stay the same as defined here.  */}}
+
+{{/*
+    Define base parameters for canonicalizing the image link. The Options key
+    is always added after preset options are merged with the attributes.
+*/}}
+{{- $canonicalizing := dict "Config"   $Config
+                            "Page"     $Page
+                            "ValidIDs" $Prefixes
+                            "ID"       $MarkupInfo.Prefix
+                            "Kind"     "image"
+-}}
+
+{{/*
+    Initialize the rendered image string. This is returned to the caller. If
+    it's empty, this renderer isn't applied. If it has any content, that's used
+    as the rendered output for the image link from the Markdown. Only the first
+    renderer that returns content is used.
+*/}}
 {{- $renderedImage := "" -}}
 
-{{- $prefixes := slice "styled:" -}}
-{{- range $alias := $Aliases -}}
-  {{- $prefixes = $prefixes | append (printf "%s:" $alias) -}}
-{{- end -}}
+{{/*
+    If MarkupInfo is an empty dict, it's because this image link's alt text
+    doesn't have a valid prefix for this markup.
+*/}}
+{{- with $MarkupInfo -}}
+  {{/*
+      Merge the attributes with the preset options, if any. Next, canonicalize
+      the information to select the template to render and provide the values
+      the templates need to render the markup.
+  */}}
+  {{- $MergedOptions  := partial $getMergedLinkOptions $MergeParameters         -}}
+  {{- $canonicalizing  = merge $canonicalizing (dict "Options"  $MergedOptions) -}}
+  {{- $Canonicalized  := partial $canonicalize $canonicalizing                  -}}
 
-{{- $hasPrefix := false -}}
-{{- $alt       := $text -}}
-{{- $class     := slice -}}
+  {{/*  Render the image link with the template from the canonicalized info  */}}
+  {{- $renderedImage = partial $Canonicalized.Template $Canonicalized -}}
 
-{{- range $prefix := $prefixes -}}
-  {{- if and (not $hasPrefix) (hasPrefix $text $prefix) -}}
-    {{- $hasPrefix = true                             -}}
-    {{- $alt       = strings.TrimPrefix $prefix $text -}}
+  {{/*  Trim the rendered image link as needed  */}}
+  {{- if $TrimLeadingWhitespace -}}
+    {{- $renderedImage = strings.TrimLeft "\n " $renderedImage -}}
   {{- end -}}
-{{- end -}}
-
-{{- if $hasPrefix -}}
-  {{/* Retrieve the defaults from data, init style and preset opts */}}
-  {{- $passedOptions := dict -}}
-  {{- $mergedOptions := dict -}}
-  {{- $presetOptions := dict -}}
-
-  {{/*  Destination is required to use Title  */}}
-  {{- with $Destination -}}
-    {{- if hasPrefix $Destination $PresetPrefix -}}
-      {{- $PresetPath   := strings.TrimPrefix $PresetPrefix $Destination    -}}
-      {{- $passedOptions = merge $passedOptions (dict "preset" $PresetPath) -}}
-    {{- else if (ne $Destination ".") -}}
-      {{- $passedOptions = merge $passedOptions (dict "style" $Destination) -}}
-    {{- end -}}
-
-    {{/*  Title is always a list of classes, space-separated  */}}
-    {{- with $Title -}}
-      {{- $passedOptions = merge $passedOptions (dict "class" $Title) -}}
-    {{- end -}}
+  {{- if $TrimTrailingWhitespace -}}
+    {{- $renderedImage = strings.TrimRight "\n " $renderedImage -}}
   {{- end -}}
-
-  {{/*  Alt text is always the actual subscript text  */}}
-  {{- with $alt -}}
-    {{- $passedOptions = merge $passedOptions (dict "text" $alt) -}}
-  {{- end -}}
-
-  {{- with $passedOptions.preset -}}
-    {{- $presetOptions = partialCached "platen/markup/styled_text/_getPreset" . . -}}
-  {{- end -}}
-
-  {{/*  If there's a preset, add it to the merged options first.  */}}
-  {{- range $PresetKey, $presetValue := $presetOptions -}}
-    {{- if eq "text" $PresetKey -}}
-      {{/*  Text from passed options always arrived rendered, needs to be rendered from preset  */}}
-      {{- $presetValue   = $Page.RenderString $presetValue -}}
-    {{- end -}}
-
-    {{- $MergedValue  := index $passedOptions $PresetKey | default $presetValue -}}
-    {{- $mergedOptions = merge $mergedOptions (dict $PresetKey $MergedValue)    -}}
-  {{- end -}}
-
-  {{/*  Merge the passed options over the preset options (or just set them if no preset)  */}}
-  {{- range $PassedKey, $PassedValue := $passedOptions -}}
-    {{- with index $mergedOptions $PassedKey -}}
-      {{/* Nothing to do, already merged */}}
-    {{- else -}}
-      {{/* Not defined in preset options, add value from passed options */}}
-      {{- $mergedOptions = merge $mergedOptions (dict $PassedKey $PassedValue) -}}
-    {{- end -}}
-  {{- end -}}
-
-  {{/*  Canonicalize the values; this handles style merging and option validation  */}}
-  {{- $Canonicalizing := dict "Page" $Page "Options" $mergedOptions                        -}}
-  {{- $Canonicalized  := partial "platen/markup/styled_text/_canonicalize" $Canonicalizing -}}
-
-  {{/*  Convert the canonicalized attributes into the form needed for insertion and add.  */}}
-  {{- $attributeParams := dict "Attributes" $Canonicalized.Attributes "IndentCount" 4       -}}
-  {{- $attributes      := partial "platen/utils/getSafeAttributes" $attributeParams         -}}
-  {{- $renderedImage    = printf "<span %s>\n  %s\n</span>" $attributes $Canonicalized.Text -}}
 {{- end -}}
 
 {{- return $renderedImage -}}

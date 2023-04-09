@@ -1,6 +1,6 @@
 text: Example
-classes:
+class:
   - foo
   - bar
-styles:
+style:
   - baz

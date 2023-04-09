@@ -17,7 +17,7 @@
 {{- $Position            := $Params.Position                               -}}
 {{- $Attributes          := $Params.Attributes          | default (dict)   -}}
 {{- $YamlOptions         := $Params.YamlOptions         | default (dict)   -}}
-{{- $ValidKeys           := $Params.ValidKeys           | default (dict)   -}}
+{{- $ValidKeys           := $Params.ValidKeys           | default (slice)  -}}
 {{- $PresetKey           := $Params.PresetKey           | default "preset" -}}
 {{- $PresetDotPathPrefix := $Params.PresetDotPathPrefix                    -}}
 

@@ -1,0 +1,11 @@
+{{- $Params            := .                                        -}}
+{{- $FormulaAttributes := $Params.FormulaAttributes | safeHTMLAttr -}}
+{{- $FormulaOpen       := $Params.FormulaOpen       | safeHTML     -}}
+{{- $FormulaClose      := $Params.FormulaClose      | safeHTML     -}}
+{{- $Definition        := $Params.Definition        | safeHTML     -}}
+
+<div {{ $FormulaAttributes }}>
+  \{{ $FormulaOpen }}
+    {{ $Definition }}
+  \{{ $FormulaClose }}
+</div>

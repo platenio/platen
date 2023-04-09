@@ -1,0 +1,48 @@
+{{/*
+    This custom template is a stub. It's here for your convenience only. If
+    you want to define your own template, copy this one to start from. The
+    inputs for your template are limited to the ones defined here, but your
+    template can do whatever you need it to.
+*/}}
+{{- $Params  := . -}}
+{{/*
+    The available parameters for a custom tab group template are:
+
+    Attributes - the list of attributes pre-canonicalized for you. This includes
+    the class, id, placement, activation, and noScrollControls attributes.
+
+    Rendered Tabs - the pre-rendered tabs that go inside this container.
+
+    Page - the Hugo page object for the source of the markup in your site
+    content.
+
+    Position - the location in the page the markup was used in your Markdown.
+
+    Config - the merged `platen.markup.tabs` configuration settings from site
+    configuration and data.
+
+    Definition - the inner value of the markup's codeblock as it was passed.
+
+    Options - the canonicalized options for the markup.
+*/}}
+{{- $Attributes   := $Params.Attributes   | safeHTMLAttr -}}
+{{- $RenderedTabs := $Params.RenderedTabs | safeHTML     -}}
+{{- $Page         := $Params.Page       -}}
+{{- $Position     := $Params.Position   -}}
+{{- $Config       := $Params.Config     -}}
+{{- $Definition   := $Params.Definition -}}
+{{- $Options      := $Params.Options    -}}
+
+
+{{/*
+    The default custom template raises an error because it's not
+    actually implemented. This stub is for your convenience.
+*/}}
+{{- errorf "Used custom tabs template at %s, but no template defined." $Position -}}
+
+{{/*
+    You don't need to do a return statement, you can just use
+    a custom HTML template if you want. This return is included
+    so Platen doesn't break if the custom template isn't defined.
+*/}}
+{{- return "" -}}

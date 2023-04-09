@@ -270,7 +270,16 @@ platen:
       style: section
     tabs:
       enabled: true
+      custom: false
+      classes: []
+      activation: auto
+      no_scroll_controls: false
+      placement: top
+      # preset: null
+      use_legacy: true
+      warn_on_legacy: true
       partials:
+        header: platen/markup/tabs/header
         renderers:
           codeblock: platen/markup/tabs/codeblock
       style: tabs

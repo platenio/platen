@@ -130,10 +130,10 @@ Here we define a preset for a reusable subscript in
 
 ```yaml
 text: Example
-classes:
+class:
   - foo
   - bar
-styles:
+style:
   - baz
 ```
 ``````
@@ -148,7 +148,7 @@ Then, in our markdown, we use the subscript markup and reference the preset:
 Which is processed to the equivalent YAML internally:
 
 ```yaml
-classes: []
+class: []
 preset: example
 text:   Override
 ```
@@ -159,7 +159,7 @@ Now that we have both the values from the preset and Markdown, Platen combines
 them into:
 
 ```yaml
-classes:
+class:
   - foo
   - bar
 style: baz
@@ -189,7 +189,7 @@ If you want to use extensible values, you probably want to define a style
 or add another preset instead.
 ```
 
-### `classes` { #preset-property-classes }
+### `class` { #preset-property-class }
 
 Specify one or more classes to add to the subscript's element. By default, it has no classes.
 
@@ -198,20 +198,20 @@ You can specify this value either as a string (if you only need to add one class
 `````````tabs { #preset-property-class-strings }
 ``````tab { name="Single Class" }
 ```yaml
-classes: sepia
+class: sepia
 ```
 ``````
 
 ``````tab { name="Multiple Classes" }
 ```yaml
-classes:
+class:
   - big
   - shadowed
 ```
 ``````
 `````````
 
-### `styles` { #preset-property-styles }
+### `style` { #preset-property-style }
 
 Specify any number of styles to use for this preset. The styles are applied in the order they're specified, with later
 styles overriding values from earlier ones.
@@ -225,7 +225,7 @@ the style defined in `data/platen/subscripts/styles/flagrant_garden/basic` would
 `````````tabs { #preset-property-style-strings }
 ``````tab { name="Single Style" }
 ```yaml
-styles: classic
+style: classic
 ```
 ``````
 
@@ -234,7 +234,7 @@ In this example, because `flagrant` is specified last, any of its values that
 conflict with those from `classic` are used. Any values that are only defined
 in `classic` or `flagrant` are also used.
 ```yaml
-styles:
+style:
   - classic
   - flagrant
 ```
