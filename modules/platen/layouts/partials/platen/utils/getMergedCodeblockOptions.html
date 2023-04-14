@@ -1,0 +1,71 @@
+{{/*
+    Use this partial for munging the passed options from attributes and data for
+    codeblock render hooks. This makes the attribute/data pattern more reusable
+    for codeblock render hooks.
+
+    It first processes the attributes and data options, preferring the options
+    from yaml over attributes when both are provided. Then it checks for
+    whether the markup uses a preset, retrieving it if needed.
+
+    Next, it merges the passed options over the preset options, preferring the
+    passed options over preset options.
+
+    Finally, if ValidKeys are specified, it throws away any keys that aren't
+    valid before returning the merged map.
+*/}}
+{{- $Params              := .                                              -}}
+{{- $Position            := $Params.Position                               -}}
+{{- $Attributes          := $Params.Attributes          | default (dict)   -}}
+{{- $YamlOptions         := $Params.YamlOptions         | default (dict)   -}}
+{{- $ValidKeys           := $Params.ValidKeys           | default (slice)  -}}
+{{- $PresetKey           := $Params.PresetKey           | default "preset" -}}
+{{- $PresetDotPathPrefix := $Params.PresetDotPathPrefix                    -}}
+
+{{/*  Merge the attributes over the options from YAML  */}}
+{{- $passedOptions := $Attributes -}}
+{{- range $Key, $value := $YamlOptions -}}
+  {{- if isset $passedOptions $Key -}}
+    {{- $value         = index $passedOptions $Key | default $value -}}
+    {{- $passedOptions = merge $passedOptions (dict $Key $value)    -}}
+  {{- else -}}
+    {{- $passedOptions = merge $passedOptions (dict $Key $value) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  If the preset key is in the merged options, retrieve the preset options.  */}}
+{{- $presetOptions := dict -}}
+{{- with index $passedOptions $PresetKey -}}
+  {{- $PresetDotPath := printf "%s.%s" $PresetDotPathPrefix .                                  -}}
+  {{- $presetOptions  = partialCached "platen/utils/getDataPath" $PresetDotPath $PresetDotPath -}}
+{{- end -}}
+
+{{/*
+    If the preset options are populated, add them to the merged options map,
+    using the value from passed options if set and only falling back to the
+    preset options if needed.
+*/}}
+{{- $mergedOptions := dict -}}
+{{- range $Key, $value := $presetOptions -}}
+  {{- $MergedValue  := index $passedOptions $Key | default $value    -}}
+  {{- $mergedOptions = merge $mergedOptions (dict $Key $MergedValue) -}}
+{{- end -}}
+
+{{/*  Merge the passed options into the merged map if they're not already set. */}}
+{{- range $Key, $Value := $passedOptions -}}
+  {{- if not (isset $mergedOptions $Key) -}}
+    {{- $mergedOptions = merge $mergedOptions (dict $Key $Value) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Limit the return info to valid options if needed.  */}}
+{{- $validOptions := $mergedOptions -}}
+{{- with $ValidKeys -}}
+  {{- $validOptions := dict -}}
+  {{- range $Key, $Value := $mergedOptions -}}
+    {{- if in $ValidKeys $Key -}}
+      {{- $validOptions = merge $validOptions (dict $Key $Value) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $validOptions -}}

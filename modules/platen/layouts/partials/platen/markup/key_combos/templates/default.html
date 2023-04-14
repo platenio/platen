@@ -1,0 +1,16 @@
+{{- $Params  := . -}}
+{{/*
+    These values are all from the example implementation of the canonicalize
+    partial. Make sure to actually implement the template to your needs.
+
+    Always pass the values through safeHTML, safeHTMLAttr (for attributes),
+    safeCSS, safeJS, or safeURL so your values aren't munged unexpectedly.
+*/}}
+{{- $Classes := $Params.Classes    | safeHTMLAttr -}}
+{{- $Keys    := $Params.Keys                      -}}
+
+<kbd {{- with $Classes }} {{ $Classes }} {{- end }}>
+  {{- range $Index, $Key := $Keys -}}
+  {{- if $Index -}} + {{- end -}}<kbd>{{- $Key | safeHTML -}}</kbd>
+  {{- end -}}
+</kbd>

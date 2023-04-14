@@ -1,0 +1,13 @@
+{{- $Params   := .                               -}}
+{{- $GrowSize := $Params.GrowSize | safeHTMLAttr -}}
+{{- $Classes  := $Params.Classes  | safeHTMLAttr -}}
+{{- $ID       := $Params.ID       | safeHTMLAttr -}}
+{{- $Content  := $Params.Content  | safeHTML     -}}
+
+<div {{ with $ID -}}
+       id="{{ $ID}}"
+     {{ end -}}
+     class="{{ $Classes }}"
+     style="flex-grow: {{ $GrowSize }};">
+  {{ $Content }}
+</div>

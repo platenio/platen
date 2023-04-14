@@ -1,0 +1,44 @@
+
+{{/*
+    This partial expects to receive input for merging additional classes into
+    default classes. The value for Default and Additional can either be strings
+    or a slice of strings.
+
+    The partial returns the combined list, space-delimited, unless Delimit is
+    passed as false.
+*/}}
+{{- $Params     := .                                 -}}
+{{- $Default    := $Params.Default                   -}}
+{{- $Additional := $Params.Additional                -}}
+{{- $Delimit    := $Params.Delimit    | default true -}}
+
+{{/*  Initialize the class list  */}}
+{{- $classes := slice -}}
+
+{{/* Set the class list to include the default(s) first */}}
+{{- with $Default -}}
+  {{- if reflect.IsSlice $Default -}}
+    {{- $classes = $Default -}}
+  {{- else -}}
+    {{- $classes = $classes | append $Default -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Add the additional classes after the defaults  */}}
+{{- with $Additional -}}
+  {{- if reflect.IsSlice $Additional -}}
+    {{- $classes = union $classes $Additional -}}
+  {{- else -}}
+    {{- $classes = $classes | append $Additional -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+  Convert the class list into a space-separated string for HTML unless the
+  caller specified not to.
+*/}}
+{{- if $Delimit -}}
+  {{- $classes = delimit $classes " " -}}
+{{- end -}}
+
+{{- return $classes -}}

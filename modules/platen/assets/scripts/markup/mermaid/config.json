@@ -2,5 +2,6 @@
   "flowchart": {
     "useMaxWidth":true
   },
-  "theme": "default"
+  "theme": "default",
+  "startOnLoad": false
 }

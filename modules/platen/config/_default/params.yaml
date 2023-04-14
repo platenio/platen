@@ -195,6 +195,13 @@ platen:
       style: art
     buttons:
       enabled: true
+      classes: []
+      # size: null
+      # outline: null
+      # pill: null
+      # variant: null
+      use_legacy: true
+      warn_on_legacy: true
       partials:
         renderers:
           image: platen/markup/buttons/image
@@ -212,12 +219,24 @@ platen:
       style: columns
     details:
       enabled: true
+      custom: false
+      classes: []
+      # icons:
+      #   collapse: null
+      #   expand: null
+      linkable: true
+      open: true
+      use_legacy: true
+      warn_on_legacy: true
       partials:
         renderers:
           codeblock: platen/markup/details/codeblock
       style: details
     itch:
-      enabled: true
+      enabled:  true
+      dark:     false
+      linkback: false
+      square:   false
       partials:
         renderers:
           image: platen/markup/itch/image
@@ -237,7 +256,7 @@ platen:
           image: platen/markup/key_combos/image
     mermaid:
       enabled: true
-      version: 9.3.0
+      version: 10.0.2
       container: pre
       partials:
         header: platen/markup/mermaid/header
@@ -251,7 +270,16 @@ platen:
       style: section
     tabs:
       enabled: true
+      custom: false
+      classes: []
+      activation: auto
+      no_scroll_controls: false
+      placement: top
+      # preset: null
+      use_legacy: true
+      warn_on_legacy: true
       partials:
+        header: platen/markup/tabs/header
         renderers:
           codeblock: platen/markup/tabs/codeblock
       style: tabs

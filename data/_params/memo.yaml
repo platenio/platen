@@ -71,7 +71,6 @@ front_matter:
         - /modules/platen/markup/art:frontmatter/preset-work.json
         - /modules/platen/markup/art:frontmatter/image-local.json
         - /modules/platen/markup/art:frontmatter/image-remote.json
-        - /modules/platen/markup/buttons:frontmatter/defined-style.json
         - /modules/platen/markup/buttons:frontmatter/defined-preset.json
         - /modules/platen/markup/buttons:frontmatter/image.json
         - /modules/platen/markup/columns:frontmatter/codeblock-entry.json

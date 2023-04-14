@@ -1,0 +1,7 @@
+{{- $Params           := .                                       -}}
+{{- $FigureAttributes := $Params.FigureAttributes | safeHTMLAttr -}}
+{{- $ImageAttributes  := $Params.ImageAttributes  | safeHTMLAttr -}}
+
+<figure {{ $FigureAttributes }}>
+  <img {{ $ImageAttributes }}>
+</figure>

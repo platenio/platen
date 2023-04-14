@@ -1,0 +1,19 @@
+{{- $Params            := .                                        -}}
+{{- $FigureAttributes  := $Params.FigureAttributes  | safeHTMLAttr -}}
+{{- $ImageAttributes   := $Params.ImageAttributes   | safeHTMLAttr -}}
+{{- $InputAttributes   := $Params.InputAttributes   | safeHTMLAttr -}}
+{{- $LabelAttributes   := $Params.LabelAttributes   | safeHTMLAttr -}}
+{{- $ContentWarning    := $Params.ContentWarning    | safeHTML     -}}
+{{- $CaptionAttributes := $Params.CaptionAttributes | safeHTMLAttr -}}
+{{- $CaptionRendered   := $Params.CaptionRendered   | safeHTML     -}}
+
+<figure {{ $FigureAttributes }}>
+  <input {{ $InputAttributes }}/>
+  <label {{ $LabelAttributes }}>
+    {{ $ContentWarning }}
+  </label>
+  <img {{ $ImageAttributes }}>
+  <figcaption {{ $CaptionAttributes }}>
+    {{ $CaptionRendered }}
+  </figcaption>
+</figure>

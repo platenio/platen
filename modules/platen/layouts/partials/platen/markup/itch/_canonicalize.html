@@ -1,0 +1,217 @@
+{{- $Params     := .                  -}}
+{{- $Config     := $Params.Config     -}} {{/* The markup's site configuration, like platen.markup.foo     */}}
+{{- $Position   := $Params.Position   -}} {{/* The markup's position in the Markdown - only for codeblocks */}}
+{{- $Page       := $Params.Page       -}} {{/* The Page object for the Markdown document the markup is in  */}}
+{{- $ValidIDs   := $Params.ValidIDs   -}} {{/* The map or slice of valid IDs for the markup                */}}
+{{- $ID         := $Params.ID         -}} {{/* The used language ID (codeblock) or prefix (image/link)     */}}
+{{- $Kind       := $Params.Kind       -}} {{/* The kind of markup: codeblock, image, link, etc             */}}
+{{- $Definition := $Params.Definition -}} {{/* The non-yaml text of the markup - only for codeblocks       */}}
+{{- $options    := $Params.Options    -}} {{/* The pre-merged options, attributes, and preset properties   */}}
+{{/*
+    Define partials for easier calling/renaming. If there's any that you don't
+    need, you can delete them or leave them here.
+
+    - mungeHeadingLevel converts a value for a heading level to between 0 and 6,
+      inclusive. A value of 0 indicates that the markup shouldn't be rendered
+      as a heading. If the value is less than 0, it's munged to 0. If it's
+      greater than 6, it's munged to 6.
+
+    - getLeadTrimmedText takes a block of text and trims the leading whitespace
+      for the first line from the remaining lines. Use this to ensure Markdown
+      in a nested codeblock can be rendered correctly.
+
+    - getMergedClasses merges one or more default classes with a list of
+      additional classes, returning the union of the two lists (no duplicate
+      values). It's space-delimited by default, but you can pass Delimit as false
+      to return the values as a slice.
+
+    - getPrettyRender renders a line or block of Markdown and munges it for line
+      length and indentation. You can use the AsBlock option in the parameters
+      to always render the Markdown as a block, even when it's only one line.
+      You can set the indent count with the IndentCount option.
+
+    - getSafeAttributes takes a slice of HTML element attributes as strings and
+      returns them as a single space-delimited string, marked as safe for
+      insertion into HTML attributes.
+*/}}
+{{- $mungeHeadingLevel  := "platen/utils/mungeHeadingLevel"    -}}
+{{- $getLeadTrimmedText := "platen/utils/getLeadTrimmedText"   -}}
+{{- $getMergedClasses   := "platen/utils/getMergedClasses"     -}}
+{{- $getPrettyRender    := "platen/utils/getPrettyRender"      -}}
+{{- $getSafeAttributes  := "platen/utils/getSafeAttributes"    -}}
+{{/*  Define the template folder and default template for this markup  */}}
+{{- $TemplateFolder := "platen/markup/itch/templates" -}}
+{{- $template       := "default"                      -}}
+{{/*
+    Define the list of valid config options that can be used as defaults for
+    the markup when not supplied directly or by a preset. Delete this section
+    if the markup doesn't use defaults from the site config.
+
+    You can specify values with dotpath notation as needed, but they should
+    always be relative to the markup's configuration key. So far the config
+    setting 'platen.markup.foo.bar.baz', specify the key as "foo.bar.baz"
+*/}}
+{{- $ConfigOptions := slice "dark" "square" "linkback" -}}
+{{/*
+    Define the list of default values for the options that aren't pulled from
+    the site configuration. Delete this section if you don't need it.
+
+    If you need to define defaults, add them to the dictionary using the
+    option's key and default value. For example, to default the legacy option
+    to false, add this to the $NonConfigDefaults dictionary:
+
+        "legacy" false
+*/}}
+{{- $NonConfigDefaults := dict -}}
+{{/*  Initialize the return value for this partial  */}}
+{{- $canonical := dict -}}
+
+{{/*
+    Canonicalize options with config defaults, using the value from the config
+    unless specified by the markup options (already merged with preset).
+
+    Delete this section if the markup doesn't use defaults from the site config.
+
+    It loops over the list of config options to see if they're set. Then it uses
+    those values as the default for the matching value from the merged options,
+    ignoring the value from config if it was set in the markup's attribute,
+    options, or preset properties.
+
+    You can check the name of the key to do specific munging if the values in
+    the configuration don't match the value type for the options. Here we left
+    the handling for classes, where the configuration specifies `classes` as an
+    array but markup always uses `class` due to the built-in handling of class
+    attributes by Hugo. It space-delimits the values from config and uses them
+    as a default if `class` isn't defined in the options.
+
+    You can do similar handling for other keys by adding an 'else if' statement
+    before the end of the conditional, like:
+
+        {{- else if (eq "use_legacy" $OptionKey) -}}
+          {{- $key   = "legacy"                         -}}
+          {{- $value = $options.legacy | default $value -}}
+        {{- else -}}
+
+    Which would check for a key called 'use_legacy' and use its value for the
+    'legacy' key in the options.
+*/}}
+{{/* Set default values */}}
+{{- $height := 167 -}}
+{{- $width  := 552 -}}
+{{/* Set base URL */}}
+{{- $BaseUrl := "https://itch.io/embed" -}}
+{{- $url     := ""                      -}}
+
+{{/*
+    Canonicalize options with config defaults, using the value from the config
+    unless specified by the markup options (already merged with preset).
+*/}}
+{{- range $OptionKey := $ConfigOptions -}}
+  {{- if isset $Config $OptionKey -}}
+    {{- $key   := $OptionKey               -}}
+    {{- $value := index $Config $OptionKey -}}
+    {{- if eq "classes" $OptionKey -}}
+      {{- $key   = "class"                         -}}
+      {{- $value = $options.class | default (delimit $value " ") -}}
+    {{- else -}}
+      {{- $value = index $options $OptionKey | default $value -}}
+    {{- end -}}
+    {{/*  Merge the munged value in  */}}
+    {{- $options = merge $options (dict $key $value) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+    Loop over the default values that aren't defined by the configuration and
+    set if needed.
+
+    You can delete this section if your markup doesn't support default values
+    for the options that aren't sourced from the configuration.
+*/}}
+{{- range $Key, $Value := $NonConfigDefaults -}}
+  {{- if not (isset $options $Key) -}}
+    {{- $options = merge $options (dict $Key $Value) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+    Canonicalize the alt text/title. This needs to be unescaped since it's
+    plain text.
+*/}}
+{{- $title := "" -}}
+{{- with $options.title -}}
+  {{- $title = htmlUnescape $options.title -}}
+{{- else -}}
+  {{- $message := slice "Missing title for itch embed;"
+                        "no title specified as alt text or in preset from site data"
+                        (printf "(platen.embeds.itch.%s)." $options.id)
+  -}}
+  {{- $message = delimit $message " " -}}
+  {{- errorf (print $message)         -}}
+{{- end -}}
+{{- $canonical = merge $canonical (dict "Title" $title) -}}
+
+{{/*
+    Canonicalize the size of the iframe. The only value that changes is the
+    width, when displaying as a square instead of the long rectangle.
+*/}}
+{{- if $options.square -}}
+  {{- $width = 208 -}}
+{{- end -}}
+{{- $canonical = merge $canonical (dict "Height" $height) -}}
+{{- $canonical = merge $canonical (dict "Width"  $width)  -}}
+
+{{- with $options.id -}}
+  {{- $url = printf "%s/%s" $BaseUrl (print $options.id) -}} 
+{{- else -}}
+  {{- errorf (i18n "ErrorItchioMissingID" (dict "page" $Page)) -}}
+{{- end -}}
+
+{{/*  Build the list of query params for itch to use when styling the iframe  */}}
+{{- $urlQueryParams := slice -}}
+{{- if $options.linkback -}}
+  {{- $urlQueryParams = $urlQueryParams | append "linkback=true" -}}
+{{- end -}}
+{{- if $options.dark -}}
+  {{- $urlQueryParams = $urlQueryParams | append "dark=true" -}}
+{{- end -}}
+{{/*  The color options need to have the leading # trimmed for the URL query, if specified  */}}
+{{- with $options.background_color -}}
+  {{- $backgroundColor := strings.TrimPrefix "#" $options.background_color                 -}}
+  {{- $urlQueryParams   = $urlQueryParams | append (printf "bg_color=%s" $backgroundColor) -}}
+{{- end -}}
+{{- with $options.text_color -}}
+  {{- $textColor     := strings.TrimPrefix "#" $options.text_color                 -}}
+  {{- $urlQueryParams = $urlQueryParams | append (printf "fg_color=%s" $textColor) -}}
+{{- end -}}
+{{- with $options.button_color -}}
+  {{- $buttonColor   := strings.TrimPrefix "#" $options.button_color                   -}}
+  {{- $urlQueryParams = $urlQueryParams | append (printf "link_color=%s" $buttonColor) -}}
+{{- end -}}
+{{- with $options.border_color -}}
+  {{- $borderColor   := strings.TrimPrefix "#" $options.border_color                     -}}
+  {{- $urlQueryParams = $urlQueryParams | append (printf "border_color=%s" $borderColor) -}}
+{{- end -}}
+{{/*  If specified, the border width needs to be between 0 and 5, inclusive.  */}}
+{{- with $options.border_width -}}
+  {{- $borderWidth := int $options.border_width -}}
+  {{- if and (ge $borderWidth 0) (le $borderWidth 5) -}}
+    {{- $urlQueryParams = $urlQueryParams | append (printf "border_width=%v" $borderWidth) -}}
+  {{- else -}}
+    {{- errorf "%s" (i18n "ErrorItchioInvalidBorderWidth" (print $borderWidth)) -}}
+  {{- end -}}
+{{- end -}}
+{{/*  The query params need to be joined before appending to the URL  */}}
+{{- $urlQueryParams = delimit $urlQueryParams "&" -}}
+{{/* Add the query parameters to the url, if any */}}
+{{- with $urlQueryParams -}}
+  {{- $url = printf "%s?%s" $url $urlQueryParams -}}
+{{- end -}}
+{{/*  Add the canonical URL  */}}
+{{- $canonical = merge $canonical (dict "URL" $url) -}}
+
+{{/*  Canonicalize the template to render  */}}
+{{- $template  = printf "%s/%s" $TemplateFolder $template     -}}
+{{- $canonical = merge $canonical (dict "Template" $template) -}}
+
+{{- return $canonical -}}

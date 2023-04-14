@@ -1,5 +1,0 @@
-{{- $StylePath := .                                                          -}}
-{{- $DotPath   := printf "platen.styled_text.styles.%s" $StylePath           -}}
-{{- $Data      := partialCached "platen/utils/getDataPath" $DotPath $DotPath -}}
-
-{{- return $Data -}}

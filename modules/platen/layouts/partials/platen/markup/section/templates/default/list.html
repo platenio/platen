@@ -1,0 +1,13 @@
+{{- $Params        := .                                    -}}
+{{- $Children      := $Params.Children                     -}}
+{{- $DivAttributes := $Params.DivAttributes | safeHTMLAttr -}}
+{{- $LeadContent   := $Params.LeadContent   | safeHTML     -}}
+{{- $getIndentedContent := "platen/utils/getIndentedContent" -}}
+
+<div {{ $DivAttributes }}>
+{{- with $LeadContent }}{{ $LeadContent }}{{ end }}
+  <dl>
+{{ range $Child := $Children }}
+    {{- partial $Child.Template $Child -}}
+  {{ end }}</dl>
+</div>

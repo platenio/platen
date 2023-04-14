@@ -1,51 +1,334 @@
-{{- $Params       := .                                        -}}
-{{- $Page         := $Params.Page                             -}}
-{{- $Options      := $Params.Options                          -}}
-{{- $DefaultStyle := site.Data.platen.buttons.styles._default -}}
-{{- $style        := dict                                     -}}
-{{- $canonical    := dict "Page" $Page                        -}}
+{{- $Params     := .                  -}}
+{{- $Config     := $Params.Config     -}} {{/* The markup's site configuration, like platen.markup.foo     */}}
+{{- $Position   := $Params.Position   -}} {{/* The markup's position in the Markdown - only for codeblocks */}}
+{{- $Page       := $Params.Page       -}} {{/* The Page object for the Markdown document the markup is in  */}}
+{{- $ValidIDs   := $Params.ValidIDs   -}} {{/* The map or slice of valid IDs for the markup                */}}
+{{- $ID         := $Params.ID         -}} {{/* The used language ID (codeblock) or prefix (image/link)     */}}
+{{- $Kind       := $Params.Kind       -}} {{/* The kind of markup: codeblock, image, link, etc             */}}
+{{- $Definition := $Params.Definition -}} {{/* The non-yaml text of the markup - only for codeblocks       */}}
+{{- $options    := $Params.Options    -}} {{/* The pre-merged options, attributes, and preset properties   */}}
+{{/*
+    Define partials for easier calling/renaming. If there's any that you don't
+    need, you can delete them or leave them here.
 
-{{- with $Options.style -}}
-  {{- $styles := . -}}
-  {{- if not (reflect.IsSlice $styles) -}}
-    {{- $styles = slice $styles -}}
+    - mungeHeadingLevel converts a value for a heading level to between 0 and 6,
+      inclusive. A value of 0 indicates that the markup shouldn't be rendered
+      as a heading. If the value is less than 0, it's munged to 0. If it's
+      greater than 6, it's munged to 6.
+
+    - getLeadTrimmedText takes a block of text and trims the leading whitespace
+      for the first line from the remaining lines. Use this to ensure Markdown
+      in a nested codeblock can be rendered correctly.
+
+    - getMergedClasses merges one or more default classes with a list of
+      additional classes, returning the union of the two lists (no duplicate
+      values). It's space-delimited by default, but you can pass Delimit as false
+      to return the values as a slice.
+
+    - getPrettyRender renders a line or block of Markdown and munges it for line
+      length and indentation. You can use the AsBlock option in the parameters
+      to always render the Markdown as a block, even when it's only one line.
+      You can set the indent count with the IndentCount option.
+
+    - getSafeAttributes takes a slice of HTML element attributes as strings and
+      returns them as a single space-delimited string, marked as safe for
+      insertion into HTML attributes.
+*/}}
+{{- $mungeHeadingLevel  := "platen/utils/mungeHeadingLevel"    -}}
+{{- $getLeadTrimmedText := "platen/utils/getLeadTrimmedText"   -}}
+{{- $getMergedClasses   := "platen/utils/getMergedClasses"     -}}
+{{- $getPrettyRender    := "platen/utils/getPrettyRender"      -}}
+{{- $getSafeAttributes  := "platen/utils/getSafeAttributes"    -}}
+{{/*  Define the template folder and default template for this markup  */}}
+{{- $TemplateFolder := "platen/markup/buttons/templates/link" -}}
+{{- $template       := "default"                              -}}
+{{/*
+    Define the list of valid config options that can be used as defaults for
+    the markup when not supplied directly or by a preset. Delete this section
+    if the markup doesn't use defaults from the site config.
+
+    You can specify values with dotpath notation as needed, but they should
+    always be relative to the markup's configuration key. So far the config
+    setting 'platen.markup.foo.bar.baz', specify the key as "foo.bar.baz"
+*/}}
+{{- $ConfigOptions := slice "classes" "size" "outline" "pill" "variant" "use_legacy" -}}
+{{/*
+    Define the list of default values for the options that aren't pulled from
+    the site configuration. Delete this section if you don't need it.
+
+    If you need to define defaults, add them to the dictionary using the
+    option's key and default value. For example, to default the legacy option
+    to false, add this to the $NonConfigDefaults dictionary:
+
+        "legacy" false
+*/}}
+{{- $NonConfigDefaults := dict -}}
+{{/*  Initialize the return value for this partial  */}}
+{{- $canonical := dict -}}
+
+{{/*
+    Canonicalize options with config defaults, using the value from the config
+    unless specified by the markup options (already merged with preset).
+
+    Delete this section if the markup doesn't use defaults from the site config.
+
+    It loops over the list of config options to see if they're set. Then it uses
+    those values as the default for the matching value from the merged options,
+    ignoring the value from config if it was set in the markup's attribute,
+    options, or preset properties.
+
+    You can check the name of the key to do specific munging if the values in
+    the configuration don't match the value type for the options. Here we left
+    the handling for classes, where the configuration specifies `classes` as an
+    array but markup always uses `class` due to the built-in handling of class
+    attributes by Hugo. It space-delimits the values from config and uses them
+    as a default if `class` isn't defined in the options.
+
+    You can do similar handling for other keys by adding an 'else if' statement
+    before the end of the conditional, like:
+
+        {{- else if (eq "use_legacy" $OptionKey) -}}
+          {{- $key   = "legacy"                         -}}
+          {{- $value = $options.legacy | default $value -}}
+        {{- else -}}
+
+    Which would check for a key called 'use_legacy' and use its value for the
+    'legacy' key in the options.
+*/}}
+{{- range $OptionKey := $ConfigOptions -}}
+  {{- if isset $Config $OptionKey -}}
+    {{- $key   := $OptionKey               -}}
+    {{- $value := index $Config $OptionKey -}}
+    {{- if eq "classes" $OptionKey -}}
+      {{- $key   = "class"                         -}}
+      {{- $value = $options.class | default (delimit $value " ") -}}
+    {{- else if (eq "use_legacy" $OptionKey) -}}
+      {{- $key   = "legacy"                         -}}
+      {{- $value = $options.legacy | default $value -}}
+    {{- else -}}
+      {{- $value = index $options $OptionKey | default $value -}}
+    {{- end -}}
+    {{/*  Merge the munged value in  */}}
+    {{- $options = merge $options (dict $key $value) -}}
+  {{- else if (in $OptionKey ".") -}}
+    {{/*
+        This section is for config options that aren't at the top level. We
+        default to using the path, replacing the dots with underscores, as
+        the key name. So `foo.bar.baz` becomes `foo_bar_baz`.
+
+        If your markup doesn't have any config items that are nested and need
+        to be accessed with the dot path, you can delete this conditional block.
+
+        As with the top-level keys, you can add handling for specific keys by
+        checking the key name and munging either or both the key and value to
+        insert into the options.
+    */}}
+    {{- $key   := replace $OptionKey "." "_" -}}
+    {{/*  Retrieve the value from the config if defined  */}}
+    {{- $value := $Config                    -}}
+    {{- range $Segment := split $OptionKey "." -}}
+      {{- $value = index $value $Segment -}}
+    {{- end -}}
+    {{/*  If the value was defined, process it for merging  */}}
+    {{- if ne nil $value -}}
+      {{/*
+          Add handling for specific keys here, like:
+
+              {{- if eq "icons.collapse" $OptionKey -}}
+                {{- $key = "icon_collapse" -}}
+              {{- else if (eq "icons.expand" $OptionKey) -}}
+                {{- $key = "icon_expand" -}}
+              {{- end -}}
+      */}}
+      {{/*  Merge the config value over the options if not set explicitly  */}}
+      {{- $value   = index $options $key | default $value -}}
+      {{- $options = merge $options (dict $key $value)    -}}
+    {{- end -}}
   {{- end -}}
+{{- end -}}
 
-  {{- range $stylePath := $styles -}}
-    {{- $mergingStyle := partialCached "platen/markup/buttons/_getStyle" $stylePath $stylePath -}}
-    {{- $mergeParams  := dict "BaseMap" $style "MergingMap" $mergingStyle                      -}}
-    {{- $style         = partialCached "platen/utils/getMergedMap" $mergeParams $mergeParams   -}}
+{{/*
+    Loop over the default values that aren't defined by the configuration and
+    set if needed.
+
+    You can delete this section if your markup doesn't support default values
+    for the options that aren't sourced from the configuration.
+*/}}
+{{- range $Key, $Value := $NonConfigDefaults -}}
+  {{- if not (isset $options $Key) -}}
+    {{- $options = merge $options (dict $Key $Value) -}}
   {{- end -}}
+{{- end -}}
 
-  {{- $mergeParams := dict "BaseMap" $DefaultStyle "MergingMap" $style "JoinArrays" true  -}}
-  {{- $style        = partialCached "platen/utils/getMergedMap" $mergeParams $mergeParams -}}
+{{/*  Initialize the attributes slice  */}}
+{{- $attributes := slice -}}
+
+{{/*  Canonicalize the button's label text  */}}
+{{- with $options.label_text -}}
+  {{- $canonical = merge $canonical (dict "Label" .) -}}
 {{- else -}}
-  {{- $style = $DefaultStyle -}}
+  {{- $canonical = merge $canonical (dict "Label" "") -}}
 {{- end -}}
 
-{{- with $Options.class -}}
-  {{- $styleClasses := $style.classes -}}
-
-  {{- range $class := split $Options.class " " -}}
-    {{- $styleClasses = $styleClasses | append $class -}}
-  {{- end -}}
-
-  {{- $style = merge $style (dict "classes" $styleClasses) -}}
-{{- end -}}
-
-{{- $canonical = merge $canonical (dict "Style" $style) -}}
-
-{{- with $Options.destination -}}
+{{/*  Canonicalize the button's link destination  */}}
+{{- with $options.destination -}}
   {{/* Test if valid? */}}
-  {{- $canonical = merge $canonical (dict "Destination" . ) -}}
+  {{- $attributes = $attributes | append (printf `href="%s"` $options.destination) -}}
 {{- else -}}
   {{- errorf (i18n "ErrorButtonMissingDestination" .) -}}
 {{- end -}}
 
-{{- with $Options.text -}}
-  {{- $canonical = merge $canonical (dict "Text" .) -}}
-{{- else -}}
-  {{- $canonical = merge $canonical (dict "Text" "") -}}
+{{/*  Canonicalize the button's classes  */}}
+{{- $classes := printf "platen-btn" }}
+{{- with $options.class -}}
+  {{- $classes = printf "%s %s" $classes $options.class -}}
 {{- end -}}
+{{- $attributes = $attributes | append (printf `class="%s"` $classes) -}}
+
+{{/*  Canonicalize the options for the templates button  */}}
+{{- if $options.legacy -}}
+  {{- $template = "legacy" -}}
+  {{- if $Config.warn_on_legacy -}}
+    {{- $message := slice "Used legacy template for buttons markup."
+                          "This template is deprecated and will eventually be removed."
+                          "For more information, see"
+                          "https://platen.io/modules/platen/markup/buttons/#legacy-template"
+    -}}
+    {{- warnf (delimit $message " " | print) -}}
+  {{- end -}}
+{{- else -}}
+  {{/*  Using shoelace, make sure the page gets marked for it.  */}}
+  {{- $Page.Store.Set "_hasShoelace" true -}}
+
+  {{- with $options.variant -}}
+    {{- $variant       := $options.variant                                                        -}}
+    {{- $ValidVariants := slice "default" "primary" "success" "neutral" "warning" "danger" "text" -}}
+    {{- if and (ne "" $variant) (not (in $ValidVariants $variant)) -}}
+      {{- warnf "Specified button variant '%s' is invalid. Treating as default." -}}
+      {{- $variant = "default" -}}
+    {{- end -}}
+    {{- $attributes = $attributes | append (printf `variant="%s"` $variant) -}}
+  {{- end -}}
+
+  {{- if isset $options "size" -}}
+    {{- $size := $options.size -}}
+    {{- $ValidSizes := slice "small" "medium" "large" -}}
+    {{- if and (ne "" $size) (not (in $ValidSizes $size)) -}}
+      {{- warnf "Specified button size '%s' is invalid. Treating as 'medium'." -}}
+      {{- $size = "medium" -}}
+    {{- end -}}
+    {{- $attributes = $attributes | append (printf `size="%s"` $size) -}}
+  {{- end -}}
+
+  {{- $inlineStyle := slice -}}
+  {{- if isset $options "height" -}}
+    {{- $attributes  = $attributes  | append `data-custom-height="true"`                    -}}
+    {{- $inlineStyle = $inlineStyle | append (printf "--custom-height: %s" $options.height) -}}
+  {{- end -}}
+  {{- if isset $options "width" -}}
+    {{- $attributes  = $attributes    | append `data-custom-width="true"`                 -}}
+    {{- $inlineStyle = $inlineStyle | append (printf "--custom-width: %s" $options.width) -}}
+  {{- end -}}
+  {{- with $inlineStyle -}}
+    {{- $inlineStyle = delimit $inlineStyle "; "                               -}}
+    {{- $attributes  = $attributes | append (printf `style="%s"` $inlineStyle) -}}
+  {{- end -}}
+
+  {{- if isset $options "type" -}}
+    {{- $type := $options.type -}}
+    {{- $ValidTypes := slice "button" "submit" "reset" -}}
+    {{- if and (ne "" $type) (not (in $ValidTypes $type)) -}}
+      {{- warnf "Specified button type '%s' is invalid. Treating as 'button'." -}}
+      {{- $type = "button" -}}
+    {{- end -}}
+    {{- $attributes = $attributes | append (printf `type="%s"` $type) -}}
+  {{- end -}}
+
+  {{- if isset $options "target" -}}
+    {{- $target := $options.target -}}
+    {{- $ValidTargets := slice "_blank" "_parent" "_self" "_top" -}}
+    {{- if and (ne "" $target) (not (in $ValidTargets $target)) -}}
+      {{- warnf "Specified button target '%s' is invalid. Ignoring" -}}
+    {{- else -}}
+      {{- $attributes = $attributes | append (printf `target="%s"` $target) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- with $options.label_icon -}}
+    {{- $labelAttributes := slice -}}
+    {{- if reflect.IsMap $options.label_icon -}}
+      {{- range $AttributeName, $AttributeValue := $options.label_icon -}}
+        {{- $labelAttributes = $labelAttributes | append (printf `%s="%s"` $AttributeName (print $AttributeValue)) -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $labelAttributes = $labelAttributes | append (printf `name="%s"` $options.label_icon) -}}
+    {{- end -}}
+    {{- $attributeParams := dict "Attributes" $labelAttributes "IndentCount" 27          -}}
+    {{- $labelAttributes  = partial "platen/utils/getSafeAttributes" $attributeParams    -}}
+    {{- $Label    := printf `<sl-icon %s></sl-icon>` $labelAttributes                    -}}
+    {{- $canonical = merge $canonical (dict "Label" $Label)                              -}}
+    {{- if isset $options "circle" -}}
+      {{- $attributes = $attributes | append (printf `circle="%v"` $options.circle) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if isset $options "outline" -}}
+    {{- $attributes = $attributes | append (printf `outline="%v"` $options.outline) -}}
+  {{- end -}}
+
+  {{- if isset $options "pill" -}}
+    {{- $attributes = $attributes | append (printf `pill="%v"` $options.pill) -}}
+  {{- end -}}
+
+  {{- if isset $options "rel" -}}
+    {{- $attributes = $attributes | append (printf `ref="%s"` $options.rel) -}}
+  {{- end -}}
+
+  {{- with $options.download_name -}}
+    {{- $attributes = $attributes | append (printf `download="%s"` $options.download_name) -}}
+  {{- end -}}
+
+  {{/*  Handle the prefix  */}}
+  {{- $prefixAttributes := slice -}}
+  {{- with $options.prefix_icon -}}
+    {{- if reflect.IsMap $options.prefix_icon -}}
+      {{- range $AttributeName, $AttributeValue := $options.prefix_icon -}}
+        {{- $prefixAttributes = $prefixAttributes | append (printf `%s="%s"` $AttributeName (print $AttributeValue)) -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $prefixAttributes = $prefixAttributes | append (printf `name="%s"` $options.prefix_icon) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- with $prefixAttributes -}}
+    {{- $attributeParams := dict "Attributes" $prefixAttributes "IndentCount" 27         -}}
+    {{- $prefixAttributes = partial "platen/utils/getSafeAttributes" $attributeParams    -}}
+    {{- $canonical        = merge $canonical (dict "PrefixAttributes" $prefixAttributes) -}}
+  {{- end -}}
+
+  {{/*  Handle the suffix  */}}
+  {{- $suffixAttributes := slice -}}
+  {{- with $options.suffix_icon -}}
+    {{- if reflect.IsMap $options.suffix_icon -}}
+      {{- range $AttributeName, $AttributeValue := $options.suffix_icon -}}
+        {{- $suffixAttributes = $suffixAttributes | append (printf `%s="%s"` $AttributeName (print $AttributeValue)) -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $suffixAttributes = $suffixAttributes | append (printf `name="%s"` $options.suffix_icon) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- with $suffixAttributes -}}
+    {{- $attributeParams := dict "Attributes" $suffixAttributes "IndentCount" 27         -}}
+    {{- $suffixAttributes = partial "platen/utils/getSafeAttributes" $attributeParams    -}}
+    {{- $canonical        = merge $canonical (dict "SuffixAttributes" $suffixAttributes) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $attributeIndent := cond (eq true $options.legacy) 3 11                          -}}
+{{- $attributeParams := dict "Attributes" $attributes "IndentCount" $attributeIndent -}}
+{{- $attributes       = partial "platen/utils/getSafeAttributes" $attributeParams    -}}
+{{- $canonical        = merge $canonical (dict "Attributes" $attributes)             -}}
+
+{{- $template  = printf "%s/%s" $TemplateFolder $template     -}}
+{{- $canonical = merge $canonical (dict "Template" $template) -}}
 
 {{- return $canonical -}}

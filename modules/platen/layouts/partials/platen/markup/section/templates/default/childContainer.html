@@ -1,0 +1,20 @@
+{{- $Params      := .                                           -}}
+{{- $Children    := $Params.Children                            -}}
+{{- $Text        := $Params.Text                                -}}
+{{- $Title       := $Params.Title                               -}}
+{{- $Url         := $Params.Url                                 -}}
+{{- $IndentCount := $Params.Indent                  | default 0 -}}
+{{- $Indent      := strings.Repeat $IndentCount " " | safeHTML  -}}
+
+{{ $Indent }}<dt>
+{{ $Indent }}  <a href="{{ $Url }}">
+{{ $Indent }}    {{ $Title }}
+{{ $Indent }}  </a>
+{{ $Indent }}</dt>
+{{ $Indent }}<dd class="markdown-inner">
+{{ $Indent }}  {{ $Text }}
+{{ $Indent }}  <dl>
+{{ range $Child := $Children }}
+{{- partial $Child.Template $Child -}}
+{{ end }}{{ $Indent }}  </dl>
+{{ $Indent }}</dd>

@@ -5,17 +5,30 @@ title: Tabs
 description: Defines the options for Platen's tabs markup
 schematize:
   details: |
-    Defines the map of options for Platen's [tabs markup][01]. The existing value is a map that
-    includes whether or not to enable the codeblock render hook and the style definition for it.
+    Defines the map of options for Platen's [tabs markup][01]. The existing value is a map that includes whether or not
+    to enable the codeblock render hook and the style definition for it.
 
     When this markup is enabled, you can create tabbed content on a page with a [codeblock][01].
 
-    You can add new keys or replace the values for existing ones. You don't need to keep the full
-    list of all properties in your own configuration file. Only specify the values you want to add
-    or replace.
+    Note that Platen is migrating from the [legacy template][02] to a new template that uses [sref:Shoelace][03] to add
+    a more customizable and extensible element to your site.
+
+    The legacy template has a more limited set of options than the new default template and it will eventually be
+    removed. We strongly recommend you set [sref:`use_legacy`][04] to `false` and migrate your site's custom styling
+    and scripting to use the new template.
+
+    For now, Platen defaults to using the legacy template but warns you that the legacy template will eventually be
+    removed. You can silence this warning by setting [sref:`warn_on_legacy`][05] to `false`.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the full list of all
+    properties in your own configuration file. Only specify the values you want to add or replace.
 
     <!-- Reference Links -->
     [01]: /modules/platen/markup/tabs
+    [02]: /modules/platen/markup/tabs#legacy-template
+    [03]: sl:
+    [04]: platen.site.markup.tabs.use_legacy
+    [05]: platen.site.markup.tabs.warn_on_legacy
 type: object
 properties:
   enabled:
@@ -81,6 +94,165 @@ properties:
             description: Alias for the top-level codeblock language ID, (default is 'tabs').
             type: string
       - type: string
+  custom:
+    title: Use Custom Rendering Template
+    description: Choose whether tabs rendering uses a custom template.
+    schematize:
+      details: |
+        Choose whether tabs are rendered with a custom template. The default value is `false`. When this value is
+        `true`, Platen uses the `platen/markup/tabs/templates/custom/group.html` partial template for rendering the
+        tabs container and `tab.html` in the same folder for rendering individual tabs. When this value is a string,
+        Platen uses that value as the name of the folder in the `platen/markup/tabs/templates` folder to look for the
+        `group.html` and `tabs.html` partial templates.
+
+        If a tabs markup defines the [`custom` option][01], the value defined on the markup overrides this setting.
+
+        For more information, see [Custom Templates][02].
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/tabs#options-custom
+        [02]: /modules/platen/markup/tabs#custom-templates
+      weight: 3
+    default: false
+    oneOf:
+      - type: boolean
+      - type: string
+  classes:
+    title: Default Classes
+    description: Add classes to tabs containers unless overridden in the markup.
+    schematize:
+      details: |
+        You can add any number of classes to rendered tabs containers by default. Specify one or more strings as items
+        in an array. They're inserted for all tabs containers as if they had been specified with the `class`
+        [attribute][01] or [option][02] in the markup.
+        
+        If the attribute or option are specified for a tab group, those values override the list defined by this
+        setting.
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/tabs#attributes-class
+        [02]: /modules/platen/markup/tabs#options-class
+      weight: 4
+    default: []
+    type: array
+    items:
+      type: string
+  activation:
+    title: Default Activation Mode
+    description: Specify whether tabs should be automatically shown on navigation or require manual activation to show.
+    schematize:
+      details: |
+        You can define a default activation mode for a tab group. When the tab group is focused, keyboard users can
+        press the [kbd:Left]() and [kbd:Right]() keys to select the desired tab.
+
+        When the value of this option is `auto`, the selected tab is shown immediately.
+
+        To require the user to press [kbd:Space]() or [kbd:Enter]() to show the tab, set this value to `manual`.
+
+        If the [`activation` option][01] is specified for a tab group in the markup, that value override this setting.
+
+        <!-- Link References -->
+        [01]: /modules/platen/markup/tabs#options-activation
+      weight: 5
+    default: auto
+    type: string
+    enum:
+      - auto
+      - manual
+  no_scroll_controls:
+    title: Disable Scroll Controls for Tab Groups
+    description: Specify whether tab groups should display arrows when the tabs overflow.
+    schematize:
+      details: |
+        Specify whether the scroll arrows should be visible when tabs overflow. Set this value to `true` to disable the
+        scroll arrows.
+
+        If the [`no_scroll_controls` option][01] is specified for a tab group in the markup, that value override this
+        setting.
+
+        <!-- Link References -->
+        [01]: /modules/platen/markup/tabs#options-no_scroll_controls
+      weight: 6
+    default: false
+    type: boolean
+  placement:
+    title: Default Tabs Placement
+    description: Specify where the tabs should be rendered relative to their content.
+    schematize:
+      details: |
+        Specify where the tabs should be rendered relative to their content. When the placement is `top` or `bottom`
+        and the tabs overflow the available horizontal width, they can be scrolled. You can disable the scroll arrows
+        displayed when the tabs overflow by setting `no_scroll_controls` in your [sref:site settings][01] or in the
+        [options][02] for a tab group.
+
+        If the [`placement` option][02] is specified for a tab group in the markup, that value override this setting.
+
+        <!-- Link References -->
+        [01]: platen.site.markup.tabs.no_scroll_controls
+        [02]: /modules/platen/markup/tabs#options-placement
+      weight: 7
+    type: string
+    default: top
+    enum:
+      - top
+      - bottom
+      - start
+      - end
+  preset:
+    title: Default Preset
+    description: Specify the dot-path to a preset to use as the default for this markup.
+    schematize:
+      details: |
+        You can define any number of preset tab groups and tabs reusably in your site's data. Any YAML files you add in
+         the `data/platen/tabs` folder are available for use. You can use folders to group presets together. For more
+         information about presets, see [Presets][01] in the reference documentation for the markup.
+
+         [01]: /modules/platen/markup/tabs#presets
+      weight: 8
+    type: string
+  use_legacy:
+    title: Use Legacy Template
+    description: Set whether rendered tabs use the legacy template by default.
+    schematize:
+      details: |
+        Use this setting to configure whether Platen uses the [legacy template][01] for tabs markup. The default
+        value is `true`. Set this value to `false` to use the new template by default.
+
+        The legacy template has a more limited set of options than the new default template and it will eventually
+        be removed. We strongly recommend you set this value to `true` and migrate your site's custom styling and
+        scripting to use the new template.
+
+        If you use the [`legacy` option][02] for tabs markup in your content, this value is overriden by that
+        option.
+
+        For more information, see [Legacy Template][01] in the reference documentation for this markup.
+
+        <!-- Reference Link Definitions -->
+        [01]: /modules/platen/markup/tabs#legacy-template
+        [02]: /modules/platen/markup/tabs#option-legacy
+      weight: 98
+    default: true
+    type: boolean
+  warn_on_legacy:
+    title: Warn When Using the Legacy Template
+    description: Set whether Platen warns when you use the legacy template.
+    schematize:
+      details: |
+        Use this setting to configure whether Platen raises a warning when you use a [legacy template][01] for your
+        tabs markup. Set this value to `false` to disable the warning. The default value is `true`.
+
+        The legacy template has a more limited set of options than the new default template and it will eventually be
+        removed. We strongly recommend you set [sref:`use_legacy`][02] to `false` and migrate your site's custom
+        styling and scripting to use the new template.
+
+        For more information, see [Legacy Template][01] in the reference documentation for this markup.
+
+        <!-- Reference Link Definitions -->
+        [01]: /modules/platen/markup/tabs#legacy-template
+        [02]: platen.site.markup.tabs.use_legacy
+      weight: 99
+    default: true
+    type: boolean
   partials:
     title: Markup Partials
     description: Define a map of partials for Platen to inject as needed.
@@ -151,7 +323,7 @@ properties:
     title: Markup Simple Style Module
     description: Defines the art markup's simple style module
     schematize:
-      weight: 100
+      weight: 200
       skip_schema_render: true
       details: |
         Defines default styling for tabs created by the codeblock.

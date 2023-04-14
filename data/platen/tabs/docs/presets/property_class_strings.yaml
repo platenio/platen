@@ -1,0 +1,15 @@
+placement: start
+definition: |
+  ``````tab { name="Single Class" }
+  ```yaml
+  class: sepia
+  ```
+  ``````
+
+  ``````tab { name="Multiple Classes" }
+  ```yaml
+  class:
+    - big
+    - shadowed
+  ```
+  ``````

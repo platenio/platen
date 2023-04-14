@@ -9,11 +9,16 @@
         "---",
         "summary:       [[&summary]]",
         "class:         [[class]]",
+        "disabled:      [[disabled]]",
         "heading_level: [[level]]",
+        "icon_collapse: '[[iconCollapse]]'",
+        "icon_expand:   '[[iconExpand]]'",
         "id:            [[id]]",
+        "legacy:        [[legacy]]",
         "linkable:      [[linkable]]",
         "open:          [[open]]",
         "---",
+        "",
         "[[&selection]]",
         "```"
       ],
@@ -39,17 +44,51 @@
           "default": ""
         },
         {
+          "name": "disabled",
+          "title": "Whether the details should have the toggle for expanding and collapsing disabled.",
+          "type": "choice",
+          "choices": [
+            "true",
+            "false"
+          ],
+          "default": "false"
+        },
+        {
           "name": "level",
           "title": "The heading level to insert for the summary of the details element. This turns the details element into a collapsible section if the value is 1 through 6. The default (no heading) is 0.",
           "type": "number",
           "default": "0"
         },
         {
-          "name": "id",
-          "title": "The custom ID to give the details element. Must have a `#` prefix.",
+          "name": "iconCollapse",
+          "title": "The name of the icon to use to indicate an expanded details block can be collapsed. If this value is set, the expand icon needs to be set too.",
           "type": "string",
           "single": true,
           "default": ""
+        },
+        {
+          "name": "iconExpand",
+          "title": "The name of the icon to use to indicate a collapsed details block can be expanded. If this value is set, the collapse icon needs to be set too.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "id",
+          "title": "The custom ID to give the details element.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "legacy",
+          "title": "Whether the details should be rendered with the legacy template.",
+          "type": "choice",
+          "choices": [
+            "true",
+            "false"
+          ],
+          "default": "false"
         },
         {
           "name": "linkable",

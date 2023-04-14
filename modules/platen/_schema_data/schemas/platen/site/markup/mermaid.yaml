@@ -39,10 +39,10 @@ properties:
         style and script modules for Mermaid from a CDN at build time. This value is used to
         determine which version to bundle with the site and use for auto-rendering.
 
-        You can set this value to any valid released version of Mermaid. The default is `0.16.4`.
+        You can set this value to any valid released version of Mermaid greater than 10. The default is `10`.
       weight: 2
     type: string
-    default: 9.3.0
+    default: '10'
   container:
     title: Container Element
     description: Specify the container element for Mermaid diagrams.

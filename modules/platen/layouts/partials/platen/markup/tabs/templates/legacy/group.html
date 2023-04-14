@@ -1,0 +1,7 @@
+{{- $Params       := .                                   -}}
+{{- $Attributes   := $Params.Attributes   | safeHTMLAttr -}}
+{{- $RenderedTabs := $Params.RenderedTabs | safeHTML     -}}
+
+<div {{ $Attributes }}>
+  {{ $RenderedTabs }}
+</div>

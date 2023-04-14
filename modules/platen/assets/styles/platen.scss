@@ -1,11 +1,26 @@
-{{- $context           := . -}}
+{{- $context           := .                                                     -}}
 {{- $PlatenConfig      := partialCached "platen/param/getKey" "platen" "platen" -}}
-{{- $theme             := $PlatenConfig.theme -}}
-{{- $variablesPartial  := "platen/utils/styles/variables"  -}}
-{{- $importPartial     := "platen/utils/styles/import"     -}}
-{{- $fontsPartial      := "platen/utils/styles/fonts"      -}}
-{{- $markupPartial     := "platen/utils/styles/markup"     -}}
-{{- $shortcodesPartial := "platen/utils/styles/shortcodes" -}}
+{{- $theme             := $PlatenConfig.theme                                   -}}
+{{- $shoelace          := dict                                                  -}}
+{{- $variablesPartial  := "platen/utils/styles/variables"                       -}}
+{{- $importPartial     := "platen/utils/styles/import"                          -}}
+{{- $fontsPartial      := "platen/utils/styles/fonts"                           -}}
+{{- $markupPartial     := "platen/utils/styles/markup"                          -}}
+{{- $shortcodesPartial := "platen/utils/styles/shortcodes"                      -}}
+
+// Handle shoelace info if needed.
+{{- if $PlatenConfig.features.shoelace.enabled -}}
+  {{- $ConfigKey      := "platen.features.shoelace"                                -}}
+  {{- $ShoelaceConfig := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+  {{- $Version        := $ShoelaceConfig.version | default "2.3.0"                 -}}
+  {{- $UrlPrefix      := "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace"   -}}
+  {{- $LightThemeUrl  := printf "%s@%v/dist/themes/light.css" $UrlPrefix $Version  -}}
+  {{- $DarkThemeUrl   := printf "%s@%v/dist/themes/dark.css"  $UrlPrefix $Version  -}}
+  {{- $shoelace        = merge $shoelace (dict "Enabled" true)                     -}}
+  {{- $shoelace        = merge $shoelace (dict "LightThemeUrl" $LightThemeUrl)     -}}
+  {{- $shoelace        = merge $shoelace (dict "DarkThemeUrl" $DarkThemeUrl)       -}}
+{{- end -}}
+
 // Adds the basic SCSS variables. These can be strings or maps. Values in this
 // group must not reference other values, only primitives.
 {{- range $name, $value := $theme.variables.basic_scss -}}
@@ -24,7 +39,12 @@
 // mode basis. Custom color themes can be implemented by overriding these values
 // in the site configuration. Further customization requires more in-depth
 // handling.
+//
+// This also imports the CSS for shoelace before defining any theme variables.
 @mixin theme-light {
+  {{ if $shoelace.Enabled -}}
+    @import url('{{ $shoelace.LightThemeUrl }}');
+  {{- end }}
   {{ range $name, $value := $theme.variables.light_css }}
     {{ $params := dict "Name" $name "Value" $value "IsCSS" true }}
     {{ partial $variablesPartial $params }}
@@ -32,6 +52,9 @@
 }
 
 @mixin theme-dark {
+  {{ if $shoelace.Enabled -}}
+    @import url('{{ $shoelace.DarkThemeUrl }}');
+  {{- end }}
   {{ range $name, $value := $theme.variables.dark_css }}
     {{ $params := dict "Name" $name "Value" $value "IsCSS" true }}
     {{ partial $variablesPartial $params }}
@@ -53,6 +76,24 @@
 // Modes determine whether the site uses light mode, dark mode, or automatically
 // shows the same mode as the site user's system preferences.
 @import "modes/{{ default "auto" $theme.mode }}";
+
+// Ensure theme mode variables propagate to shoelace
+{{ if and $shoelace.Enabled (in (slice "light" "auto") $theme.mode) }}
+  :host, sl-theme-light {
+    {{ range $name, $value := $theme.variables.light_css }}
+      {{ $params := dict "Name" $name "Value" $value "IsCSS" true }}
+      {{ partial $variablesPartial $params }}
+    {{ end }}
+  }
+{{ end }}
+{{ if and $shoelace.Enabled (in (slice "dark" "auto") $theme.mode) }}
+  :host, sl-theme-dark {
+    {{ range $name, $value := $theme.variables.dark_css }}
+      {{ $params := dict "Name" $name "Value" $value "IsCSS" true }}
+      {{ partial $variablesPartial $params }}
+    {{ end }}
+  }
+{{ end }}
 
 // Normalize the styles before applying specifics
 @import "normalize";

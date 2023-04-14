@@ -33,7 +33,6 @@ Memo:
           - ./art:frontmatter/image-local.json
           - ./art:frontmatter/image-remote.json
           - ./buttons:frontmatter/defined-preset.json
-          - ./buttons:frontmatter/defined-style.json
           - ./buttons:frontmatter/image.json
           - ./columns:frontmatter/codeblock-entry.json
           - ./columns:frontmatter/codeblock-group.json

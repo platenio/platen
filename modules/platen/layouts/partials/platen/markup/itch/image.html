@@ -1,167 +1,183 @@
-{{- $Params      := .                                                                -}}
-{{- $Page        := $Params.Page                                                     -}}
-{{- $destination := $Params.Destination                                              -}}
-{{- $title       := $Params.Title                                                    -}}
-{{- $text        := $Params.PlainText                                                -}}
-{{- $IsBlock     := $Params.IsBlock                                                  -}}
-{{- $Ordinal     := $Params.Ordinal                                                  -}}
-{{- $ConfigKey   := "platen.markup.itch"                                             -}}
-{{- $Config      := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Params      := .                   -}}
+{{- $Page        := $Params.Page        -}} {{/* The Page the image markup was added to                           */}}
+{{- $Attributes  := $Params.Attributes  -}} {{/* The attributes added between curly braces after the markup       */}}
+{{- $Destination := $Params.Destination -}} {{/* The Source input for the image link markup                       */}}
+{{- $Title       := $Params.Title       -}} {{/* The Title input for the image link markup                        */}}
+{{- $Text        := $Params.Text        -}} {{/* The rendered Alt Text input for the image link markup            */}}
+{{- $Ordinal     := $Params.Ordinal     -}} {{/* The 0-based ordinal for codeblocks in the page the markup's from */}}
+{{- $MarkupName  := "itch"              -}} {{/* The name of the markup, usually the same as the parent folder    */}}
+{{/*
+    Retrieve settings from configuration.
 
+    Make sure to replace NAME with the name of the markup in the site config.
+    If your default prefix isn't the same as the markup name, edit that too.
+
+    Markup should always have at least one default prefix and support aliases.
+    If the markup supports differently grouped prefixes, specify the
+    DefaultPrefixes as a map instead of a slice and set the DefaultKey to the
+    key that is added from aliases when aliases is a slice or string instead
+    of a map.
+*/}}
+{{- $ConfigKey       := printf "platen.markup.%s" $MarkupName                     -}}
+{{- $Config          := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Aliases         := $Config.aliases                                           -}}
+{{- $DefaultPrefixes := slice $MarkupName                                         -}}
+{{- $DefaultKey      := ""                                                        -}}
+{{/*
+    Define partials for easier calling/renaming.
+
+    - getMergedMarkupIDs returns the canonical list of language IDs or prefixes
+      that Platen will use to see if a codeblock or image should be rendered as
+      this markup. For images, we always pass the Suffix option as true so it
+      appends the semi-colon for us.
+
+    - getPrefixTrimmedAltText checks to see if the image link is this markup.
+      If it is, the Value key will be set to the trimmed alt text. If it isn't,
+      it returns an empty dict; this lets us use the `with` operator even when
+      the trimmed alt text is an empty string. That can be valid when the
+      markup supports presets.
+    
+    - getMergedLinkOptions handles merging preset options with the attributes
+      on the markup, preferring values set in the attributes over the properties
+      from the preset, if any.
+    
+    - _canonicalize is always markup-specific and must handle selecting the
+      template to render, merging in any site configuration settings that apply
+      to the markup when the markup doesn't override the value, munging the
+      options as needed, and building the list of canonical values to send to
+      the template.
+*/}}
+{{- $getMergedMarkupIDs      := "platen/utils/getMergedMarkupIDs"                   -}}
+{{- $getPrefixTrimmedAltText := "platen/utils/getPrefixTrimmedAltText"              -}}
+{{- $getMergedLinkOptions    := "platen/utils/getMergedLinkOptions"                 -}}
+{{- $canonicalize            := printf "platen/markup/%s/_canonicalize" $MarkupName -}}
+{{/*
+    Get the list of valid prefixes for this markup. If the markup supports more
+    than one kind, the prefixes and language IDs must be shared.
+*/}}
+{{- $MarkupIDParams := dict "Default"    $DefaultPrefixes
+                            "DefaultKey" $DefaultKey
+                            "Aliases"    $Aliases
+                            "Suffix"     true
+-}}
+{{- $CacheKey := printf "%s-image" $MarkupName                               -}}
+{{- $Prefixes := partialCached $getMergedMarkupIDs $MarkupIDParams $CacheKey -}}
+{{/*
+    Check to see if the image link is this markup. If it is, the Value key will
+    be set to the trimmed alt text. If it isn't, this will be an empty dict;
+    this lets us use the `with` operator even when the trimmed alt text is an
+    empty string.
+
+    This also returns the matching prefix in the Prefix key, which is useful
+    when you need to take additional actions based on the prefix itself during
+    canonicalization.
+*/}}
+{{- $PrefixCheckParams := dict "Prefixes" $Prefixes "Text" $Text              -}}
+{{- $MarkupInfo        := partial $getPrefixTrimmedAltText $PrefixCheckParams -}}
+{{/*
+    Define base parameters for merging the preset options with attributes and
+    inputs. Preset options are always overridden by the inputs which are
+    overridden by the attributes.
+
+    Make sure that the values for DestinationKey and TextKey are what you want.
+    They can be renamed to anything, but the partial expects to use that name
+    for merging the values from preset options, inputs, and attributes. If
+    you're using the Title input, make sure the TitleKey is correct too.
+
+    Delete the lines for Preset* variables if your markup doesn't use presets.
+    If your markup does use presets, make sure to set the PresetDotPathPrefix
+    to the dot-path root for your presets in the site data. For example, if you
+    want to support finding the preset "bar.baz" in "data/platen/foo", the value
+    should be "platen.foo"
+
+    Delete the lines for Title and TitleKey if your markup ignores that input.
+
+    Delete the lines for ValidAttributes if you don't want to validate the keys
+    to a strict list of valid options. Otherwise, add the valid names to the
+    slice.
+
+    Attributes, Destination, Page, and Text always need to be passed.
+
+    The values pre-assigned to the variables represent the defaults for the
+    partial. If you're using the defaults you can delete them or leave them
+    here.
+*/}}
+{{- $DestinationKey      := "id"                 -}}
+{{- $PresetDotPathPrefix := "platen.embeds.itch" -}}
+{{- $PresetKey           := "preset"             -}}
+{{- $PresetKeysToRender  := slice                -}}
+{{- $PresetPrefix        := "preset:"            -}}
+{{- $TextKey             := "title"              -}}
+{{- $ValidAttributes     := slice                -}}
+{{- $MergeParameters     := dict "Attributes"          $Attributes
+                                 "Destination"         $Destination
+                                 "DestinationKey"      $DestinationKey
+                                 "Page"                $Page
+                                 "PresetDotPathPrefix" $PresetDotPathPrefix
+                                 "PresetKey"           $PresetKey
+                                 "PresetKeysToRender"  $PresetKeysToRender
+                                 "PresetPrefix"        $PresetPrefix
+                                 "Text"                $MarkupInfo.Value
+                                 "TextKey"             $TextKey
+                                 "ValidAttributes"     $ValidAttributes
+-}}
+
+{{/*
+    Define options for trimming the rendered output. Set TrimLeadingWhitespace
+    to false to leave any leading whitespace for the rendered output. Set
+    TrimTrailingWhitespace to false to leave any trailing whitespace for the
+    rendered output.
+
+    Unless specifically desired, we trim leading and trailing whitespace so the
+    rendered output is more readable.
+*/}}
+{{- $TrimLeadingWhitespace  := true -}}
+{{- $TrimTrailingWhitespace := true -}}
+
+{{/*  From this point on, everything should stay the same as defined here.  */}}
+
+{{/*
+    Define base parameters for canonicalizing the image link. The Options key
+    is always added after preset options are merged with the attributes.
+*/}}
+{{- $canonicalizing := dict "Config"   $Config
+                            "Page"     $Page
+                            "ValidIDs" $Prefixes
+                            "ID"       $MarkupInfo.Prefix
+                            "Kind"     "image"
+-}}
+
+{{/*
+    Initialize the rendered image string. This is returned to the caller. If
+    it's empty, this renderer isn't applied. If it has any content, that's used
+    as the rendered output for the image link from the Markdown. Only the first
+    renderer that returns content is used.
+*/}}
 {{- $renderedImage := "" -}}
 
-{{- $prefixes := slice "itch:" -}}
-{{- range $alias := $Config.aliases -}}
-  {{- $prefixes = $prefixes | append (printf "%s:" $alias) -}}
-{{- end -}}
+{{/*
+    If MarkupInfo is an empty dict, it's because this image link's alt text
+    doesn't have a valid prefix for this markup.
+*/}}
+{{- with $MarkupInfo -}}
+  {{/*
+      Merge the attributes with the preset options, if any. Next, canonicalize
+      the information to select the template to render and provide the values
+      the templates need to render the markup.
+  */}}
+  {{- $MergedOptions  := partial $getMergedLinkOptions $MergeParameters         -}}
+  {{- $canonicalizing  = merge $canonicalizing (dict "Options"  $MergedOptions) -}}
+  {{- $Canonicalized  := partial $canonicalize $canonicalizing                  -}}
 
-{{- $hasPrefix := false -}}
-{{- $alt       := $text -}}
+  {{/*  Render the image link with the template from the canonicalized info  */}}
+  {{- $renderedImage = partial $Canonicalized.Template $Canonicalized -}}
 
-{{- range $prefix := $prefixes -}}
-  {{- if and (not $hasPrefix) (hasPrefix $text $prefix) -}}
-    {{- $hasPrefix = true                             -}}
-    {{- $alt       = strings.TrimPrefix $prefix $text -}}
+  {{/*  Trim the rendered image link as needed  */}}
+  {{- if $TrimLeadingWhitespace -}}
+    {{- $renderedImage = strings.TrimLeft "\n " $renderedImage -}}
   {{- end -}}
-{{- end -}}
-
-{{- if $hasPrefix -}}
-  {{/* Presets contain settings from site data */}}
-  {{- $preset     := dict -}}
-  {{/* Retrieve attributes for block syntax image only */}}
-  {{- $attributes := dict -}}
-
-  {{/* Initialize iframe attribute list and mandatory values */}}
-  {{- $iframeAttributes := slice -}}
-  {{- $title            := ""    -}}
-
-  {{/* Set default values */}}
-  {{- $height := 167 -}}
-  {{- $width  := 552 -}}
-
-  {{/* Set base URL */}}
-  {{- $BaseUrl := "https://itch.io/embed" -}}
-  {{- $url     := ""                      -}}
-
-  {{- with $destination -}}
-    {{- if not (findRE `^\d+$` $destination) -}}
-      {{- with index site.Data.platen.embeds.itch $destination -}}
-        {{- $preset = . -}}
-        {{- with $preset.id -}}
-          {{- $url = printf "%s/%v" $BaseUrl . -}}
-        {{- end -}}
-      {{- else -}}
-        {{- errorf "Unable to find preset '%s' in site data 'platen.embeds.itch' - is '%s.yaml' defined?" -}}
-      {{- end -}}
-    {{- else -}}
-      {{- $url = printf "%s/%s" $BaseUrl $destination -}}
-    {{- end -}}
-
-    {{/*
-      Handle the alt text. If it's provided, use as title for iframe. Otherwise, assume the use of a
-      preset which should have a title.
-    */}}
-    {{- with $alt -}}
-      {{- $title = $alt -}}
-    {{- else -}}
-      {{- with $preset.title -}}
-        {{- $title = . -}}
-      {{- else -}}
-        {{- errorf "Missing title for itch embed; no title specified as alt text or in preset from site data (platen.embeds.itch.%s)." $destination -}}
-      {{- end -}}
-    {{- end -}}
-
-    {{/* If the image is a block, handle the attributes. */}}
-    {{/* Both should set the url and title */}}
-    {{- if $IsBlock -}}
-      {{- $attributes       = $Params.Attributes -}}
-      {{- $dark            := $attributes.dark
-                              | default $preset.dark
-                              | default false
-      -}}
-      {{- $square          := $attributes.square
-                              | default $preset.square
-                              | default false
-      -}}
-      {{- $linkback        := $attributes.linkback
-                              | default $preset.linkback
-                              | default false
-      -}}
-      {{- $backgroundColor := $attributes.background_color | default $preset.background_color -}}
-      {{- $textColor       := $attributes.text_color       | default $preset.text_color       -}}
-      {{- $buttonColor     := $attributes.button_color     | default $preset.button_color     -}}
-      {{- $borderColor     := $attributes.border_color     | default $preset.border_color     -}}
-      {{- $borderWidth     := $attributes.border_width     | default $preset.border_width     -}}
-      {{- $urlQueryParams  := slice                                                           -}}
-
-      {{/* In this case the usage specified a preset that didn't define an id */}}
-      {{- if eq $url "" -}}
-        {{- with $attributes.id -}}
-          {{- $url = printf "%s/%s" $BaseUrl . -}}
-        {{- else -}}
-          {{- errorf "No ID specified for itch embed. Used preset '%s', which doesn't define an id, without specifying an ID attribute." $destination -}}
-        {{- end -}}
-      {{- end -}}
-
-      {{- if $linkback -}}
-        {{- $urlQueryParams = $urlQueryParams | append "linkback=true" -}}
-      {{- end -}}
-      {{- if $dark -}}
-        {{- $urlQueryParams = $urlQueryParams | append "dark=true" -}}
-      {{- end -}}
-      {{- if $square -}}
-        {{- $width = 208 -}}
-      {{- end -}}
-      {{- with $backgroundColor -}}
-        {{- $backgroundColor = strings.TrimPrefix "#" $backgroundColor -}}
-        {{- $urlQueryParams = $urlQueryParams | append (printf `bg_color=%s` $backgroundColor) -}}
-      {{- end -}}
-      {{- with $textColor -}}
-        {{- $textColor      = strings.TrimPrefix "#" $textColor -}}
-        {{- $urlQueryParams = $urlQueryParams | append (printf `fg_color=%s` $textColor) -}}
-      {{- end -}}
-      {{- with $buttonColor -}}
-        {{- $buttonColor    = strings.TrimPrefix "#" $buttonColor -}}
-        {{- $urlQueryParams = $urlQueryParams | append (printf `link_color=%s` $buttonColor) -}}
-      {{- end -}}
-      {{- with $borderColor -}}
-        {{- $borderColor    = strings.TrimPrefix "#" $borderColor -}}
-        {{- $urlQueryParams = $urlQueryParams | append (printf `border_color=%s` $borderColor) -}}
-      {{- end -}}
-      {{- with $borderWidth -}}
-        {{- $borderWidth = int $borderWidth -}}
-        {{- if and (ge $borderWidth 0) (le $borderWidth 5) -}}
-          {{- $urlQueryParams = $urlQueryParams | append (printf `border_width=%v` $borderWidth) -}}
-        {{- else -}}
-          {{- errorf "%s" (i18n "ErrorItchioInvalidBorderWidth" (print $borderWidth)) -}}
-        {{- end -}}
-      {{- end -}}
-      {{- $urlQueryParams = delimit $urlQueryParams "&" -}}
-
-      {{/* Add the query parameters to the url, if any */}}
-      {{- with $urlQueryParams -}}
-        {{- $url = printf "%s?%s" $url $urlQueryParams -}}
-      {{- end -}}
-    {{- end -}}
-
-    {{- $iframeAttributes = $iframeAttributes | append (printf `src="%s"` $url) -}}
-
-    {{- with $title -}}
-        {{- $iframeAttributes = $iframeAttributes | append (printf `title="%s"` $title) -}}
-    {{- else -}}
-      {{- $message := i18n "ErrorItchioMissingTitle"}}
-      {{- errorf "%s" $message -}}
-    {{- end -}}
-
-    {{- $iframeAttributes = $iframeAttributes | append `frameborder="0"`              -}}
-    {{- $iframeAttributes = $iframeAttributes | append (printf `height="%v"` $height) -}}
-    {{- $iframeAttributes = $iframeAttributes | append (printf `width="%v"`  $width)  -}}
-
-    {{- $attributeParams := dict "Attributes" $iframeAttributes "IndentCount" 8       -}}
-    {{- $attributes       = partial "platen/utils/getSafeAttributes" $attributeParams -}}
-    {{- $renderedImage    = printf "<iframe %s></iframe>" $attributes                 -}}
-  {{- else -}}
-    {{- errorf (i18n "ErrorItchioMissingID" (dict "page" $Page)) -}}
+  {{- if $TrimTrailingWhitespace -}}
+    {{- $renderedImage = strings.TrimRight "\n " $renderedImage -}}
   {{- end -}}
 {{- end -}}
 

@@ -1,6 +1,16 @@
 {{/*
     This partial is used to retrieve the canonicalized value of the site's configuration params by
     merging the settings from data over Hugo's configuration (files and environment).
+
+    We use `isset` instead of the more convenient `with` because values can be explicitly set to a
+    falsy value. Hugo treats all of the following as false values in a `with` statement:
+
+    - Boolean `false`
+    - Integer `0`
+    - Any zero-length array, slice, map, or string.
+
+    Normally, this is desired, but because you can explicitly define empty/null/false settings and
+    they ought to _override_ defined settings, we need to handle them.
 */}}
 {{- $Context := .                                           -}}
 {{- $Data    := $Context.Data   | default site.Data._params -}}
@@ -11,22 +21,21 @@
 {{- range $paramKey, $paramValue := $Params -}}
   {{- $value := $paramValue -}}
   {{- if reflect.IsMap $paramValue -}}
-    {{- with index $Data $paramKey -}}
-      {{- $rContext := dict "Data" . "Params" $paramValue                               -}}
+    {{- if isset $Data $paramKey -}}
+      {{- $rContext := dict "Data" (index $Data $paramKey) "Params" $paramValue        -}}
       {{- $value     = partialCached "platen/param/getMergedValue" $rContext $rContext -}}
     {{- end -}}
   {{- else -}}
-    {{- with index $Data $paramKey -}}
+    {{- if isset $Data $paramKey -}}
       {{/* Naive replacement for scalars and lists */}}
-      {{- $value = . -}}
+      {{- $value = index $Data $paramKey -}}
     {{- end -}}
   {{- end -}}
   {{- $config = merge $config (dict $paramKey $value) -}}
 {{- end -}}
 
 {{- range $dataKey, $dataValue := $Data -}}
-  {{- with index $config $dataKey -}}
-  {{- else -}}
+  {{- if not (isset $config $dataKey) -}}
     {{- $config = merge $config (dict $dataKey $dataValue) -}}
   {{- end }}
 {{- end -}}

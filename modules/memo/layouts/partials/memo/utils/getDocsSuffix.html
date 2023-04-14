@@ -86,6 +86,12 @@
                           "and with a `#` prefix, like `#my-id`"
   -}}
   {{- $docsSuffix = delimit $fragments " " -}}
+{{- else if (eq "String.Length" $type) -}}
+    {{- $fragments := slice  "Specify a valid [CSS length](https://developer.mozilla.org/en-US/docs/web/css/length)"
+                             "wrapped in quotes. For example, you could specify `\"10rem\"` to set the value to ten"
+                             "times the size of root elment's `font-size`."
+    -}}
+    {{- $docsSuffix = delimit $fragments " " -}}
 {{- else if (hasPrefix $type "String") -}}
   {{- if strings.HasSuffix $type "Quoted" -}}
     {{- $docsSuffix = $quotedStringSuffix -}}

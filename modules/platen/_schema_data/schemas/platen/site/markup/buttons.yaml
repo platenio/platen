@@ -47,6 +47,131 @@ properties:
         items:
           type: string
       - type: string
+  classes:
+    title: Default Classes
+    description: Add classes to buttons unless overridden in the markup.
+    schematize:
+      weight: 3
+      details: |
+        You can add any number of classes to rendered buttons by default. Specify one or more strings as items in an
+        array. They're inserted for all buttons as if they had been specified with the [`class` attribute][01] in the
+        markup.
+        
+        If the `class` attribute is specified for a button, that value overrides the list defined by this setting.
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/buttons#class
+    type: array
+    items:
+      type: string
+    default: []
+  size:
+    title: Default Size
+    description: Set a default size for buttons unless overridden in the markup.
+    schematize:
+      weight: 4
+      details: |
+        You can define a default size for rendered buttons. Any buttons that don't define the [`size` attribute][01]
+        in their markup use this value. When this value is undefined and the markup doesn't specify a size, the default
+        size from Shoelace (`medium`) is used instead.
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/buttons#size
+    type: string
+    enum:
+      - small
+      - medium
+      - large
+  outline:
+    title: Outline Buttons by Default
+    description: Set whether buttons display with outlines unless overridden in the markup.
+    schematize:
+      weight: 5
+      details: |
+        You can define whether buttons are rendered in the outline style by default. Any buttons that don't define the
+        [`outline` attribute][01] in their markup use this value. When this value is undefined and the markup doesn't
+        specify a size, the default value from Shoelace (`false`) is used instead.
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/buttons#outline
+    type: boolean
+  pill:
+    title: Pill Buttons by Default
+    description: Set whether buttons display with rounded corners unless overridden in the markup.
+    schematize:
+      weight: 6
+      details: |
+        You can define whether buttons are rendered in the pill style by default. Any buttons that don't define the
+        [`pill` attribute][01] in their markup use this value. When this value is undefined and the markup doesn't
+        specify a size, the default value from Shoelace (`false`) is used instead.
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/buttons#pill
+    type: boolean
+  variant:
+    title: Default Variant
+    description: Set a default variant for buttons unless overridden in the markup.
+    schematize:
+      weight: 7
+      details: |
+        You can define the default variant for rendered buttons. Any buttons that don't define the
+        [`variant` attribute][01] in their markup use this value. When this value is undefined and the markup doesn't
+        specify a variant, the default variant from Shoelace (`default`) is used instead.
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/buttons#variant
+    type: string
+    enum:
+      - default
+      - primary
+      - success
+      - neutral
+      - warning
+      - danger
+      - text
+  use_legacy:
+    title: Use Legacy Template
+    description: Set whether rendered link buttons use the legacy template by default.
+    schematize:
+      details: |
+        Use this setting to configure whether Platen uses the [legacy template][01] for the buttons markup. The default
+        value is `true`. Set this value to `false` to use the new template by default.
+
+        The legacy template has a more limited set of options than the new default template and it will eventually
+        be removed. We strongly recommend you set this value to `true` and migrate your site's custom styling and
+        scripting to use the new template.
+
+        If you use the [`legacy` option][02] for buttons markup in your content, this value is overriden by that
+        option.
+
+        For more information, see [Legacy Template][01] in the reference documentation for this markup.
+
+        <!-- Reference Link Definitions -->
+        [01]: /modules/platen/markup/buttons#legacy-template
+        [02]: /modules/platen/markup/buttons#legacy
+      weight: 98
+    default: true
+    type: boolean
+  warn_on_legacy:
+    title: Warn When Using the Legacy Template
+    description: Set whether Platen warns when you use the legacy template.
+    schematize:
+      details: |
+        Use this setting to configure whether Platen raises a warning when you use a [legacy template][01] for your
+        buttons markup. Set this value to `false` to disable the warning. The default value is `true`.
+
+        The legacy template has a more limited set of options than the new default template and it will eventually be
+        removed. We strongly recommend you set [sref:`use_legacy`][02] to `false` and migrate your site's custom
+        styling and scripting to use the new template.
+
+        For more information, see [Legacy Template][01] in the reference documentation for this markup.
+
+        <!-- Reference Link Definitions -->
+        [01]: /modules/platen/markup/buttons#legacy-template
+        [02]: platen.site.markup.buttons.use_legacy
+      weight: 99
+    default: true
+    type: boolean
   partials:
     title: Markup Partials
     description: Define a map of partials for Platen to inject as needed.
@@ -113,7 +238,7 @@ properties:
     title: Markup Simple Style Module
     description: Defines the art markup's simple style module
     schematize:
-      weight: 100
+      weight: 101
       skip_schema_render: true
       details: |
         Defines default styling for buttons created by render hooks.

@@ -1,0 +1,17 @@
+{{- $Params  := . -}}
+{{/*
+    These values are all from the example implementation of the canonicalize
+    partial. Make sure to actually implement the template to your needs.
+
+    Always pass the values through safeHTML, safeHTMLAttr (for attributes),
+    safeCSS, safeJS, or safeURL so your values aren't munged unexpectedly.
+*/}}
+{{- $Attributes := $Params.Attributes | safeHTMLAttr -}}
+{{- $Content    := $Params.Content    | safeHTML     -}}
+{{- $Classes    := $Params.Classes    | safeHTMLAttr -}}
+
+<div class="{{ $Classes }}">
+  <span {{ $Attributes }}>Example Default Template</span>
+
+  {{ $Content }}
+</div>

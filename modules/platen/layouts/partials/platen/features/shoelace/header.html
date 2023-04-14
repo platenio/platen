@@ -11,62 +11,28 @@
   {{/* Get the Shoelace URLs to use */}}
   {{- $Version       := $ShoelaceConfig.version | default "2.3.0"                          -}}
   {{- $UrlPrefix     := "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace"            -}}
-  {{- $LightThemeUrl := printf "%s@%v/dist/themes/light.css"           $UrlPrefix $Version -}}
-  {{- $DarkThemeUrl  := printf "%s@%v/dist/themes/dark.css"            $UrlPrefix $Version -}}
   {{- $LibraryUrl    := printf "%s@%v/dist/shoelace.js"                $UrlPrefix $Version -}}
+  {{- $ScriptName    := "scripts/features/shoelace/modeSwap.js"                            -}}
 
   {{/* Initialize the slice of strings to render */}}
   {{- $renderStrings := slice -}}
 
-  {{/* Get the Shoelace light theme definitions */}}
-  {{- $style           := resources.GetRemote $LightThemeUrl
-      | resources.Copy "shoelace/themes/light.css"
-      | resources.Fingerprint
-  -}}
-  {{- $styleIntegrity  := partialCached $IntegrityPartial $style "ShoelaceLightTheme" -}}
-  {{- $styleAttributes := slice `rel="stylesheet"`
-      | append `media="(prefers-color-scheme:light)"`
-      | append (printf `href="%s"` $style.RelPermalink)
-      | append $styleIntegrity
-  -}}
-  {{- $styleAttributes  = delimit $styleAttributes " "          -}}
-  {{- $style           := printf "<link %s />" $styleAttributes -}}
-  {{- $renderStrings    = $renderStrings | append $style        -}}
-  
-  {{/* Get the Shoelace dark theme definitions */}}
-  {{- $style           := resources.GetRemote $DarkThemeUrl
-      | resources.Copy "shoelace/themes/dark.css"
-      | resources.Fingerprint
-  -}}
-  {{- $styleIntegrity  := partialCached $IntegrityPartial $style "ShoelaceDarkTheme" -}}
-  {{- $styleAttributes := slice `rel="stylesheet"`
-      | append `media="(prefers-color-scheme:dark)"`
-      | append (printf `href="%s"` $style.RelPermalink)
-      | append `onLoad="document.documentElement.classList.add('sl-theme-dark');"`
-      | append $styleIntegrity
-  -}}
-  {{- $styleAttributes  = delimit $styleAttributes " "          -}}
-  {{- $style           := printf "<link %s />" $styleAttributes -}}
-  {{- $renderStrings    = $renderStrings | append $style        -}}
-  
   {{/* Get the Shoelace library script */}}
-  {{/*  {{- $library           := resources.GetRemote $LibraryUrl
-      | resources.Copy "shoelace/shoelace.js"
-      | resources.Fingerprint
-  -}}
-  {{- $libraryIntegrity  := partialCached $IntegrityPartial $library "ShoelaceLibrary" -}}
-  {{- $libraryAttributes := slice `type="module"`
-      | append (printf `src="%s"` $library.RelPermalink)
-      | append $libraryIntegrity
-  -}}
-  {{- $libraryAttributes  = delimit $libraryAttributes " "                   -}}
-  {{- $library           := printf "<script %s></script>" $libraryAttributes -}}
-  {{- $renderStrings      = $renderStrings | append $library                 -}}  */}}
+  {{- $libraryAttributes := slice `type="module"` (printf `src="%s"` $LibraryUrl) -}}
+  {{- $libraryAttributes  = delimit $libraryAttributes " "                        -}}
+  {{- $Library           := printf "<script %s></script>" $libraryAttributes      -}}
+  {{- $renderStrings      = $renderStrings | append $Library                      -}}
 
-  {{- $altLibraryAttributes := slice `type="module"` (printf `src="%s"` $LibraryUrl) -}}
-  {{- $altLibraryAttributes  = delimit $altLibraryAttributes " "                     -}}
-  {{- $altLibrary           := printf "<script %s></script>" $altLibraryAttributes   -}}
-  {{- $renderStrings         = $renderStrings | append $altLibrary                   -}}
+  {{/*  Handle light/dark mode  */}}
+  {{- $ScriptResource   :=  resources.Get $ScriptName
+                            | resources.ExecuteAsTemplate "scripts/shoelace/modeSwap.js" .
+                            | resources.Fingerprint
+  -}}
+  {{- $ScriptIntegrity  := partialCached $IntegrityPartial $ScriptResource "ShoelaceModeSwap"      -}}
+  {{- $scriptAttributes := slice (printf `src="%s"` $ScriptResource.RelPermalink) $ScriptIntegrity -}}
+  {{- $scriptAttributes  = delimit $scriptAttributes " "                                           -}}
+  {{- $Script           := printf "<script %s></script>" $scriptAttributes                         -}}
+  {{- $renderStrings     = $renderStrings | append $Script                                         -}}
 
   {{/* Render */}}
   {{- delimit $renderStrings "\n" | safeHTML -}}

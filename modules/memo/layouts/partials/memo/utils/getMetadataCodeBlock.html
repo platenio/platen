@@ -1,40 +1,45 @@
-{{- $param := . -}}
-{{- $type  := $param.type -}}
-
-{{- $metadata   := slice -}}
+{{- $param      := .           -}}
+{{- $type       := $param.type -}}
+{{- $metadata   := dict        -}}
 
 {{- $mungedType := $type -}}
 {{- if hasPrefix $mungedType "String" -}}
     {{- $mungedType = "String" -}}
 {{- end -}}
-{{- $metadata  = $metadata | append (dict "Type" $mungedType) -}}
 
-{{- $required := default false $param.required -}}
-{{- $metadata  = $metadata | append (dict "Required" (print $required)) -}}
+{{- with $param.enum -}}
+  {{- $mungedType = "Enum"      -}}
+  {{- $enums     := $param.enum -}}
+  {{- if not (reflect.IsSlice $enums) -}}
+    {{- $enums = slice $enums -}}
+  {{- end -}}
+  {{- $metadata = merge $metadata (dict "ValidValues" $enums) -}}
+{{- end -}}
+
+{{- $metadata  = merge $metadata (dict "Type" $mungedType) -}}
+
+{{- $required := $param.required | default false             -}}
+{{- $metadata  = merge $metadata (dict "Required" $required) -}}
 
 {{- if isset $param "position" -}}
   {{- $position := print $param.position                       -}}
-  {{- $metadata  = $metadata | append (dict "Position" $position) -}}
+  {{- $metadata  = merge $metadata (dict "Position" $position) -}}
 {{- end -}}
 
 {{- if in $type "Markdown" -}}
-  {{- $metadata = $metadata | append (dict "RendersMarkdown" true) -}}
+  {{- $metadata = merge $metadata (dict "RendersMarkdown" true) -}}
 {{- end -}}
 
 {{- $trimsLeadingWhiteSpaceKey := "TrimsLeadingWhiteSpace" -}}
 {{- with (index $param (lower $trimsLeadingWhiteSpaceKey)) -}}
-  {{- $value   := .                                                           -}}
-  {{- $metadata = $metadata | append (dict $trimsLeadingWhiteSpaceKey $value) -}}
+  {{- $value   := .                                                        -}}
+  {{- $metadata = merge $metadata (dict $trimsLeadingWhiteSpaceKey $value) -}}
 {{- end -}}
 
 {{- $metadataCodeBlock := slice "```yaml { Memo=ShortCodeMetadata }" -}}
-{{- range $metadataDict := $metadata -}}
-  {{- range $key, $value := $metadataDict -}}
-    {{- $entry := printf "%s: %v" $key $value                   -}}
-    {{- $metadataCodeBlock = $metadataCodeBlock | append $entry -}}
-  {{- end -}}
-{{- end -}}
-{{- $metadataCodeBlock = $metadataCodeBlock | append "```" -}}
-{{- $metadataCodeBlock = delimit $metadataCodeBlock "\n"   -}}
+{{- $yaml              := $metadata | transform.Remarshal "yaml"     -}}
+{{- $metadataCodeBlock  = $metadataCodeBlock | append $yaml          -}}
+{{- $metadataCodeBlock  = $metadataCodeBlock | append "```"          -}}
+{{- $metadataCodeBlock  = delimit $metadataCodeBlock "\n"            -}}
 
 {{- return $metadataCodeBlock -}}

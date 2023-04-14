@@ -1,0 +1,26 @@
+{{- $Params          := .                                       -}}
+{{- $Checked         := $Params.Checked                         -}}
+{{- $DivClasses      := $Params.DivClasses      | safeHTMLAttr  -}}
+{{- $ID              := $Params.ID              | safeHTMLAttr  -}}
+{{- $InputClasses    := $Params.InputClasses    | safeHTMLAttr  -}}
+{{- $LabelClasses    := $Params.LabelClasses    | safeHTMLAttr  -}}
+{{- $LabelContent    := $Params.LabelContent    | safeHTML      -}}
+{{- $GroupID         := $Params.GroupID         | safeHTMLAttr  -}}
+{{- $RenderedContent := $Params.RenderedContent | safeHTML      -}}
+
+<input type="radio"
+       class="{{ $InputClasses }}"
+       name="{{ $GroupID }}"
+       id="{{ $ID }}"
+       {{- if $Checked }}
+       checked="checked"
+       {{- end -}}/>
+<label for="{{ $ID }}"
+{{- with $LabelClasses }}
+       class="{{ $LabelClasses }}"
+{{- end -}}>
+  {{ $LabelContent }}
+</label>
+<div class="{{ $DivClasses}}">
+  {{ $RenderedContent }}
+</div>
