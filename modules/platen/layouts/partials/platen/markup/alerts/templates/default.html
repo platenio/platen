@@ -1,0 +1,18 @@
+{{- $Params         := .                                     -}}
+{{- $Attributes     := $Params.Attributes     | safeHTMLAttr -}}
+{{- $Content        := $Params.Content        | safeHTML     -}}
+{{- $Header         := $Params.Header         | safeHTML     -}}
+{{- $IconAttributes := $Params.IconAttributes | safeHTMLAttr -}}
+
+<sl-alert {{ $Attributes }}>
+  {{- with $IconAttributes }}
+  <sl-icon slot="icon"
+          {{ $IconAttributes }}></sl-icon>
+  {{ end -}}
+  <div class="markdown-inner">
+    {{ with $Header -}}
+    <span class="platen-alert-header">{{ $Header }}</span>
+    {{ end -}}
+    {{ $Content }}
+  </div>
+</sl-alert>

@@ -187,6 +187,23 @@ platen:
       partials:
         header: platen/features/shoelace/header
   markup:
+    alerts:
+      enabled: true
+      custom: false
+      # preset: null
+      classes: []
+      variant: primary
+      icons:
+        danger:  exclamation-octagon
+        default: gear
+        primary: info-circle
+        success: check2-circle
+        warning: exclamation-triangle
+      use_default_icons: true
+      partials:
+        renderers:
+          codeblock: platen/markup/alerts/codeblock
+      style: alerts
     art:
       enabled: true
       partials:

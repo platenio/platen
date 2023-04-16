@@ -1,0 +1,4 @@
+variant: warning
+header: "**Careful!**"
+definition: |
+  If you override the style module or this setting, you _entirely overwrite_ the default from Platen.

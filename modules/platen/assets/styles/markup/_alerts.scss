@@ -1,0 +1,15 @@
+.markdown sl-alert.platen-alert {
+  // Ensure adjacent alerts have space between them.
+  & + sl-alert.platen-alert {
+    margin-top: $padding-large;
+  }
+  > [slot="icon"] {
+    // This is the icon, if one is included.
+  }
+  > div.markdown-inner {
+    // This is the container for the content.
+    span.platen-alert-header {
+      // This is the header for the content.
+    }
+  }
+}

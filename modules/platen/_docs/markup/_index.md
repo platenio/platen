@@ -10,6 +10,7 @@ Memo:
   front_matter:
     configs:
       - merge:
+          - ./alerts:frontmatter/codeblock.json
           - ./art:frontmatter/image-local.json
           - ./art:frontmatter/image-remote.json
           - ./buttons:frontmatter/image.json
@@ -28,6 +29,8 @@ Memo:
           - ./tabs:frontmatter/codeblock-group.json
         publish: /frontmatter/platen/content/snippets.json
       - merge:
+          - ./alerts:frontmatter/defined-preset.json
+          - ./alerts:frontmatter/codeblock.json
           - ./art:frontmatter/preset-style.json
           - ./art:frontmatter/preset-work.json
           - ./art:frontmatter/image-local.json
