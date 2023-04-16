@@ -1,0 +1,110 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+# Can't have $schema - breaks frontmatter. Intellisense only works in VS Code
+# with the YAML extension directive at the top.
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: /modules/platen/markup/alerts/schemas/definitions/preset
+title: Alert Preset Definition
+description: |
+  Specifies a defined preset for reusing alerts in your Platen site.
+
+  https://platen.io/modules/platen/markup/alerts#presets
+type: object
+properties:
+  class:
+    title: Class List
+    description: |
+      Specify any additional classes to add to the alert.
+
+      https://platen.io/modules/platen/markup/alerts#preset-property-class
+    type: array
+    items:
+      type: string
+    uniqueItems: true
+  closable:
+    title: Closable
+    description: |
+      Specify whether the alert should be rendered with a button users can activate to close the alert.
+
+      https://platen.io/modules/platen/markup/alerts#preset-property-closable
+    type: boolean
+    default: false
+  custom:
+    title: Use Custom Template
+    description: |
+      Specify whether the alert should be rendered as a custom template.
+
+      https://platen.io/modules/platen/markup/alerts#preset-property-custom
+    oneOf:
+      - type: boolean
+      - type: string
+    default: false
+  definition:
+    title: Alert Markdown Content
+    description: |
+      Define the Markdown content for the body of the alert.
+
+      https://platen.io/modules/platen/markup/alerts#preset-property-definition
+    type: string
+  duration:
+    title: Alert Duration
+    description: |
+      Specify how long the icon should be visible before automatically hiding. A value of `0` disables this behavior.
+
+      https://platen.io/modules/platen/markup/alerts#preset-property-duration
+    default: 0
+    oneOf:
+      - type: integer
+        minimum: 0
+      - type: string
+        pattern: ^\\d+([a-zA-Z]+)?$
+  header:
+    title: Alert Header
+    description: |
+      Specify the Markdown text to render as the alert's header.
+
+      https://platen.io/modules/platen/markup/alerts#preset-property-header
+    type: string
+  icon:
+    title: Alert Icon
+    description: |
+      Specify the name of an icon to add to the alert.
+
+      https://platen.io/modules/platen/markup/alerts#preset-property-icon
+    type: string
+  id:
+    title: Alert ID
+    description: |
+      Specify an ID to add to the alert's `<sl-alert>` element.
+
+      https://platen.io/modules/platen/markup/alerts#preset-property-id
+    type: string
+  open:
+    title: Open Alert on Load
+    description: |
+      Specify whether Platen should render this alert as a visible element when the page loads.
+
+      https://platen.io/modules/platen/markup/alerts#preset-property-open
+    type: boolean
+    default: true
+  use_default_icons:
+    title: Use Default Icons
+    description: |
+      Specify whether Platen should add the configured default icon for the alert's variant.
+
+      https://platen.io/modules/platen/markup/alerts#preset-property-legacy
+    type: boolean
+    default: true
+  variant:
+    title: Alert Variant
+    description: |
+      Use this property to change the theme of the rendered alert.
+
+      https://platen.io/modules/platen/markup/alerts#preset-property-variant
+    type: string
+    default: primary
+    enum:
+      - danger
+      - default
+      - primary
+      - success
+      - warning

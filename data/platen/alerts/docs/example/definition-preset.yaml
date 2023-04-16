@@ -1,0 +1,13 @@
+variant: primary
+definition: |
+  This is an alert preset definition.
+
+  It includes any normal Markdown you might want to use.
+
+  ![button:See all Markup](/modules/platen/markup)
+
+  It can even include codeblocks, like this YAML block:
+
+  ```yaml
+  variant: primary
+  ```

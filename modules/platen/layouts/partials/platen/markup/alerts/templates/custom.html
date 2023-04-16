@@ -1,0 +1,61 @@
+{{/*
+    This custom template is a stub. It's here for your convenience only. If
+    you want to define your own template, copy this one to start from. The
+    inputs for your template are limited to the ones defined here, but your
+    template can do whatever you need it to.
+*/}}
+{{- $Params  := . -}}
+{{/*
+    These values are passed to the custom template by Platen when canonicalizing
+    the markup. They include:
+
+    Attributes
+        The list of attributes that Platen would've passed to the sl-alert
+        element. You can parse this or reuse it.
+    Content
+        The pre-rendered content from the markup's definition.
+    Classes
+        The canonicalized list of classes for the alert. It includes the
+        default class "platen-alert" as well as any classes specified in the
+        markup. It's passed here as a space-separated list.
+    Page
+        The hugo Page variable for the Markdown page the alert markup was found
+        in. You can use this to render content.
+    Position
+        The path to the file the alert markup was found in, as well as the line
+        and column number where the codeblock started. Useful for error and
+        warning messages.
+    Config
+        The configuration settings for platen.markup.tabs, merging them from
+        both the Hugo configuration file(s) and the _params data folder.
+    Options
+        The canonicalized options for the markup. Platen has already merged
+        the settings from the markup's attributes and YAML options and the
+        preset, if specified. If the same options were set in multiple places,
+        the preset values are overridden by attributes and attributes by the
+        yaml options.
+
+    Always pass the values meant to be insertable directly in the HTML through
+    safeHTML, safeHTMLAttr (for attributes), safeCSS, safeJS, or safeURL so
+    your values aren't munged unexpectedly.
+*/}}
+{{- $Attributes := $Params.Attributes | safeHTMLAttr -}}
+{{- $Content    := $Params.Content    | safeHTML     -}}
+{{- $Classes    := $Params.Classes    | safeHTMLAttr -}}
+{{- $Page       := $Params.Page                      -}}
+{{- $Position   := $Params.Position                  -}}
+{{- $Config     := $Params.Config                    -}}
+{{- $Options    := $Params.Options                   -}}
+
+{{/*
+    The default custom template raises an error because it's not
+    actually implemented. This stub is for your convenience.
+*/}}
+{{- errorf "Used custom alert template at %s, but it's not implemented." $Position -}}
+
+{{/*
+    You don't need to do a return statement, you can just use
+    a custom HTML template if you want. This return is included
+    so Platen doesn't break if the custom template isn't defined.
+*/}}
+{{- return "" -}}

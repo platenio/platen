@@ -1,0 +1,17 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.data.types": [
+    {
+      "id": "platen-markup-alerts-preset",
+      "schema": "/modules/platen/markup/alerts:definitions/preset.schema.yaml"
+    }
+  ],
+  "frontMatter.data.folders": [
+    {
+      "id": "platen-markup-alerts-presets",
+      "path": "[[workspace]]/data/platen/alerts",
+      "singleEntry": true,
+      "type": "platen-markup-alerts-preset"
+    }
+  ]
+}

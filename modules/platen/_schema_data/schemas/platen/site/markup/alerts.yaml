@@ -1,0 +1,409 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: alerts.schema.yaml
+title: Alerts
+description: Defines the options for Platen's alerts markup
+schematize:
+  details: |
+    Defines the map of options for Platen's [alerts markup][01]. The existing value is a map that includes whether or
+    not to enable the codeblock render hook and the style definition for it.
+
+    When this markup is enabled, you can make content stand out from its surroundings on a page with a
+    [codeblock][01]. It inserts an [sref:`<sl-alert>`][02] element from [sref:Shoelace][03] with your content rendered
+    inside it.
+
+    You can add new keys or replace the values for existing ones. You don't need to keep the full list of all
+    properties in your own configuration file. Only specify the values you want to add or replace.
+
+    <!-- Reference Links -->
+    [01]: /modules/platen/markup/alerts
+    [02]: sl.component:sl-alert
+    [03]: sl:
+type: object
+properties:
+  enabled:
+    title: Enable the markup
+    description: Choose whether alert codeblock rendering is available for the site.
+    schematize:
+      weight: 1
+      details: |
+        Choose whether the site renders codeblocks with the `alert` language ID as an alert. If this setting is set to
+        `true`, content inside the codeblock is added inside a [sref:`<sl-alert>`] element. If this setting is `false`,
+        the content is rendered as an unhighlighted codeblock.
+    type: boolean
+    default: true
+  aliases:
+    title: Aliases
+    description: Defines additional language IDs for the codeblock render hook.
+    schematize:
+      weight: 2
+      details: |
+        Define one or more language IDs to use in addition to the default language ID for codeblocks that render their
+        content as an alert. The default is `alert`.
+
+        You can specify a string or an array of strings for this value. If the value is an array, each item in the
+        array is added as an alias.
+    oneOf:
+      - type: array
+        items:
+          type: string
+      - type: string
+  custom:
+    title: Use Custom Rendering Template
+    description: Choose whether alert rendering uses a custom template.
+    schematize:
+      details: |
+        Choose whether alerts are rendered with a custom template. The default value is `false`. When this value is
+        `true`, Platen uses the `platen/markup/alerts/templates/custom.html` partial template for rendering the alert.
+        When this value is a string, Platen uses that value as the name of the HTML file in the
+        `platen/markup/alerts/templates` folder to use as the rendering template.
+
+        If an alert markup defines the [`custom` option][01], the value defined on the markup overrides this setting.
+
+        For more information, see [Custom Templates][02].
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/alerts#options-custom
+        [02]: /modules/platen/markup/alerts#custom-templates
+      weight: 3
+    default: false
+    oneOf:
+      - type: boolean
+      - type: string
+  preset:
+    title: Default Preset
+    description: Specify the dot-path to a preset to use as the default for this markup.
+    schematize:
+      details: |
+        You can define any number of preset alerts reusably in your site's data. Any YAML files you add in the
+        `data/platen/alerts` folder are available for use. You can use folders to group presets together. For more
+        information about presets, see [Presets][01] in the reference documentation for the markup.
+
+        [01]: /modules/platen/markup/alerts#presets
+      weight: 4
+    type: string
+  classes:
+    title: Default Classes
+    description: Add classes to alerts unless overridden in the markup.
+    schematize:
+      details: |
+        You can add any number of classes to rendered alerts by default. Specify one or more strings as items in an
+        array. They're inserted for all alerts as if they had been specified with the `class` [attribute][01] or
+        [option][02] in the markup.
+        
+        If the attribute or option are specified for an alert's markup, those values override the list defined by this
+        setting.
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/alerts#attributes-class
+        [02]: /modules/platen/markup/alerts#options-class
+      weight: 5
+    default: []
+    type: array
+    items:
+      type: string
+  variant:
+    title: Default Variant
+    description: Specify the default variant for rendered alerts.
+    schematize:
+      details: |
+        You can define a default variant for your alerts. The variant controls the color used for the alert's border.
+        If the alert includes an icon, the variant also determines the icon's color. You can override this setting with
+        the [`variant` option][01] in an alert's markup.
+
+        When `use_default_icons` is set to `true` in the [sref:configuration][02] or an [alert markup's options][03],
+        the variant also determines which icon is added to the alert.
+
+        The valid variants are:
+
+        - `danger`
+        - `default`
+        - `primary`
+        - `success`
+        - `warning`
+
+        The configured default variant is `primary`.
+
+        For more information, see the [reference documentation for the markup][04].
+
+        <!-- Link References -->
+        [01]: /modules/platen/markup/alerts#options-variant
+        [02]: platen.site.markup.alerts.use_default_icons
+        [03]: /modules/platen/markup/alerts#options-use_default_icons
+        [04]: /modules/platen/markup/alerts
+      weight: 5
+    default: primary
+    type: string
+    enum:
+      - danger
+      - default
+      - primary
+      - success
+      - warning
+  icons:
+    title: Default Alert Icons
+    description: Specify default icons for alerts by their variant.
+    schematize:
+      details: |
+        Specify default icons for alerts by their variant. These settings are only used when `use_default_icons` is
+        set to `true` in the [sref:configuration][01] or in an alert's [markup options][02].
+
+        The key for each setting is the name of a [variant][03] for the alert. The value is the name of the icon to
+        add to the alert unless overridden by the [`icon` option][04] in the alert's markup.
+
+        The Shoelace documentation lists the [sref:valid icon names you can use][05].
+
+        <!-- Link References -->
+        [01]: platen.site.markup.alerts.use_default_icons
+        [02]: /modules/platen/markup/alerts#options-use_default_icons
+        [03]: /modules/platen/markup/alerts#options-variant
+        [04]: /modules/platen/markup/alerts#options-icon
+        [05]: sl.component:icon?id=default-icons
+      skip_schema_render: true
+      weight: 6
+    type: object
+    properties:
+      danger:
+        title: Default 'danger' Alert Variant Icon
+        description: Specify the name of the default icon for danger variant alerts.
+        schematize:
+          details: |
+            Use this setting to specify the name of the default icon for `danger`` variant alerts. This icon is only
+            added to alerts when:
+            
+            - their [`variant` option][01] is set to `danger`,
+            - the `use_default_icons` [sref:configuration setting][02] or [markup option][03] is set to `true`,
+            - and the markup doesn't specify the [`icon` option][04].
+
+            You can specify any [sref:valid icon name][05] for this setting. The default is `exclamation-octagon`.
+
+            <!-- Link References -->
+            [01]: /modules/platen/markup/alerts#options-variant
+            [02]: platen.site.markup.alerts.use_default_icons
+            [03]: /modules/platen/markup/alerts#options-use_default_icons
+            [04]: /modules/platen/markup/alerts#options-icon
+            [05]: sl.component:icon?id=default-icons
+          weight: 1
+        type: string
+        default: exclamation-octagon
+      default:
+        title: Default 'default' Alert Variant Icon
+        description: Specify the name of the default icon for default variant alerts.
+        schematize:
+          details: |
+            Use this setting to specify the name of the default icon for `default` variant alerts. This icon is only
+            added to alerts when:
+            
+            - their [`variant` option][01] is set to `default`,
+            - the `use_default_icons` [sref:configuration setting][02] or [markup option][03] is set to `true`,
+            - and the markup doesn't specify the [`icon` option][04].
+
+            You can specify any [sref:valid icon name][05] for this setting. The default is `gear`.
+
+            <!-- Link References -->
+            [01]: /modules/platen/markup/alerts#options-variant
+            [02]: platen.site.markup.alerts.use_default_icons
+            [03]: /modules/platen/markup/alerts#options-use_default_icons
+            [04]: /modules/platen/markup/alerts#options-icon
+            [05]: sl.component:icon?id=default-icons
+          weight: 2
+        type: string
+        default: gear
+      primary:
+        title: Default 'primary' Alert Variant Icon
+        description: Specify the name of the default icon for primary variant alerts.
+        schematize:
+          details: |
+            Use this setting to specify the name of the default icon for `primary` variant alerts. This icon is only
+            added to alerts when:
+            
+            - their [`variant` option][01] is set to `primary`,
+            - the `use_default_icons` [sref:configuration setting][02] or [markup option][03] is set to `true`,
+            - and the markup doesn't specify the [`icon` option][04].
+
+            You can specify any [sref:valid icon name][05] for this setting. The default is `info-circle`.
+
+            <!-- Link References -->
+            [01]: /modules/platen/markup/alerts#options-variant
+            [02]: platen.site.markup.alerts.use_default_icons
+            [03]: /modules/platen/markup/alerts#options-use_default_icons
+            [04]: /modules/platen/markup/alerts#options-icon
+            [05]: sl.component:icon?id=default-icons
+          weight: 3
+        type: string
+        default: info-circle
+      success:
+        title: Default 'success' Alert Variant Icon
+        description: Specify the name of the default icon for success variant alerts.
+        schematize:
+          details: |
+            Use this setting to specify the name of the default icon for `success` variant alerts. This icon is only
+            added to alerts when:
+            
+            - their [`variant` option][01] is set to `success`,
+            - the `use_default_icons` [sref:configuration setting][02] or [markup option][03] is set to `true`,
+            - and the markup doesn't specify the [`icon` option][04].
+
+            You can specify any [sref:valid icon name][05] for this setting. The default is `check2-circle`.
+
+            <!-- Link References -->
+            [01]: /modules/platen/markup/alerts#options-variant
+            [02]: platen.site.markup.alerts.use_default_icons
+            [03]: /modules/platen/markup/alerts#options-use_default_icons
+            [04]: /modules/platen/markup/alerts#options-icon
+            [05]: sl.component:icon?id=default-icons
+          weight: 4
+        type: string
+        default: check2-circle
+      warning:
+        title: Default 'warning' Alert Variant Icon
+        description: Specify the name of the default icon for warning variant alerts.
+        schematize:
+          details: |
+            Use this setting to specify the name of the default icon for `warning` variant alerts. This icon is only
+            added to alerts when:
+            
+            - their [`variant` option][01] is set to `warning`,
+            - the `use_default_icons` [sref:configuration setting][02] or [markup option][03] is set to `true`,
+            - and the markup doesn't specify the [`icon` option][04].
+
+            You can specify any [sref:valid icon name][05] for this setting. The default is `exclamation-triangle`.
+
+            <!-- Link References -->
+            [01]: /modules/platen/markup/alerts#options-variant
+            [02]: platen.site.markup.alerts.use_default_icons
+            [03]: /modules/platen/markup/alerts#options-use_default_icons
+            [04]: /modules/platen/markup/alerts#options-icon
+            [05]: sl.component:icon?id=default-icons
+          weight: 5
+        type: string
+        default: exclamation-triangle
+  use_default_icons:
+    title: Use Default Icons
+    description: Set whether rendered alerts use configured icons by default
+    schematize:
+      details: |
+        Use this setting to configure whether Platen adds the [sref:configured variant icons][01] to rendered alerts. The
+        default value is `true`. Set this value to `false` to ignore the variant icons.
+
+        If you use the [`use_default_icons` option][02] for alert markup in your content, this value is overriden by
+        that option.
+
+        <!-- Reference Link Definitions -->
+        [01]: platen.site.markup.alerts.icons
+        [02]: /modules/platen/markup/alerts#options-use_default_icons
+      weight: 7
+    default: true
+    type: boolean
+  partials:
+    title: Markup Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only injected when
+        [sref:`enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`enabled`]: platen.site.markup.alerts.enabled
+      weight: 100
+      skip_schema_render: true
+    type: object
+    properties:
+      renderers:
+        title: Renderer Partials
+        description: Registers one or more partials that act as render hooks.
+        type: object
+        schematize:
+          weight: 2
+          skip_schema_render: true
+          details: |
+            Defines a map of partials to use as Markdown render hooks. Like all partials, these are only processed when
+            [sref:`enabled`] is set to `true`.
+
+            Supported renderer partials include:
+
+            - `codeblock`, processed for fenced code blocks with a language ID
+            - `heading`, processed for headings
+            - `image`, processed for image links
+            - `link`, processed for non-image links
+
+            In all cases, all renderer partials for enabled features and markup options are checked one after the other
+            unless they return a render string. Only the first applicable partial that returns a render string is
+            processed and rendered.
+
+            <!-- Reference Links -->
+            [sref:`enabled`]: platen.site.markup.alerts.enabled
+        properties:
+          codeblock:
+            title: Codeblock Render Hook Partial
+            description: Adds a partial to call when processing the codeblock render hook.
+            schematize:
+              details: |
+                Adds support for rendering codeblocks as alerts in Platen. This render hook is only called if the
+                language ID for the codeblock (i.e. `` ```languageID ``) is `alert` or a [sref:valid alias][01]. If a
+                codeblock does include a valid language ID for the markup, Platen uses the codeblock for rendering an
+                alert.
+
+                For more information about using the codeblock to add an alert, see [the reference documentation][02].
+
+                This value defaults to `platen/markup/alerts/codeblock`. You can replace it with a different value and
+                define a new partial template, or override the existing partial by creating the file
+                `layouts/partials/platen/markup/tabs/codeblock.html` in your own site or module.
+                
+                We recommend instead that you use the `custom` [sref:configuration setting][03] or
+                [markup option][04]. Defining a [custom template][05] is much less work than fully implementing a new
+                Markdown render hook.
+
+                For more information about defining codeblock render hook partials, see
+                [Defining a Codeblock Render Hook Partial][05] in the [Theme Guide][06].
+
+                <!-- Reference Links -->
+                [01]: platen.site.markup.alerts.aliases
+                [02]: /modules/platen/markup/alerts
+                [03]: platen.site.markup.alerts.custom
+                [04]: /modules/platen/markup/alerts#options-custom
+                [05]: /modules/platen/markup/alerts#custom-templates
+                [06]: /styling
+                [07]: /styling
+            type: string
+            default: platen/markup/alerts/codeblock
+  style:
+    title: Markup Simple Style Module
+    description: Defines the alerts markup's simple style module
+    schematize:
+      weight: 200
+      skip_schema_render: true
+      details: |
+        Defines default styling for alerts created by the codeblock.
+
+        When you use the [`alert`][01] codeblock, the following SCSS is applied:
+
+        ```scss
+        // Fill me out
+        ```
+
+        ### Overriding
+
+        You can overwrite this definition for your own site or theme by creating the file `styles/markup/_alerts.scss`
+        in your [assets folder][02], which defaults to `assets` in your project root.
+        
+        You can also create a new style module in the `styles/markup` folder and set this value to that module's name.
+        If you do, omit the leading `_` and trailing `.scss`. For example, the name for the style module
+        `assets/styles/markup/_foo.scss` is `foo`.
+
+        ```alert
+        ---
+        preset: docs.warning-style-override
+        ---
+        ```
+
+        For more information on authoring SCSS, see the [learning guide][03]. For more information on styling your
+        alerts markup, see [Styling][04] in the reference documentation for the markup.
+
+        <!-- Reference Links -->
+        [01]: /modules/platen/markup/alerts
+        [02]: https://gohugo.io/getting-started/directory-structure/#directory-structure-explained
+        [03]: https://sass-lang.com/guide
+        [04]: /modules/platen/markup/alerts#styling
+    type: string
+    default: alerts

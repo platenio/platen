@@ -1,0 +1,93 @@
+{
+  "$schema": "https://beta.frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.content.snippets": {
+    "platen-alert": {
+      "title": "Alert",
+      "description": "Add content in a box of text that stounds out from the surrounding content.\nFor more information, see https://platen.io/modules/platen/markup/art",
+      "body": [
+        "```alert",
+        "---",
+        "class: [[&class]]",
+        "header: >-",
+        "  [[&header]]",
+        "icon: [[&icon]]",
+        "id: [[&id]]",
+        "use_default_icons: [[use_default_icons]]",
+        "variant: [[variant]]",
+        "---",
+        "",
+        "[[&selection]]",
+        "```"
+      ],
+      "fields": [
+        {
+          "name": "selection",
+          "title": "Content Markdown",
+          "type": "string",
+          "default": "FM_SELECTED_TEXT"
+        },
+        {
+          "name": "header",
+          "title": "The inline Markdown to use as the header for the alert.",
+          "type": "string",
+          "single": true,
+          "default": ""
+        },
+        {
+          "name": "class",
+          "title": "Zero or more classes to add to the alert as a space-separated list.",
+          "type": "string",
+          "single": true,
+          "default": "''"
+        },
+        {
+          "name": "closable",
+          "title": "Whether the alert should have a button users can click to close it.",
+          "type": "choice",
+          "choices": [
+            "true",
+            "false"
+          ],
+          "default": "false"
+        },
+        {
+          "name": "icon",
+          "title": "The name of the icon to add to the alert.",
+          "type": "string",
+          "single": true,
+          "default": "''"
+        },
+        {
+          "name": "use_default_icons",
+          "title": "Whether the alert should use the default configured icons for its variant.",
+          "type": "choice",
+          "choices": [
+            "true",
+            "false"
+          ],
+          "default": "true"
+        },
+        {
+          "name": "id",
+          "title": "The custom ID to give the alert.",
+          "type": "string",
+          "single": true,
+          "default": "''"
+        },
+        {
+          "name": "variant",
+          "title": "The variant the alert should be rendered as.",
+          "type": "choice",
+          "choices": [
+            "danger",
+            "default",
+            "primary",
+            "success",
+            "warning"
+          ],
+          "default": "primary"
+        }
+      ]
+    }
+  }
+}
