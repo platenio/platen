@@ -1,0 +1,49 @@
+// This style is adapted from the excellent blog post by Dylan Smith:
+// https://dylanatsmith.com/wrote/styling-the-kbd-element
+
+kbd kbd {
+  // Set up custom properties for colours so we can switch them in dark mode
+  --kbd-color-background: var(--gray-100);
+  --kbd-color-border: var(--gray-500);
+  --kbd-color-text:       var(--body-font-color);
+
+  @media (prefers-color-scheme: dark) {
+    --kbd-color-background: var(--gray-200);
+    --kbd-color-border:     var(--gray-100);
+  }
+
+  background-color: var(--kbd-color-background);
+  color: var(--kbd-color-text);
+
+  // Round off the corners like physical keys have
+  border-radius: 0.25rem;
+
+  // A sharp shadow (with no blur) really gives
+  // the old school keyboard look
+  box-shadow: 0 2px 0 0px var(--kbd-color-border);
+
+  // Remove the text cursor so it looks like clicking
+  cursor: default;
+
+  // Remove any extra space to accurately tweak the padding
+  line-height: 1;
+
+  // Keep the characters centred when narrower than the `max-width`
+  text-align: center;
+
+  // Keys should have horizontal padding
+  padding: 0 0.5em;
+
+  // These two lines pull the whole element up now that they’re
+  // bottom-heavy due to the `box-shadow`. This looks better
+  // against the cap height of regular paragraph text.
+  position: relative;
+  top: -1px;
+
+  // Make the key get “pushed” down and reduce the shadow so it looks like
+  // it might when typing on a physical keyboard.
+  &:hover {
+    box-shadow: 0 1px 0 0.5px var(--kbd-color-border);
+    top: 1px;
+  }
+}

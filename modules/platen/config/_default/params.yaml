@@ -271,6 +271,7 @@ platen:
       partials:
         renderers:
           image: platen/markup/key_combos/image
+      style: key_combos
     mermaid:
       enabled: true
       version: 10.0.2
