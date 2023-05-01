@@ -63,7 +63,14 @@
 {{- $ConfigOptions := slice -}}
 {{/*  Only tab groups get setting defaults from config  */}}
 {{- if $IsGroup -}}
-  {{- $ConfigOptions = slice "classes" "use_legacy" "placement" "activation" "no_scroll_controls" -}}
+  {{- $ConfigOptions = slice
+                       "activation"
+                       "classes"
+                       "no_scroll_controls"
+                       "placement"
+                       "standardize_height"
+                       "use_legacy"
+  -}}
 {{- end -}}
 {{/*
     Define the list of default values for the options that aren't pulled from
@@ -276,6 +283,10 @@
       {{- end -}}
 
       {{- $attributes = $attributes | append (printf `activation="%s"` $options.activation) -}}
+    {{- end -}}
+
+    {{- with $options.standardize_height -}}
+      {{- $attributes = $attributes | append `data-standardize-height="true"` -}}
     {{- end -}}
 
     {{- if isset $options "no_scroll_controls" -}}

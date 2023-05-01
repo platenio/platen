@@ -198,17 +198,34 @@ properties:
       - bottom
       - start
       - end
+  standardize_height:
+    title: Standardize Tab Heights
+    description: Specify whether the tabs in a group should be rendered with the same height as the tallest tab panel.
+    schematize:
+      weight: 8
+      details: |
+        Specify whether the tabs in every group should be rendered with the same height as the tallest tab panel in the
+        group. This can help to reduce how much the page's layout updates when a reader switches between tabs in a
+        group. Set this value to `true` to standardize the height of the tabs.
+
+        If the [`standardize_height` option][01] is specified for a tab group in the markup, that value overrides this
+        setting.
+
+        <!-- Link References -->
+        [01]: /modules/platen/markup/tabs#options-standardize_height
+    type: boolean
+    default: false
   preset:
     title: Default Preset
     description: Specify the dot-path to a preset to use as the default for this markup.
     schematize:
       details: |
         You can define any number of preset tab groups and tabs reusably in your site's data. Any YAML files you add in
-         the `data/platen/tabs` folder are available for use. You can use folders to group presets together. For more
-         information about presets, see [Presets][01] in the reference documentation for the markup.
+        the `data/platen/tabs` folder are available for use. You can use folders to group presets together. For more
+        information about presets, see [Presets][01] in the reference documentation for the markup.
 
          [01]: /modules/platen/markup/tabs#presets
-      weight: 8
+      weight: 9
     type: string
   use_legacy:
     title: Use Legacy Template

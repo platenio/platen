@@ -7,7 +7,7 @@
 
 {{- if $HasClosableTabs -}}
   {{- $CacheKey     := "closable-tabs-script"                              -}}
-  {{- $ResourcePath := "scripts/markup/tabs/handleClosing.js"              -}}
+  {{- $ResourcePath := "scripts/markup/tabs/handler.js"                    -}}
   {{- $Template     := "platen/markup/tabs/templates/header"               -}}
   {{- $Script       := resources.Get $ResourcePath | resources.Fingerprint -}}
   {{- $Integrity    := partialCached $IntegrityPartial $Script $CacheKey   -}}

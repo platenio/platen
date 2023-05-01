@@ -292,6 +292,7 @@ platen:
       activation: auto
       no_scroll_controls: false
       placement: top
+      standardize_height: false
       # preset: null
       use_legacy: true
       warn_on_legacy: true

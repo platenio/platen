@@ -52,6 +52,10 @@ Memo:
         - start
         - end
       default: top
+    standardize_height:
+      required: false
+      type:     Boolean
+      default:  false
     preset:
       type: String
       required: false
@@ -181,6 +185,10 @@ using the arrow keys on your keyboard. If this option was set to `true`, you
 would only be able to use your keyboard to scroll the list. For more
 information, see [`no_scroll_controls`](#options-no_scroll_controls).
 
+Finally, it sets `standardize_height` to `true`, which ensures that the height
+of the tab panels is made consistent, setting every tab to the same height as
+the tallest rendered tab.
+
 <!--- Example Start -->
 
 ``````tabs
@@ -190,6 +198,7 @@ class: example
 placement: bottom
 activation: auto
 no_scroll_controls: false
+standardize_height: true
 ---
 
 ```tab
@@ -516,6 +525,20 @@ placement: end
 ``````
 
 {{< memo/renderer/option "placement" >}}
+
+### `standardize_height` { #options-standardize_height }
+
+Specify whether the tabs in the group should have their height standardized to the same height as the tallest rendered
+tab in the group. This can help reduce how much the page layout updates when a reader switches between tabs.
+
+If this option isn't set in the markup, Platen uses the value of the `platen.markup.tabs.standardize_height` setting
+defined in your site configuration. The site configuration default is `false`. For more information, see
+[Configuration](#configuration).
+
+This option isn't valid with the [legacy template](#legacy-template). It's ignored when the preset is applied to
+the markup for an individual tab.
+
+{{< memo/renderer/option "standardize_height" >}}
 
 ### `preset` { #options-preset }
 
@@ -980,6 +1003,20 @@ your site configuration. The site configuration default is `top`. For more infor
 This option isn't valid with the [legacy template](#legacy-template). It's ignored when the preset is applied to
 the markup for an individual tab.
 
+### `standardize_height` { #preset-properties-standardize_height }
+
+Specify whether the tabs in the group should have their height standardized to the same height as the tallest rendered
+tab in the group. This can help reduce how much the page layout updates when a reader switches between tabs.
+
+If this option isn't set in the markup, Platen uses the value of the `platen.markup.tabs.standardize_height` setting
+defined in your site configuration. The site configuration default is `false`. For more information, see
+[Configuration](#configuration).
+
+This option isn't valid with the [legacy template](#legacy-template). It's ignored when the preset is applied to
+the markup for an individual tab.
+
+{{< memo/renderer/option "standardize_height" >}}
+
 ## Custom Templates
 
 If you want to use your own custom rendering for a tabs group without having to handle the markup parsing, attributes,
@@ -1004,8 +1041,8 @@ representing the tab control and a child `<div>` for the tab content. The Markdo
 normal.
 
 Currently, Platen uses the legacy template by default and warns on its use. You can override these behaviors in the
-configuration. To use the new template by default, set [sref:`platen.markup.tabs.use_legacy`][c07] to `false`. To
-continue using the legacy tabs element without warnings, set [sref:`platen.markup.tabs.warn_on_legacy`][c08] to
+configuration. To use the new template by default, set [sref:`platen.markup.tabs.use_legacy`][c08] to `false`. To
+continue using the legacy tabs element without warnings, set [sref:`platen.markup.tabs.warn_on_legacy`][c09] to
 `false`.
 
 ## Configuration
@@ -1023,6 +1060,7 @@ tabs:
   activation: auto
   no_scroll_controls: false
   placement: top
+  standardize_height: false
   preset: null
   use_legacy: true
   warn_on_legacy: true
@@ -1057,12 +1095,17 @@ tabs:
 : Choose the default preset to apply to tabs markup. There is no default preset. For more information, see
   [Presets](#presets).
 
-[sref:`use_legacy`][c07]
+[sref:`standardize_height`][c07]
+: Choose whether every tab group is rendered with the heights of its tabs standardized to the same as the tallest tab
+  in the group. Set this value to `true` to standardize the height. If you specify the `standardize_height`
+  [option](#options-standardize_height) in your markup, that value is used instead.
+
+[sref:`use_legacy`][c08]
 : If you want your tabs rendered with the new default template to use the full set of options, set this value to
   `false`. It defaults to `true` now, but will default to `false` in the future. Eventually, the legacy template will
   be removed entirely.
 
-[sref:`warn_on_legacy`][c08]
+[sref:`warn_on_legacy`][c09]
 : If you want to silence the warnings Platen emits when you use the legacy template, set this value to `false`.
 
 You can find the full set of options for this markup in the [sref:configuration reference][c99].
@@ -1210,7 +1253,7 @@ inside of the tab-group selector, like this:
 You can completely override the provided style by defining the `styles/markup/_tabs.scss` file in your
 [assets folder][h04].
 
-You can also create a new style module in the `styles/markup` folder and set [sref:`platen.markup.tabs.style`][c09]
+You can also create a new style module in the `styles/markup` folder and set [sref:`platen.markup.tabs.style`][c10]
 in your site configuration to that module's name. If you do, omit the leading `_` and trailing `.scss`. For example,
 the name for the style module `assets/styles/markup/_foo.scss` is `foo`.
 
@@ -1232,9 +1275,10 @@ the name for the style module `assets/styles/markup/_foo.scss` is `foo`.
 [c04]: platen.site.markup.tabs.no_scroll_controls
 [c05]: platen.site.markup.tabs.placement
 [c06]: platen.site.markup.tabs.preset
-[c07]: platen.site.markup.tabs.use_legacy
-[c08]: platen.site.markup.tabs.warn_on_legacy
-[c09]: platen.site.markup.tabs.style
+[c07]: platen.site.markup.tabs.standardize_height
+[c08]: platen.site.markup.tabs.use_legacy
+[c09]: platen.site.markup.tabs.warn_on_legacy
+[c10]: platen.site.markup.tabs.style
 [c99]: platen.site.markup.tabs
 [h01]: https://gohugo.io/variables/page/
 [h02]: https://gohugo.io/templates/render-hooks/#render-hooks-for-code-blocks
