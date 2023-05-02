@@ -4,13 +4,21 @@
 */}}
 {{- $params := . -}}
 {{- $munged := $params.ref -}}
-{{- $outputFormat := cond (eq "schema" $params.target) "Schematize" "HTML" -}}
-{{- $params := merge $params (dict "outputFormat" $outputFormat) -}}
+{{- $outputFormat := "" -}}
+
+{{- if eq "schema" $params.target -}}
+  {{- $outputFormat = "Schematize" -}}
+  {{- $params = merge $params (dict "outputFormat" $outputFormat) -}}
+{{- end -}}
 
 {{- if findRE "\\{" $params.ref -}}
 {{- else -}}
   {{- $munged = replaceRE "\\.schema\\.yaml" "" $params.ref -}}
-  {{- $munged = ref $params.page (dict "path" $munged "outputFormat" $params.outputFormat) -}}
+  {{- with $params.outputFormat -}}
+    {{- $munged = ref $params.page (dict "path" $munged "outputFormat" $params.outputFormat) -}}
+  {{- else -}}
+    {{- $munged = ref $params.page (dict "path" $munged) -}}
+  {{- end -}}
 {{- end -}}
 
 {{- return $munged -}}
