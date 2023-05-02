@@ -53,6 +53,7 @@
 {{- $sharedParams   := merge $params       (dict "_level" $current_level) -}}
 {{- $headerParams   := $sharedParams                                      -}}
 {{- $schemaParams   := $sharedParams                                      -}}
+{{- $defaultParams  := $sharedParams                                      -}}
 {{- $examplesParams := $sharedParams                                      -}}
 {{- $requiredParams := merge $sharedParams (dict "_id" $property_prefix)  -}}
 {{- $propertyParams := merge $sharedParams (dict "_id" $property_prefix)  -}}
@@ -62,7 +63,8 @@
 {{- $renderStrings := slice $openSectionHTML
                       | append (partial "schematize/docs/object/header" $headerParams)
                       | append (partial "schematize/utils/schema/render" $schemaParams)
-                      | append (partial "schematize/docs/object/examples" $examplesParams)
+                      | append (partial "schematize/docs/default"  $defaultParams)
+                      | append (partial "schematize/docs/examples" $examplesParams)
                       | append (partial "schematize/docs/object/requiredProperties" $requiredParams)
                       | append (partial "schematize/docs/object/properties" $propertyParams)
                       | append (partial "schematize/docs/object/patternProperties" $patternParams)
