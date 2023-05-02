@@ -11,12 +11,30 @@
   - `_id` - Optional. The ID this property belongs to.
 */}}
 {{- $params := . -}}
+{{- $schemaData := partial "schematize/utils/schema/munge/id" $params -}}
+{{- $params      = merge $params (dict "property" $schemaData)        -}}
+
+{{/* Need to determine if this is a top-level object so we can appropriately open the section. */}}
+{{- $base_level := $schemaData._level | default 0  -}}
+{{/*
+    Top-level objects are placed in a section with the schematize class and no ID, because their
+    H1 is the appropriate anchor.
+*/}}
+{{- if eq $base_level 0 -}}
+  <section class="schematize">
+{{- end -}}
 
 {{/* Build the list of strings to render */}}
 {{- $renderStrings := slice    (partial "schematize/utils/headings/property" $params)
                       | append (partial "schematize/utils/summary"           $params)
                       | append (partial "schematize/utils/metadata/render"   $params)
+                      | append (partial "schematize/docs/default"            $params)
+                      | append (partial "schematize/docs/examples"           $params)
 -}}
 
 {{/* Render */}}
 {{- delimit $renderStrings "\n\n" | safeHTML -}}
+
+{{- if eq $base_level 0 -}}
+  </section>
+{{- end -}}
