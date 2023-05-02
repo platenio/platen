@@ -1,0 +1,56 @@
+{{/*
+  Writes the examples section for an object with a heading followed by a series of code blocks
+  showing valid values for this object.
+
+  This partial uses the parameters from the object's own documentation partial. The parameters are
+  expected to include:
+
+  - `property` - Mandatory. The objects's schema data
+  - `page`     - Mandatory. The hugo Page object for the webpage the documentation is being written
+    on, for resolving references.
+  - `_level` - Optional. The current hierarchy level of the page. Used for determining what heading
+    level to write. If unspecified, it's assumed that this is a top-level object, documenting a full
+    schema.
+  - `_id` - Optional. The ID this property belongs to. If specified, used as the prefix for this
+    object's properties. This value should be null for a top-level object and set for any nested
+    objects, like properties of a top-level object.
+*/}}
+{{- $params := .                    -}}
+{{- $data   := $params.property     -}}
+{{- $level  := $params._level | default 0 | add 1 -}}
+{{- with $data.examples }}
+  {{- $format         := $data.schematize.example_format | default "json"                     -}}
+  {{- $headingParams  := dict "level" $level "title" "Examples"                               -}}
+  {{- $openCodeBlock  := printf "\n```%s { .schematize-example-block }" $format               -}}
+  {{- $closeCodeBlock := "```\n\n"                                                            -}}
+  {{- $renderStrings  := slice (partial "schematize/utils/headings/arbitrary" $headingParams) -}}
+  {{- $headingParams   = merge $headingParams (dict "level" (add 1 $level)) -}}
+
+  {{- range $Index, $example := . -}}
+    {{- $exampleCode := dict -}}
+    {{- $title       := printf "Example %v" (add 1 $Index) -}}
+    {{- $description := ""                                 -}}
+    {{- with $example.schematize -}}
+      {{- $format      = $example.schematize.format  | default $format      -}}
+      {{- $title       = $example.schematize.title   | default $title       -}}
+      {{- $description = $example.schematize.details | default $description -}}
+      {{- range $Key, $Value := $example -}}
+        {{- if ne $Key "schematize" -}}
+          {{- $exampleCode = merge $exampleCode (dict $Key $Value) -}}
+        {{- end -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $exampleCode = $example -}}
+    {{- end -}}
+    {{- $headingParams = merge $headingParams (dict "title" $title) -}}
+    {{- $renderStrings = $renderStrings | append (partial "schematize/utils/headings/arbitrary" $headingParams) -}}
+    {{- $exampleCode   = $exampleCode | transform.Remarshal $format                         -}}
+    {{- $exampleCode   = printf "%s\n%s\n%s" $openCodeBlock $exampleCode $closeCodeBlock -}}
+    {{- $renderStrings = $renderStrings | append $exampleCode -}}
+    {{- with $description -}}
+      {{- $renderStrings = $renderStrings | append $description -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- delimit $renderStrings "\n\n" -}}
+{{- end -}}
