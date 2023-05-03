@@ -15,21 +15,24 @@
     object's properties. This value should be null for a top-level object and set for any nested
     objects, like properties of a top-level object.
 */}}
-{{- $params := .                    -}}
-{{- $data   := $params.property     -}}
-{{- $level  := $params._level | default 0 | add 1 -}}
+{{- $params := .                                                               -}}
+{{- $data   := $params.property                                                -}}
+{{- $id     := $params.property._id | default $params._id | default "" | lower -}}
+{{- $level  := $params._level       | default 0           | add 1              -}}
 {{- with $data.examples }}
-  {{- $format         := $data.schematize.example_format | default "json"                     -}}
-  {{- $headingParams  := dict "level" $level "title" "Examples"                               -}}
-  {{- $openCodeBlock  := printf "\n```%s { .schematize-example-block }" $format               -}}
-  {{- $closeCodeBlock := "```\n\n"                                                            -}}
-  {{- $renderStrings  := slice (partial "schematize/utils/headings/arbitrary" $headingParams) -}}
-  {{- $headingParams   = merge $headingParams (dict "level" (add 1 $level)) -}}
+  {{- $format         := $data.schematize.example_format | default "json"                       -}}
+  {{- $headingID      := printf "%s.examples" $id                                               -}}
+  {{- $headingParams  := dict "level" $level "title" "Examples" "id" $headingID                 -}}
+  {{- $openCodeBlock  := printf "\n```%s { .schematize-example-block }" $format                 -}}
+  {{- $closeCodeBlock := "```\n\n"                                                              -}}
+  {{- $renderStrings  := slice (partial "schematize/utils/headings/arbitrary" $headingParams)   -}}
+  {{- $headingParams   = merge $headingParams (dict "level" (add 1 $level))                     -}}
 
   {{- range $Index, $example := . -}}
-    {{- $exampleCode := dict -}}
+    {{- $exampleCode := dict                               -}}
     {{- $title       := printf "Example %v" (add 1 $Index) -}}
     {{- $description := ""                                 -}}
+
     {{- with $example.schematize -}}
       {{- $format      = $example.schematize.format  | default $format      -}}
       {{- $title       = $example.schematize.title   | default $title       -}}
@@ -42,11 +45,14 @@
     {{- else -}}
       {{- $exampleCode = $example -}}
     {{- end -}}
-    {{- $headingParams = merge $headingParams (dict "title" $title) -}}
+
+    {{- $headingID    := printf "%s.%s" $headingID (lower $title | urlize)                                      -}}
+    {{- $headingParams = merge $headingParams (dict "title" $title "id" $headingID)                             -}}
     {{- $renderStrings = $renderStrings | append (partial "schematize/utils/headings/arbitrary" $headingParams) -}}
-    {{- $exampleCode   = $exampleCode | transform.Remarshal $format                         -}}
-    {{- $exampleCode   = printf "%s\n%s\n%s" $openCodeBlock $exampleCode $closeCodeBlock -}}
-    {{- $renderStrings = $renderStrings | append $exampleCode -}}
+    {{- $exampleCode   = $exampleCode | transform.Remarshal $format                                             -}}
+    {{- $exampleCode   = printf "%s\n%s\n%s" $openCodeBlock $exampleCode $closeCodeBlock                        -}}
+    {{- $renderStrings = $renderStrings | append $exampleCode                                                   -}}
+
     {{- with $description -}}
       {{- $renderStrings = $renderStrings | append $description -}}
     {{- end -}}

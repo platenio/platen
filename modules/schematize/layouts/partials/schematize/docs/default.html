@@ -15,8 +15,9 @@
     object's properties. This value should be null for a top-level object and set for any nested
     objects, like properties of a top-level object.
 */}}
-{{- $params := .                    -}}
-{{- $data   := $params.property     -}}
+{{- $params := .                                                               -}}
+{{- $data   := $params.property                                                -}}
+{{- $id     := $params.property._id | default $params._id | default "" | lower -}}
 
 {{/*  Handle the level correctly. Not sure why, but when it's set on the property it needs to increment 2, not 1  */}}
 {{- $level  := 1 -}}
@@ -27,16 +28,17 @@
 {{- end -}}
 
 {{- with $data.default -}}
-  {{- $format      := $data.schematize.default.format | default $data.schematize.format | default "json" -}}
-  {{- $skipHeading := $data.schematize.default.skip_heading | default false -}}
-  {{- $title       := $data.schematize.default.title        | default "Default Value" -}}
-  {{- $description := $data.schematize.default.details      | default "" -}}
-  {{- $default     := dict -}}
+  {{- $format      := $data.schematize.default.format       | default $data.schematize.format | default "json" -}}
+  {{- $skipHeading := $data.schematize.default.skip_heading | default false                                    -}}
+  {{- $title       := $data.schematize.default.title        | default "Default Value"                          -}}
+  {{- $description := $data.schematize.default.details      | default ""                                       -}}
+  {{- $default     := dict                                                                                     -}}
+
   {{- if and (reflect.IsMap $data.default) (isset $data.default "schematize") -}}
-    {{- $format      = $data.schematize.format | default $format -}}
+    {{- $format      = $data.schematize.format               | default $format      -}}
     {{- $skipHeading = $data.default.schematize.skip_heading | default $skipHeading -}}
-    {{- $title       = $data.default.schematize.title | default $title -}}
-    {{- $description = $data.default.schematize.description | default $description -}}
+    {{- $title       = $data.default.schematize.title        | default $title       -}}
+    {{- $description = $data.default.schematize.description  | default $description -}}
     {{- range $Key, $Value := $data.default -}}
       {{- if ne $Key "schematize" -}}
         {{- $default = merge $default (dict $Key $Value) -}}
@@ -45,14 +47,16 @@
   {{- else -}}
     {{- $default = $data.default -}}
   {{- end -}}
-  {{- $openCodeBlock  := printf "\n```%s { .schematize-example-block }" $format               -}}
-  {{- $closeCodeBlock := "```\n\n"                                                            -}}
-  {{- $renderStrings  := slice -}}
+
+  {{- $openCodeBlock  := printf "\n```%s { .schematize-example-block }" $format -}}
+  {{- $closeCodeBlock := "```\n\n"                                              -}}
+  {{- $renderStrings  := slice                                                  -}}
   
   {{- if not $skipHeading -}}
-    {{- $headingParams := dict "level" $level "title" $title                          -}}
+    {{- $headingID     := printf "%s.default" $id                                      -}}
+    {{- $headingParams := dict "level" $level "title" $title "id" $headingID           -}}
     {{- $Heading       := partial "schematize/utils/headings/arbitrary" $headingParams -}}
-    {{- $renderStrings  = $renderStrings | append $Heading -}}
+    {{- $renderStrings  = $renderStrings | append $Heading                             -}}
   {{- end -}}
 
   {{- if eq "json" $format -}}
@@ -71,12 +75,14 @@
         {{- $defaultItems = $defaultItems | append (printf "- %v" $Item) -}}
       {{- end -}}
     {{- end -}}
+  
     {{- $default = delimit $defaultItems "\n" -}}
   {{- else if (reflect.IsMap $default) -}}
     {{- $default       = $default | transform.Remarshal $format                         -}}
   {{- else -}}
     {{/*  ??  */}}
   {{- end -}}
+
   {{- $default       = printf "%s\n%s\n%s" $openCodeBlock $default $closeCodeBlock -}}
   {{- $renderStrings = $renderStrings | append $default -}}
 
