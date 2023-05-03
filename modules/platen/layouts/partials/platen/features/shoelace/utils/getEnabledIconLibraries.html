@@ -1,0 +1,11 @@
+{{- $Key              := "platen.features.shoelace.icons.libraries"    -}}
+{{- $Libraries        := partialCached "platen/param/getKey" $Key $Key -}}
+{{- $enabledLibraries := slice                                         -}}
+
+{{- range $Library, $Config := $Libraries -}}
+  {{- if eq true $Config.enabled -}}
+    {{- $enabledLibraries = $enabledLibraries | append $Library | uniq -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $enabledLibraries -}}

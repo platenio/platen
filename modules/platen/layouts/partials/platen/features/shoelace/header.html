@@ -36,4 +36,7 @@
 
   {{/* Render */}}
   {{- delimit $renderStrings "\n" | safeHTML -}}
+
+  {{/*  Load icon libraries as needed  */}}
+  {{- partial "platen/features/shoelace/icons" $Context -}}
 {{- end }}

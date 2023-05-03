@@ -184,6 +184,139 @@ platen:
       enabled:     true
       always_load: false
       version:     2.3.0
+      icons:
+        default_library: builtin_bootstrap
+        always_load_libraries: []
+        libraries:
+          builtin_bootstrap:
+            enabled: true
+          boxicons:
+            enabled: true
+            aliases:
+              - box
+            version: 2.0.5
+            default_variant: regular
+            variants:
+              regular: bx
+              solid:   bxs
+              logos:   bxl
+            registration:
+              script: boxicons.js
+          font_awesome:
+            enabled: true
+            aliases:
+              - fa
+            version: 5.15.1
+            default_variant: regular
+            variants:
+              regular: far
+              solid:   fas
+              brands:  fab
+            registration:
+              script: font_awesome.js
+          heroicons:
+            enabled: true
+            aliases:
+              - hero
+            version: 2.0.1
+            default_variant: outline
+            variants:
+              outline: 24/outline
+              solid:   24/solid
+              mini:    20/solid
+            registration:
+              script: heroicons.js
+          iconoir:
+            enabled: true
+            version: latest
+            registration:
+              script: iconoir.js
+          ionicons:
+            enabled: true
+            aliases:
+              - ion
+            version: 5.1.2
+            default_variant: outline
+            variants:
+              outline: ''
+              filled:  -filled
+              sharp:   -sharp
+            registration:
+              script: ionicons.js
+          jam_icons:
+            enabled: true
+            aliases:
+              - jam
+            version: 2.0.0
+            default_variant: regular
+            variants:
+              regular: ''
+              filled:  '-f'
+            registration:
+              script: jam_icons.js
+          lucide:
+            enabled: true
+            version: latest
+            registration:
+              script: lucide.js
+          material_icons:
+            enabled: true
+            aliases:
+              - material
+            version: 1.0.5
+            default_variant: outline
+            variants:
+              - outline
+              - round
+              - sharp
+            registration:
+              script: material_icons.js
+          remix_icon:
+            enabled: true
+            aliases:
+              - remix
+            version: 2.5.0
+            default_category: system
+            default_variant: line
+            variants:
+              - line
+              - fill
+            categories:
+              - buildings
+              - business
+              - communication
+              - design
+              - development
+              - device
+              - document
+              - editor
+              - finance
+              - health
+              - logos
+              - map
+              - media
+              - others
+              - system
+              - user
+              - weather
+            registration:
+              script: remix_icon.js
+          tabler_icons:
+            enabled: true
+            aliases:
+              - tabler
+            version: 1.68.0
+            registration:
+              script: tabler_icons.js
+          unicons:
+            enabled: true
+            version: 3.0.3
+            default_variant: line
+            variants:
+              line: ''
+              solid: 's'
+            registration:
+              script: unicons.js
       partials:
         header: platen/features/shoelace/header
   markup:
@@ -249,6 +382,15 @@ platen:
         renderers:
           codeblock: platen/markup/details/codeblock
       style: details
+    icons:
+      enabled: true
+      custom: false
+      classes: []
+      # default_icon: "foo"
+      # default_library: heroicons
+      partials:
+        renderers:
+          image: platen/markup/icons/image
     itch:
       enabled:  true
       dark:     false

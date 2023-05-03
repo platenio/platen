@@ -1,0 +1,7 @@
+{{- $ConfigKey        := "platen.features.shoelace"                                -}}
+{{- $ShoelaceConfig   := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $Version          := $ShoelaceConfig.version | default "2.3.0"                 -}}
+{{- $UrlPrefix        := "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace"   -}}
+{{- $BasePath         := printf "%s@%v/dist"   $UrlPrefix    $Version              -}}
+
+{{- return $BasePath -}}

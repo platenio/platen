@@ -1,0 +1,89 @@
+{{- $Context              := .                                                                     -}}
+{{- $IntegrityPartial     := "platen/utils/getIntegrityAttributes"                                 -}}
+{{- $BasePathPartial      := "platen/features/shoelace/getBasePath"                                -}}
+{{- $Template             := "platen/features/shoelace/templates/iconRegistration"                 -}}
+{{- $KeyConfig            := "platen.features.shoelace"                                            -}}
+{{- $KeyHasIcons          := "_hasIcons"                                                           -}}
+{{- $KeyMarkupConfig      := "platen.markup.icons"                                                 -}}
+{{- $KeyUsedIconLibraries := "_usedIconLibraries"                                                  -}}
+{{- $Config               := partialCached "platen/param/getKey" $KeyConfig $KeyConfig             -}}
+{{- $MarkupConfig         := partialCached "platen/param/getKey" $KeyMarkupConfig $KeyMarkupConfig -}}
+{{- $AlwaysLoadLibraries  := $Config.icons.always_load_libraries                                   -}}
+{{- $DefaultLibrary       := $MarkupConfig.default_library | default $Config.icons.default_library -}}
+{{- $HasIcons             := $Context.Store.Get $KeyHasIcons          | default false              -}}
+{{- $librariesToLoad      := $Context.Store.Get $KeyUsedIconLibraries | default (slice)            -}}
+
+{{- with $AlwaysLoadLibraries -}}
+  {{- if reflect.IsSlice $AlwaysLoadLibraries -}}
+    {{- $librariesToLoad = union $librariesToLoad $AlwaysLoadLibraries -}}
+  {{- else if or (eq "all" (lower $AlwaysLoadLibraries)) (eq true $AlwaysLoadLibraries) -}}
+    {{- range $Library, $LibraryConfig := $Config.icons.libraries -}}
+      {{- if eq true $LibraryConfig.enabled -}}
+        {{- $librariesToLoad = $librariesToLoad | append $Library | uniq -}}
+      {{- else -}}
+        {{- warnf "Specified '%s' as an icon library to always load, but it's disabled in the configuration. Not registering the library." -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $HasIcons -}}
+  {{- $librariesToLoad = $librariesToLoad | append $DefaultLibrary | uniq -}}
+{{- end -}}
+
+{{- $ShouldRegisterIcons := or $HasIcons (gt (len $librariesToLoad) 0) -}}
+
+{{- if $ShouldRegisterIcons -}}
+  {{- $ShoelaceBasePath    := partial $BasePathPartial                                  -}}
+  {{- $CacheKey            := printf "register-icons-%s" (delimit $librariesToLoad "-") -}}
+  {{- $templateParams      := dict "ShoelaceBasePath" $ShoelaceBasePath                 -}}
+  {{- $registrationScripts := slice                                                     -}}
+
+  {{- range $IconLibrary := $librariesToLoad -}}
+    {{/*  {{- warnf "working to register icon library '%s'" $IconLibrary -}}  */}}
+    {{- $LibraryConfig := index $Config.icons.libraries $IconLibrary -}}
+
+    {{- if eq true $LibraryConfig.enabled -}}
+      {{- with $LibraryConfig.registration.script -}}
+        {{- $Script := $LibraryConfig.registration.script -}}
+        {{- $kind   := "default"                          -}}
+
+        {{- if hasPrefix $Script "/" -}}
+          {{- $kind = "absolute" -}}
+        {{- else if (or (hasPrefix $Script "https://") (hasPrefix $Script "http://")) -}}
+          {{- $kind = "remote" -}}
+        {{- end -}}
+
+        {{- $ResourcePath := cond (eq "default" $kind)
+                            (printf "scripts/features/shoelace/icons/register/%s" $Script)
+                            $Script
+        -}}
+
+        {{- if eq "remote" $kind -}}
+          {{- $Resource  := resources.GetRemote $ResourcePath | resources.Fingerprint                -}}
+          {{- $Integrity := partialCached $IntegrityPartial $Resource $ResourcePath                  -}}
+          {{- $Source    := $Resource.RelPermalink                                                   -}}
+          {{- $templateParams = merge $templateParams (dict "Source" $Source "Integrity" $Integrity) -}}
+        {{- else -}}
+          {{- $ResourceParams := merge $templateParams (dict "Config" $LibraryConfig "Context" $Context) -}}
+          {{- $OutputPath     := $LibraryConfig.registration.output_path | default $ResourcePath         -}}
+          {{- $Resource       := resources.Get $ResourcePath
+                                | resources.ExecuteAsTemplate $OutputPath $ResourceParams
+                                | resources.Fingerprint
+          -}}
+          {{- $Integrity     := partialCached $IntegrityPartial $Resource (dict $ResourcePath $ResourceParams) -}}
+          {{- $Source        := $Resource.RelPermalink                                                         -}}
+          {{- $templateParams = merge $templateParams (dict "Source" $Source "Integrity" $Integrity)           -}}
+        {{- end -}}
+
+        {{/*  Add the script to the header  */}}
+        {{ partialCached $Template $templateParams $ResourcePath }}
+      {{- end -}}
+    {{- else -}}
+      {{- warnf "Used icon library '%s' on page %s, but it's not enabled in the configuration."
+                $IconLibrary
+                $Context.Title
+      -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
