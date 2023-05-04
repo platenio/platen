@@ -58,11 +58,15 @@
       {{- $id   := index (split . "." | last 1) 0 -}}
       {{/* Handle pattern properties differently than others */}}
       {{- with $property._pattern -}}
-        {{- $id = printf "Pattern: <code>%s</code>" . -}}
+        {{- if not ($property.schematize.no_pattern_in_heading | default false) -}}
+          {{- $id = printf " (Pattern: <code>%s</code>)" . -}}
+        {{- else -}}
+          {{- $id = "" -}}
+        {{- end -}}
       {{- else -}}
-        {{- $id = printf "<code>%s</code>" $id -}}
+        {{- $id = printf " (<code>%s</code>)" $id -}}
       {{- end -}}
-      {{- $headerText = printf "%s (%s)" $headerText $id -}}
+      {{- $headerText = printf "%s%s" $headerText $id -}}
       {{- $headerText = printf "<h%v id=\"%s\">%s</h%v>" $level $href $headerText $level -}}
     {{- end -}}
   {{- else -}}

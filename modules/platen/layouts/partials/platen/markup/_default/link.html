@@ -37,7 +37,7 @@
         {{- end -}}
       {{- else if fileExists (print $File.Dir $destination) -}}
         {{/*  Nothing  */}}
-      {{- else -}}
+      {{- else if (not (hasPrefix .Destination "/")) -}}
         {{- warnf "Page '%s' not found in '%s'" $destination $File -}}
       {{- end -}}
     {{- end -}}

@@ -1,0 +1,20 @@
+{{- $LibraryName      := .                                             -}}
+{{- $Key              := "platen.features.shoelace.icons.libraries"    -}}
+{{- $Libraries        := partialCached "platen/param/getKey" $Key $Key -}}
+{{- $libraryConfig    := dict                                          -}}
+
+{{- range $Library, $Config := $Libraries -}}
+  {{- $Aliases := $Config.aliases | default (slice) -}}
+
+  {{- with $libraryConfig -}}
+    {{/*  Nothing to do, skip processing. We always return first valid config.  */}}
+  {{- else -}}
+    {{- if eq (lower $Library) (lower $LibraryName) -}}
+      {{- $libraryConfig = dict $Library $Config -}}
+    {{- else if (in $Aliases $LibraryName) -}}
+      {{- $libraryConfig = dict $Library $Config -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $libraryConfig -}}

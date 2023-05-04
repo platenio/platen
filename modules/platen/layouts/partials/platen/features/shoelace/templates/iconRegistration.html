@@ -1,0 +1,10 @@
+{{- $Params           := .                                       -}}
+{{- $Integrity        := $Params.Integrity        | safeHTMLAttr -}}
+{{- $ShoelaceBasePath := $Params.ShoelaceBasePath | safeHTMLAttr -}}
+{{- $Source           := $Params.Source           | safeHTMLAttr -}}
+{{/*  {{- warnf "Header template params: %s" ($Params | jsonify (dict "indent" "  ")) -}}  */}}
+
+<script type="module"
+        src="{{ $Source }}"
+        data-shoelace="{{ $ShoelaceBasePath }}"
+        {{ $Integrity }}></script>

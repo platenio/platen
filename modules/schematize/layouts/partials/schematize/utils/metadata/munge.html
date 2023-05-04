@@ -12,13 +12,22 @@
 {{/* Initialize the metadata map */}}
 {{- $metadata := dict -}}
 
+{{- $NumericTypes := slice "integer" "number" -}}
+{{- $isNumeric    := false                    -}}
+
 {{- with $property.type -}} {{/* Applies to: any */}}
-  {{- $metadata = merge $metadata (dict "Type" . ) -}}
+  {{- $Type    := printf "`%s`" $property.type | $params.page.RenderString -}}
+  {{- $metadata = merge $metadata (dict "Type" (dict "Kind" "inline" "Definition" $Type)) -}}
+
+  {{- if (in $NumericTypes $property.type) -}}
+    {{- $isNumeric = true -}}
+  {{- end -}}
 {{- end -}}
 
 {{- with (index $property "$id") -}} {{/* Applies to: any */}}
-  {{- $idLink := printf "[%s](%s)" . . | markdownify -}}
-  {{- $metadata = merge $metadata (dict "ID" $idLink) -}}
+  {{- $idLink  := printf "[%s](%s)" . . | markdownify                                -}}
+  {{- $idLink   = printf `<code class="schematize-id">%s</code>` $idLink | safeHTML  -}}
+  {{- $metadata = merge $metadata (dict "ID" (dict "Kind" "inline" "Definition" $idLink)) -}}
 {{- end -}}
 
 {{- with $property.oneOf -}} {{/* Applies to: any */}}
@@ -28,7 +37,7 @@
     {{- $munged := partial "schematize/utils/metadata/munge" $recursiveParameters -}}
     {{- $oneOf = $oneOf | append $munged -}}
   {{- end -}}
-  {{- $metadata = merge $metadata (dict "Must be one of" $oneOf ) -}}
+  {{- $metadata = merge $metadata (dict "Must be one of" (dict "Kind" "block" "Definition" $oneOf)) -}}
 {{- end -}}
 
 {{- with $property.anyOf -}} {{/* Applies to: any */}}
@@ -38,59 +47,81 @@
     {{- $munged := partial "schematize/utils/metadata/munge" $recursiveParameters -}}
     {{- $anyOf = $anyOf | append $munged -}}
   {{- end -}}
-  {{- $metadata = merge $metadata (dict "May be any of" $anyOf ) -}}
+  {{- $metadata = merge $metadata (dict "May be any of" (dict "Kind" "block" "Definition" $anyOf)) -}}
 {{- end -}}
 
 {{- with $property.enum -}} {{/* Applies to: string, enum, anyOf, oneOf */}}
-  {{- $metadata = merge $metadata (dict "Enums" .) -}}
+  {{- $mungedEnums := slice          -}}
+
+  {{- $enums       := $property.enum -}}
+  {{- if not (reflect.IsSlice $enums) -}}
+    {{- $enums = slice $enums -}}
+  {{- end -}}
+
+  {{- range $Enum := $enums -}}
+    {{- $mungedEnums = $mungedEnums | append (printf `<code class="schematize-enum">%s</code>` $Enum | safeHTML) -}}
+  {{- end -}}
+
+  {{- $metadata = merge $metadata (dict "Enums" (dict "Kind" "inline" "Definition" $mungedEnums)) -}}
 {{- end -}}
 
 {{- with $property.multipleOf -}} {{/* Applies to: numeric */}}
-  {{- $metadata = merge $metadata (dict "Must be multiple of" .) -}}
+  {{- $metadata = merge $metadata (dict "Must be multiple of" (dict "Kind" "inline" "Definition" .)) -}}
 {{- end -}}
 
 {{- with $property.minimum -}} {{/* Applies to: array, numeric */}}
-  {{- $key := cond (eq $property.type "numeric") "Must be ≥" "Item count must be ≥" -}}
-  {{- $metadata = merge $metadata (dict $key .) -}}
+  {{- $Key        := cond ($isNumeric) "Must be ≥" "Item count must be ≥"                        -}}
+  {{- $Definition := printf "`%v`" $property.minimum | $params.page.RenderString                 -}}
+  {{- $metadata    = merge $metadata (dict $Key (dict "Kind" "inline" "Definition" $Definition)) -}}
 {{- end -}}
 
 {{- with $property.exclusiveMinimum -}} {{/* Applies to: array, numeric */}}
-  {{- $key := cond (eq $property.type "numeric") "Must be >" "Item count must be >" -}}
-  {{- $metadata = merge $metadata (dict $key .) -}}
+  {{- $Key        := cond ($isNumeric) "Must be >" "Item count must be >"                        -}}
+  {{- $Definition := printf "`%v`" $property.exclusiveMinimum | $params.page.RenderString        -}}
+  {{- $metadata    = merge $metadata (dict $Key (dict "Kind" "inline" "Definition" $Definition)) -}}
 {{- end -}}
 
 {{- with $property.maximum -}} {{/* Applies to: array, numeric */}}
-  {{- $key := cond (eq $property.type "numeric") "Must be ≤" "Item count must be ≤" -}}
-  {{- $metadata = merge $metadata (dict $key .) -}}
+  {{- $Key        := cond ($isNumeric) "Must be ≤"    "Item count must be ≤"                     -}}
+  {{- $Definition := printf "`%v`" $property.maximum | $params.page.RenderString                 -}}
+  {{- $metadata    = merge $metadata (dict $Key (dict "Kind" "inline" "Definition" $Definition)) -}}
 {{- end -}}
 
 {{- with $property.exclusiveMaximum -}} {{/* Applies to: array, numeric */}}
-  {{- $key := cond (eq $property.type "numeric") "Must be <" "Item count must be <" -}}
-  {{- $metadata = merge $metadata (dict $key .) -}}
+  {{- $Key        := cond ($isNumeric) "Must be <"    "Item count must be <"                     -}}
+  {{- $Definition := printf "`%v`" $property.exclusiveMaximum | $params.page.RenderString        -}}
+  {{- $metadata    = merge $metadata (dict $Key (dict "Kind" "inline" "Definition" $Definition)) -}}
 {{- end }}
 
 {{- with $property.minLength -}} {{/* Applies to: string */}}
-  {{- $metadata = merge $metadata (dict "Minimum Length" .) -}}
+  {{- $Key        := "Minimum Length"                                                            -}}
+  {{- $Definition := printf "`%v`" $property.minLength | $params.page.RenderString               -}}
+  {{- $metadata    = merge $metadata (dict $Key (dict "Kind" "inline" "Definition" $Definition)) -}}
 {{- end -}}
 
 {{- with $property.maxLength -}} {{/* Applies to: string */}}
-  {{- $metadata = merge $metadata (dict "Maximum Length" .) -}}
+  {{- $Key        := "Maximum Length"                                                            -}}
+  {{- $Definition := printf "`%v`" $property.maxLength | $params.page.RenderString               -}}
+  {{- $metadata    = merge $metadata (dict $Key (dict "Kind" "inline" "Definition" $Definition)) -}}
 {{- end -}}
 
 {{- with $property.pattern -}} {{/* Applies to: string */}}
-  {{- $value := printf "`%s`" . | markdownify -}}
-  {{- $metadata = merge $metadata (dict "Required regex pattern" $value) -}}
+  {{- $Key        := "Required regex pattern"                                                    -}}
+  {{- $Definition := printf "`%v`" $property.pattern | $params.page.RenderString                 -}}
+  {{- $metadata    = merge $metadata (dict $Key (dict "Kind" "inline" "Definition" $Definition)) -}}
 {{- end -}}
 
 {{- with $property.format -}} {{/* Applies to: string */}}
-  {{- $metadata = merge $metadata (dict "Required Format" .) -}}
+  {{- $Key        := "Required Format"                                                           -}}
+  {{- $Definition := $property.format                                                            -}}
+  {{- $metadata    = merge $metadata (dict $Key (dict "Kind" "inline" "Definition" $Definition)) -}}
 {{- end -}}
 
 {{- with $property.if -}}
   {{- with $property.schematize.details -}}
-    {{- $title   := default "Conditional Settings" $property.schematize.title -}}
-    {{- $details := $params.page.RenderString .                               -}}
-    {{- $metadata = merge $metadata (dict $title $details)                    -}}
+    {{- $title   := default "Conditional Settings" $property.schematize.title                 -}}
+    {{- $details := $params.page.RenderString $property.schematize.details                    -}}
+    {{- $metadata = merge $metadata (dict $title (dict "Kind" "block" "Definition" $details)) -}}
   {{- end -}}
 {{- end -}}
 
@@ -114,7 +145,7 @@
   {{- $summary = $params.page.RenderString $summary -}}
   {{/* Keys in the metadata dictionary list are markdownified, so ensure it links to the schema */}}
   {{- $key := printf "%s ([Schema](%s))" $refData.title $schemaRef -}}
-  {{- $metadata = merge $metadata (dict $key $summary) -}}
+  {{- $metadata = merge $metadata (dict $key (dict "Kind" "block" "Definition" $summary)) -}}
 {{- end -}}
 
 {{- if eq "array" $property.type -}} {{/* Applies to: arrays */}}
@@ -131,7 +162,7 @@
       {{- $munged := partial "schematize/utils/metadata/munge" $recursiveParameters -}}
       {{- $tuples = $tuples | append $munged -}}
     {{- end -}}
-    {{- $metadata = merge $metadata (dict "Valid tuples" $tuples ) -}}
+    {{- $metadata = merge $metadata (dict "Valid tuples" (dict "Kind" "block" "Definition" $tuples)) -}}
   {{- else if $withItems -}}
     {{- $items := $property.items -}}
     {{- if isset $items "oneOf" -}}
@@ -143,12 +174,12 @@
       {{- range $items -}}
         {{- $recursiveParameters := dict "property" . "page" $params.page -}}
         {{- $item := partial "schematize/utils/metadata/munge" $recursiveParameters -}}
-        {{- $metadata = merge $metadata (dict "Valid items" $item) -}}
+        {{- $metadata = merge $metadata (dict "Valid items" (dict "Kind" "block" "Definition" $item)) -}}
       {{- end -}}
     {{- else -}}
       {{- $recursiveParameters := dict "property" $items "page" $params.page -}}
       {{- $item := partial "schematize/utils/metadata/munge" $recursiveParameters -}}
-      {{- $metadata = merge $metadata (dict "Valid items" $item) -}}
+      {{- $metadata = merge $metadata (dict "Valid items" (dict "Kind" "block" "Definition" $item)) -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}

@@ -1,0 +1,8 @@
+{{- $Params     := .                                                     -}}
+{{- $Name       := $Params.Name       | safeHTMLAttr                     -}}
+{{- $Library    := $Params.Library    | default "default" | safeHTMLAttr -}}
+{{- $Label      := $Params.Label      | safeHTMLAttr                     -}}
+
+<sl-icon name="{{ $Name }}" library="{{ $Library }}"
+         {{- with $Label }} label="{{ $Label }}" {{ end -}}>
+</sl-icon>

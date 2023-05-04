@@ -5,7 +5,16 @@
 {{- $params   := .                                                  -}}
 {{- $property := $params.property                                   -}}
 {{- $refPath  := replaceRE "\\.yaml" "" (index $property "$ref")    -}}
+{{- $pointer  := ""                                                 -}}
+
+{{- if in $refPath "#/" -}}
+  {{- $Parts := split $refPath "#/"                    -}}
+  {{- $refPath = index $Parts 0                        -}}
+  {{- $pointer = printf "#/%s" (index $Parts 1)          -}}
+{{- end -}}
+
 {{- $refPath   = relref $params.page (dict "path" $refPath) | print -}}
+
 {{- if hasPrefix $refPath "/schemas" -}}
   {{/* This is how everything was originally implemented. Keep this as a fallback. */}}
   {{- $refPath   = trim $refPath "\\/"                    -}}
@@ -17,7 +26,11 @@
     definition to get the data path. This only works when the schematize data is set in the page
     frontmatter. Need to consider how we might make this more robust for shortcodes later.
   */}}
-  {{- $refPagePath := strings.TrimSuffix "/" $refPath -}}
+  {{- $suffix := "/" -}}
+  {{- if (strings.HasSuffix $refPath "schema.json") -}}
+    {{- $suffix = "/schema.json" -}}
+  {{- end -}}
+  {{- $refPagePath := strings.TrimSuffix $suffix $refPath -}}
   {{- $refPagePath  = printf "%s.md" $refPagePath     -}}
   {{- $refPage     := site.GetPage $refPagePath       -}}
   {{- $refPath      = $refPage.Params.schematize      -}}
@@ -34,6 +47,13 @@
 {{- else -}}
   {{- $refData = index $refData $refPath -}}
 {{- end -}}
+
+{{- with $pointer -}}
+    {{- range $Segment := split (strings.TrimPrefix "#/" $pointer) "/" -}}
+      {{- $refData = index $refData $Segment -}}
+    {{- end -}}
+{{- end -}}
+
 {{- $refData = merge $refData (dict "_level" $refLevel) -}}
 
 {{/* Return the referenced schema data to the caller */}}

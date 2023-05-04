@@ -12,36 +12,55 @@
   alphabetical order.
 */}}
 {{- $params := . }}
-{{- $termGroup := "\n<div class=\"schematize-metadata-term-group\">\n" -}}
+
+{{- $InlineTermClass       := `"schematize-metadata-term-group inline"`       -}}
+{{- $BlockTermClass        := `"schematize-metadata-term-group block"`        -}}
+{{- $InlineDefinitionClass := `"schematize-metadata-definition-group inline"` -}}
+{{- $BlockDefinitionClass  := `"schematize-metadata-definition-group block"`  -}}
+
 {{- $definitionGroup := "\n<div class=\"schematize-metadata-definition-group\">\n" -}}
 {{- $closeDiv := "\n</div>\n" -}}
-{{- $keysToSkip := slice "ID" "Type" "schematize" -}}
+{{- $keysToSkip := slice "schematize" "Kind" "Definition" "ID" "Type" -}}
 
 <dl class="schematize-metadata">
 
 {{- with $params.ID -}}
+  {{- $termGroup := printf "\n<div class=%s>\n" $InlineTermClass -}}
   {{- $termGroup | safeHTML -}}
   {{- partial "schematize/utils/metadata/render/term" "ID" -}}
-  {{- partial "schematize/utils/metadata/render/definition" . -}}
+  {{- partial "schematize/utils/metadata/render/definition" $params.ID.Definition -}}
   {{- $closeDiv | safeHTML -}}
 {{- end -}}
 
 {{- with $params.Type -}}
+  {{- $termGroup := printf "\n<div class=%s>\n" $InlineTermClass -}}
   {{- $termGroup | safeHTML -}}
   {{- partial "schematize/utils/metadata/render/term" "Type" -}}
-  {{- partial "schematize/utils/metadata/render/definition" . -}}
+  {{- partial "schematize/utils/metadata/render/definition" $params.Type.Definition -}}
   {{- $closeDiv | safeHTML -}}
 {{- end -}}
 
-{{ range $term, $definition := . }}
+{{ range $term, $info := . }}
   {{- if not (in $keysToSkip $term) -}}
+    {{- $Kind       := "inline" -}}
+    {{- $Definition := $info    -}}
+    {{- if reflect.IsMap $info -}}
+      {{- $Kind       = $info.Kind       -}}
+      {{- $Definition = $info.Definition -}}
+    {{- end -}}
+
+    {{- $TermClass       := cond (eq "inline" $Kind) $InlineTermClass       $BlockTermClass       -}}
+    {{- $DefinitionClass := cond (eq "inline" $Kind) $InlineDefinitionClass $BlockDefinitionClass -}}
+    {{- $termGroup       := printf "\n<div class=%s>\n" $TermClass                                -}}
+    {{- $definitionGroup := printf "\n<div class=%s>\n" $DefinitionClass                          -}}
+
     {{- $termGroup | safeHTML -}}
     {{- partial "schematize/utils/metadata/render/term" $term -}}
-    {{- if not (reflect.IsSlice $definition) }}
-      {{- partial "schematize/utils/metadata/render/definition" $definition }}
+    {{- if not (reflect.IsSlice $Definition) }}
+      {{- partial "schematize/utils/metadata/render/definition" $Definition }}
     {{- else -}}
       {{- $definitionGroup | safeHTML -}}
-      {{- range $definition -}}
+      {{- range $Definition -}}
         {{- partial "schematize/utils/metadata/render/definition" . }}
       {{- end -}}
       {{- $closeDiv | safeHTML -}}

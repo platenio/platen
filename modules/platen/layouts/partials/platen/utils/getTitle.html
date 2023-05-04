@@ -9,15 +9,17 @@
 {{- $forMenu     := "" -}}
 {{- $forHeader   := "" -}}
 {{- $forHeading  := "" -}}
+{{- $forHtmlHead := "" -}}
 {{- $forList     := "" -}}
 
 
 {{- if reflect.IsMap $Params -}}
-  {{- $context    = $Params.Context    -}}
-  {{- $forMenu    = $Params.ForMenu    -}}
-  {{- $forHeader  = $Params.ForHeader  -}}
-  {{- $forHeading = $Params.ForHeading -}}
-  {{- $forList    = $Params.ForList    -}}
+  {{- $context     = $Params.Context     -}}
+  {{- $forMenu     = $Params.ForMenu     -}}
+  {{- $forHeader   = $Params.ForHeader   -}}
+  {{- $forHeading  = $Params.ForHeading  -}}
+  {{- $forHtmlHead = $Params.ForHtmlHead -}}
+  {{- $forList     = $Params.ForList     -}}
 {{- end -}}
 
 {{- range $Feature, $Settings := $Features -}}
@@ -30,7 +32,7 @@
 
 {{- if eq "" $title -}}
   {{- if and $context.LinkTitle (or $forMenu $forList) -}}
-    {{- $title = $context.LinkTitle -}}
+    {{- $title = $context.LinkTitle | $context.RenderString -}}
   {{- else if $context.Title -}}
     {{- $title = $context.Title -}}
   {{- else if and $context.IsSection $context.File -}}

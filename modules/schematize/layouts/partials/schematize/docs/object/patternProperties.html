@@ -24,7 +24,8 @@
 
 {{ with $data.patternProperties }}
   {{/* Render the heading for the pattern properties */}}
-  {{- $headingParams := dict  "level" $level "title" "Pattern Properties"                    -}}
+  {{- $prefix         = printf "%spatternProperties" $prefix                                 -}}
+  {{- $headingParams := dict  "level" $level "title" "Pattern Properties" "id" $prefix       -}}
   {{- $renderStrings := slice (partial "schematize/utils/headings/arbitrary" $headingParams) -}}
 
   {{/* Build the list of sorted properties, munging the ID as needed for better linking */}}
@@ -33,10 +34,10 @@
     {{- $weight := default 0 $info.schematize.weight -}}
     {{- $id     := $prefix                           -}}
     {{- with $info.schematize.href -}}
-      {{- $id = printf "%s%s" $id . -}}
+      {{- $id = printf "%s.%s" $id . -}}
     {{- else -}}
       {{- if $info.title -}}
-        {{- $id = printf "%s%s" $id (. | lower | urlize) -}}
+        {{- $id = printf "%s.%s" $id (. | lower | urlize) -}}
       {{- else -}}
         {{-
           errorf "%s '%s'; %s. Reference: %#v"

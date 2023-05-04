@@ -1,0 +1,94 @@
+{{/*
+  Writes the default section for a property or schema with a heading followed by a codeblock showing the default
+  value for the property.
+
+  This partial uses the parameters from the property's own documentation partial. The parameters are
+  expected to include:
+
+  - `property` - Mandatory. The objects's schema data
+  - `page`     - Mandatory. The hugo Page object for the webpage the documentation is being written
+    on, for resolving references.
+  - `_level` - Optional. The current hierarchy level of the page. Used for determining what heading
+    level to write. If unspecified, it's assumed that this is a top-level object, documenting a full
+    schema.
+  - `_id` - Optional. The ID this property belongs to. If specified, used as the prefix for this
+    object's properties. This value should be null for a top-level object and set for any nested
+    objects, like properties of a top-level object.
+*/}}
+{{- $params := .                                                               -}}
+{{- $data   := $params.property                                                -}}
+{{- $id     := $params.property._id | default $params._id | default "" | lower -}}
+
+{{/*  Handle the level correctly. Not sure why, but when it's set on the property it needs to increment 2, not 1  */}}
+{{- $level  := 1 -}}
+{{- if isset $params "_level" -}}
+  {{- $level = add 1 $params._level -}}
+{{- else if (isset $data "_level") -}}
+  {{- $level = add 2 $data._level -}}
+{{- end -}}
+
+{{- with $data.default -}}
+  {{- $format      := $data.schematize.default.format       | default $data.schematize.format | default "json" -}}
+  {{- $skipHeading := $data.schematize.default.skip_heading | default false                                    -}}
+  {{- $title       := $data.schematize.default.title        | default "Default Value"                          -}}
+  {{- $description := $data.schematize.default.details      | default ""                                       -}}
+  {{- $default     := dict                                                                                     -}}
+
+  {{- if and (reflect.IsMap $data.default) (isset $data.default "schematize") -}}
+    {{- $format      = $data.schematize.format               | default $format      -}}
+    {{- $skipHeading = $data.default.schematize.skip_heading | default $skipHeading -}}
+    {{- $title       = $data.default.schematize.title        | default $title       -}}
+    {{- $description = $data.default.schematize.description  | default $description -}}
+    {{- range $Key, $Value := $data.default -}}
+      {{- if ne $Key "schematize" -}}
+        {{- $default = merge $default (dict $Key $Value) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $default = $data.default -}}
+  {{- end -}}
+
+  {{- $openCodeBlock  := printf "\n```%s { .schematize-example-block }" $format -}}
+  {{- $closeCodeBlock := "```\n\n"                                              -}}
+  {{- $renderStrings  := slice                                                  -}}
+  
+  {{- if not $skipHeading -}}
+    {{- $headingID     := printf "%s.default" $id                                      -}}
+    {{- $headingParams := dict "level" $level "title" $title "id" $headingID           -}}
+    {{- $Heading       := partial "schematize/utils/headings/arbitrary" $headingParams -}}
+    {{- $renderStrings  = $renderStrings | append $Heading                             -}}
+  {{- end -}}
+
+  {{- if eq "json" $format -}}
+    {{- $default = $default | jsonify (dict "indent" "  ") -}}
+  {{- else if reflect.IsSlice $default -}}
+    {{/*  Need to special handle yaml bc Remarshal errors on yaml arrays  */}}
+    {{- $defaultItems := slice -}}
+    {{- range $Item := $default -}}
+      {{- if reflect.IsMap $Item -}}
+        {{- $marshalled  := $Item | transform.Remarshal $format -}}
+        {{- $marshalled   = trim $marshalled "\n" -}}
+        {{- $marshalled   = split $marshalled "\n" -}}
+        {{- $marshalled   = printf "- %s" (delimit $marshalled "\n  ") -}}
+        {{- $defaultItems = $defaultItems | append $marshalled -}}
+      {{- else -}}
+        {{- $defaultItems = $defaultItems | append (printf "- %v" $Item) -}}
+      {{- end -}}
+    {{- end -}}
+  
+    {{- $default = delimit $defaultItems "\n" -}}
+  {{- else if (reflect.IsMap $default) -}}
+    {{- $default       = $default | transform.Remarshal $format                         -}}
+  {{- else -}}
+    {{/*  ??  */}}
+  {{- end -}}
+
+  {{- $default       = printf "%s\n%s\n%s" $openCodeBlock $default $closeCodeBlock -}}
+  {{- $renderStrings = $renderStrings | append $default -}}
+
+  {{- with $description -}}
+    {{- $renderStrings = $renderStrings | append $description -}}
+  {{- end -}}
+
+  {{- delimit $renderStrings "\n\n" -}}
+{{- end -}}
