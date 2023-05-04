@@ -5,6 +5,14 @@
 {{- $params   := .                                                  -}}
 {{- $property := $params.property                                   -}}
 {{- $refPath  := replaceRE "\\.yaml" "" (index $property "$ref")    -}}
+{{- $pointer  := ""                                                 -}}
+
+{{- if in $refPath "#/" -}}
+  {{- $Parts := split $refPath "#/"                    -}}
+  {{- $refPath = index $Parts 0                        -}}
+  {{- $pointer = printf "#/%s" (index $Parts 1)          -}}
+{{- end -}}
+
 {{- $refPath   = relref $params.page (dict "path" $refPath) | print -}}
 
 {{- if hasPrefix $refPath "/schemas" -}}
@@ -39,6 +47,13 @@
 {{- else -}}
   {{- $refData = index $refData $refPath -}}
 {{- end -}}
+
+{{- with $pointer -}}
+    {{- range $Segment := split (strings.TrimPrefix "#/" $pointer) "/" -}}
+      {{- $refData = index $refData $Segment -}}
+    {{- end -}}
+{{- end -}}
+
 {{- $refData = merge $refData (dict "_level" $refLevel) -}}
 
 {{/* Return the referenced schema data to the caller */}}
