@@ -2,18 +2,23 @@
   Resolve the reference to a references schema data. This is only supported for locally defined
   schemas and may behave strangely if accidentally called for external schemas.
 */}}
-{{- $params   := .                                                  -}}
-{{- $property := $params.property                                   -}}
-{{- $refPath  := replaceRE "\\.yaml" "" (index $property "$ref")    -}}
-{{- $pointer  := ""                                                 -}}
+{{- $params     := .                                               -}}
+{{- $property   := $params.property                                -}}
+{{- $refPath    := replaceRE "\\.yaml" "" (index $property "$ref") -}}
+{{- $HomeRelRef := relref $params.page (dict "path" "/_index.md")  -}}
+{{- $pointer    := ""                                              -}}
+
+{{- $PagePath := $params.page.File.Path -}}
 
 {{- if in $refPath "#/" -}}
-  {{- $Parts := split $refPath "#/"                    -}}
-  {{- $refPath = index $Parts 0                        -}}
-  {{- $pointer = printf "#/%s" (index $Parts 1)          -}}
+  {{- $Parts  := split $refPath "#/"            -}}
+  {{- $refPath = index $Parts 0                 -}}
+  {{- $pointer = printf "#/%s" (index $Parts 1) -}}
 {{- end -}}
 
-{{- $refPath   = relref $params.page (dict "path" $refPath) | print -}}
+{{- $refPath = relref $params.page (dict "path" $refPath) | print -}}
+{{/*  Support sites with base URLs that have a suffix, like https://foo.com/bar - replaces '/bar/' with '/'  */}}
+{{- $refPath = replace $refPath $HomeRelRef "/" -}}
 
 {{- if hasPrefix $refPath "/schemas" -}}
   {{/* This is how everything was originally implemented. Keep this as a fallback. */}}
@@ -31,9 +36,9 @@
     {{- $suffix = "/schema.json" -}}
   {{- end -}}
   {{- $refPagePath := strings.TrimSuffix $suffix $refPath -}}
-  {{- $refPagePath  = printf "%s.md" $refPagePath     -}}
-  {{- $refPage     := site.GetPage $refPagePath       -}}
-  {{- $refPath      = $refPage.Params.schematize      -}}
+  {{- $refPagePath  = printf "%s.md" $refPagePath         -}}
+  {{- $refPage     := site.GetPage $refPagePath           -}}
+  {{- $refPath      = $refPage.Params.schematize          -}}
 {{- end -}}
 {{- $refLevel := default 0 $property._level -}}
 {{/* Still hard coded to schemas folder */}}
