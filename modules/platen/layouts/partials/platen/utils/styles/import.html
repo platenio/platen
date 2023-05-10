@@ -1,12 +1,13 @@
-{{- $stylesMap     := .StylesMap  -}}
-{{- $rootFolder    := .RootFolder -}}
-{{- $renderStrings := slice -}}
+{{- $Params        := .                  -}}
+{{- $StylesMap     := $Params.StylesMap  -}}
+{{- $RootFolder    := $Params.RootFolder -}}
+{{- $renderStrings := slice              -}}
 
-{{- range $name, $settings := $stylesMap -}}
-  {{- if $settings.enabled }}
-    {{- $mungedName   := default (lower $name) $settings.name               -}}
-    {{- $importLine   := printf  `@import "%s/%s";` $rootFolder $mungedName -}}
-    {{- $renderStrings = $renderStrings | append $importLine                -}}
+{{- range $Name, $Settings := $StylesMap -}}
+  {{- if $Settings.enabled }}
+    {{- $MungedName   := default (lower $Name) $Settings.name               -}}
+    {{- $ImportLine   := printf  `@import "%s/%s";` $RootFolder $MungedName -}}
+    {{- $renderStrings = $renderStrings | append $ImportLine                -}}
   {{- end -}}
 {{- end -}}
 

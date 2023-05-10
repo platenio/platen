@@ -1,5 +1,3 @@
-{{- $Context := . -}}
-
 {{/*
   Determine whether to use Hugo's generator for the table of contents or Platen's. By default, use
   Platen's generator. If the site configuration specifies a value, use that setting.
@@ -9,16 +7,16 @@
 {{- $useBuiltInToC := partial "platen/param/resolve" (
   dict "Config"  "platen.display.table_of_contents.use_built_in"
        "Param"   "platen.table_of_contents.use_built_in"
-       "Context" $Context
+       "Context" page
        "Default" false
 ) -}}
 
-{{ partial "platen/inject/toc-before" $Context }}
+{{ partial "platen/inject/toc-before" }}
 
 {{ if $useBuiltInToC -}}
-  {{ $Context.TableOfContents }}
+  {{ page.TableOfContents }}
 {{ else -}}
-  {{ partial "platen/toc/generate" $Context }}
+  {{ partial "platen/toc/generate" }}
 {{ end }}
 
-{{ partial "platen/inject/toc-after" $Context }}
+{{ partial "platen/inject/toc-after" }}

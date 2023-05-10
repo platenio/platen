@@ -1,10 +1,9 @@
-{{- $Context    := .                                                                -}}
 {{- $ConfigKey  := "platen.display.logo.url"                                        -}}
 {{- $LogoUrl    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey        -}}
 {{- $NoHomeFile := not site.Home.File                                               -}}
 <h2 class="platen-brand">
   <a class="flex align-center"
-     href="{{ cond $NoHomeFile $Context.Sites.First.Home.RelPermalink site.Home.RelPermalink }}">
+     href="{{ cond $NoHomeFile page.Sites.First.Home.RelPermalink site.Home.RelPermalink }}">
     {{- with $LogoUrl -}}
       <img src="{{ $LogoUrl | relURL }}" alt="Logo" />
     {{- end -}}

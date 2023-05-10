@@ -1,13 +1,16 @@
-{{- $context := . -}}
+{{- $IntegrityPartial := "platen/utils/getIntegrityAttributes" -}}
+{{/*  Get the service worker script  */}}
 {{- $swJS := resources.Get "scripts/features/pwa/sw-register.js"
-             | resources.ExecuteAsTemplate "sw.js" $context
-             | resources.Minify
-             | resources.Fingerprint
+    | resources.ExecuteAsTemplate "sw.js" page
+    | resources.Minify
+    | resources.Fingerprint
 -}}
+{{/*  Get the web manifest  */}}
 {{- $manifest := resources.Get "scripts/features/pwa/manifest.json"
-                 | resources.ExecuteAsTemplate "manifest.json" $context
+    | resources.ExecuteAsTemplate "site.webmanifest" page
 -}}
 {{- $manifestIntegrity := partialCached "platen/utils/getIntegrityAttributes" $swJS "swJS" -}}
+
+{{/*  Render  */}}
 <link rel="manifest" href="{{ $manifest.RelPermalink }}">
-<script defer src="{{ $swJS.RelPermalink }}"
-              {{ $manifestIntegrity }}></script>
+<script defer src="{{ $swJS.RelPermalink }}" {{ $manifestIntegrity }}></script>

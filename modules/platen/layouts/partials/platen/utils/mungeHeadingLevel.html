@@ -1,11 +1,11 @@
-{{- $Input                 := .                                                                  -}}
-{{- $Key                   := $Input.Key | default "heading_level"                               -}}
-{{- $headingLevel          := $Input.HeadingLevel                                                -}}
-{{- $For                   := $Input.For                                                         -}}
+{{- $Input                 := .                                                                   -}}
+{{- $Key                   := $Input.Key | default "heading_level"                                -}}
+{{- $headingLevel          := $Input.HeadingLevel                                                 -}}
+{{- $For                   := $Input.For                                                          -}}
 {{- $At                    := cond (isset $Input "Position") (printf " at %s" $Input.Position) "" -}}
-{{- $WarningInfo           := dict "Key" $Key "Level" $headingLevel "For" $For "At" $At          -}}
-{{- $HeadingLevelIsDefined := isset $Input "HeadingLevel"                                        -}}
-{{- $ForIsDefined          := isset $Input "For"                                                 -}}
+{{- $WarningInfo           := dict "Key" $Key "Level" $headingLevel "For" $For "At" $At           -}}
+{{- $HeadingLevelIsDefined := isset $Input "HeadingLevel"                                         -}}
+{{- $ForIsDefined          := isset $Input "For"                                                  -}}
 
 {{- if and $HeadingLevelIsDefined $ForIsDefined -}}
   {{/*  Munge heading levels - if string, make int. If invalid number, munge to closest.  */}}

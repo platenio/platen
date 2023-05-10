@@ -1,12 +1,12 @@
 {{/*
     Docs.Partial: termEntry
 */}}
-{{- $termPage := . -}}
+{{- $TermPage := . -}}
 
 {{/* Retrieve info about the term and it's usage */}}
-{{- $href         := $termPage.RelPermalink -}}
-{{- $title        := $termPage.Title        -}}
-{{- $termUseCount := len $termPage.Pages    -}}
+{{- $Href         := $TermPage.RelPermalink -}}
+{{- $Title        := $TermPage.Title        -}}
+{{- $TermUseCount := len $TermPage.Pages    -}}
 
 {{/* Define attributes for the list item element */}}
 {{- $liAttributes := slice                                                  -}}
@@ -15,11 +15,11 @@
 
 {{/* define attributes for the link element */}}
 {{- $aAttributes := slice                                                 -}}
-{{- $aAttributes  = $aAttributes | append (printf `href="%s"` $href)      -}}
+{{- $aAttributes  = $aAttributes | append (printf `href="%s"` $Href)      -}}
 {{- $aAttributes  = partial "platen/utils/getSafeAttributes" $aAttributes -}}
 
 {{/* Render */}}
 <li {{ $liAttributes }}>
-  <a {{ $aAttributes }}>{{ $title }}</a>
-  <span>{{ $termUseCount }}</span>
+  <a {{ $aAttributes }}>{{ $Title }}</a>
+  <span>{{ $TermUseCount }}</span>
 </li>

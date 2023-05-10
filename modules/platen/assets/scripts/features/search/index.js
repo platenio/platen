@@ -1,6 +1,7 @@
-{{- $Context      := .              -}}
-{{- $DataUrl      := .SearchDataUrl -}}
-{{- $Config       := .SearchConfig  -}}
+{{- $Params  := .                     -}}
+{{- $DataUrl := $Params.SearchDataUrl -}}
+{{- $Config  := $Params.SearchConfig  -}}
+
 'use strict';
 
 (function () {

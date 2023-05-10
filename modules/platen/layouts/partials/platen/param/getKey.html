@@ -7,8 +7,8 @@
 {{- $Config := partialCached "platen/param/getMergedValue" (dict) "full" -}}
 
 {{- $value := $Config -}}
-{{- range $segment := split $Key "." -}}
-  {{- $value = index $value $segment -}}
+{{- range $Segment := split $Key "." -}}
+  {{- $value = index $value $Segment -}}
 {{- end -}}
 
 {{- return $value -}}

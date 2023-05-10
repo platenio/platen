@@ -1,4 +1,4 @@
-{{- $Context := . -}}
+{{- $Context := . | default page -}}
 
 {{- $classList := partial "platen/param/classes/_getList" $Context -}}
 

@@ -1,41 +1,38 @@
-{{- $Context      := .                                             -}}
-{{- $PlatenConfig      := partialCached "platen/param/getKey" "platen" "platen" -}}
+{{- $PlatenConfig := partialCached "platen/param/getKey" "platen" "platen" -}}
+{{- partial  "platen/param/checkShortcodes" page -}}
 
-{{- partial  "platen/param/checkShortcodes" $Context -}}
-
-{{  partial  "platen/htmlHead/meta"                 $Context  }}
-
-{{- template "_internal/opengraph.html"             $Context -}}
+{{ partial  "platen/htmlHead/meta"     page }}
+{{ template "_internal/opengraph.html" page }}
 
 <title>
-  {{ partial "platen/utils/getHtmlHeadTitle" $Context }}
+  {{ partial "platen/utils/getHtmlHeadTitle" page }}
 </title>
 
-{{ partial "platen/htmlHead/faviconLink" $Context }}
+{{ partial "platen/htmlHead/faviconLink" page }}
 
-{{- range $translatedPage := $Context.Translations }}
-  {{ partial "platen/htmlHead/translationLink" $translatedPage }}
+{{- range $TranslatedPage := page.Translations }}
+  {{ partial "platen/htmlHead/translationLink" $TranslatedPage }}
 {{- end -}}
 
-{{ partial "platen/htmlHead/siteStyleLink" $Context }}
+{{ partial "platen/htmlHead/siteStyleLink" page }}
 
-{{ range $feature, $settings := $PlatenConfig.features -}}
-  {{- if $settings.enabled -}}
-    {{- with $settings.partials.header -}}
-      {{ partial . $Context }}
+{{ range $Feature, $Settings := $PlatenConfig.features -}}
+  {{- if $Settings.enabled -}}
+    {{- with $Settings.partials.header -}}
+      {{ partial $Settings.partials.header page }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
-{{ range $feature, $settings := $PlatenConfig.markup -}}
-  {{- if $settings.enabled -}}
-    {{- with $settings.partials.header -}}
-      {{ partial . $Context }}
+{{ range $Feature, $Settings := $PlatenConfig.markup -}}
+  {{- if $Settings.enabled -}}
+    {{- with $Settings.partials.header -}}
+      {{ partial $Settings.partials.header page }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
-{{- template "_internal/google_analytics.html" $Context -}}
+{{- template "_internal/google_analytics.html" page -}}
 
 {{ partial "platen/htmlHead/rssLink" }}
 

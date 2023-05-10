@@ -1,7 +1,6 @@
-{{- $context := . -}}
 <div class="flex flex-wrap justify-between">
-  {{ partial "platen/footer/lastEditedOn" $context }}
-  {{ partial "platen/footer/editThisPage" $context }}
+  {{ partial "platen/footer/lastEditedOn" page }}
+  {{ partial "platen/footer/editThisPage" page }}
 </div>
 
-{{ partial "platen/footer/codeClipboard" $context }}
+{{ partial "platen/footer/codeClipboard" page }}

@@ -17,34 +17,35 @@
     `true`, this handler raises a warning instead of an error.
 */}}
 
-{{- $params := .              -}}
-{{- $input  := $params.Input  -}}
-{{- $info   := $params.Info   -}}
-{{- $suffix := $params.Suffix -}}
+{{- $Params := .              -}}
+{{- $Input  := $Params.Input  -}}
+{{- $Info   := $Params.Info   -}}
+{{- $Suffix := $Params.Suffix -}}
 
 {{/* Retrieve site accessibility settings */}}
-{{- $A11ySettings := partialCached "platen/param/getKey" "platen.accessibility" "platen.accessibility" -}}
+{{- $A11yKey      := "platen.accessibility"                                -}}
+{{- $A11ySettings := partialCached "platen/param/getKey" $A11yKey $A11yKey -}}
 
 {{/* Set default message without context */}}
-{{- $message      := i18n "MissingAltText"               -}}
+{{- $message := i18n "MissingAltText" -}}
 
 {{/* Add context if possible */}}
-{{- with $input -}}
-  {{- warnf "shortcode input: %#v" $input -}}
-  {{- $message = printf "%s %s" $message (i18n "MissingAltTextSuffixShortcode" $input) -}}
+{{- with $Input -}}
+  {{- warnf "shortcode input: %#v" $Input -}}
+  {{- $message = printf "%s %s" $message (i18n "MissingAltTextSuffixShortcode" $Input) -}}
 {{- else -}}
-  {{- with $info -}}
-    {{- with $info.i18nCode -}}
-      {{- $message = printf "%s %s" $message (i18n . $info) -}}
+  {{- with $Info -}}
+    {{- with $Info.i18nCode -}}
+      {{- $message = printf "%s %s" $message (i18n . $Info) -}}
     {{- else -}}
-      {{- $message = printf "%s %s" $message (i18n "MissingAltTextSuffixPartial" $info) -}}
+      {{- $message = printf "%s %s" $message (i18n "MissingAltTextSuffixPartial" $Info) -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
 {{/* Add message suffix if provided */}}
-{{- with $suffix -}}
-  {{- $message = printf "%s %s" $message $suffix -}}
+{{- with $Suffix -}}
+  {{- $message = printf "%s %s" $message $Suffix -}}
 {{- end -}}
 
 {{/* Write warning or error as configured */}}

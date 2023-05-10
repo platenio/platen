@@ -6,6 +6,11 @@ schematize:
   no_munge_description: true
 type: string
 enum:
+  - 0.111.3
+  - 0.111.2
+  - 0.111.1
+  - 0.111.0
+  - 0.110.0
   - 0.109.0
   - 0.108.0
   - 0.107.0

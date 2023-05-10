@@ -1,26 +1,27 @@
-{{- $Context          := .                                                                -}}
-{{- $Image            := $Context.Params.image                                            -}}
-{{- $ConfigKey        := "platen.display.date_format"                                     -}}
+{{- $PostContext      := .                                                         -}}
+{{- $Image            := $PostContext.Params.image                                 -}}
+{{- $ConfigKey        := "platen.display.date_format"                              -}}
 {{- $DateFormatConfig := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
-{{ with .Date }}
+
+{{ with $PostContext.Date }}
   <h5>
-    {{ partial "platen/utils/getFormattedDate" (dict "Date" . "Format" $DateFormatConfig) }}
+    {{ partial "platen/utils/getFormattedDate" (dict "Date" $PostContext.Date "Format" $DateFormatConfig) }}
   </h5>
 {{ end }}
 
-{{ range $taxonomy, $_ := site.Taxonomies }}
-  {{ with $terms := $Context.GetTerms $taxonomy }}
+{{ range $Taxonomy, $_ := site.Taxonomies }}
+  {{ with $TermPages := $PostContext.GetTerms $Taxonomy }}
   <div>
-    {{ range $n, $term := $terms }}{{ if $n }}, {{ end }}
-      <a href="{{ $term.RelPermalink }}">{{ $term.Title }}</a>
+    {{ range $Index, $TermPage := $TermPages }}{{ if $Index }}, {{ end }}
+      <a href="{{ $TermPage.RelPermalink }}">{{ $TermPage.Title }}</a>
     {{- end }}
   </div>
   {{ end }}
 {{ end }}
 
-{{ if $Image }}
+{{ with $Image }}
 <p>
-  {{ with $Context.Resources.GetMatch $Image }}
+  {{ with $PostContext.Resources.GetMatch $Image }}
     <img src={{ .RelPermalink }} />
   {{ else }}
     <img src={{ $Image | relURL }} />

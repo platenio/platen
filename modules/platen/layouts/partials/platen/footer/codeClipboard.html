@@ -1,12 +1,11 @@
 {{/*
     Docs.Partial: codeClipboard
 */}}
-{{- $context := . -}}
 
 {{/* Get the script */}}
-{{- $script  := resources.Get "scripts/platen/code-clipboard.js" | resources.Minify -}}
+{{- $Script  := resources.Get "scripts/platen/code-clipboard.js" | resources.Minify -}}
 
 {{/* Render */}}
-{{ with $script.Content -}}
-  <script>{{ $script.Content | safeJS }}</script>
+{{ with $Script.Content -}}
+  <script>{{ $Script.Content | safeJS }}</script>
 {{- end }}

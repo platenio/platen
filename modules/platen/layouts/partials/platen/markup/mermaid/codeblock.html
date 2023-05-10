@@ -1,11 +1,11 @@
-{{- $Params     := .                    -}}
-{{- $Page       := $Params.Page         -}} {{/* The Page object the codeblock markup was included in               */}}
-{{- $Position   := $Params.Position     -}} {{/* The Position of the codeblock markup in the page                   */}}
-{{- $Definition := $Params.Inner        -}} {{/* The text inside the codeblock (between the fences)                 */}}
-{{- $Type       := $Params.Type | lower -}} {{/* The language ID for the codeblock                                  */}}
-{{- $Attributes := $Params.Attributes   -}} {{/* The attributes added to the codeblock after the ID in curly braces */}}
-{{- $Ordinal    := $Params.Ordinal      -}} {{/* The 0-based ordinal for codeblocks in the page the markup's from   */}}
-{{- $MarkupName := "mermaid"            -}} {{/* The name of the markup, usually the same as the parent folder      */}}
+{{- $Input      := .                   -}}
+{{- $Page       := $Input.Page         -}} {{/* The Page object the codeblock markup was included in               */}}
+{{- $Position   := $Input.Position     -}} {{/* The Position of the codeblock markup in the page                   */}}
+{{- $Definition := $Input.Inner        -}} {{/* The text inside the codeblock (between the fences)                 */}}
+{{- $Type       := $Input.Type | lower -}} {{/* The language ID for the codeblock                                  */}}
+{{- $Attributes := $Input.Attributes   -}} {{/* The attributes added to the codeblock after the ID in curly braces */}}
+{{- $Ordinal    := $Input.Ordinal      -}} {{/* The 0-based ordinal for codeblocks in the page the markup's from   */}}
+{{- $MarkupName := "mermaid"           -}} {{/* The name of the markup, usually the same as the parent folder      */}}
 {{/*
     Retrieve settings from configuration.
 

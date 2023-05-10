@@ -1,13 +1,13 @@
 {{/*
     Docs.Partial: translationLink
 */}}
-{{- $translatedPage := . -}}
+{{- $TranslatedPage := . -}}
 
 {{/* Define attribute list for link */}}
 {{- $attributes := slice                                                   -}}
-{{- $hrefLang   := default $translatedPage.Language.Lang site.LanguageCode -}}
-{{- $href       := $translatedPage.Permalink                               -}}
-{{- $title      := partial "platen/utils/getTitle" $translatedPage         -}}
+{{- $hrefLang   := default $TranslatedPage.Language.Lang site.LanguageCode -}}
+{{- $href       := $TranslatedPage.Permalink                               -}}
+{{- $title      := partial "platen/utils/getTitle" $TranslatedPage         -}}
 {{- $attributes  = $attributes | append `rel="alternate"`                  -}}
 {{- $attributes  = $attributes | append (printf `hreflang="%s"` $hrefLang) -}}
 {{- $attributes  = $attributes | append (printf `href="%s"` $href)         -}}

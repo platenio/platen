@@ -1,11 +1,11 @@
-{{- $Params      := .                   -}}
-{{- $Page        := $Params.Page        -}} {{/* The Page the image markup was added to                           */}}
-{{- $Attributes  := $Params.Attributes  -}} {{/* The attributes added between curly braces after the markup       */}}
-{{- $Destination := $Params.Destination -}} {{/* The Source input for the image link markup                       */}}
-{{- $Title       := $Params.Title       -}} {{/* The Title input for the image link markup                        */}}
-{{- $Text        := $Params.PlainText   -}} {{/* The unrendered Alt Text input for the image link markup          */}}
-{{- $Ordinal     := $Params.Ordinal     -}} {{/* The 0-based ordinal for codeblocks in the page the markup's from */}}
-{{- $MarkupName  := "key_combos"        -}} {{/* The name of the markup, usually the same as the parent folder    */}}
+{{- $Input       := .                  -}}
+{{- $Page        := $Input.Page        -}} {{/* The Page the image markup was added to                           */}}
+{{- $Attributes  := $Input.Attributes  -}} {{/* The attributes added between curly braces after the markup       */}}
+{{- $Destination := $Input.Destination -}} {{/* The Source input for the image link markup                       */}}
+{{- $Title       := $Input.Title       -}} {{/* The Title input for the image link markup                        */}}
+{{- $Text        := $Input.PlainText   -}} {{/* The unrendered Alt Text input for the image link markup          */}}
+{{- $Ordinal     := $Input.Ordinal     -}} {{/* The 0-based ordinal for codeblocks in the page the markup's from */}}
+{{- $MarkupName  := "key_combos"       -}} {{/* The name of the markup, usually the same as the parent folder    */}}
 {{/*
     Retrieve settings from configuration.
 

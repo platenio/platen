@@ -1,33 +1,32 @@
-{{- $params           := .                                      -}}
-{{- $definition       := $params.Definition                     -}}
-{{- $supportsData     := default true  $params.SupportsData     -}}
-{{- $supportsMarkdown := default false $params.SupportsMarkdown -}}
-{{- $info             := dict                                   -}}
-{{- $data             := dict                                   -}}
-{{- $markdown         := ""                                     -}}
+{{- $params           := .                                        -}}
+{{- $Definition       := $params.Definition                       -}}
+{{- $SupportsData     := $params.SupportsData     | default true  -}}
+{{- $SupportsMarkdown := $params.SupportsMarkdown | default false -}}
+{{- $data             := dict                                     -}}
+{{- $markdown         := ""                                       -}}
 
 {{- $dataPattern := `---(.|\s)+---` -}}
 
-{{- if $supportsData -}}
-  {{- if $supportsMarkdown -}}
-    {{- if hasPrefix $definition "---"}}
-      {{- $parts         := split $definition   "---"                             -}}
-      {{- $count         := len   $parts                                          -}}
-      {{- $markdownParts := last (sub $count 2) $parts                            -}}
-      {{- $data           = index $parts 1 | transform.Unmarshal | default (dict) -}}
-      {{- $markdown       = delimit $markdownParts "---"                          -}}
+{{- if $SupportsData -}}
+  {{- if $SupportsMarkdown -}}
+    {{- if hasPrefix $Definition "---"}}
+      {{- $Parts         := split $Definition   "---"                             -}}
+      {{- $Count         := len   $Parts                                          -}}
+      {{- $MarkdownParts := last (sub $Count 2) $Parts                            -}}
+      {{- $data           = index $Parts 1 | transform.Unmarshal | default (dict) -}}
+      {{- $markdown       = delimit $MarkdownParts "---"                          -}}
     {{- else -}}
-      {{- $markdown = $definition -}}
+      {{- $markdown = $Definition -}}
     {{- end -}}
   {{- else -}}
-    {{- $data = $definition | transform.Unmarshal | default (dict) -}}
+    {{- $data = $Definition | transform.Unmarshal | default (dict) -}}
   {{- end -}}
-{{- else if $supportsMarkdown -}}
-  {{- $markdown = $definition -}}
+{{- else if $SupportsMarkdown -}}
+  {{- $markdown = $Definition -}}
 {{- else -}}
   {{- errorf "Invalid definition for codeblock renderer; must support data and/or markdown input, but supports neither." -}}
 {{- end -}}
 
-{{- $info = dict "Data" $data "Markdown" $markdown -}}
+{{- $Info := dict "Data" $data "Markdown" $markdown -}}
 
-{{- return $info -}}
+{{- return $Info -}}

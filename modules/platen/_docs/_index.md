@@ -13,4 +13,6 @@ theme and provides a minimal website for hosting your digital books.
 It includes functionality for a blog, game-specific shortcodes, and is required for the other
 modules to function smoothly.
 
+![icon:hammer](lucide)
+
 [01]: https://github.com/alex-shpak/hugo-book

@@ -1,8 +1,10 @@
 {{- $searchEnabled := partial "platen/param/resolve" (
-  dict "Config"  "platen.features.search.enabled"
-       "Default" true
-) -}}
-{{ if $searchEnabled }}
+      dict "Config"  "platen.features.search.enabled"
+           "Default" true
+    )
+-}}
+
+{{- if $searchEnabled -}}
 <div class="platen-search">
   <input type="text"
          id="platen-search-input"
@@ -13,4 +15,4 @@
   <div class="platen-search-spinner hidden"></div>
   <ul id="platen-search-results"></ul>
 </div>
-{{ end }}
+{{- end -}}

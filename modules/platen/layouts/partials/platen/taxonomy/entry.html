@@ -1,22 +1,22 @@
 {{/*
     Docs.Partial: entry
 */}}
-{{- $taxonomyPage := . -}}
+{{- $TaxonomyPage := . -}}
 
 {{/* Define title for this taxonomy */}}
-{{- $title := $taxonomyPage.Title | title -}}
+{{- $Title := $TaxonomyPage.Title | title -}}
 
 {{/* Define list item element attributes */}}
-{{- $liAttributes := slice                                                  -}}
-{{- $liAttributes  = $liAttributes | append `class="platen-section-flat"`   -}}
-{{- $liAttributes  = partial "platen/utils/getSafeAttributes" $liAttributes -}}
+{{- $attributes := slice                                                -}}
+{{- $attributes  = $attributes | append `class="platen-section-flat"`   -}}
+{{- $attributes  = partial "platen/utils/getSafeAttributes" $attributes -}}
 
 {{/* Render */}}
-<li {{ $liAttributes }}>
-  <strong>{{ $title }}</strong>
+<li {{ $attributes }}>
+  <strong>{{ $Title }}</strong>
   <ul>
-    {{- range $termPage := $taxonomyPage.Pages }}
-      {{ partial "platen/taxonomy/termEntry" $termPage }}
+    {{- range $TermPage := $TaxonomyPage.Pages }}
+      {{ partial "platen/taxonomy/termEntry" $TermPage }}
     {{ end -}}
   </ul>
 </li>

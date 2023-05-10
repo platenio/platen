@@ -1,13 +1,11 @@
 {{ define "main" }}
-  {{- $context := . -}}
-  {{ range $post := sort $context.Paginator.Pages }}
-    {{ partial "platen/post/listEntry" $post }}
+  {{ range $Post := sort page.Paginator.Pages }}
+    {{ partial "platen/post/listEntry" $Post }}
   {{ end }}
 
-  {{ template "_internal/pagination.html" $context }}
+  {{ template "_internal/pagination.html" page }}
 {{ end }}
 
 {{ define "toc" }}
-  {{- $context := . -}}
-  {{ partial "platen/taxonomy" $context }}
+  {{ partial "platen/taxonomy" }}
 {{ end }}

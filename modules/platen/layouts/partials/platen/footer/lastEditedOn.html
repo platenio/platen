@@ -1,7 +1,6 @@
 {{/*
     Docs.Partial: editThisPage
 */}}
-{{- $context := . -}}
 
 {{/* Retrieve settings from the site config */}}
 {{- $PlatenConfig := partialCached "platen/param/getKey" "platen" "platen" -}}
@@ -9,7 +8,7 @@
 {{- $dateFormat   := $PlatenConfig.display.date_format -}}
 
 {{/* Retrieve info from the page */}}
-{{- $gitInfo := $context.GitInfo -}}
+{{- $gitInfo := page.GitInfo -}}
 
 {{/* This partial should only render if the page has git info and the base URL is defined */}}
 {{- $shouldRender := and $gitInfo $repoUrl -}}

@@ -1,26 +1,26 @@
-{{- $params     := .                                                                -}}
-{{- $context    := $params.Context                                                  -}}
-{{- $position   := $params.Position                                                 -}}
-{{- $ConfigKey  := "platen.display.menu"                                            -}}
+{{- $Params     := .                                                         -}}
+{{- $Context    := $Params.Context                                           -}}
+{{- $Position   := $Params.Position                                          -}}
+{{- $ConfigKey  := "platen.display.menu"                                     -}}
 {{- $MenuConfig := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 
-{{- with (index $MenuConfig $position) -}}
-  {{- $positionSettings := . -}}
-  {{- with $positionSettings.entries -}}
-    {{- $partialParams := merge $params $positionSettings -}}
-    {{- with $positionSettings.group -}}
+{{- with (index $MenuConfig $Position) -}}
+  {{- $PositionSettings := . -}}
+  {{- with $PositionSettings.entries -}}
+    {{- $partialParams := merge $Params $PositionSettings -}}
+    {{- with $PositionSettings.group -}}
       {{ partial "platen/menu/features/group" $partialParams }}
     {{- else -}}
       {{- $partialParams = merge $partialParams (dict "TopLevel" true) -}}
       {{ partial "platen/menu/features/entries" $partialParams }}
     {{- end -}}
   {{- else -}}
-    {{- if reflect.IsSlice $positionSettings -}}
-      {{- warnf "processing entries as naive list: %#v" $positionSettings -}}
+    {{- if reflect.IsSlice $PositionSettings -}}
+      {{- warnf "processing entries as naive list: %#v" $PositionSettings -}}
     {{- else -}}
       {{- errorf "%s; %s"
-                 (printf "Unable to process feature menu items for %s" $position)
-                 (printf "value is neither a map defining the 'Entries' key nor slice of entries: %#v" $positionSettings)
+                 (printf "Unable to process feature menu items for %s" $Position)
+                 (printf "value is neither a map defining the 'Entries' key nor slice of entries: %#v" $PositionSettings)
       -}}
     {{- end -}}
   {{- end -}}

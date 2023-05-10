@@ -1,53 +1,63 @@
-{{- $Context       := . -}}
-{{- $ConfigKey     := "platen.display.menu"                                            -}}
+{{- $ConfigKey     := "platen.display.menu"                                     -}}
 {{- $MenuConfig    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
-{{- $PlatenSection := $MenuConfig.root_section | default "/"                           -}}
+{{- $PlatenSection := $MenuConfig.root_section | default "/"                    -}}
 {{- if eq $PlatenSection "*" -}}
   {{- $PlatenSection = "/" -}}{{/* Backward compatibility */}}
 {{- end }}
 
-{{ with site.GetPage $PlatenSection }} {{ $Page := . }}
-  {{ template "platen-section-children" (dict "Section" $Page "CurrentPage" $Context) }}
+{{ with site.GetPage $PlatenSection }}
+  {{- $Section := . -}}
+  {{ template "platen-section-children" $Section }}
 {{ end }}
 
-{{ define "platen-section-children" }}{{/* (dict "Section" .Section "CurrentPage" .CurrentPage) */}}
+{{ define "platen-section-children" }}
+  {{- $Section := . -}}
   <ul>
-    {{ range (where .Section.Pages "Params.platen.menu.hide" "ne" true) }}
-      {{ if .IsSection }}
-        <li {{- if .Params.platen.menu.flatten_section }} class="platen-section-flat" {{ end -}}>
-          {{ template "platen-page-link"        (dict "Page"    . "CurrentPage" $.CurrentPage) }}
-          {{ template "platen-section-children" (dict "Section" . "CurrentPage" $.CurrentPage) }}
+    {{ range $ChildPage := (where $Section.Pages "Params.platen.menu.hide" "ne" true) }}
+      {{ if $ChildPage.IsSection }}
+        <li {{- if $ChildPage.Params.platen.menu.flatten_section }} class="platen-section-flat" {{ end -}}>
+          {{ template "platen-page-link"        $ChildPage }}
+          {{ template "platen-section-children" $ChildPage }}
         </li>
-      {{ else if and .IsPage .Content }}
+      {{ else if and $ChildPage.IsPage $ChildPage.Content }}
         <li>
-          {{ template "platen-page-link" (dict "Page" . "CurrentPage" $.CurrentPage) }}
+          {{ template "platen-page-link" $ChildPage }}
         </li>
       {{ end }}
     {{ end }}
   </ul>
 {{ end }}
 
-{{ define "platen-page-link" }}{{/* (dict "Page" .Page "CurrentPage" .CurrentPage) */}}
-  {{ $current := eq .CurrentPage .Page }}
-  {{ $ancestor := .Page.IsAncestor .CurrentPage }}  
-  {{- $titleParams := dict "Context" .Page "ForMenu" true          -}}
-  {{- $titleText   := partial "platen/utils/getTitle" $titleParams -}}
+{{ define "platen-page-link" }}
+  {{- $EntryPage           := .                                                       -}}
+  {{- $HasContent          := $EntryPage.Content                                      -}}
+  {{- $IsCurrentPage       := eq page $EntryPage                                      -}}
+  {{- $IsAncestorPage      := $EntryPage.IsAncestor page                              -}}
+  {{- $IsAncestorOrCurrent := or $IsCurrentPage $IsAncestorPage                       -}}
+  {{- $TitleParams         := dict "Context" $EntryPage "ForMenu" true                -}}
+  {{- $TitleText           := partial "platen/utils/getTitle" $TitleParams            -}}
+  {{- $LinkClassAttribute  := cond $IsCurrentPage `class="active"` "" | safeHTMLAttr -}}
 
-  {{ if .Page.Params.platen.menu.collapse_section }}
+  {{ if $EntryPage.Params.platen.menu.collapse_section }}
+    {{- $SectionID := printf "section-%s" (md5 $EntryPage) | safeHTMLAttr -}}
+
     <input type="checkbox"
-           id="section-{{ md5 .Page }}"
-           class="toggle" {{ if or $current $ancestor }}checked{{ end }} />
-    <label for="section-{{ md5 .Page }}" class="flex justify-between">
-      <a {{ if .Page.Content }}href="{{ .Page.Permalink }}"{{ else }}role="button"{{ end }}
-         class="{{ if $current }}active{{ end }}">
-        {{- $titleText -}}
+           id="{{ $SectionID }}"
+           class="toggle" {{ if $IsAncestorOrCurrent }} checked {{ end }} />
+    <label for="{{ $SectionID }}" class="flex justify-between">
+      <a {{ $LinkClassAttribute }} {{ if $HasContent -}}
+            href="{{ $EntryPage.Permalink }}"
+          {{- else -}}
+            role="button"
+          {{- end }}>
+        {{- $TitleText -}}
       </a>
     </label>
-  {{ else if .Page.Content }}
-    <a href="{{ .Page.Permalink }}" class="{{ if $current }} active{{ end }}">
-      {{- $titleText -}}
+  {{ else if $HasContent }}
+    <a {{ $LinkClassAttribute }} href="{{ $EntryPage.Permalink }}">
+      {{- $TitleText -}}
     </a>
   {{ else }}
-    <span>{{- $titleText -}}</span>
+    <span>{{- $TitleText -}}</span>
   {{ end }}
 {{ end }}

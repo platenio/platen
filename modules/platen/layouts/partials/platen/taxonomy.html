@@ -1,10 +1,8 @@
-{{- $context := . -}}
-
 <nav>
   <ul>
-  {{ range $term, $_ := site.Taxonomies }}
-    {{- $termPageName := printf "/%s" $term | urlize -}}
-    {{ with site.GetPage $termPageName }}
+  {{ range $Term, $_ := site.Taxonomies }}
+    {{- $TermPageName := printf "/%s" $Term | urlize -}}
+    {{ with site.GetPage $TermPageName }}
       {{ partial "platen/taxonomy/entry" . }}
     {{ end }}
   {{ end }}

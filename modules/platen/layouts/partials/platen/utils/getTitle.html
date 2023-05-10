@@ -1,16 +1,16 @@
 {{/*
   Partial to generate page name from Title or File name. Accepts Page as context
 */}}
-{{- $Params      := .                                                                -}}
-{{- $context     := .                                                                -}}
-{{- $title       := ""                                                               -}}
-{{- $ConfigKey   := "platen.features"                                                -}}
-{{- $Features    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey        -}}
-{{- $forMenu     := "" -}}
-{{- $forHeader   := "" -}}
-{{- $forHeading  := "" -}}
-{{- $forHtmlHead := "" -}}
-{{- $forList     := "" -}}
+{{- $Params      := .                                                         -}}
+{{- $context     := .                                                         -}}
+{{- $title       := ""                                                        -}}
+{{- $ConfigKey   := "platen.features"                                         -}}
+{{- $Features    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $forMenu     := ""                                                        -}}
+{{- $forHeader   := ""                                                        -}}
+{{- $forHeading  := ""                                                        -}}
+{{- $forHtmlHead := ""                                                        -}}
+{{- $forList     := ""                                                        -}}
 
 
 {{- if reflect.IsMap $Params -}}

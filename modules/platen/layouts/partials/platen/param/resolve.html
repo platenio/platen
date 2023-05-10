@@ -21,12 +21,12 @@
     When a Default is provided, the value is set to the Default only if the value would otherwise
     be nil.
 */}}
-{{- $Input       := .              -}}
-{{- $Context     := $Input.Context -}}
-{{- $ConfigKey   := $Input.Config  -}}
-{{- $ParamKey    := $Input.Param   -}}
-{{- $value       := ""             -}}
-{{- $Partial     := "platen/param/_resolve"}}
+{{- $Input       := .                       -}}
+{{- $Context     := $Input.Context          -}}
+{{- $ConfigKey   := $Input.Config           -}}
+{{- $ParamKey    := $Input.Param            -}}
+{{- $value       := ""                      -}}
+{{- $Partial     := "platen/param/_resolve" -}}
 
 {{- with $Context -}}
   {{- $value = partialCached $Partial $Input $Input $Context.Permalink -}}

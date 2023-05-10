@@ -1,13 +1,13 @@
-{{- $params   := .                                         -}}
-{{- $position := default $params.position $params.Position -}}
-{{- $name     := default $params.name     $params.Name     -}}
-{{- $href     := default $params.href     $params.Href     -}}
-{{- $collapse := default $params.collapse $params.Collapse -}}
-{{- $flatten  := default $params.flatten  $params.Flatten  -}}
-{{- $class    := default $params.class    $params.Class    -}}
+{{- $Params   := .                                         -}}
+{{- $Position := default $Params.position $Params.Position -}}
+{{- $Name     := default $Params.name     $Params.Name     -}}
+{{- $Href     := default $Params.href     $Params.Href     -}}
+{{- $Collapse := default $Params.collapse $Params.Collapse -}}
+{{- $flatten  := default $Params.flatten  $Params.Flatten  -}}
+{{- $class    := default $Params.class    $Params.Class    -}}
 
-{{- if and $flatten $collapse -}}
-  {{- warnf "Specified both flatten and collapse for '%s' entry in site menu at position %s. Preferring collapse instead." $name $position -}}
+{{- if and $flatten $Collapse -}}
+  {{- warnf "Specified both flatten and collapse for '%s' entry in site menu at position %s. Preferring collapse instead." $Name $Position -}}
   {{- $flatten = false -}}
 {{- end -}}
 
@@ -22,25 +22,24 @@
   {{- end -}}
 {{- end -}}
 
+{{- $entryElement := printf "<span>%s</span>" $Name -}}
 
-{{- $entryElement := printf "<span>%s</span>" $name -}}
-
-{{- if $collapse -}}
-  {{- $entryElement = printf `<a role="button">%s</a>` $name -}}
+{{- if $Collapse -}}
+  {{- $entryElement = printf `<a role="button">%s</a>` $Name -}}
 {{- end -}}
 
-{{- with $href -}}
-  {{- $entryElement = printf `<a href="%s">%s</a>` $href $name -}}
+{{- with $Href -}}
+  {{- $entryElement = printf `<a href="%s">%s</a>` $Href $Name -}}
 {{- end -}}
 
 {{- if $flatten -}}
 <li {{ $class | safeHTMLAttr }}>
   {{ $entryElement | safeHTML }}
-{{- else if $collapse -}}
-{{- $id          := printf "section-%s" (md5 $name) -}}
+{{- else if $Collapse -}}
+{{- $ID          := printf "section-%s" (md5 $Name) -}}
 <li {{$class | safeHTMLAttr }}>
-  <input type="checkbox" id="{{ $id }}" class="toggle">
-  <label for="{{ $id }}" class="flex justify-between" />
+  <input type="checkbox" id="{{ $ID }}" class="toggle">
+  <label for="{{ $ID }}" class="flex justify-between" />
     {{ $entryElement | safeHTML }}
   </label>
 {{- else -}}

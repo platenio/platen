@@ -1,6 +1,5 @@
-{{- $Context              := .                                                                     -}}
 {{- $IntegrityPartial     := "platen/utils/getIntegrityAttributes"                                 -}}
-{{- $BasePathPartial      := "platen/features/shoelace/getBasePath"                                -}}
+{{- $BasePathPartial      := "platen/features/shoelace/utils/getBasePath"                          -}}
 {{- $Template             := "platen/features/shoelace/templates/iconRegistration"                 -}}
 {{- $KeyConfig            := "platen.features.shoelace"                                            -}}
 {{- $KeyHasIcons          := "_hasIcons"                                                           -}}
@@ -10,8 +9,8 @@
 {{- $MarkupConfig         := partialCached "platen/param/getKey" $KeyMarkupConfig $KeyMarkupConfig -}}
 {{- $AlwaysLoadLibraries  := $Config.icons.always_load_libraries                                   -}}
 {{- $DefaultLibrary       := $MarkupConfig.default_library | default $Config.icons.default_library -}}
-{{- $HasIcons             := $Context.Store.Get $KeyHasIcons          | default false              -}}
-{{- $librariesToLoad      := $Context.Store.Get $KeyUsedIconLibraries | default (slice)            -}}
+{{- $HasIcons             := page.Store.Get $KeyHasIcons          | default false              -}}
+{{- $librariesToLoad      := page.Store.Get $KeyUsedIconLibraries | default (slice)            -}}
 
 {{- with $AlwaysLoadLibraries -}}
   {{- if reflect.IsSlice $AlwaysLoadLibraries -}}
@@ -65,7 +64,7 @@
           {{- $Source    := $Resource.RelPermalink                                                   -}}
           {{- $templateParams = merge $templateParams (dict "Source" $Source "Integrity" $Integrity) -}}
         {{- else -}}
-          {{- $ResourceParams := merge $templateParams (dict "Config" $LibraryConfig "Context" $Context) -}}
+          {{- $ResourceParams := merge $templateParams (dict "Config" $LibraryConfig) -}}
           {{- $OutputPath     := $LibraryConfig.registration.output_path | default $ResourcePath         -}}
           {{- $Resource       := resources.Get $ResourcePath
                                 | resources.ExecuteAsTemplate $OutputPath $ResourceParams
@@ -82,7 +81,7 @@
     {{- else -}}
       {{- warnf "Used icon library '%s' on page %s, but it's not enabled in the configuration."
                 $IconLibrary
-                $Context.Title
+                page.Title
       -}}
     {{- end -}}
   {{- end -}}

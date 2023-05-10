@@ -1,11 +1,10 @@
 {{/*
     Docs.Partial: generate
 */}}
-{{- $Context       := .                                                                -}}
-{{- $pageContent   := $Context.Content                                                 -}}
-{{- $ConfigKey     := "platen.display.table_of_contents"                               -}}
+{{- $pageContent   := page.Content                                              -}}
+{{- $ConfigKey     := "platen.display.table_of_contents"                        -}}
 {{- $SiteConfigToC := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
-{{- $PageConfigToC := $Context.Params.platen.table_of_contents                         -}}
+{{- $PageConfigToC := page.Params.platen.table_of_contents                      -}}
 
 {{/* Parse settings for minimum and maximum heading levels to include in ToC */}}
 {{- $MinLevel := $PageConfigToC.minimum_level | default $SiteConfigToC.minimum_level | default 2 -}}

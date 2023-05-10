@@ -1,10 +1,10 @@
-{{- $params     := .               -}}
-{{- $definition := $params.Inner   -}}
-{{- $type       := $params.Type    -}}
-{{- $options    := $params.Options -}}
+{{- $Input      := .              -}}
+{{- $Definition := $Input.Inner   -}}
+{{- $Type       := $Input.Type    -}}
+{{- $Options    := $Input.Options -}}
 
-{{- with $options -}}
-  {{- highlight $definition $type $options -}}
+{{- with $Options -}}
+  {{- highlight $Definition $Type $Options -}}
 {{- else -}}
-  {{- highlight $definition $type -}}
+  {{- highlight $Definition $Type -}}
 {{- end -}}

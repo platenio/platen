@@ -1,13 +1,13 @@
 {{/*
-    Docs.Partial: title
+    Docs.Partial: post/listEntry
 */}}
-{{- $postContext := . -}}
+{{- $PostContext := . -}}
 
-{{- $href        := $postContext.RelPermalink                    -}}
-{{- $titleParams := dict "Context" $postContext "ForList" true   -}}
-{{- $title       := partial "platen/utils/getTitle" $titleParams -}}
-{{- $summary     := $postContext.Summary                         -}}
-{{- $isTruncated := $postContext.Truncated                       -}}
+{{- $Href        := $PostContext.RelPermalink                    -}}
+{{- $TitleParams := dict "Context" $PostContext "ForList" true   -}}
+{{- $Title       := partial "platen/utils/getTitle" $TitleParams -}}
+{{- $summary     := $PostContext.Summary                         -}}
+{{- $IsTruncated := $PostContext.Truncated                       -}}
 
 {{/* Define attribute list for article */}}
 {{- $articleAttributes := slice -}}
@@ -20,20 +20,20 @@
 
 {{/* Define attribute list for link */}}
 {{- $aAttributes := slice                                                 -}}
-{{- $aAttributes  = $aAttributes | append (printf `href="%s"` $href)      -}}
+{{- $aAttributes  = $aAttributes | append (printf `href="%s"` $Href)      -}}
 {{- $aAttributes  = partial "platen/utils/getSafeAttributes" $aAttributes -}}
 
 {{/* Add the truncated suffix if needed*/}}
-{{- if $isTruncated -}}
+{{- if $IsTruncated -}}
   {{- $summary = printf `%s <a %s>...</a>` $summary $aAttributes | safeHTML -}}
 {{- end -}}
 
 {{/* Define the metadata elements */}}
-{{- $meta := partial "platen/utils/posts/meta" $postContext | safeHTML -}}
+{{- $Meta := partial "platen/utils/posts/meta" $PostContext | safeHTML -}}
 
 {{/* Render */}}
 <article {{ $articleAttributes }}>
-  <h2><a {{ $aAttributes }}>{{ $title }}</a></h2>
-  {{ $meta }}
+  <h2><a {{ $aAttributes }}>{{ $Title }}</a></h2>
+  {{ $Meta }}
   <p>{{ $summary }}</p>
 </article>

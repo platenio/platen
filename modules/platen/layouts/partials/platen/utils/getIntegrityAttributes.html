@@ -1,9 +1,10 @@
-{{- $params          := .  -}}
+{{- $Resource        := .  -}}
 {{- $attributeString := "" -}}
-{{- if (urls.Parse $params.Permalink).Host -}}
-    {{- $integrity      := printf `integrity="%s"` $params.Data.Integrity -}}
-    {{- $crossOrigin    := `crossorigin="anonymous"`                      -}}
-    {{- $attributeString = printf " %s %s" $integrity $crossOrigin        -}}
+
+{{- if (urls.Parse $Resource.Permalink).Host -}}
+    {{- $Integrity      := printf `integrity="%s"` $Resource.Data.Integrity -}}
+    {{- $CrossOrigin    := `crossorigin="anonymous"`                        -}}
+    {{- $attributeString = printf " %s %s" $Integrity $CrossOrigin          -}}
 {{- end -}}
 
 {{- return ($attributeString | safeHTMLAttr) -}}

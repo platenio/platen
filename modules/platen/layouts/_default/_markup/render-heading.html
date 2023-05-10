@@ -1,21 +1,21 @@
-{{- $Context         := .                                             -}}
-{{- $PlatenConfig      := partialCached "platen/param/getKey" "platen" "platen" -}}
-{{- $renderedHeading := ""                                            -}}
+{{- $Input           := .                                                     -}}
+{{- $PlatenConfig    := partialCached "platen/param/getKey" "platen" "platen" -}}
+{{- $renderedHeading := ""                                                    -}}
 
 {{/* Use renderers from features first */}}
-{{- range $feature := $PlatenConfig.features -}}
-  {{- if and $feature.enabled (eq "" $renderedHeading) -}}
-    {{- with $feature.partials.renderers.heading -}}
-      {{- $renderedHeading = partial . $Context }}
+{{- range $Feature := $PlatenConfig.features -}}
+  {{- if and $Feature.enabled (eq "" $renderedHeading) -}}
+    {{- with $Feature.partials.renderers.heading -}}
+      {{- $renderedHeading = partial $Feature.partials.renderers.heading $Input -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
 {{/* Use arbitrary renderers if no feature applied */}}
-{{- range $markup := $PlatenConfig.markup -}}
-  {{- if and $markup.enabled (eq "" $renderedHeading) -}}
-    {{- with $markup.partials.renderers.heading -}}
-      {{- $renderedHeading = partial . $Context }}
+{{- range $Markup := $PlatenConfig.markup -}}
+  {{- if and $Markup.enabled (eq "" $renderedHeading) -}}
+    {{- with $Markup.partials.renderers.heading -}}
+      {{- $renderedHeading = partial $Markup.partials.renderers.heading $Input -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -24,5 +24,5 @@
 {{- with $renderedHeading -}}
   {{- safeHTML $renderedHeading -}}
 {{- else -}}
-  {{- partial "platen/markup/_default/heading" $Context -}}
+  {{- partial "platen/markup/_default/heading" $Input -}}
 {{- end -}}

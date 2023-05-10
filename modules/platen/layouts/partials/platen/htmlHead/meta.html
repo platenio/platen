@@ -1,7 +1,6 @@
 {{/*
     Docs.Partial: meta
 */}}
-{{- $context := . -}}
 
 {{/* Build list of meta tags */}}
 {{- $metaTags := dict -}}
@@ -21,7 +20,7 @@
 {{/* Add the description tag */}}
 {{- $descriptionAttributes := slice                                                       -}}
 {{- $descriptionAttributes  = $descriptionAttributes | append `name="description"`        -}}
-{{- $descriptionContent    := default $context.Summary $context.Description               -}}
+{{- $descriptionContent    := page.Description       | default page.Summary               -}}
 {{- $descriptionContent     = printf `content="%s"` $descriptionContent                   -}}
 {{- $descriptionAttributes  = $descriptionAttributes | append $descriptionContent         -}}
 {{- $metaTags               = merge $metaTags (dict "description" $descriptionAttributes) -}}
