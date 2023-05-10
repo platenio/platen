@@ -16,6 +16,8 @@
 
 {{ partial "platen/htmlHead/siteStyleLink" page }}
 
+{{ partialCached "platen/htmlHead/siteModuleScript" "cache" "cache" }}
+
 {{ range $Feature, $Settings := $PlatenConfig.features -}}
   {{- if $Settings.enabled -}}
     {{- with $Settings.partials.header -}}

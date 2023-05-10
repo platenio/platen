@@ -20,6 +20,35 @@ export function onFirstVisible(element, callback) {
   }).observe(element);
 }
 
-const Version = '0.1.0'
+const SiteMenuControlID = 'menu-control'
+const TableOfContentsControlID = 'toc-control'
+
+export function getSiteMenuControl() {
+  return document.getElementById(SiteMenuControlID)
+}
+
+export function getTableOfContentsControl() {
+  return document.getElementById(TableOfContentsControlID)
+}
+
+export function showSiteMenu() {
+  console.log('showing site menu')
+  getSiteMenuControl().checked = true
+}
+
+export function hideSiteMenu() {
+  getSiteMenuControl().checked = false
+}
+
+export function toggleTableOfContents() {
+  let toc = getTableOfContentsControl()
+  if (toc.checked != true) {
+    toc.checked = true
+  } else {
+    toc.checked = false
+  }
+}
+
+export const Version = '0.1.0'
 
 export default Version

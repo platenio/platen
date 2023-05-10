@@ -1,0 +1,6 @@
+{{- $Module  := partialCached "platen/utils/getModule" "cache" "cache" -}}
+{{/*  Render  */}}
+<script type="module">
+  import * as Platen  from '{{ $Module.RelPermalink }}'
+  window.Platen = Platen
+</script>
