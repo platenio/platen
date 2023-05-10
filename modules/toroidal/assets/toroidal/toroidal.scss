@@ -1,6 +1,6 @@
 {{- $Config := site.Params.toroidal -}}
 {{- if (partialCached "toroidal/utils/canUsePlatenPartials" "" "check") -}}
-  {{- $ConfigKey := "toroidal"                                                       -}}
+  {{- $ConfigKey := "toroidal"                                                -}}
   {{- $Config     = partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 {{- end -}}
 @import "defaults";

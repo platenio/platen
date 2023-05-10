@@ -1,11 +1,11 @@
-{{- $params            := .                         -}}
-{{- $webringName       := $params.WebringName       -}}
-{{- $menuCollapse      := $params.MenuCollapse      -}}
-{{- $menuFlatten       := $params.MenuFlatten       -}}
-{{- $class             := $params.Class             -}}
+{{- $Params       := .                    -}}
+{{- $WebringName  := $Params.WebringName  -}}
+{{- $MenuCollapse := $Params.MenuCollapse -}}
+{{- $menuFlatten  := $Params.MenuFlatten  -}}
+{{- $class        := $Params.Class        -}}
 
-{{- if and $menuFlatten $menuCollapse -}}
-  {{- warnf "Specified both flatten and collapse for '%s' webring entry in site menu. Preferring collapse instead." $webringName -}}
+{{- if and $menuFlatten $MenuCollapse -}}
+  {{- warnf "Specified both flatten and collapse for '%s' webring entry in site menu. Preferring collapse instead." $WebringName -}}
   {{- $menuFlatten = false -}}
 {{- end -}}
 
@@ -22,15 +22,15 @@
 
 {{- if $menuFlatten -}}
 <li {{ $class | safeHTMLAttr }}>
-  <span>{{ $webringName}}</span>
-{{- else if $menuCollapse -}}
-{{- $id          := printf "section-%s" (md5 $webringName)                                -}}
+  <span>{{ $WebringName}}</span>
+{{- else if $MenuCollapse -}}
+{{- $id := printf "section-%s" (md5 $WebringName) -}}
 <li {{$class | safeHTMLAttr }}>
   <input type="checkbox" id="{{ $id }}" class="toggle">
   <label for="{{ $id }}" class="flex justify-between" />
-    <a role="button">{{ $webringName }}</a>
+    <a role="button">{{ $WebringName }}</a>
   </label>
 {{- else -}}
 <li {{$class | safeHTMLAttr }}>
-  <span>{{ $webringName }}</span>
+  <span>{{ $WebringName }}</span>
 {{- end -}}
