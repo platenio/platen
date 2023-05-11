@@ -1,0 +1,99 @@
+{{/*
+    Shoelace Utility Partial: resolveIconOptions
+
+    This partial expects to receive a dict with the following keys:
+
+    - Icon: Mandatory, the information to use when resolving the icon. This can
+      be the name of an icon as a string or a dictionary of icon options.
+    - Page: Optional, the page the icon is being rendered on. Used to register
+      the icon library so it can render correctly.
+    - Position: Optional, improves the warning context. This should be passed
+      when the icon is being resolved from a codeblock render hook.
+
+    If Params.Icon is a string, the partial uses it to resolve the icon. If the
+    value is a dictionary, the partial constructs the resolveable string from
+    the dictionary's `name`, `variant`, and `library` keys.
+
+    This partial returns a dictionary with the following values:
+
+    - name: The canonical name of the icon with the variant, if used.
+    - library: The canonical name of the icon's library.
+
+    If Params.Icon was a dictionary, those values are merged into that value,
+    returning it with the canonicalized name/library.
+
+    If the library resolved to a disabled library or couldn't resolve the
+    library, this partial raises a warning and returns an empty dictionary.
+
+    Because this partial returns a usable map of icon options or an empty map
+    when the icon wasn't resolvable, the caller can use the `with` function over
+    the result of this partial.
+*/}}
+{{/*  Define partials for easier reading/maintaining  */}}
+{{- $parseIconName           := "platen/features/shoelace/utils/parseIconName"           -}}
+{{- $updateUsedIconLibraries := "platen/features/shoelace/utils/updateUsedIconLibraries" -}}
+{{/*  Handle parameters  */}}
+{{- $Params   := .                -}}
+{{- $Page     := $Params.Page     -}}
+{{- $Position := $Params.Position -}}
+{{- $Icon     := $Params.Icon     -}}
+
+{{/*  If Page or Position are passed, give more context on problems  */}}
+{{- $warningSource := " " -}}
+{{- with $Page -}}
+  {{- $warningSource := printf " in '%s' " $Page.File.Path -}}
+{{- end -}}
+{{- with $Position -}}
+  {{- $warningSource := printf " at %s " $Position -}}
+{{- end -}}
+
+{{/*  Define map of sl-icon element attributes to return  */}}
+{{- $iconAttributeMap := dict -}}
+
+{{- if reflect.IsMap $Icon -}}
+  {{- $iconAttributeMap = merge $iconAttributeMap $Icon -}}
+{{- else -}}
+  {{- $iconAttributeMap = merge $iconAttributeMap (dict "name" $Icon) -}}
+{{- end -}}
+
+{{- with $iconAttributeMap.name -}}
+  {{/*  Build the string to parse for the icon's name to get the canonical info  */}}
+  {{- $iconName := $iconAttributeMap.name -}}
+
+  {{- with $iconAttributeMap.variant -}}
+    {{- $iconName = printf "%s&%s" $iconName $iconAttributeMap.variant -}}
+  {{- end -}}
+
+  {{- with $iconAttributeMap.library -}}
+    {{- $iconName = printf "%s@%s" $iconName $iconAttributeMap.library -}}
+  {{- end -}}
+
+  {{/*  Parse the string to get the canonical combined name and library  */}}
+  {{- $IconInfo := partialCached $parseIconName $iconName $iconName -}}
+
+  {{- if eq "enabled" $IconInfo.LibraryStatus -}}
+    {{- $iconAttributeMap = merge $iconAttributeMap (dict "name" $IconInfo.CombinedName) -}}
+
+    {{- if ne "builtin_bootstrap" $IconInfo.Library -}}
+      {{- $iconAttributeMap = merge $iconAttributeMap (dict "library" $IconInfo.Library) -}}
+    {{- end -}}
+
+    {{- partial $updateUsedIconLibraries (dict "Page" $Page "Library" $IconInfo.Library) -}}
+  {{- else if (eq "disabled" $IconInfo.LibraryStatus) -}}
+    {{- warnf "Resolved icon library '%s' for icon '%s'%sis disabled. Ignoring the icon."
+              $IconInfo.Library
+              $iconAttributeMap.name
+              $warningSource
+    -}}
+    {{- $iconAttributeMap = dict -}}
+  {{- else -}}
+    {{- warnf "Couldn't resolve any library for icon '%s'%s. Ignoring the icon."
+              $iconAttributeMap.name
+              $warningSource
+    -}}
+    {{- $iconAttributeMap = dict -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Return the canonicalized map of attributes  */}}
+{{- return $iconAttributeMap -}}

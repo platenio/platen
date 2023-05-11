@@ -1,0 +1,114 @@
+{{/*
+    Shoelace Template: iconButton
+
+    Renders an <sl-icon-button> element on a page inside an <sl-tooltip>.
+
+    This template partial expects a dict with the following keys:
+
+    - Button: (Mandatory) A dictionary of options for the icon button.
+    - Tooltip: (Optional) A dictionary of options for the tooltip.
+    - Label: (Optional) A string to use as the accessible label for the button.
+
+    If Params.Button.label is defined, the partial uses that value for the icon
+    button's accessible label. Params.Label should be used as a fallback value
+    for when Params.Button.label isn't defined.
+
+    If Params.Label or Params.Button.label has the prefix `i18n!`, the text
+    after that prefix is used as the lookup key in the site's i18n dictionary
+    to resolve the label text. This way, you can provide multiple translations
+    for a button's label.
+
+    If Params.Tooltip.content is defined, that value is used for the tooltip's
+    display text. If it isn't, the partial defaults to Params.Button.label,
+    then Params.Label for the value.
+
+    The sl-icon-button is always rendered inside an sl-tooltip element that has
+    the `hoist` and `content` attributes set. The sl-icon-button always has the
+    `name` and `label attributes set. If the icon isn't from the builtin
+    library, the `library` attribute is also set.
+
+    All other options for the tooltip and button are passed as attributes if
+    they're not part of the known skip list for the element.
+*/}}
+{{/*  Define partials for easier renaming/use  */}}
+{{- $getSafeAttributes := "platen/utils/getSafeAttributes" -}}
+{{/*  Define constants  */}}
+{{- $SkipButtonOptions  := slice "use_legacy" "classes" "label" "tooltip" -}}
+{{- $SkipTooltipOptions := slice "content" "classes" "hoist"              -}}
+{{- $I18nPrefix         := "i18n!"                                        -}}
+{{/*  Handle parameters  */}}
+{{- $Params         := .                                                                 -}}
+{{- $ButtonOptions  := $Params.Button  | default (dict)                                  -}}
+{{- $TooltipOptions := $Params.Tooltip | default $ButtonOptions.tooltip | default (dict) -}}
+{{- $label          := $Params.Label   | default ""                                      -}}
+{{/*  Initialize attribute slices  */}}
+{{- $tooltipAttributes := slice -}}
+{{- $buttonAttributes  := slice -}}
+
+{{/*  Canonicalize the button's attributes  */}}
+{{- with $ButtonOptions -}}
+  {{/*  Handle the button's label  */}}
+  {{- $label = $ButtonOptions.label | default $label -}}
+  {{- if hasPrefix $label $I18nPrefix -}}
+    {{- $i18n := strings.TrimPrefix $I18nPrefix $label -}}
+    {{- $label = i18n $i18n                            -}}
+  {{- end -}}
+  {{- $LabelAttribute  := printf `label="%s"` $label                 -}}
+  {{- $buttonAttributes = $buttonAttributes | append $LabelAttribute -}}
+
+  {{/*  Handle the button's classes  */}}
+  {{- $classes := slice "platen-btn" -}}
+  {{- with $ButtonOptions.classes -}}
+    {{- $classes = union $classes $ButtonOptions.classes -}}
+  {{- end -}}
+  {{- $classes          = delimit $classes " "                       -}}
+  {{- $ClassAttribute  := printf `class="%s"` $classes               -}}
+  {{- $buttonAttributes = $buttonAttributes | append $ClassAttribute -}}
+
+  {{/*  Handle remaining button attributes  */}}
+  {{- range $Name, $Value := $ButtonOptions -}}
+    {{- if not (in $SkipButtonOptions $Name) -}}
+      {{- $Attribute       := printf `%s="%s"` $Name (print $Value) -}}
+      {{- $buttonAttributes = $buttonAttributes | append $Attribute -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/*  Turn the slice into insertable attributes for the button  */}}
+  {{- $attributeParams := dict "Attributes" $buttonAttributes "IndentCount" 18 -}}
+  {{- $buttonAttributes = partial $getSafeAttributes $attributeParams          -}}
+{{- end -}}
+
+{{/*  Handle the tooltip content, falling back on the button label  */}}
+{{- $content := $TooltipOptions.content | default $label -}}
+{{- if hasPrefix $content $I18nPrefix -}}
+  {{- $i18n   := strings.TrimPrefix $I18nPrefix $content -}}
+  {{- $content = i18n $i18n                              -}}
+{{- end -}}
+{{- $ContentAttribute := printf `content="%s"` $content                -}}
+{{- $tooltipAttributes = $tooltipAttributes | append $ContentAttribute -}}
+
+{{/*  Handle any other options for tooltip, all optional  */}}
+{{- with $TooltipOptions -}}
+  {{/*  Add classes, if needed  */}}
+  {{- with $TooltipOptions.classes -}}
+    {{- $ClassAttribute   := printf `class="%s"` (delimit $TooltipOptions.classes " ") -}}
+    {{- $tooltipAttributes = $tooltipAttributes | append $ClassAttribute               -}}
+  {{- end -}}
+
+  {{/*  Handle any other specified attributes  */}}
+  {{- range $Name, $Value := $TooltipOptions -}}
+    {{- if not (in $SkipTooltipOptions $Name) -}}
+      {{- $Attribute        := printf `%s="%s"` $Name (print $Value)  -}}
+      {{- $tooltipAttributes = $tooltipAttributes | append $Attribute -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Turn the slice into insertable attributes for the tooltip  */}}
+{{- $attributeParams  := dict "Attributes" $tooltipAttributes "IndentCount" 12 -}}
+{{- $tooltipAttributes = partial $getSafeAttributes $attributeParams           -}}
+
+<sl-tooltip {{ $tooltipAttributes }}>
+  <sl-icon-button {{ $buttonAttributes }}>
+  </sl-icon-button>
+</sl-tooltip>
