@@ -38,16 +38,18 @@
 */}}
 {{- range $Font := sort (where $weightedFontStyles "weight" "ne" nil) "weight" -}}
   {{- $importLine   := printf `@import "fonts/%s";` $Font.import_name -}}
+
   {{- if findRE $FontUrlPattern $Font.import_name -}}
     {{- $importLine = printf `@import url('%s');` $Font.import_name -}}
   {{- end -}}
-  
+
   {{- $renderStrings = $renderStrings | append $importLine           -}}
 {{ end }}
 
 {{/* Add import statements for unweighted font styles. */}}
 {{- range $Font := sort $unweightedFontStyles -}}
-  {{- $importLine   := printf `@import "fonts/%s";` $Font -}}
+  {{- $importLine := printf `@import "fonts/%s";` $Font -}}
+
   {{- if findRE $FontUrlPattern $Font -}}
     {{- $importLine = printf `@import url('%s');` $Font -}}
   {{- end -}}
@@ -57,8 +59,8 @@
 
 {{/*  Add selector declarations for every defined setting  */}}
 {{- range $Name, $Settings := $FontSettings -}}
-  {{- $selector       := default (lower $Name) $Settings.selector -}}
-  {{- $selectorString := slice (printf "%s {" $selector) -}}
+  {{- $Selector       := default (lower $Name) $Settings.selector -}}
+  {{- $selectorString := slice (printf "%s {" $Selector)          -}}
 
   {{/* Add the family declaration, if any, for this selector */}}
   {{- with $Settings.family -}}

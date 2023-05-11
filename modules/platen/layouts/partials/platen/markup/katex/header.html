@@ -1,4 +1,3 @@
-{{- $Context          := .                                                                  -}}
 {{- $IntegrityPartial := "platen/utils/getIntegrityAttributes"                              -}}
 {{- $ConfigKey        := "platen.markup.katex"                                              -}}
 {{- $Config           := partialCached "platen/param/getKey" $ConfigKey $ConfigKey          -}}
@@ -17,8 +16,8 @@
 {{- $RenderPath       := "katex/auto-render.min.js"                                         -}}
 {{- $Template         := "platen/markup/katex/templates/header"                             -}}
 
-{{- $LoadKatex   := $Context.Store.Get $KatexStoreKey
-                    | default $Context.Params.platen.markup.katex.always_load
+{{- $LoadKatex   := page.Store.Get $KatexStoreKey
+                    | default page.Params.platen.markup.katex.always_load
                     | default $Config.always_load
 -}}
 
@@ -30,9 +29,9 @@
   {{- $Resources  := dict "Style" $Style "Library" $Library "AutoRender" $AutoRender                       -}}
 
   {{/*  Add the chemistry resource if needed  */}}
-  {{- $ChemUsages := findRE $ChemPattern $Context.RawContent              -}}
+  {{- $ChemUsages := findRE $ChemPattern page.RawContent              -}}
   {{- $UsesChem   := gt (len $ChemUsages) 0                               -}}
-  {{- $LoadChem   := $Context.Store.Get $ChemStoreKey | default $UsesChem -}}
+  {{- $LoadChem   := page.Store.Get $ChemStoreKey | default $UsesChem -}}
   {{- if $LoadChem -}}
     {{- $Chemistry := resources.GetRemote $ChemistryUrl | resources.Copy $ChemistryPath | resources.Fingerprint -}}
     {{- $Resources = merge $Resources (dict "Chemistry" $Chemistry)                                             -}}

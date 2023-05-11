@@ -1,29 +1,37 @@
-{{- $Context          := . -}}
-{{- $UsePortableLinks := partialCached "platen/param/getKey"
-                                       "platen.features.portable_links.enabled"
-                                       "platen.features.portable_links.enabled"
--}}
+{{- $Input            := .                                             -}}
+{{- $Key              := "platen.features.portable_links.enabled"      -}}
+{{- $UsePortableLinks := partialCached "platen/param/getKey" $Key $Key -}}
+
 {{- if $UsePortableLinks -}}
-  {{- template "portable-image" $Context -}}
+  {{- template "portable-image" $Input -}}
 {{- else -}}
-  <img src="{{ $Context.Destination | safeURL }}"
-       alt="{{ $Context.Text }}" {{ with $Context.Title }}title="{{ . }}"{{ end }}/>
+  {{- $Src   := $Input.Destination | safeURL      -}}
+  {{- $Alt   := $Input.Text        | safeHTMLAttr -}}
+  {{- $Title := $Input.Title       | safeHTMLAttr -}}
+  <img src="{{ $Src }}" alt="{{ $Alt }}" {{- with $Title }} title="{{ $Title }}" {{- end }}/>
 {{- end -}}
 
 {{- define "portable-image" -}}
-  {{- $Context  := . -}}
-  {{- $Destination := $Context.Destination -}}
-  {{- $File        := $Context.Page.File   -}}
-  {{- $isRemote := or (in $Destination "://") (strings.HasPrefix $Destination "//") }}
-  {{- if not $isRemote }}
+  {{- $Input       := .                                                                -}}
+  {{- $Destination := $Input.Destination                                               -}}
+  {{- $Alt         := $Input.Text        | safeHTMLAttr                                -}}
+  {{- $Title       := $Input.Title       | safeHTMLAttr                                -}}
+  {{- $File        := $Input.Page.File                                                 -}}
+  {{- $IsRemote    := or (in $Destination "://") (strings.HasPrefix $Destination "//") -}}
+
+  {{- if not $IsRemote }}
     {{- $path := print $File.Dir $Destination }}
     {{- if strings.HasPrefix $Destination "/" }}
       {{- $path = print "/static" $Destination }}
     {{- end }}
+
     {{- if not (fileExists $path) }}
       {{- warnf "Image '%s' not found in '%s'" $Destination $File }}
     {{- end }}
   {{- end }}
-  <img src="{{ $Destination | safeURL }}"
-       alt="{{ $Context.Text }}" {{ with $Context.Title }}title="{{ . }}"{{ end }}/>
+
+  {{/*  Seems like we should munge here, but we didn't before the refactor.  */}}
+  {{- $Src := $Destination | safeURL -}}
+
+  <img src="{{ $Src }}" alt="{{ $Alt }}" {{- with $Title }} title="{{ $Title }}"{{- end }}/>
 {{- end -}}

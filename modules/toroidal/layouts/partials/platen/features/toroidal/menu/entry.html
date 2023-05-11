@@ -4,42 +4,42 @@
   this performs is to arrange and format the information. All retrieval must
   be done first.
 */}}
-{{- $params            := .                         -}}
+{{- $Params            := .                         -}}
 
 {{/* Calculated properties */}}
-{{- $idMap   := partial "toroidal/utils/getNavIDs"           $params                -}}
-{{- $jsNames := partial "toroidal/utils/scripting/getNames"  $params                -}}
-{{- $js      := partial "toroidal/utils/scripting/render.js" $params | htmlUnescape -}}
+{{- $IdMap   := partial "toroidal/utils/getNavIDs"           $Params                -}}
+{{- $JsNames := partial "toroidal/utils/scripting/getNames"  $Params                -}}
+{{- $js      := partial "toroidal/utils/scripting/render.js" $Params | htmlUnescape -}}
 {{- $js       = split   $js "\n"                                                    -}}
 {{- $js       = delimit $js "\n    "                                                -}}
 
-{{- if $params.ForEmbedding }}
-  {{- partial "platen/features/toroidal/menu/embed-header" $params.WebringName }}
+{{- if $Params.ForEmbedding }}
+  {{- partial "platen/features/toroidal/menu/embed-header" $Params.WebringName }}
 {{- else }}
-  {{- partial "platen/features/toroidal/menu/list-item" $params }}
+  {{- partial "platen/features/toroidal/menu/list-item" $Params }}
 {{- end }}
   <ul>
     <li>
       <a target="_blank"
-          id="{{ $idMap.Prev }}"
-          href="{{ $params.PrevHref }}">Previous</a>
+          id="{{ $IdMap.Prev }}"
+          href="{{ $Params.PrevHref }}">Previous</a>
     </li>
     <li>
       <a target="_blank"
-          id="{{ $idMap.List }}"
-          href="{{ $params.MemberListHref }}">Member List</a>
+          id="{{ $IdMap.List }}"
+          href="{{ $Params.MemberListHref }}">Member List</a>
     </li>
-    {{- if $params.RandomMemberLink }}
+    {{- if $Params.RandomMemberLink }}
     <li>
       <a target="_blank"
-          onclick="{{ $jsNames.GoToFunction | safeJS }}"
+          onclick="{{ $JsNames.GoToFunction | safeJS }}"
           role="button">Random</a>
     </li>
     {{- end }}
     <li>
       <a target="_blank"
-          id="{{ $idMap.Next }}"
-          href="{{ $params.NextHref }}">Next</a>
+          id="{{ $IdMap.Next }}"
+          href="{{ $Params.NextHref }}">Next</a>
     </li>
   </ul>
   <script type="text/javascript">

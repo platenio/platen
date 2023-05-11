@@ -9,11 +9,11 @@
   {{/*  Define the line leading for the indented content as newline + whitespace  */}}
   {{- $LineLead := printf "\n%s" (strings.Repeat $IndentCount " ") -}}
   {{/*  Split on newlines. We could handle \r and \r\n but /shrug  */}}
-  {{- $Lines         := split $Content "\n" -}}
+  {{- $Lines := split $Content "\n" -}}
   
   {{/*  If we're not indenting the first line, just add it in now  */}}
   {{- if not $IndentFirstLine -}}
-    {{- $indentedContent = index $Lines 0      -}}
+    {{- $indentedContent = index $Lines 0 -}}
   {{- else -}}
     {{- $indentedContent = "" -}}
   {{- end -}}
@@ -30,11 +30,11 @@
       because those are _meant_ to be displayed with the exact whitespace that
       they were written with.
   */}}
-  {{- $findPattern       := `<pre.+?>(.|\s)+?</pre>`       -}}
-  {{- $undoPattern       := printf `\n%s` (strings.Repeat $IndentCount " ") -}}
-  {{- $preformatted      := findRE $findPattern $indentedContent -}}
-  {{- range $block := $preformatted -}}
-    {{- $indentedContent  = replace $indentedContent $block (replaceRE $undoPattern "\n" $block) -}}
+  {{- $FindPattern  := `<pre.+?>(.|\s)+?</pre>`                        -}}
+  {{- $UndoPattern  := printf `\n%s` (strings.Repeat $IndentCount " ") -}}
+  {{- $Preformatted := findRE $FindPattern $indentedContent            -}}
+  {{- range $Block := $Preformatted -}}
+    {{- $indentedContent = replace $indentedContent $Block (replaceRE $UndoPattern "\n" $Block) -}}
   {{- end -}}
 {{- end -}}
 

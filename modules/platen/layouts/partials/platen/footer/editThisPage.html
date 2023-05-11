@@ -1,7 +1,6 @@
 {{/*
     Docs.Partial: editThisPage
 */}}
-{{- $context := . -}}
 
 {{/* Retrieve settings from the site config */}}
 {{- $RepoConfig   := partialCached "platen/param/getKey" "platen.repository" "platen.repository" -}}
@@ -30,8 +29,8 @@
 {{- end  -}}
 
 {{/* Retrieve info from the page */}}
-{{- $gitInfo := $context.GitInfo -}}
-{{- $file    := $context.File    -}}
+{{- $gitInfo := page.GitInfo -}}
+{{- $file    := page.File    -}}
 
 {{/* This partial should only render if the page has git info and the base URL is defined */}}
 {{- $shouldRender := and $file $gitInfo $repoUrl $editPath -}}

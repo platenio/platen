@@ -1,7 +1,7 @@
-{{- $Context         := .                                               -}}
-{{- $Config          := $Context.Config                                 -}}
-{{- $LibraryURL      := $Context.LibraryUrl                             -}}
-{{- $PlatenModule    := partialCached "platen/utils/getModule" $Context -}}
+{{- $Params          := .                                              -}}
+{{- $Config          := $Params.Config                                 -}}
+{{- $LibraryURL      := $Params.LibraryUrl                             -}}
+{{- $PlatenModule    := partialCached "platen/utils/getModule" $Params -}}
 
 // We import mermaid from the defined URL instead of constructing it here.
 import mermaid from '{{ $LibraryURL }}'

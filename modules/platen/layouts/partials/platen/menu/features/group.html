@@ -1,37 +1,35 @@
-{{- $params      := .                                         -}}
-{{- $context     := default $params.context  $params.Context  -}}
-{{- $entries     := default $params.entries  $params.Entries  -}}
-{{- $group       := default $params.group    $params.Group    -}}
-{{- $position    := default $params.position $params.Position -}}
-{{- $topLevel    := default $params.topLevel $params.TopLevel -}}
+{{- $Params      := .                                                          -}}
+{{- $Context     := $Params.Context  | default $Params.context                 -}}
+{{- $Entries     := $Params.Entries  | default $Params.entries                 -}}
+{{- $group       := $Params.Group    | default $Params.group                   -}}
+{{- $Position    := $Params.Position | default $Params.position                -}}
+{{- $TopLevel    := $Params.TopLevel | default $Params.topLevel | default true -}}
+{{- $class       := $group.Class     | default $group.class                    -}}
+{{- $Name        := $group.Name      | default $group.name                     -}}
 
-{{- $class       := default $group.class $group.Class -}}
-{{- $name        := default $group.name  $group.Name  -}}
-{{- $topLevel     = default true         $topLevel    -}}
-
-{{- with $name -}}
-  {{- with $entries -}}
+{{- with $Name -}}
+  {{- with $Entries -}}
     {{- with $class -}}
       {{- $class = printf ` class="%s"` $class -}}
     {{- end -}}
     {{/* Top-level groups are added in their own unordered list; others are already in one. */}}
-    {{- if $topLevel -}}
+    {{- if $TopLevel -}}
       <ul{{ $class | safeHTMLAttr }}>
-        {{ partial "platen/menu/list-item" (merge $group (dict "Position" $position)) }}
+        {{ partial "platen/menu/list-item" (merge $group (dict "Position" $Position)) }}
         <ul>
-          {{ partial "platen/menu/features/entries" $params }}
+          {{ partial "platen/menu/features/entries" $Params }}
         </ul>
       </ul>
     {{- else -}}
-      {{ partial "platen/menu/list-item" (merge $group (dict "Position" $position)) }}
+      {{ partial "platen/menu/list-item" (merge $group (dict "Position" $Position)) }}
       <ul {{ $class | safeHTMLAttr }}>
-        {{ partial "platen/menu/features/entries" $params }}
+        {{ partial "platen/menu/features/entries" $Params }}
       </ul>
     {{- end -}}
   {{- else -}}
     {{- warnf "Specified group '%s' for position %s without any entries; skipping this group."
-              $name
-              $position
+              $Name
+              $Position
     -}}
   {{- end -}}
 {{- else -}}
@@ -40,21 +38,21 @@
     the group and recall the partial.
   */}}
   {{- if reflect.IsMap $group -}}
-    {{- errorf "Specified group as a map without mandatory key 'name' for position %s: %#v" $position $group -}}
+    {{- errorf "Specified group as a map without mandatory key 'name' for position %s: %#v" $Position $group -}}
   {{- else if reflect.IsSlice $group -}}
     {{- errorf "%s. %s. Definition: %#v"
-               (printf "Specified Group as an array for position %s" $position)
+               (printf "Specified Group as an array for position %s" $Position)
                "Must be a map with the key 'name' defined or a string"
                $group
     -}}
   {{- else -}}
     {{- $group = dict "name" (print $group) -}}
-    {{- $mungedParams := dict "Context"     $context
+    {{- $MungedParams := dict "Context"     $Context
                               "class"       $class
-                              "entries"     $entries
+                              "entries"     $Entries
                               "group"       $group
-                              "position"    $position
+                              "position"    $Position
     -}}
-    {{- partial "platen/menu/features/group" $mungedParams -}}
+    {{- partial "platen/menu/features/group" $MungedParams -}}
   {{- end  -}}
 {{- end  -}}

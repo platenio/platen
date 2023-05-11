@@ -1,11 +1,10 @@
 {{/*
     Docs.Partial: siteStyleLink
 */}}
-{{- $context := . -}}
 
 {{/* Retrieve and process the site style */}}
 {{- $siteStyle := resources.Get "styles/platen.scss"
-                  | resources.ExecuteAsTemplate "platen.scss" $context
+                  | resources.ExecuteAsTemplate "platen.scss" page
                   | resources.ToCSS
 -}}
 

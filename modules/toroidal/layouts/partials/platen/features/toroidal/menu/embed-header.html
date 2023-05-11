@@ -1,6 +1,6 @@
 {{- $name := . -}}
 
-{{- $headerLines := slice
+{{- $HeaderLines := slice
                     `$params       := .`
                     `$liParams     := dict`
                     (printf `$webringName  := default "%s" $params.DisplayName` $name)
@@ -11,18 +11,18 @@
 -}}
 
 {{- $padToLength := 0 -}}
-{{- range $line := $headerLines -}}
-  {{- $lineLength := len $line -}}
-  {{- if gt $lineLength $padToLength -}}
-    {{- $padToLength = $lineLength -}}
+{{- range $Line := $HeaderLines -}}
+  {{- $LineLength := len $Line -}}
+  {{- if gt $LineLength $padToLength -}}
+    {{- $padToLength = $LineLength -}}
   {{- end -}}
 {{- end -}}
 
 {{- $mungedHeaderLines := slice -}}
-{{- range $line := $headerLines -}}
-  {{- $padCount := sub $padToLength (len $line) -}}
-  {{- $mungedLine := printf `{{- %s%s -}}` $line (strings.Repeat $padCount " ") -}}
-  {{- $mungedHeaderLines = $mungedHeaderLines | append $mungedLine -}}
+{{- range $Line := $HeaderLines -}}
+  {{- $PadCount         := sub $padToLength      (len $Line)                          -}}
+  {{- $MungedLine       := printf `{{- %s%s -}}` $Line (strings.Repeat $PadCount " ") -}}
+  {{- $mungedHeaderLines = $mungedHeaderLines    | append $MungedLine                 -}}
 {{- end -}}
 
 {{- delimit $mungedHeaderLines "\n" | safeHTML }}

@@ -1,9 +1,8 @@
-{{- $Context          := .                                                          -}}
 {{- $IntegrityPartial := "platen/utils/getIntegrityAttributes"                      -}}
 {{- $ClosableTabsKey  := "_hasClosableTabs"                                         -}}
 {{- $ConfigKey        := "platen.markup.tabs"                                       -}}
 {{- $Config           := partialCached "platen/param/getKey" $ConfigKey $ConfigKey  -}}
-{{- $HasClosableTabs  := $Context.Store.Get $ClosableTabsKey                        -}}
+{{- $HasClosableTabs  := page.Store.Get $ClosableTabsKey                            -}}
 
 {{- if $HasClosableTabs -}}
   {{- $CacheKey     := "closable-tabs-script"                              -}}

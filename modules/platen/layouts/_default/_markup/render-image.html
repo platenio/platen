@@ -1,21 +1,21 @@
-{{- $Context       := .                                                            -}}
+{{- $Input         := .                                                     -}}
 {{- $PlatenConfig  := partialCached "platen/param/getKey" "platen" "platen" -}}
-{{- $renderedImage := ""                                                           -}}
+{{- $renderedImage := ""                                                    -}}
 
 {{/* Use renderers from features first */}}
-{{- range $feature := $PlatenConfig.features -}}
-  {{- if and $feature.enabled (eq "" $renderedImage) -}}
-    {{- with $feature.partials.renderers.image -}}
-      {{- $renderedImage = partial . $Context }}
+{{- range $Feature := $PlatenConfig.features -}}
+  {{- if and $Feature.enabled (eq "" $renderedImage) -}}
+    {{- with $Feature.partials.renderers.image -}}
+      {{- $renderedImage = partial $Feature.partials.renderers.image $Input -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
 {{/* Use arbitrary renderers if no feature applied */}}
-{{- range $markup := $PlatenConfig.markup -}}
-  {{- if and $markup.enabled (eq "" $renderedImage) -}}
-    {{- with $markup.partials.renderers.image -}}
-      {{- $renderedImage = partial . $Context }}
+{{- range $Markup := $PlatenConfig.markup -}}
+  {{- if and $Markup.enabled (eq "" $renderedImage) -}}
+    {{- with $Markup.partials.renderers.image -}}
+      {{- $renderedImage = partial $Markup.partials.renderers.image $Input -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -24,5 +24,5 @@
 {{- with $renderedImage -}}
   {{- safeHTML $renderedImage -}}
 {{- else -}}
-  {{- partial "platen/markup/_default/image" $Context -}}
+  {{- partial "platen/markup/_default/image" $Input -}}
 {{- end -}}

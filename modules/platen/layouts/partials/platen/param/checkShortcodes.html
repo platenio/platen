@@ -1,29 +1,26 @@
-{{/*  Current page context  */}}
-{{- $context := . -}}
-
 {{/* Retrieve the registered shortcodes, process the disabled ones */}}
-{{- $params     := dict "DisabledOnly" true                                                     -}}
-{{- $shortcodes := partialCached "platen/param/getRegisteredShortcodes" $params "check" -}}
+{{- $Params     := dict "DisabledOnly" true                                             -}}
+{{- $Shortcodes := partialCached "platen/param/getRegisteredShortcodes" $Params "check" -}}
 
-{{- range $shortcode, $settings := $shortcodes -}}
-  {{- $names := slice $shortcode -}}
-  {{- with $settings.aliases -}}
-    {{- $names = union $names $settings.aliases -}}
+{{- range $Shortcode, $Settings := $Shortcodes -}}
+  {{- $names := slice $Shortcode -}}
+  {{- with $Settings.aliases -}}
+    {{- $names = union $names $Settings.aliases -}}
   {{- end -}}
   
-  {{- $prefix  := "[^`]?{{(<|%)"                                     -}}
-  {{- $pattern := printf `%s\s+(%s)\s+` $prefix (delimit $names "|") -}}
-  {{- $usages  := findRE $pattern $context.RawContent                -}}
-  {{- if gt (len $usages) 0 -}}
-    {{- $message := slice    (printf "Found usage of the disabled '%s'"        $shortcode)
-                    | append (printf "shortcode in content for '%s'."          $context.File.Path)
-                    | append (printf "Set platen.shortcodes.%s.enabled to true" $shortcode)
+  {{- $Prefix  := "[^`]?{{(<|%)"                                     -}}
+  {{- $Pattern := printf `%s\s+(%s)\s+` $Prefix (delimit $names "|") -}}
+  {{- $Usages  := findRE $Pattern page.RawContent                    -}}
+  {{- if gt (len $Usages) 0 -}}
+    {{- $message := slice    (printf "Found usage of the disabled '%s'"         $Shortcode)
+                    | append (printf "shortcode in content for '%s'."           page.File.Path)
+                    | append (printf "Set platen.shortcodes.%s.enabled to true" $Shortcode)
                     | append "in your site configuration or remove all uses of the shortcode."
     -}}
-    {{- with $settings.aliases -}}
-      {{- $aliases := delimit $settings.aliases "', '" "', and '"                 -}}
-      {{- $suffix  := printf "Aliases for this shortcode include: '%s'." $aliases -}}
-      {{- $message  = $message | append $suffix                                   -}}
+    {{- with $Settings.aliases -}}
+      {{- $Aliases := delimit $Settings.aliases "', '" "', and '"                 -}}
+      {{- $Suffix  := printf "Aliases for this shortcode include: '%s'." $Aliases -}}
+      {{- $message  = $message | append $Suffix                                   -}}
     {{- end -}}
     {{- errorf "%s" (delimit $message " ") -}}
   {{- end -}}

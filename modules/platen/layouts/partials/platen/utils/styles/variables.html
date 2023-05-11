@@ -1,20 +1,25 @@
-{{- $params  := .                                         -}}
-{{- $name    := $params.Name                              -}}
-{{- $value   := $params.Value                             -}}
-{{- $prefix  := cond (eq true .IsCSS)     "--"        "$" -}}
-{{- $default := cond (eq true .IsDefault) " !default" ""  -}}
+{{- $Params    := .                                 -}}
+{{- $Name      := $Params.Name                      -}}
+{{- $Value     := $Params.Value                     -}}
+{{- $IsCSS     := $Params.IsCSS     | default false -}}
+{{- $IsDefault := $Params.IsDefault | default false -}}
+{{- $Prefix    := cond $IsCSS       "--"        "$" -}}
+{{- $Default   := cond $IsDefault   " !default" ""  -}}
 
 {{- $renderStrings := slice -}}
-{{ if reflect.IsMap $value }}
-  {{- $renderStrings = $renderStrings | append (printf "%s%s: (" $prefix $name) -}}
-  {{ range $k, $v := $value }}
+
+{{ if reflect.IsMap $Value }}
+  {{- $renderStrings = $renderStrings | append (printf "%s%s: (" $Prefix $Name) -}}
+
+  {{ range $k, $v := $Value }}
     {{- $renderStrings = $renderStrings | append (printf "%s: %v," $k $v) -}}
   {{ end }}
-  {{- $renderStrings = $renderStrings | append (printf ")%s;" $default) -}}
+
+  {{- $renderStrings = $renderStrings | append (printf ")%s;" $Default) -}}
 {{ else }}
-  {{- $variable     := printf "%s%s: %v%s;" $prefix $name $value $default }}
-  {{- $renderStrings = $renderStrings | append $variable -}}
+  {{- $variable     := printf "%s%s: %v%s;" $Prefix $Name $Value $Default -}}
+  {{- $renderStrings = $renderStrings | append $variable                  -}}
 {{ end }}
 
 {{/*  Return the SCSS to render  */}}
-{{- delimit $renderStrings "\n  " "\n" -}}
+{{- delimit $renderStrings "\n  " "\n" | safeHTML -}}

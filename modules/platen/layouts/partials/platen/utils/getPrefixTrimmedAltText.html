@@ -15,10 +15,10 @@
     a slice now would require capturing the result and then accessing both
     values independently. This implementation is more concise.
 */}}
-{{- $Params    := .                -}}
-{{- $Prefixes  := $Params.Prefixes -}}
-{{- $Text      := $Params.Text     -}}
-{{- $result    := dict             -}}
+{{- $Params   := .                -}}
+{{- $Prefixes := $Params.Prefixes -}}
+{{- $Text     := $Params.Text     -}}
+{{- $result   := dict             -}}
 
 {{/*
     Loop over the prefixes looking for a match, trimming and breaking the loop

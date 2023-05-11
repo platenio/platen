@@ -1,17 +1,18 @@
-{{- $Context       := . -}}
-{{- $ConfigKey     := "platen.multilingual"                                            -}}
+{{- $ConfigKey     := "platen.multilingual"                                     -}}
 {{- $LangConfig    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 <!-- Merge home and current page translations -->
-{{ $translatedOnly := $LangConfig.translated_only | default false }}
-{{ $translations := dict }}
-{{ if (eq $translatedOnly false) }}
-  {{ range site.Home.Translations }}
-    {{ $translations = merge $translations (dict .Language.Lang .) }}
-  {{ end }}
-{{ end }}
-{{ range $Context.Translations }}
-  {{ $translations = merge $translations (dict .Language.Lang .) }}
-{{ end }}
+{{- $TranslatedOnly := $LangConfig.translated_only | default false -}}
+{{- $translations   := dict                                        -}}
+
+{{- if (eq $TranslatedOnly false) -}}
+  {{- range $Translation := site.Home.Translations -}}
+    {{- $translations = merge $translations (dict $Translation.Language.Lang $Translation) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- range $Translation := page.Translations -}}
+  {{- $translations = merge $translations (dict $Translation.Language.Lang $Translation) -}}
+{{- end -}}
 
 <ul class="platen-languages">
   <li>
@@ -24,13 +25,16 @@
     </label>
 
     <ul>
-      {{ range site.Languages }}{{ with index $translations .Lang }}
-      <li>
-        <a href="{{ .Permalink }}">
-          {{ .Language.LanguageName }}
-        </a>
-      </li>
-      {{ end }}{{ end }}
+      {{ range $Language := site.Languages }}
+        {{- with index $translations $Language.Lang -}}
+          {{- $Translation := . -}}
+          <li>
+            <a href="{{ $Translation.Permalink }}">
+              {{ $Translation.Language.LanguageName }}
+            </a>
+          </li>
+        {{ end }}
+      {{ end }}
     </ul>
   </li>
 </ul>

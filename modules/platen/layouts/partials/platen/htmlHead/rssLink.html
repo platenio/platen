@@ -1,9 +1,8 @@
 {{/*
   Docs.Partial: rssLink
 */}}
-{{- $context := . -}}
 
-{{- with $context.OutputFormats.Get "rss" -}}
+{{- with page.OutputFormats.Get "rss" -}}
   {{- $rss   := .                   -}}
   {{- $rel   := $rss.Rel            -}}
   {{- $type  := $rss.MediaType.Type -}}

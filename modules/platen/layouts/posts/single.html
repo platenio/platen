@@ -1,13 +1,11 @@
 {{ define "main" }}
-  {{- $context := . -}}
   <article class="markdown">
-    {{ partial "platen/post/title" $context }}
-    {{ partial "platen/utils/posts/meta" $context }}
-    {{- $context.Content -}}
+    {{ partial "platen/post/title"       page }}
+    {{ partial "platen/utils/posts/meta" page }}
+    {{- page.Content -}}
   </article>
 {{ end }}
 
 {{ define "toc" }}
-  {{- $context := . -}}
-  {{ partial "platen/toc" $context }}
+  {{ partial "platen/toc" }}
 {{ end }}

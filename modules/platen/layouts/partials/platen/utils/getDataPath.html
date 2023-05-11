@@ -1,6 +1,9 @@
 {{- $DotPath := . -}}
 
+{{/*  Start from the blob that contains all data for the site  */}}
 {{- $data := site.Data -}}
+
+{{/*  Split the dot path and index for each segment.  */}}
 {{- range $Segment := split $DotPath "." -}}
   {{- $data = index $data $Segment -}}
 {{- end -}}
@@ -8,9 +11,11 @@
 {{- with $data -}}
   {{/*  Nothing to do, the data was found  */}}
 {{- else -}}
+  {{/*  If you index into an empty setting, something went wrong.  */}}
   {{- $FilePath    := printf "data/%s" (delimit (split $DotPath ".") "/") -}}
   {{- $MessageInfo := dict "DotPath" $DotPath "FilePath" $FilePath        -}}
   {{- $Message     := i18n "ErrorUnresolvableDotPath" $MessageInfo        -}}
+
   {{- errorf $Message -}}
 {{- end -}}
 

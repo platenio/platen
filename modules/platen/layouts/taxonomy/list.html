@@ -1,20 +1,18 @@
 {{ define "main" }}
-{{- $context := . -}}
-<article class="markdown">
-  <h1>{{ $context.Title | title }}</h1>
-  {{ $taxonomies := index site.Taxonomies $context.Page.Type }}
-  {{ range $taxonomy := $taxonomies }}
-    {{- $href  := $taxonomy.Page.Permalink -}}
-    {{- $title := $taxonomy.Page.Title     -}}
-    {{- $count := $taxonomy.Count          -}}
-    <div>
-      <a href="{{ $href }}">{{ $title }} <sup>{{ $count }}</sup></a>
-    </div>
-  {{ end }}
-</article>
+  <article class="markdown">
+    <h1>{{ page.Title | title }}</h1>
+    {{ $Taxonomies := index site.Taxonomies page.Type }}
+    {{ range $Taxonomy := $Taxonomies }}
+      {{- $Href  := $Taxonomy.Page.Permalink -}}
+      {{- $Title := $Taxonomy.Page.Title     -}}
+      {{- $Count := $Taxonomy.Count          -}}
+      <div>
+        <a href="{{ $Href }}">{{ $Title }} <sup>{{ $Count }}</sup></a>
+      </div>
+    {{ end }}
+  </article>
 {{ end }}
 
 {{ define "toc" }}
-  {{- $context := . -}}
-  {{ partial "platen/taxonomy" $context }}
+  {{ partial "platen/taxonomy" }}
 {{ end }}

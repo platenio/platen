@@ -1,9 +1,8 @@
-{{- $Context          := .                                                         -}}
 {{- $IntegrityPartial := "platen/utils/getIntegrityAttributes"                     -}}
 {{- $ConfigKey        := "platen.features.alpine"                                  -}}
 {{- $AlpineConfig     := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
-{{- $loadAlpine       := $Context.Store.Get "_hasAlpine"
-    | default $Context.Params.platen.features.alpine.always_load
+{{- $loadAlpine       := page.Store.Get "_hasAlpine"
+    | default page.Params.platen.features.alpine.always_load
     | default $AlpineConfig.always_load
 -}}
 

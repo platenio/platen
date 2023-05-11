@@ -1,9 +1,9 @@
-{{- $Params      := .                   -}}
-{{- $Page        := $Params.Page        -}} {{/* The Page the link markup was added to                         */}}
-{{- $Destination := $Params.Destination -}} {{/* The Destination input for the link markup                     */}}
-{{- $Title       := $Params.Title       -}} {{/* The Title input for the link markup                           */}}
-{{- $Text        := $Params.Text        -}} {{/* The rendered Text input for the link markup                   */}}
-{{- $MarkupName  := "NAME"              -}} {{/* The name of the markup, usually the same as the parent folder */}}
+{{- $Input       := .                  -}}
+{{- $Page        := $Input.Page        -}} {{/* The Page the link markup was added to                         */}}
+{{- $Destination := $Input.Destination -}} {{/* The Destination input for the link markup                     */}}
+{{- $Title       := $Input.Title       -}} {{/* The Title input for the link markup                           */}}
+{{- $Text        := $Input.Text        -}} {{/* The rendered Text input for the link markup                   */}}
+{{- $MarkupName  := "NAME"             -}} {{/* The name of the markup, usually the same as the parent folder */}}
 {{/*
     Retrieve settings from configuration.
 

@@ -1,21 +1,21 @@
-{{- $Context      := .                                             -}}
-{{- $PlatenConfig      := partialCached "platen/param/getKey" "platen" "platen" -}}
-{{- $renderedCode := ""                                            -}}
+{{- $Input        := .                                                     -}}
+{{- $PlatenConfig := partialCached "platen/param/getKey" "platen" "platen" -}}
+{{- $renderedCode := ""                                                    -}}
 
 {{/* Use renderers from features first */}}
-{{- range $feature := $PlatenConfig.features -}}
-  {{- if and $feature.enabled (eq "" $renderedCode) -}}
-    {{- with $feature.partials.renderers.codeblock -}}
-      {{- $renderedCode = partial . $Context }}
+{{- range $Feature := $PlatenConfig.features -}}
+  {{- if and $Feature.enabled (eq "" $renderedCode) -}}
+    {{- with $Feature.partials.renderers.codeblock -}}
+      {{- $renderedCode = partial $Feature.partials.renderers.codeblock $Input -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
 {{/* Use arbitrary renderers if no feature applied */}}
-{{- range $markup := $PlatenConfig.markup -}}
-  {{- if and $markup.enabled (eq "" $renderedCode) -}}
-    {{- with $markup.partials.renderers.codeblock -}}
-      {{- $renderedCode = partial . $Context }}
+{{- range $Markup := $PlatenConfig.markup -}}
+  {{- if and $Markup.enabled (eq "" $renderedCode) -}}
+    {{- with $Markup.partials.renderers.codeblock -}}
+      {{- $renderedCode = partial $Markup.partials.renderers.codeblock $Input -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -24,5 +24,5 @@
 {{- with $renderedCode -}}
   {{- safeHTML $renderedCode -}}
 {{- else -}}
-  {{- partial "platen/markup/_default/codeblock" $Context -}}
+  {{- partial "platen/markup/_default/codeblock" $Input -}}
 {{- end -}}

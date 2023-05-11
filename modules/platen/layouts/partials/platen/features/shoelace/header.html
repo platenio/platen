@@ -1,13 +1,12 @@
-{{- $Context          := .                                                         -}}
 {{- $IntegrityPartial := "platen/utils/getIntegrityAttributes"                     -}}
 {{- $ConfigKey        := "platen.features.shoelace"                                -}}
 {{- $ShoelaceConfig   := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
-{{- $loadShoelace := $Context.Store.Get "_hasShoelace"
-    | default $Context.Params.platen.features.shoelace.always_load
+{{- $LoadShoelace     := page.Store.Get "_hasShoelace"
+    | default page.Params.platen.features.shoelace.always_load
     | default $ShoelaceConfig.always_load
 -}}
 
-{{- if $loadShoelace -}}
+{{- if $LoadShoelace -}}
   {{/* Get the Shoelace URLs to use */}}
   {{- $Version       := $ShoelaceConfig.version | default "2.3.0"                          -}}
   {{- $UrlPrefix     := "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace"            -}}
@@ -25,8 +24,8 @@
 
   {{/*  Handle light/dark mode  */}}
   {{- $ScriptResource   :=  resources.Get $ScriptName
-                            | resources.ExecuteAsTemplate "scripts/shoelace/modeSwap.js" .
-                            | resources.Fingerprint
+      | resources.ExecuteAsTemplate "scripts/shoelace/modeSwap.js" .
+      | resources.Fingerprint
   -}}
   {{- $ScriptIntegrity  := partialCached $IntegrityPartial $ScriptResource "ShoelaceModeSwap"      -}}
   {{- $scriptAttributes := slice (printf `src="%s"` $ScriptResource.RelPermalink) $ScriptIntegrity -}}
@@ -38,5 +37,5 @@
   {{- delimit $renderStrings "\n" | safeHTML -}}
 
   {{/*  Load icon libraries as needed  */}}
-  {{- partial "platen/features/shoelace/icons" $Context -}}
+  {{- partial "platen/features/shoelace/icons" -}}
 {{- end }}

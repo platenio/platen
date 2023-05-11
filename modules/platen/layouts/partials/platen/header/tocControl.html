@@ -1,13 +1,12 @@
 {{/*
     Docs.Partial: menuControl
 */}}
-{{- $Context       := .                                            -}}
 
 {{/* Determine if the TOC menu should be rendered */}}
 {{- $ShouldRender := partial "platen/param/resolve" (
   dict "Config"  "platen.display.table_of_contents.render"
        "Param"   "platen.table_of_contents.render"
-       "Context" $Context
+       "Context" page
        "Default" true
 ) -}}
 

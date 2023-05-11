@@ -1,20 +1,30 @@
-{{- $Context     := .                                                                -}}
-{{- $title       := ""                                                               -}}
-{{- $titleParams := dict "Context" $Context "ForHtmlHead" true                       -}}
-{{- $ConfigKey   := "platen.features"                                                -}}
+{{- $Context     := .                                                         -}}
+{{- $title       := ""                                                        -}}
+{{- $TitleParams := dict "Context" $Context "ForHtmlHead" true                -}}
+{{- $ConfigKey   := "platen.features"                                         -}}
 {{- $Features    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 
-{{- range $feature, $settings := $Features -}}
-  {{- if and (eq "" $title) $settings.enabled -}}
-    {{- with $settings.partials.title -}}
-      {{ $title = partial . $titleParams }}
+{{/*
+    First, see if any feature sets the title. Only one feature should apply. If
+    more than one feature could return a title, only the first processed
+    feature actually does. After the title is set by any feature, processing
+    for the title ends and it gets returned.
+*/}}
+{{- range $Feature, $Settings := $Features -}}
+  {{- $TitleIsNotSet    := eq "" $title      -}}
+  {{- $FeatureIsEnabled := $Settings.enabled -}}
+
+  {{- if and $TitleIsNotSet $FeatureIsEnabled -}}
+    {{- with $Settings.partials.title -}}
+      {{ $title = partial $Settings.partials.title $TitleParams }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
+{{/*  If no feature set the title, use the default behavior for Platen  */}}
 {{- if eq "" $title -}}
-  {{- $titleText   := partial "platen/utils/getTitle" $titleParams -}}
-  {{- $title = printf "%s | %s" $titleText site.Title     -}}
+  {{- $titleText   := partial "platen/utils/getTitle" $TitleParams -}}
+  {{- $title        = printf "%s | %s" $titleText site.Title       -}}
 {{- end }}
 
 {{- return $title -}}

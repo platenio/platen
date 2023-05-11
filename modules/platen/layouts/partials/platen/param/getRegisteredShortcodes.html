@@ -9,9 +9,9 @@
 
 {{- if $DisabledOnly -}}
   {{- $disabledShortcodes := dict -}}
-  {{- range $shortcode, $settings := $registeredShortcodes -}}
-    {{- if eq $settings.enabled false -}}
-      {{- $disabledShortcodes = merge $disabledShortcodes (dict $shortcode $settings) -}}
+  {{- range $Shortcode, $Settings := $registeredShortcodes -}}
+    {{- if eq $Settings.enabled false -}}
+      {{- $disabledShortcodes = merge $disabledShortcodes (dict $Shortcode $Settings) -}}
     {{- end -}}
   {{- end -}}
   {{- $registeredShortcodes = $disabledShortcodes -}}

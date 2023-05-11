@@ -13,18 +13,20 @@
 {{- $indentCount         := 0    -}}
 
 {{- if reflect.IsMap $inputAttributeSlice -}}
-  {{- $multiLine           = default $multiLine         $inputAttributeSlice.MultiLine         -}}
-  {{- $indentCount         = default $indentCount $inputAttributeSlice.IndentCount -}}
-  {{- $inputAttributeSlice = $inputAttributeSlice.Attributes                                   -}}
+  {{- $multiLine           = $inputAttributeSlice.MultiLine   | default $multiLine   -}}
+  {{- $indentCount         = $inputAttributeSlice.IndentCount | default $indentCount -}}
+  {{- $inputAttributeSlice = $inputAttributeSlice.Attributes                         -}}
 {{- end -}}
 
 {{- $mungedAttributes := delimit $inputAttributeSlice " " | safeHTMLAttr -}}
 
 {{- if or $multiLine (gt (len $mungedAttributes) 70) -}}
-  {{- $mungedAttributes = index $inputAttributeSlice 0 -}}
+  {{- $mungedAttributes = index $inputAttributeSlice 0    -}}
+  {{- $Indentation     := strings.Repeat $indentCount " " -}}
+
   {{- range $index, $attribute := $inputAttributeSlice -}}
     {{- if ne 0 $index -}}
-      {{- $mungedAttributes = printf "%s\n%s%s" $mungedAttributes (strings.Repeat $indentCount " ") $attribute -}}
+      {{- $mungedAttributes = printf "%s\n%s%s" $mungedAttributes $Indentation $attribute -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}

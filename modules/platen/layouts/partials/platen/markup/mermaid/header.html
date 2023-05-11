@@ -1,13 +1,12 @@
-{{- $Context              := .                                                                -}}
-{{- $StoreKey             := "_hasMermaid"                                                    -}}
-{{- $VersionKey           := "platen.markup.mermaid.version"                                  -}}
-{{- $ResolveVersionParams := dict "Context" $Context "Config" $VersionKey "Param" $VersionKey -}}
-{{- $UrlPrefix            := "https://cdn.jsdelivr.net/npm"                                   -}}
-{{- $UrlSuffix            := "dist/mermaid.esm.min.mjs"                                       -}}
+{{- $StoreKey             := "_hasMermaid"                                                -}}
+{{- $VersionKey           := "platen.markup.mermaid.version"                              -}}
+{{- $ResolveVersionParams := dict "Context" page "Config" $VersionKey "Param" $VersionKey -}}
+{{- $UrlPrefix            := "https://cdn.jsdelivr.net/npm"                               -}}
+{{- $UrlSuffix            := "dist/mermaid.esm.min.mjs"                                   -}}
 
-{{- $SiteConfigAssetPath  := "scripts/markup/mermaid/config.json"                             -}}
-{{- $ScriptAssetPath      := "scripts/markup/mermaid/init.js"                                 -}}
-{{- $ScriptPublishPath    := "scripts/mermaid/init.js"                                        -}}
+{{- $SiteConfigAssetPath  := "scripts/markup/mermaid/config.json" -}}
+{{- $ScriptAssetPath      := "scripts/markup/mermaid/init.js"     -}}
+{{- $ScriptPublishPath    := "scripts/mermaid/init.js"            -}}
 
 {{- $scriptParams := dict "WaitForShoelace" true -}}
 {{- $renderParams := dict                        -}}
@@ -18,7 +17,7 @@
 {{- $paramResolve           := "platen/param/resolve"                   -}}
 {{- $Template               := "platen/markup/mermaid/templates/header" -}}
 
-{{- if $Context.Store.Get $StoreKey -}}
+{{- if page.Store.Get $StoreKey -}}
   {{/*
       Get the URL to the mermaid library; we don't handle it as a remote resource
       because the v10+ implementation does some magic loading that breaks - we

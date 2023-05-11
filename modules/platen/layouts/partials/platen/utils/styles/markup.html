@@ -1,13 +1,14 @@
-{{- $params   := .                -}}
-{{- $name     := $params.Name     -}}
-{{- $settings := $params.Settings -}}
+{{- $Params   := .                -}}
+{{- $Name     := $Params.Name     -}}
+{{- $Settings := $Params.Settings -}}
 
 {{/* Initialize the slice of strings to render */}}
 {{- $renderStrings := slice -}}
 
 {{/*  Currently only supports naive import with no handling  */}}
-{{- with $settings.style }}
-  {{- $renderStrings = $renderStrings | append (printf `@import "markup/%s";` .) -}}
+{{- with $Settings.style }}
+  {{- $ImportLine   := printf `@import "markup/%s";` $Settings.style -}}
+  {{- $renderStrings = $renderStrings | append $ImportLine           -}}
 {{ end }}
 
 {{/*  Return the SCSS to render  */}}

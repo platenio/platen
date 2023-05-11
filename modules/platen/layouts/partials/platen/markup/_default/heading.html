@@ -1,4 +1,9 @@
-<h{{ .Level }} id="{{ .Anchor | safeURL }}">
-  {{ .Text | safeHTML }}
-  <a class="anchor" href="#{{ .Anchor | safeURL }}">#</a>
-</h{{ .Level }}>
+{{- $Input  := .                        -}}
+{{- $Level  := $Input.Level             -}}
+{{- $Anchor := $Input.Anchor | safeURL  -}}
+{{- $Text   := $Input.Text   | safeHTML -}}
+
+<h{{ $Level }} id="{{ $Anchor }}">
+  {{ $Text }}
+  <a class="anchor" href="#{{ $Anchor }}">#</a>
+</h{{ $Level }}>
