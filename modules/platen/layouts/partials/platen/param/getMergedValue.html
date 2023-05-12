@@ -1,16 +1,19 @@
 {{/*
-    This partial is used to retrieve the canonicalized value of the site's configuration params by
-    merging the settings from data over Hugo's configuration (files and environment).
+    This partial is used to retrieve the canonicalized value of the site's
+    configuration params by merging the settings from data over Hugo's
+    configuration (files and environment).
 
-    We use `isset` instead of the more convenient `with` because values can be explicitly set to a
-    falsy value. Hugo treats all of the following as false values in a `with` statement:
+    We use `isset` instead of the more convenient `with` because values can be
+    explicitly set to a falsy value. Hugo treats all of the following as false
+    values in a `with` statement:
 
     - Boolean `false`
     - Integer `0`
     - Any zero-length array, slice, map, or string.
 
-    Normally, this is desired, but because you can explicitly define empty/null/false settings and
-    they ought to _override_ defined settings, we need to handle them.
+    Normally, this is desired, but because you can explicitly define
+    empty/null/false settings and they ought to _override_ defined settings,
+    we need to handle them.
 */}}
 {{- $Context := .                                           -}}
 {{- $Data    := $Context.Data   | default site.Data._params -}}

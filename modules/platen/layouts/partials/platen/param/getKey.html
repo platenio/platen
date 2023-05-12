@@ -1,14 +1,67 @@
 {{/*
-    This partial is used to retrieve the canonicalized value of a site configuration parameter by
-    merging the configuration setting from data over Hugo's configuration (files and environment).
+    Param Partial: getKey
+
+    This partial is used to retrieve the canonicalized value of a site
+    configuration parameter by merging the configuration setting from data over
+    Hugo's configuration (files and environment).
+
+    It expects either the input to be either:
+
+    1. A string representing the dot-path key to lookup
+    2. A dictionary with the key-value pairs:
+
+       - Key: (Mandatory) A string representing the dot-path key to lookup.
+       - WithValidity: (Optional, default false) A boolean for whether the
+         partial should return the validity status of the lookup with the value.
+    
+    If the input is a string or the WithValidity parameter is false, the
+    partial returns the lookup value only, defaulting to an empty string if it
+    couldn't be resolved.
+
+    If the input is a dictionary and WithValidity is true, the partial returns
+    a dictionary with the following keys:
+
+    - Value: The resolved value of the lookup. If the lookup failed, this value
+      is an empty string.
+    - Valid: A boolean value representing whether the lookup succeeded. If the
+      lookup failed (the key wasn't set at all), this key is false. This can
+      help the caller distinguish between keys that were explicitly set to an
+      empty or null value and those where the lookup failed.
 */}}
-{{- $Key := . -}}
-
-{{- $Config := partialCached "platen/param/getMergedValue" (dict) "full" -}}
-
-{{- $value := $Config -}}
-{{- range $Segment := split $Key "." -}}
-  {{- $value = index $value $Segment -}}
+{{- $Input        := .     -}}
+{{- $key          := .     -}}
+{{- $withValidity := false -}}
+{{- if reflect.IsMap $Input -}}
+  {{- $key          = $Input.Key                          -}}
+  {{- $withValidity = $Input.WithValidity | default false -}}
 {{- end -}}
 
-{{- return $value -}}
+{{/*  Retrieve the merged site configuration  */}}
+{{- $Config := partialCached "platen/param/getMergedValue" (dict) "full" -}}
+
+{{/*  Initialize the value and validity  */}}
+{{- $value := $Config -}}
+{{- $valid := true    -}}
+
+{{/*
+    Split the dot-path key and index into each segment, setting the value if
+    it's defined. If it isn't defined, set the value to an empty string and
+    mark the lookup as invalid.
+*/}}
+{{- range $Segment := split $key "." -}}
+  {{- if $valid -}}
+    {{- if (isset $value $Segment) -}}
+      {{- $value = index $value $Segment -}}
+    {{- else -}}
+      {{- $valid = false -}}
+      {{- $value = ""    -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $Output := cond (eq true $withValidity)
+               (dict "Value" $value "Valid" $valid)
+               $value
+-}}
+
+{{- return $Output -}}

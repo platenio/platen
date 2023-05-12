@@ -1,3 +1,16 @@
+{{/*
+    Platen Param Partial: classes/canonicalize
+
+    This partial inspects a page to find the list of CSS classes to inject into
+    its body element and stores them in the page's store (a persistent scratch)
+    as an HTML class attribute under the PlatenBodyClassAttribute key.
+
+    If this partial doesn't receive a specific page's context as input, it
+    tries to use the current page as the default.
+
+    It only sets the PlatenBodyClassAttribute in the page's store if the
+    resolved class list isn't empty.
+*/}}
 {{- $Context := . | default page -}}
 
 {{- $classList := partial "platen/param/classes/_getList" $Context -}}

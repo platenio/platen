@@ -1,7 +1,28 @@
-{{- $Context     := .                                                         -}}
-{{- $PageUrl     := $Context.RelPermalink                                     -}}
-{{- $ConfigKey   := "platen.display.section_classes"                          -}}
-{{- $ClassConfig := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{/*
+    Platen Param Partial: classes/_getList
+
+    This partial compares the site configuration for section classes and a
+    page's front matter for extra classes, building a list of classes to inject
+    for the page.
+
+    This partial expects to receive a page's context as input.
+
+    It first looks up the "platen.display.section_classes" configuration. If
+    that configuration is defined and has an entry for this page or one of its
+    parent sections, the class list is added to the page's class list.
+
+    Next, it checks the front matter for the page. If platen.extra_classes is
+    defined, those classes are added to the list.
+
+    Finally, the partial returns the full list of classes to inject for the
+    page.
+*/}}
+{{- $getKey := "platen/param/getKey" -}}
+
+{{- $Context     := .                                                            -}}
+{{- $PageUrl     := $Context.RelPermalink                                        -}}
+{{- $ConfigKey   := "platen.display.section_classes"                             -}}
+{{- $ClassConfig := partialCached $getKey $ConfigKey $ConfigKey | default (dict) -}}
 
 {{- $classList := slice -}}
 

@@ -1,27 +1,59 @@
 {{/*
-    This partial is used to canonically resolve a configuration option by merging the configuration
-    setting from data, Hugo's configuration (files and environment), a page's front matter, and a
-    default value.
+    Param Partial: _resolve
+    
+    This private partial is used to canonically resolve a configuration option
+    by merging the configuration setting from data, Hugo's configuration (files
+    and environment), a page's front matter, and a default value.
 
-    When only a ConfigKey is provided, the value is a deep merge of the key's data over
-    configuration.
+    When only one key is provided for Config, the value is a deep merge of the
+    key's data over configuration. When more than one key is provided for
+    Config, the first key that resolves is used.
 
-    When only a ParamKey is provided, the value is pulled from the page's front matter. To use this
-    option, the caller must pass the page's context.
+    When only one key is provided for Param, the value is pulled from the
+    page's front matter. To use this option, the caller must pass the page's
+    context. If the page's context isn't provided, the partial will try to use
+    the current page context, if available. When more than one key is provided
+    for Param, the first key that resolves is used.
 
-    When a ConfigKey and ParamKey are provided, the value from the page's front matter is used if
-    it's available. If it isn't, the value defaults to the deep merge of the key's data over
-    configuration.
+    When keys for both Config and Param are provided, the value from the page's
+    front matter is used if it's available. If it isn't, the value defaults to
+    the deep merge of the key's data over configuration. In all cases, only the
+    first resolved value is used.
 
-    When a Default is provided, the value is set to the Default only if the value would otherwise
-    be nil.
+    When a Default is provided, the value is set to the Default only if the
+    value would otherwise be nil.
+
+    For example, consider this input:
+
+        dict "Config" (slice "display.foo.bar" "display.foo_bar")
+             "Param"  (slice "foo.bar" "foo_bar")
+             Context  page
+             Default  false
+    
+    In this case, the values resolve in the following order, returning the
+    first value from this list that does resolve to a value.
+
+    - foo.bar in the page front matter
+    - foo_bar in the page front matter
+    - display.foo.bar in the site config
+    - display.foo_bar in the site config
+    - false
+
+    The default value false is only returned if all other lookups fail to
+    resolve to a value.
 */}}
-{{- $Input       := .              -}}
-{{- $Context     := $Input.Context -}}
-{{- $ConfigKey   := $Input.Config  -}}
-{{- $ParamKey    := $Input.Param   -}}
-{{- $value       := ""             -}}
+{{- $Input       := .                              -}}
+{{- $Context     := $Input.Context | default page  -}}
+{{- $InputConfig := $Input.Config  | default slice -}}
+{{- $InputParam  := $Input.Param   | default slice -}}
+{{/*  Define partials for easier renaming/maintenance  */}}
+{{- $getKey       := "platen/param/getKey"       -}}
+{{- $getPageParam := "platen/param/getPageParam" -}}
+{{/*  Define a constant for when the value hasn't been resolved yet  */}}
+{{- $UndefinedValue := "!UNDEFINED!"    -}}
+{{- $value          := $UndefinedValue  -}}
 
+{{/*  Error if the input is invalid  */}}
 {{- if not (reflect.IsMap $Input) -}}
   {{- errorf "%s: %s Was: %#v"
              "Invalid input for 'utils/config/resolve'"
@@ -30,34 +62,69 @@
   -}}
 {{- end -}}
 
-{{- $resolving := dict "Config" $ConfigKey "Param" $ParamKey "Default" $Input.Default -}}
+{{/*  We always want to process slices of keys, so munge a non-slice into a slice.  */}}
+{{- $ParamKeys  := cond (reflect.IsSlice $InputParam)  $InputParam  (slice $InputParam)  -}}
+{{- $ConfigKeys := cond (reflect.IsSlice $InputConfig) $InputConfig (slice $InputConfig) -}}
 
-{{- with $ConfigKey -}}
-  {{- $configValue := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
-  {{- with $ParamKey -}}
-    {{- $paramValue := $Context.Params -}}
-    {{- range $segment := split $ParamKey "." -}}
-      {{- $paramValue = index $paramValue $segment -}}
+{{/*  Set the Resolving info for use in messaging/debugging  */}}
+{{- $Resolving := dict "Config" $ConfigKeys "Param" $ParamKeys "Default" $Input.Default -}}
+
+{{- range $ConfigKey := $ConfigKeys -}}
+  {{/*  Only process the config key if no value has been set yet.  */}}
+  {{- if eq $value $UndefinedValue -}}
+    {{- $ConfigLookup := dict "Key" $ConfigKey "WithValidity" true         -}}
+    {{- $ConfigInfo   := partialCached $getKey $ConfigLookup $ConfigLookup -}}
+
+    {{/*  Check each defined page param key, using the first defined one, if any  */}}
+    {{- range $ParamKey := $ParamKeys -}}
+      {{- if eq $value $UndefinedValue -}}
+        {{- $ParamLookup := dict "Page" $Context "Key" $ParamKey "WithValidity" true "Resolving" $Resolving -}}
+        {{- $ParamInfo   := partialCached  $getPageParam $ParamLookup $ParamLookup (md5 $Context) -}}
+
+        {{- if eq true $ParamInfo.Valid -}}
+          {{- $value = $ParamInfo.Value -}}
+        {{- end -}}
+      {{- end -}}
     {{- end -}}
-    {{- $value = $paramValue | default $configValue -}}
+
+    {{/*  If no page param resolved, use the config key value if available  */}}
+    {{- if and (eq true $ConfigInfo.Valid) (eq $value $UndefinedValue) -}}
+      {{- $value = $ConfigInfo.Value -}}
+    {{- end -}}
   {{- end -}}
 {{- else -}}
-  {{- with $ParamKey -}}
-    {{- $value = $Context.Params -}}
-    {{- range $segment := split $ParamKey "." -}}
-      {{- $value = index $value $segment -}}
+  {{/*  Without any config keys defined, loop over the param keys  */}}
+  {{- range $ParamKey := $ParamKeys -}}
+    {{/*  Only process the param key if no value has been set yet  */}}
+    {{- if eq $value $UndefinedValue -}}
+      {{- $LookupParams := dict "Page" $Context "Key" $ParamKey "WithValidity" true                -}}
+      {{- $ParamInfo    := partialCached  $getPageParam $LookupParams $LookupParams (md5 $Context) -}}
+      
+      {{- if eq true $ParamInfo.Valid -}}
+        {{- $value = $ParamInfo.Value -}}
+      {{- end -}}
     {{- end -}}
   {{- else -}}
+    {{/*  If no config keys were specified and no param keys were specified, error.  */}}
     {{- errorf "%s: %s Was: %#v"
                "Invalid input for 'utils/config/resolve'"
-               "Must be a map with 'Config' and/or 'Param' or a string (implicitly 'Config')."
+               "Must be a map with 'Config' and/or 'Param' defined."
                $Input
     -}}
   {{- end -}}
 {{- end -}}
 
-{{- if isset $Input "Default" -}}
-  {{- $value = $value | default $Input.Default -}}
+{{/*  If no config keys or param keys resolved, set the default value or warn if no default.  */}}
+{{- if eq $value $UndefinedValue -}}
+  {{- if and (isset $Input "Default") -}}
+    {{- $value = $Input.Default -}}
+  {{- else -}}
+    {{- warnf "%s; %s. Resolving parameters were: %s"
+              "Unable to resolve param lookup"
+              "no value found for any key and no default specified"
+              ($Resolving | jsonify (dict "indent" "  "))
+    -}}
+  {{- end -}}
 {{- end -}}
 
 {{- return $value -}}

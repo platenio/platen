@@ -1,0 +1,57 @@
+{{/*
+    Param Partial: getPageParam
+
+    This partial is used to retrieve a parameter from a page's front matter,
+    using a dot-path key to index into values nested in a dictionary.
+
+    It expects either the input to be a dictionary with the following keys:
+
+    - Page: (Mandatory) The page whose front matter to index for the Key.
+    - Key: (Mandatory) A string representing the dot-path key to lookup.
+    - WithValidity: (Optional, default false) A boolean for whether the
+      partial should return the validity status of the lookup with the value.
+    
+    If WithValidity is false, the partial returns the lookup value only,
+    defaulting to an empty string if it couldn't be resolved.
+
+    If WithValidity is true, the partial returns a dictionary with the
+    following keys:
+
+    - Value: The resolved value of the lookup. If the lookup failed, this value
+      is an empty string.
+    - Valid: A boolean value representing whether the lookup succeeded. If the
+      lookup failed (the key wasn't set at all), this key is false. This can
+      help the caller distinguish between keys that were explicitly set to an
+      empty or null value and those where the lookup failed.
+*/}}
+{{- $Params       := .                                    -}}
+{{- $Page         := $Params.Page                         -}}
+{{- $Key          := $Params.Key                          -}}
+{{- $WithValidity := $Params.WithValidity | default false -}}
+
+{{/*  Initialize the value and validity  */}}
+{{- $value := $Page.Params -}}
+{{- $valid := true         -}}
+
+{{/*
+    Split the dot-path key and index into each segment, setting the value if
+    it's defined. If it isn't defined, set the value to an empty string and
+    mark the lookup as invalid.
+*/}}
+{{- range $Segment := split $Key "." -}}
+  {{- if $valid -}}
+    {{- if (isset $value $Segment) -}}
+      {{- $value = index $value $Segment -}}
+    {{- else -}}
+      {{- $valid = false -}}
+      {{- $value = ""    -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $Output := cond (eq true $WithValidity)
+               (dict "Value" $value "Valid" $valid)
+               $value
+-}}
+
+{{- return $Output -}}
