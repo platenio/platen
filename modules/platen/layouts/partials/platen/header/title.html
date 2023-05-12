@@ -1,25 +1,48 @@
 {{/*
-    Docs.Partial: title
+    Partial: header/title
+
+    This partial handles displaying a page's title in the header section for
+    the page.
+
+    This partial doesn't expect any input, it always operates on the current
+    page.
+
+    If the `platen.display.header.title_as_heading` key is set to `true` in the
+    site configuration or the page's front matter has the
+    `platen.display_title.as_heading` option set to `true`, the page's title
+    is rendered as an H1.
+
+    Otherwise, it's rendered in a <strong> element.
 */}}
 
-{{/* Get the title text */}}
-{{- $TitleParams := dict "Context" page "ForHeader" true         -}}
-{{- $TitleText   := partial "platen/utils/getTitle" $TitleParams -}}
-
+{{/*  Define partials for easier reuse/maintenance  */}}
+{{- $getSafeAttributes  := "platen/utils/getSafeAttributes" -}}
+{{- $getTitle           := "platen/utils/getTitle"          -}}
+{{- $getDisplayTitle    := "platen/utils/getDisplayTitle"   -}}
+{{/*  Define the lookup keys for easier renaming/maintenance  */}}
+{{- $ConfigKey      := "platen.display.header.title_as_heading" -}}
+{{- $ParamKey       := "platen.display_title.as_heading"        -}}
+{{- $LegacyParamKey := "platen.title_as_heading"                -}}
 {{/* Determine the element tag. */}}
 {{- $ShouldBeHeader := partial "platen/param/resolve" (
-      dict "Config"  "platen.display.header.title_as_heading"
-           "Param"   "platen.title_as_heading"
+      dict "Config"  $ConfigKey
+           "Param"   (slice $ParamKey $LegacyParamKey)
            "Context" page
            "Default" false
     )
 -}}
 {{- $ElementTag := cond $ShouldBeHeader "h1" "strong" -}}
 
+{{/* Get the title text */}}
+{{- $params       := dict "Context" page "ForHeader" true  -}}
+{{- $Title        := partial $getTitle $params             -}}
+{{- $params        = dict "Page" page "Title" $Title       -}}
+{{- $DisplayTitle := partial $getDisplayTitle $params      -}}
+
 {{/* define the attributes for the tag */}}
 {{- $openTagAttributes := slice -}}
 {{- if $ShouldBeHeader -}}
-  {{- $ID               := urlize (lower $TitleText)                          -}}
+  {{- $ID               := urlize (lower $Title)                              -}}
   {{- $openTagAttributes = $openTagAttributes | append (printf `id="%s"` $ID) -}}
 {{- end -}}
 {{- $openTagAttributes = partial "platen/utils/getSafeAttributes" $openTagAttributes -}}
@@ -28,5 +51,5 @@
 
 {{/* Render */}}
 {{ $openTag }}
-  {{- $TitleText -}}
+  {{- $DisplayTitle -}}
 {{ $closeTag }}

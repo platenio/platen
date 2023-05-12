@@ -1,27 +1,42 @@
 {{/*
-    Docs.Partial: post/listEntry
+    Partial: post/listEntry
+
+    This partial is called for rendering blog post summaries in the blog
+    section's list page.
+
+    It expects a blog post's page context as input.
+
+    It renders an <article> element for the post with the post's title as a
+    link to the post. Under the title, it renders the blog post's metadata
+    information, which includes the publish date, tags, and categories.
+
+    Finally, it renders a summary for the blog post.
 */}}
 {{- $PostContext := . -}}
 
-{{- $Href        := $PostContext.RelPermalink                    -}}
-{{- $TitleParams := dict "Context" $PostContext "ForList" true   -}}
-{{- $Title       := partial "platen/utils/getTitle" $TitleParams -}}
-{{- $summary     := $PostContext.Summary                         -}}
-{{- $IsTruncated := $PostContext.Truncated                       -}}
+{{/*  Define the partials for easier renaming/maintenance  */}}
+{{- $resolve           := "platen/param/resolve"           -}}
+{{- $postsMeta         := "platen/utils/posts/meta"        -}}
+{{- $getDisplayTitle   := "platen/utils/getDisplayTitle"   -}}
+{{- $getTitle          := "platen/utils/getTitle"          -}}
+{{- $getSafeAttributes := "platen/utils/getSafeAttributes" -}}
+
+{{- $Href        := $PostContext.RelPermalink                   -}}
+{{- $titleParams := dict "Context" $PostContext "ForList" true  -}}
+{{- $titleText   := partial $getTitle $titleParams              -}}
+{{- $titleParams  = dict "Page" $PostContext "Title" $titleText -}}
+{{- $titleText    = partial $getDisplayTitle $titleParams       -}}
+{{- $summary     := $PostContext.Summary                        -}}
+{{- $IsTruncated := $PostContext.Truncated                      -}}
 
 {{/* Define attribute list for article */}}
-{{- $articleAttributes := slice -}}
-{{- $articleAttributes  = $articleAttributes 
-                          | append `class="markdown platen-post"`
--}}
-{{- $articleAttributes  = partial "platen/utils/getSafeAttributes"
-                                  $articleAttributes
--}}
+{{- $articleAttributes := slice `class="markdown platen-post"`          -}}
+{{- $articleAttributes  = partial $getSafeAttributes $articleAttributes -}}
 
 {{/* Define attribute list for link */}}
-{{- $aAttributes := slice                                                 -}}
-{{- $aAttributes  = $aAttributes | append (printf `href="%s"` $Href)      -}}
-{{- $aAttributes  = partial "platen/utils/getSafeAttributes" $aAttributes -}}
+{{- $aAttributes := slice                                            -}}
+{{- $aAttributes  = $aAttributes | append (printf `href="%s"` $Href) -}}
+{{- $aAttributes  = partial $getSafeAttributes $aAttributes          -}}
 
 {{/* Add the truncated suffix if needed*/}}
 {{- if $IsTruncated -}}
@@ -29,11 +44,11 @@
 {{- end -}}
 
 {{/* Define the metadata elements */}}
-{{- $Meta := partial "platen/utils/posts/meta" $PostContext | safeHTML -}}
+{{- $Meta := partial $postsMeta $PostContext | safeHTML -}}
 
 {{/* Render */}}
 <article {{ $articleAttributes }}>
-  <h2><a {{ $aAttributes }}>{{ $Title }}</a></h2>
+  <h2><a {{ $aAttributes }}>{{ $titleText }}</a></h2>
   {{ $Meta }}
   <p>{{ $summary }}</p>
 </article>
