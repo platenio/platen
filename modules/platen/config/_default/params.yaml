@@ -161,6 +161,18 @@ platen:
     header:
       title_as_heading: false
     menu_root_section: /                        # BookSection
+    footer:
+      last_edited_on: # button
+        enabled: true
+        prefix_icon:
+          name: calendar-fill
+        variant: text
+        show_elapsed: true
+      edit_this_page: #button
+        enabled: true
+        prefix_icon:
+          name: pencil-fill
+        variant: text
   features:
     search:                                   # booksearch
       enabled: true

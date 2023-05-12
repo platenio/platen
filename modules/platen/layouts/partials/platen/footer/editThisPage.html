@@ -1,11 +1,23 @@
 {{/*
-    Docs.Partial: editThisPage
+    Partial: footer/editThisPage
+
+    This partial inserts the "Edit this Page" button in a page footer.
+
+    It expects no input and always operates on the current page.
 */}}
 
+{{/*  Define partials for easier reuse/naming  */}}
+{{- $getKey            := "platen/param/getKey"            -}}
+{{- $getSafeAttributes := "platen/utils/getSafeAttributes" -}}
+
 {{/* Retrieve settings from the site config */}}
-{{- $RepoConfig   := partialCached "platen/param/getKey" "platen.repository" "platen.repository" -}}
-{{- $repoUrl      := $RepoConfig.url           -}}
-{{- $editPath     := $RepoConfig.edit_path     -}}
+{{- $RepoConfigKey := "platen.repository"                                 -}}
+{{- $RepoConfig    := partialCached $getKey $RepoConfigKey $RepoConfigKey -}}
+{{- $RepoUrl       := $RepoConfig.url                                     -}}
+{{- $EditPath      := $RepoConfig.edit_path                               -}}
+
+{{- $ButtonConfigKey := "platen.display.footer.edit_this_page"                  -}}
+{{- $ButtonConfig    := partialCached $getKey $ButtonConfigKey $ButtonConfigKey -}}
 
 {{/*
   Determine the repository-root-relative path to content directory.
@@ -16,11 +28,11 @@
   1. If neither platen.repository.content_root nor contentDir are set, fall back
      on `content`.
 */}}
-{{- $contentDir     := "content" -}}
+{{- $contentDir := "content" -}}
 {{- with $RepoConfig.content_root -}}
   {{- $contentDir = . -}}
 {{- else -}}
-  {{- with (partialCached "platen/param/getKey" "contentDir" "contentDir") -}}
+  {{- with (partialCached $getKey "contentDir" "contentDir") -}}
     {{- $contentDir = . -}}
     {{- if (hasPrefix $contentDir "../") -}}
       {{- $contentDir = strings.TrimLeft "./" $contentDir  -}}
@@ -29,15 +41,15 @@
 {{- end  -}}
 
 {{/* Retrieve info from the page */}}
-{{- $gitInfo := page.GitInfo -}}
-{{- $file    := page.File    -}}
+{{- $GitInfo := page.GitInfo -}}
+{{- $File    := page.File    -}}
 
 {{/* This partial should only render if the page has git info and the base URL is defined */}}
-{{- $shouldRender := and $file $gitInfo $repoUrl $editPath -}}
+{{- $ShouldRender := and $File $GitInfo $RepoUrl $EditPath $ButtonConfig.enabled -}}
 
-{{- $href := "" -}}
+{{ if $ShouldRender }}
+  {{- $href := "" -}}
 
-{{ if $shouldRender }}
   {{/*
     Munge the file path if needed. This only applies when you have content mounted from a module.
     It loops over the list of mounted paths in platen.repository.mounted_paths and if the file's
@@ -45,19 +57,20 @@
 
     Without this munging, mounted content can't have a functional "edit this page" link.
   */}}
-  {{- $filePath := replace $file.Path "\\" "/" -}}
-  {{- $notYetMunged := true -}}
+  {{- $filePath     := replace $File.Path "\\" "/" -}}
+  {{- $notYetMunged := true                        -}}
+
   {{- range $mountedMap := $RepoConfig.mounted_paths -}}
-    {{/*  {{- $target := default $mountedMap.target $mountedMap.Target -}}  */}}
-    {{/*  {{- $source := default $mountedMap.source $mountedMap.Source -}}  */}}
     {{- if and $notYetMunged (hasPrefix $filePath $mountedMap.target) -}}
       {{- $filePath     = replace $filePath $mountedMap.target $mountedMap.source -}}
-      {{- $notYetMunged = false                             -}}
+      {{- $notYetMunged = false                                                   -}}
     {{- end -}}
   {{- end -}}
+
   {{- if $notYetMunged -}}
     {{- $filePath = printf "%s/%s" $contentDir $filePath -}}
   {{- end -}}
+
   {{/* Build the href for the link depending on the munged file path */}}
   {{- if hasPrefix (upper $filePath) "IGNORE!!" -}}
     {{/* In this case, the content is mounted content and the user chose to ignore it here. */}}
@@ -67,33 +80,66 @@
     {{- $href = $filePath -}}
   {{- else -}}
     {{/* In this case, the content is in this repository. Build the URL. */}}
-    {{- $href = slice $repoUrl $editPath $filePath -}}
+    {{- $href = slice $RepoUrl $EditPath $filePath -}}
     {{- $href = delimit $href "/"                  -}}
   {{- end}}
 
   {{- with $href -}}
-    {{/* Define the attributes for the link. */}}
-    {{- $linkAttributes := slice                                                     -}}
-    {{- $linkAttributes  = $linkAttributes | append `class="flex align-center"`      -}}
-    {{- $linkAttributes  = $linkAttributes | append (printf `href="%s"` $href)       -}}
-    {{- $linkAttributes  = $linkAttributes | append `target="_blank"`                -}}
-    {{- $linkAttributes  = $linkAttributes | append `rel="noopener"`                 -}}
-    {{- $linkAttributes  = partial "platen/utils/getSafeAttributes" $linkAttributes  -}}
+    {{- if $ButtonConfig.use_legacy -}}
+      {{- partial "platen/footer/editThisPage/legacy" $href -}}
+    {{- else -}}
+      {{/*  Make sure the custom-handled options aren't sent as attributes  */}}
+      {{- $SkipOptions := slice "use_legacy" "enabled" "classes" "prefix_icon" "suffix_icon" -}}
+      
+      {{/*  Initialize the attribute list with the href  */}}
+      {{- $attributes := slice (printf `href="%s"`  $href) -}}
 
-    {{/* Define the attributes for the image. */}}
-    {{- $imageAttributes := slice                                                     -}}
-    {{- $src             := "svg/edit.svg" | relURL                                   -}}
-    {{- $imageAttributes  = $imageAttributes | append (printf `src="%s"` $src)        -}}
-    {{- $imageAttributes  = $imageAttributes | append `class="platen-icon"`           -}}
-    {{- $imageAttributes  = $imageAttributes | append `alt="Edit"`                    -}}
-    {{- $imageAttributes  = partial "platen/utils/getSafeAttributes" $imageAttributes -}}
+      {{/*  Handle the button's classes  */}}
+      {{- $classes := slice "platen-btn" -}}
+      {{- with $ButtonConfig.classes -}}
+        {{- $classes = union $classes $ButtonConfig.classes -}}
+      {{- end -}}
+      {{- $classes         = delimit $classes " "                 -}}
+      {{- $ClassAttribute := printf `class="%s"` $classes         -}}
+      {{- $attributes     := $attributes | append $ClassAttribute -}}
 
-    {{/* Render */}}
-    <div>
-      <a {{ $linkAttributes }}>
-        <img {{ $imageAttributes }}/>
-        <span>{{ i18n "Edit this page" }}</span>
-      </a>
-    </div>
+      {{/*  Handle remaining attributes  */}}
+      {{- range $Name, $Value := $ButtonConfig -}}
+        {{- if not (in $SkipOptions $Name) -}}
+          {{- $Attribute := printf `%s="%s"` $Name (print $Value) -}}
+          {{- $attributes = $attributes | append $Attribute       -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{/*  Turn the slice into insertable attributes  */}}
+      {{- $attributeParams  := dict "Attributes" $attributes "IndentCount" 13 -}}
+      {{- $ButtonAttributes := partial $getSafeAttributes $attributeParams    -}}
+
+      {{/*  Get the label for the button  */}}
+      {{- $Label := i18n "Edit this page" | page.RenderString -}}
+
+      {{- partial "platen/features/shoelace/templates/button" (
+            dict
+            "Page"       page
+            "Attributes" $ButtonAttributes
+            "Label"      $Label
+            "PrefixIcon" $ButtonConfig.prefix_icon
+            "SuffixIcon" $ButtonConfig.suffix_icon
+          )
+      -}}
+    {{- end -}}
   {{- end -}}
+{{- end -}}
+
+{{- define "partials/platen/footer/editThisPage/legacy" -}}
+  {{- $Href := .                       | safeHTMLAttr -}}
+  {{- $Src  := "svg/edit.svg" | relURL | safeHTMLAttr -}}
+
+  {{/* Render */}}
+  <div>
+    <a class="flex align-center" href="{{ $Href }}" target="_blank" rel="noopener">
+      <img class="platen-cion" src="{{ $Src }}" alt="Edit"/>
+      <span>{{ i18n "Edit this page" }}</span>
+    </a>
+  </div>
 {{- end -}}

@@ -1,50 +1,107 @@
 {{/*
-    Docs.Partial: editThisPage
+    Partial: footer/lastEditedOn
+
+    This partial inserts the "Last Edited On" button in a page footer.
+
+    It expects no input and always operates on the current page.
 */}}
 
+{{/*  Define partials for easier reuse/naming  */}}
+{{- $getKey            := "platen/param/getKey"            -}}
+{{- $getSafeAttributes := "platen/utils/getSafeAttributes" -}}
+{{- $getFormattedDate  := "platen/utils/getFormattedDate"  -}}
+
 {{/* Retrieve settings from the site config */}}
-{{- $PlatenConfig := partialCached "platen/param/getKey" "platen" "platen" -}}
-{{- $repoUrl      := $PlatenConfig.repository.url     -}}
-{{- $dateFormat   := $PlatenConfig.display.date_format -}}
+{{- $ConfigKey    := "platen"                                                -}}
+{{- $PlatenConfig := partialCached $getKey $ConfigKey $ConfigKey             -}}
+{{- $RepoUrl      := $PlatenConfig.repository.url                            -}}
+{{- $CommitPath   := $PlatenConfig.repository.commit_path | default "commit" -}}
+{{- $DateFormat   := $PlatenConfig.display.date_format                       -}}
+{{- $ButtonConfig := $PlatenConfig.display.footer.last_edited_on             -}}
 
 {{/* Retrieve info from the page */}}
-{{- $gitInfo := page.GitInfo -}}
+{{- $GitInfo := page.GitInfo -}}
 
 {{/* This partial should only render if the page has git info and the base URL is defined */}}
-{{- $shouldRender := and $gitInfo $repoUrl -}}
+{{- $ShouldRender := and $GitInfo $RepoUrl $ButtonConfig.enabled -}}
 
-{{ if $shouldRender }}
+{{ if $ShouldRender }}
   {{/* Define the commit path and date based on site config and git info */}}
-  {{- $commitPath     := default "commit" $PlatenConfig.repository.commit_path         -}}
-  {{- $dateParams     := dict    "Date" $gitInfo.AuthorDate.Local "Format" $dateFormat -}}
-  {{- $date           := partial "platen/utils/getFormattedDate" $dateParams           -}}
+  {{- $LastEdited := $GitInfo.AuthorDate.Local                                 -}}
+  {{- $DateParams := dict    "Date" $LastEdited "Format" $DateFormat           -}}
+  {{- $Date       := partial $getFormattedDate $DateParams                     -}}
+  {{- $href       := slice $RepoUrl $CommitPath $GitInfo.Hash                  -}}
+  {{- $href       := delimit $href "/"                                         -}}
+  {{- $title      := slice (i18n "Last modified by") $GitInfo.AuthorName $Date -}}
+  {{- $title      := delimit $title " " " | "                                  -}}
 
-  {{/* Define the attributes for the link. */}}
-  {{- $linkAttributes := slice                                                     -}}
-  {{- $linkAttributes  = $linkAttributes | append `class="flex align-center"`      -}}
-  {{- $href           := slice $repoUrl $commitPath $gitInfo.Hash                  -}}
-  {{- $href           := delimit $href "/"                                         -}}
-  {{- $linkAttributes  = $linkAttributes | append (printf `href="%s"` $href)       -}}
-  {{- $title          := slice (i18n "Last modified by") $gitInfo.AuthorName $date -}}
-  {{- $title          := delimit $title " " " | "                                  -}}
-  {{- $linkAttributes  = $linkAttributes | append (printf `title="%s"` $title)     -}}
-  {{- $linkAttributes  = $linkAttributes | append `target="_blank"`                -}}
-  {{- $linkAttributes  = $linkAttributes | append `rel="noopener"`                 -}}
-  {{- $linkAttributes  = partial "platen/utils/getSafeAttributes" $linkAttributes  -}}
+  {{- if $ButtonConfig.use_legacy -}}
+    {{- $LegacyParams := dict "Date" $Date "Href" $href "Title" $title -}}
+    {{- partial "platen/footer/lastEditedOn/legacy" -}}
+  {{- else -}}
+    {{- $SkipOptions := slice "use_legacy" "enabled" "classes" "prefix_icon" "suffix_icon" "show_elapsed" -}}
 
-  {{/* Define the attributes for the image. */}}
-  {{- $imageAttributes := slice                                                     -}}
-  {{- $src             := "svg/calendar.svg" | relURL                               -}}
-  {{- $imageAttributes  = $imageAttributes | append (printf `src="%s"` $src)        -}}
-  {{- $imageAttributes  = $imageAttributes | append `class="platen-icon"`           -}}
-  {{- $imageAttributes  = $imageAttributes | append `alt="Calendar"`                -}}
-  {{- $imageAttributes  = partial "platen/utils/getSafeAttributes" $imageAttributes -}}
+    {{/*  Initialize the attribute list with the href  */}}
+    {{- $attributes  := slice (printf `href="%s"`  $href) -}}
 
+    {{/*  Handle the button's classes  */}}
+    {{- $classes := slice "platen-btn" }}
+    {{- with $ButtonConfig.classes -}}
+      {{- $classes = union $classes $ButtonConfig.classes -}}
+    {{- end -}}
+    {{- $classes         = delimit $classes " "                 -}}
+    {{- $ClassAttribute := printf `class="%s"` $classes         -}}
+    {{- $attributes     := $attributes | append $ClassAttribute -}}
+
+    {{/*  Handle remaining attributes  */}}
+    {{- range $Name, $Value := $ButtonConfig -}}
+      {{- if not (in $SkipOptions $Name) -}}
+        {{- $Attribute := printf `%s="%s"` $Name (print $Value) -}}
+        {{- $attributes = $attributes | append $Attribute       -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{/*  Turn the slice into insertable attributes  */}}
+    {{- $attributeParams  := dict "Attributes" $attributes "IndentCount" 15 -}}
+    {{- $ButtonAttributes := partial $getSafeAttributes $attributeParams    -}}
+
+    {{- $label := $Date -}}
+    {{- if eq true $ButtonConfig.show_elapsed -}}
+      {{- $label = printf `<sl-relative-time date="%s"></sl-relative-time>` $LastEdited -}}
+    {{- end -}}
+
+    {{- $ButtonParams := dict "Page"       page
+                              "Attributes" $ButtonAttributes
+                              "Label"      $label
+                              "PrefixIcon" $ButtonConfig.prefix_icon
+                              "SuffixIcon" $ButtonConfig.suffix_icon
+    -}}
+    {{- $TemplateParams := dict "ButtonParams" $ButtonParams "Title" $title -}}
+    {{- partial "platen/footer/lastEditedOn/default" $TemplateParams -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "partials/platen/footer/lastEditedOn/default" -}}
+  {{- $Params       := .                    -}}
+  {{- $ButtonParams := $Params.ButtonParams -}}
+  {{- $Title        := $Params.Title        -}}
+
+  <sl-tooltip hoist content="{{ $Title}}">
+    {{ partial "platen/features/shoelace/templates/button" $ButtonParams }}
+  </sl-tooltip>
+{{- end -}}
+
+{{- define "partials/platen/footer/lastEditedOn/legacy" -}}
+  {{- $Params := .                                          -}}
+  {{- $Date   := $Params.Date                | safeHTML     -}}
+  {{- $Href   := $Params.Href                | safeHTMLAttr -}}
+  {{- $Title  := $Params.Title               | safeHTMLAttr -}}
+  {{- $Src    := "svg/calendar.svg" | relURL | safeHTMLAttr -}}
   {{/* Render */}}
   <div>
-    <a {{ $linkAttributes }}>
-      <img {{ $imageAttributes }}/>
-      <span>{{ $date }}</span>
+    <a class="flex align-center" href="{{ $Href }}" title="{{ $Title}}" target="_blank" rel="noopener">
+      <img src="{{ $Src}}" class="platen-icon" alt="Calendar"/>
+      <span>{{ $Date }}</span>
     </a>
   </div>
 {{- end -}}
