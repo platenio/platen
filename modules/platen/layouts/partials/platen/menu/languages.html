@@ -1,17 +1,71 @@
+{{/*
+    Partial: menu/languages
+
+    This partial handles rendering the translated pages for links in the site
+    menu when the site is multilingual.
+
+    It expects no input and always processes the current page. It only expects
+    to be called when the site is multilingual.
+
+    It renders a list where the first item in the list is a dropdown toggle.
+    The dropdown toggle's label has a prefix icon defined by the configuration
+    setting platen.display.menu.languages_icon. The label text is the language
+    of the currently displayed page.
+
+    When the dropdown is toggled open, it displays the list of translations for
+    the current page. Each item is a link to the translation with the link text
+    set to the name of the language.
+*/}}
+{{/*  Define partials for easier reuse/naming  */}}
+{{- $getKey            := "platen/param/getKey"            -}}
+{{- $getSafeAttributes := "platen/utils/getSafeAttributes" -}}
+{{/*  Get language settings  */}}
 {{- $ConfigKey     := "platen.multilingual"                                     -}}
 {{- $LangConfig    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
-<!-- Merge home and current page translations -->
+
+{{/*  Merge home and current page translations  */}}
 {{- $TranslatedOnly := $LangConfig.translated_only | default false -}}
 {{- $translations   := dict                                        -}}
-
 {{- if (eq $TranslatedOnly false) -}}
   {{- range $Translation := site.Home.Translations -}}
     {{- $translations = merge $translations (dict $Translation.Language.Lang $Translation) -}}
   {{- end -}}
 {{- end -}}
-
 {{- range $Translation := page.Translations -}}
   {{- $translations = merge $translations (dict $Translation.Language.Lang $Translation) -}}
+{{- end -}}
+
+{{/*  Pre-define the language template and icon information.  */}}
+{{- $template        := "platen/features/shoelace/templates/icon"           -}}
+{{- $templateParams  := dict                                                -}}
+{{- $IconConfigKey   := "platen.display.menu.languages_icon"                -}}
+{{- $IconConfig      := partialCached $getKey $IconConfigKey $IconConfigKey -}}
+
+{{- if $IconConfig.use_legacy -}}
+  {{- $template = "platen/menu/languages/legacy" -}}
+{{- else -}}
+  {{/*  Make sure the custom-handled options aren't sent as attributes  */}}
+  {{- $SkipOptions := slice "use_legacy" "classes" -}}
+  
+  {{/*  Initialize the attribute list with the href  */}}
+  {{- $options := dict -}}
+
+  {{/*  Handle the button's classes  */}}
+  {{- $classes := slice "platen-icon" -}}
+  {{- with $IconConfig.classes -}}
+    {{- $classes = union $classes $IconConfig.classes -}}
+  {{- end -}}
+  {{- $classes = delimit $classes " "                   -}}
+  {{- $options = merge $options (dict "class" $classes) -}}
+
+  {{/*  Handle remaining options  */}}
+  {{- range $Name, $Value := $IconConfig -}}
+    {{- if not (in $SkipOptions $Name) -}}
+      {{- $options = merge $options (dict $Name $Value) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $templateParams = dict "Page" page "Icon" $options -}}
 {{- end -}}
 
 <ul class="platen-languages">
@@ -19,7 +73,7 @@
     <input type="checkbox" id="languages" class="toggle" />
     <label for="languages" class="flex justify-between">
       <a role="button" class="flex align-center">
-        <img src="{{ "svg/translate.svg" | relURL }}" class="platen-icon" alt="Languages" />
+        {{ partial $template $templateParams }}
         {{ site.Language.LanguageName }}
       </a>
     </label>
@@ -38,3 +92,11 @@
     </ul>
   </li>
 </ul>
+
+{{- define "partials/platen/menu/languages/legacy" -}}
+  {{- $Src := "svg/translate.svg" | relURL | safeHTMLAttr -}}
+  <a role="button" class="flex align-center">
+    <img src="{{ $Src }}" class="platen-icon" alt="Languages" />
+    {{ site.Language.LanguageName }}
+  </a>
+{{- end -}}

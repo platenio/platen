@@ -160,7 +160,11 @@ platen:
     date_format: "January 2, 2006"             # BookDateFormat
     header:
       title_as_heading: false
-    menu_root_section: /                        # BookSection
+    menu:
+      root_section:   /                        # BookSection
+      languages_icon:
+          use_legacy: false
+          name:       translate
     footer:
       last_edited_on: # button
         enabled: true
