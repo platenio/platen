@@ -75,6 +75,20 @@
   {{/* Close the selector and delimit it with appropriate indentation for rendering */}}
   {{- $selectorString = $selectorString | append "}"                                   -}}
   {{- $renderStrings  = $renderStrings  | append (delimit $selectorString "\n  " "\n") -}}
+
+  {{/*  Temporary special handling for body to conform with Shoelace  */}}
+  {{- if and (eq $Name "body") (isset $Settings "family") -}}
+    {{- $sansFontOverride := printf `--sl-font-sans: %s;` $Settings.family  -}}
+    {{- $sansFontOverride  = printf ":root {\n  %s\n}"    $sansFontOverride -}}
+    {{- $renderStrings     = $renderStrings | append      $sansFontOverride -}}
+  {{- end -}}
+
+  {{/*  Temporary special handling for code to conform with Shoelace.  */}}
+  {{- if and (eq $Name "code") (isset $Settings "family") -}}
+    {{- $monoFontOverride := printf `--sl-font-mono: %s;` $Settings.family  -}}
+    {{- $monoFontOverride  = printf ":root {\n  %s\n}"    $monoFontOverride -}}
+    {{- $renderStrings     = $renderStrings | append      $monoFontOverride -}}
+  {{- end -}}
 {{ end }}
 
 {{/* Return the SCSS to render */}}
