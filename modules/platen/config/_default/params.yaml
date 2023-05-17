@@ -88,6 +88,9 @@ platen:
           enabled: true
         responsiveness:
           enabled: true
+      shoelace:
+        icons:
+          enabled: true
       mobile:
         header:
           enabled: true
@@ -165,7 +168,7 @@ platen:
       #   guide_width: 3px
       # collapse_icon: dash-square
       # expand_icon:   plus-square
-      use_legacy: true
+      use_legacy: false
     date_format: "January 2, 2006"             # BookDateFormat
     header:
       title_as_heading: false
@@ -174,6 +177,19 @@ platen:
       languages_icon:
           use_legacy: false
           name:       translate
+    mobile:
+      menu_control:
+        use_legacy: true
+        name: list
+        label: i18n!menu_control
+        tooltip:
+          placement: right
+      toc_control:
+        use_legacy: true
+        name: list-columns
+        label: i18n!toc_control
+        tooltip:
+          placement: left
     footer:
       last_edited_on: # button
         enabled: true
@@ -207,8 +223,8 @@ platen:
         header: platen/features/alpine/header
     shoelace:
       enabled:     true
-      always_load: false
-      version:     2.3.0
+      always_load: true
+      version:     2.4.0
       icons:
         default_library: builtin_bootstrap
         always_load_libraries: []
@@ -352,11 +368,11 @@ platen:
       classes: []
       variant: primary
       icons:
-        danger:  exclamation-octagon
-        default: gear
-        primary: info-circle
-        success: check2-circle
-        warning: exclamation-triangle
+        danger:  exclamation-octagon@builtin_bootstrap
+        default: gear@builtin_bootstrap
+        primary: info-circle@builtin_bootstrap
+        success: check2-circle@builtin_bootstrap
+        warning: exclamation-triangle@builtin_bootstrap
       use_default_icons: true
       partials:
         renderers:

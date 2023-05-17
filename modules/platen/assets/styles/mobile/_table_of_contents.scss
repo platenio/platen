@@ -7,6 +7,15 @@
     display: none;
   }
 
+  label[for="toc-control"] {
+    &:has(sl-icon-button) {
+      font-size: 1.5em;
+    }
+    sl-icon-button::part(base) {
+      color: var(--body-font-color)
+    }
+  }
+
   #toc-control:focus ~ main label[for="toc-control"] {
     @include outline;
   }

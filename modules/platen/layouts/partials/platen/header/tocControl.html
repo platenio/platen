@@ -1,31 +1,49 @@
 {{/*
-    Docs.Partial: menuControl
+    Header Partial: tocControl
+
+    This partial displays the button visitors can click on mobile to display
+    the table of contents for a page.
+
+    If `platen.display.mobile.toc_control.use_legacy` is set to `true`, it
+    displays an `<sl-icon-button>` with a tooltip that explains what the button
+    does. The button and tooltip can be configured in the site settings.
+
+    If `platen.display.mobile.toc_control.use_legacy` is set to `false`, it
+    displays `static/svg/toc.svg` as an image.
 */}}
 
+{{/*  Define partials for easier reuse/naming  */}}
+{{- $getKey            := "platen/param/getKey"            -}}
+{{- $getSafeAttributes := "platen/utils/getSafeAttributes" -}}
+{{- $shouldRenderToC   := "platen/utils/shouldRenderToC"   -}}
+
 {{/* Determine if the TOC menu should be rendered */}}
-{{- $ShouldRender := partial "platen/param/resolve" (
-  dict "Config"  "platen.display.table_of_contents.render"
-       "Param"   "platen.table_of_contents.render"
-       "Context" page
-       "Default" true
-) -}}
+{{- $ShouldRender := partialCached $shouldRenderToC page page -}}
 
-{{/* Get the menu icon */}}
-{{- $src := "svg/toc.svg" | relURL -}}
+{{/*  Retrieve options from the site config  */}}
+{{- $Key    := "platen.display.mobile.toc_control" -}}
+{{- $Config := partialCached $getKey $Key $Key     -}}
 
-{{/* Define the attributes for the label element */}}
-{{- $labelAttributes := slice                                                     -}}
-{{- $labelAttributes  = $labelAttributes | append `for="toc-control"`             -}}
-{{- $labelAttributes  = partial "platen/utils/getSafeAttributes" $labelAttributes -}}
+{{- $template       := "platen/features/shoelace/templates/iconButton" -}}
+{{- $templateParams := dict                                            -}}
 
-{{/* Define the attributes for the image element */}}
-{{- $imageAttributes := slice                                                     -}}
-{{- $imageAttributes  = $imageAttributes | append (printf `src="%s"` $src)        -}}
-{{- $imageAttributes  = $imageAttributes | append `class="platen-icon"`           -}}
-{{- $imageAttributes  = $imageAttributes | append `alt="Table of Contents"`       -}}
-{{- $imageAttributes  = partial "platen/utils/getSafeAttributes" $imageAttributes -}}
+{{- if eq true $Config.use_legacy -}}
+  {{- $template = "platen/header/tocControl/legacy" -}}
+{{- else -}}
+  {{- $DefaultLabel  := "Toggle table of contents"                           -}}
+  {{- $OnClickOption := dict  "onClick" "Platen.toggleTableOfContents()"     -}}
+  {{- $ButtonOptions := merge $Config   $OnClickOption                       -}}
+  {{- $templateParams = dict  "Button"  $ButtonOptions "Label" $DefaultLabel -}}
+{{- end -}}
 
 {{/* Render */}}
-<label {{ $labelAttributes }} >
-  {{ if $ShouldRender }}<img {{ $imageAttributes }} />{{ end }}
+<label for="toc-control" >
+  {{ if $ShouldRender -}}
+    {{- partial $template $templateParams -}}
+  {{- end }}
 </label>
+
+{{- define "partials/platen/header/tocControl/legacy" -}}
+  {{- $Src := "svg/toc.svg" | relURL | safeHTMLAttr -}}
+  <img src="{{ $Src}}" class="platen-icon" alt="Table of Contents"/>
+{{- end -}}

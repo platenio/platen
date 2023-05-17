@@ -7,6 +7,12 @@
 - id: Last modified by
   translation: Last modified by
 
+- id: menu_control
+  translation: Show site menu
+
+- id: toc_control
+  translation: Toggle the table of contents
+
 - id: Expand
   translation: Expand
 

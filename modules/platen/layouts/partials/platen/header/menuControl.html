@@ -1,23 +1,43 @@
 {{/*
-    Docs.Partial: menuControl
+    Header Partial: menuControl
+
+    This partial displays the button visitors can click on mobile to display
+    the site menu.
+
+    If `platen.display.mobile.menu_control.use_legacy` is set to `true`, it
+    displays an `<sl-icon-button>` with a tooltip that explains what the button
+    does. The button and tooltip can be configured in the site settings.
+
+    If `platen.display.mobile.menu_control.use_legacy` is set to `false`, it
+    displays `static/svg/menu.svg` as an image.
 */}}
 
-{{/* Get the menu icon */}}
-{{- $src := "svg/menu.svg" | relURL -}}
+{{/*  Define partials for easier reuse/naming  */}}
+{{- $getKey            := "platen/param/getKey"            -}}
+{{- $getSafeAttributes := "platen/utils/getSafeAttributes" -}}
 
-{{/* Define the attributes for the label element */}}
-{{- $labelAttributes := slice                                                     -}}
-{{- $labelAttributes  = $labelAttributes | append `for="menu-control"`            -}}
-{{- $labelAttributes  = partial "platen/utils/getSafeAttributes" $labelAttributes -}}
+{{/*  Retrieve options from the site config  */}}
+{{- $Key    := "platen.display.mobile.menu_control" -}}
+{{- $Config := partialCached $getKey $Key $Key      -}}
 
-{{/* Define the attributes for the image element */}}
-{{- $imageAttributes := slice                                                     -}}
-{{- $imageAttributes  = $imageAttributes | append (printf `src="%s"` $src)        -}}
-{{- $imageAttributes  = $imageAttributes | append `class="platen-icon"`           -}}
-{{- $imageAttributes  = $imageAttributes | append `alt="Menu"`                    -}}
-{{- $imageAttributes  = partial "platen/utils/getSafeAttributes" $imageAttributes -}}
+{{- $template       := "platen/features/shoelace/templates/iconButton" -}}
+{{- $templateParams := dict                                            -}}
+
+{{- if eq true $Config.use_legacy -}}
+  {{- $template = "platen/header/menuControl/legacy" -}}
+{{- else -}}
+  {{- $DefaultLabel  := "Show site menu"                                     -}}
+  {{- $OnClickOption := dict  "onClick" "Platen.showSiteMenu()"              -}}
+  {{- $ButtonOptions := merge $Config   $OnClickOption                       -}}
+  {{- $templateParams = dict  "Button"  $ButtonOptions "Label" $DefaultLabel -}}
+{{- end -}}
 
 {{/* Render */}}
-<label {{ $labelAttributes }} >
-  <img {{ $imageAttributes }} />
+<label for="menu-control">
+  {{ partial $template $templateParams }}
 </label>
+
+{{- define "partials/platen/header/menuControl/legacy" -}}
+  {{- $Src := "svg/menu.svg" | relURL | safeHTMLAttr -}}
+  <img src="{{ $Src}}" class="platen-icon" alt="Menu"/>
+{{- end -}}
