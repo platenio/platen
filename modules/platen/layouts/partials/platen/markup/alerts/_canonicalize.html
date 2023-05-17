@@ -34,13 +34,16 @@
       returns them as a single space-delimited string, marked as safe for
       insertion into HTML attributes.
 */}}
-{{- $mungeHeadingLevel    := "platen/utils/mungeHeadingLevel"    -}}
-{{- $getLeadTrimmedText   := "platen/utils/getLeadTrimmedText"   -}}
-{{- $getMergedClasses     := "platen/utils/getMergedClasses"     -}}
-{{- $getMergedMap         := "platen/utils/getMergedMap"         -}}
-{{- $getMergedStyleOption := "platen/utils/getMergedStyleOption" -}}
-{{- $getPrettyRender      := "platen/utils/getPrettyRender"      -}}
-{{- $getSafeAttributes    := "platen/utils/getSafeAttributes"    -}}
+{{- $mungeHeadingLevel       := "platen/utils/mungeHeadingLevel"                         -}}
+{{- $getLeadTrimmedText      := "platen/utils/getLeadTrimmedText"                        -}}
+{{- $getMergedClasses        := "platen/utils/getMergedClasses"                          -}}
+{{- $getMergedMap            := "platen/utils/getMergedMap"                              -}}
+{{- $getMergedStyleOption    := "platen/utils/getMergedStyleOption"                      -}}
+{{- $getPrettyRender         := "platen/utils/getPrettyRender"                           -}}
+{{- $getSafeAttributes       := "platen/utils/getSafeAttributes"                         -}}
+{{- $parseIconName           := "platen/features/shoelace/utils/parseIconName"           -}}
+{{- $updateUsedIconLibraries := "platen/features/shoelace/utils/updateUsedIconLibraries" -}}
+{{- $resolveIconOptions      := "platen/features/shoelace/utils/resolveIconOptions"      -}}
 {{/*  Define the template folder and default template for this markup  */}}
 {{- $TemplateFolder := "platen/markup/alerts/templates" -}}
 {{- $template       := "default"                        -}}
@@ -324,18 +327,10 @@
     Handle the icon attributes - if an icon is defined, it should at least get
     the name attribute. If this dict stays empty, no icon gets added.
 */}}
-{{- $iconAttributeMap  := dict -}}
-{{/*
-    The icon can be specified as either a string or a map for more control. If
-    the icon is a map, use the map directly for the attributes. If it's a
-    string, use the value for the `name` key in the attribute map.
-*/}}
+{{- $icon := dict -}}
+{{/*  The icon can be specified as either a string or a map for more control.  */}}
 {{- with $options.icon -}}
-  {{- if reflect.IsMap $options.icon -}}
-    {{- $iconAttributeMap = merge $iconAttributeMap $options.icon -}}
-  {{- else -}}
-    {{- $iconAttributeMap = merge $iconAttributeMap (dict "name" $options.icon) -}}
-  {{- end -}}
+  {{- $icon = $options.icon -}}
 {{- end -}}
 {{/*
     If it should use default icons, try to use that unless an icon was specified
@@ -343,10 +338,10 @@
 */}}
 {{- if $options.use_default_icons -}}
   {{- $ConfigIcon := index $Config.icons $options.variant -}}
-  {{- with $iconAttributeMap.name -}}
+  {{- with $icon -}}
     {{/*  Nothing to do, already set.  */}}
   {{- else -}}
-    {{- $iconAttributeMap = merge $iconAttributeMap (dict "name" $ConfigIcon) -}}
+    {{- $icon = $ConfigIcon -}}
   {{- end -}}
 {{- end -}}
 {{/*
@@ -354,16 +349,26 @@
     wasn't, error only if the markup expected to use the default icons and the
     icon for this alert's variant couldn't be found.
 */}}
-{{- with $iconAttributeMap -}}
-  {{- $iconAttributes := slice -}}
+{{- with $icon -}}
+  {{/*
+      Resolve the icon's options into a map of attributes.
+
+      If the icon is valid, this returns the map of options for it and marks
+      the icon's library for registration automatically.
+
+      If the icon is invalid, this returns an empty map and raises a warning.
+  */}}
+  {{- $resolveIconParams := dict "Page" $Page "Position" $Position "Icon" $icon        -}}
+  {{- $iconAttributeMap  := partialCached $resolveIconOptions $resolveIconParams $icon -}}
   {{/*
       Loop over the defined keys, turning them into attribute declarations. We
       always print the value before insertion, because HTML attributes expect
       the values as strings.
   */}}
+  {{- $iconAttributes := slice -}}
   {{- range $Key, $Value := $iconAttributeMap -}}
     {{- $IconAttribute := printf `%s="%s"` $Key (print $Value)     -}}
-    {{- $iconAttributes = $iconAttributes | append $IconAttribute -}}
+    {{- $iconAttributes = $iconAttributes | append $IconAttribute  -}}
   {{- end -}}
 
   {{/*

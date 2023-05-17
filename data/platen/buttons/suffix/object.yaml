@@ -1,3 +1,7 @@
-prefix_icon:
-  name: gear
-  style: "color: #417505;"
+suffix_icon:
+  library: boxicons
+  name:    cog
+  variant: solid
+  style: >-
+    color: #417505;
+    opacity: 50%;

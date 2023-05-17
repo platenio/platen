@@ -56,6 +56,24 @@
   {{- $iconAttributeMap = merge $iconAttributeMap (dict "name" $Icon) -}}
 {{- end -}}
 
+{{- if and (isset $iconAttributeMap "name") (isset $iconAttributeMap "src") -}}
+  {{- warnf "Specified both src ('%s') and name ('%s') for icon%s - using src."
+      $iconAttributeMap.src
+      $iconAttributeMap.name
+      $warningSource
+  -}}
+
+  {{- $munging := dict -}}
+
+  {{- range $Key, $Value := $iconAttributeMap -}}
+    {{- if not (in (slice "name" "library" "variant") $Key) -}}
+      {{- $munging = merge $munging (dict $Key $Value) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $iconAttributeMap = $munging -}}
+{{- end -}}
+
 {{- with $iconAttributeMap.name -}}
   {{/*  Build the string to parse for the icon's name to get the canonical info  */}}
   {{- $iconName := $iconAttributeMap.name -}}

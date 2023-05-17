@@ -1,4 +1,4 @@
-z{{- $Params     := .                  -}}
+{{- $Params     := .                  -}}
 {{- $Config     := $Params.Config     -}} {{/* The markup's site configuration, like platen.markup.foo     */}}
 {{- $Position   := $Params.Position   -}} {{/* The markup's position in the Markdown - only for codeblocks */}}
 {{- $Page       := $Params.Page       -}} {{/* The Page object for the Markdown document the markup is in  */}}
@@ -34,11 +34,12 @@ z{{- $Params     := .                  -}}
       returns them as a single space-delimited string, marked as safe for
       insertion into HTML attributes.
 */}}
-{{- $mungeHeadingLevel  := "platen/utils/mungeHeadingLevel"    -}}
-{{- $getLeadTrimmedText := "platen/utils/getLeadTrimmedText"   -}}
-{{- $getMergedClasses   := "platen/utils/getMergedClasses"     -}}
-{{- $getPrettyRender    := "platen/utils/getPrettyRender"      -}}
-{{- $getSafeAttributes  := "platen/utils/getSafeAttributes"    -}}
+{{- $mungeHeadingLevel  := "platen/utils/mungeHeadingLevel"                    -}}
+{{- $getLeadTrimmedText := "platen/utils/getLeadTrimmedText"                   -}}
+{{- $getMergedClasses   := "platen/utils/getMergedClasses"                     -}}
+{{- $getPrettyRender    := "platen/utils/getPrettyRender"                      -}}
+{{- $getSafeAttributes  := "platen/utils/getSafeAttributes"                    -}}
+{{- $resolveIconOptions := "platen/features/shoelace/utils/resolveIconOptions" -}}
 {{/*  Define the template folder and default template for this markup  */}}
 {{- $TemplateFolder := "platen/markup/details/templates" -}}
 {{- $template       := "default"                         -}}
@@ -164,6 +165,33 @@ z{{- $Params     := .                  -}}
   {{- $iconCollapse = "" -}}
   {{- $iconExpand   = "" -}}
 {{- else if $hasBothIcons -}}
+  {{/*  Need to validate the icon options for both icons and get their attribute lists  */}}
+  {{- $iconsMap := dict "icon_expand" $options.icon_expand "icon_collapse" $options.icon_collapse -}}
+  {{- range $For, $Icon := $iconsMap -}}
+    {{- $resolveIconParams  := dict "Page" $Page "Position" $Position "Icon" $Icon         -}}
+    {{- $iconAttributeMap   := partialCached $resolveIconOptions $resolveIconParams $Icon  -}}
+
+    {{- $iconAttributes := slice -}}
+    {{- range $Key, $Value := $iconAttributeMap -}}
+      {{- if ne "variant" $Key -}}
+        {{- $IconAttribute := printf `%s="%s"` $Key (print $Value)    -}}
+        {{- $iconAttributes = $iconAttributes | append $IconAttribute -}}
+      {{- end -}}
+    {{- else -}}
+      {{- warnf "Unable to validation icon for '%s': %+v - ignoring custom icons for details at %s"
+                $For
+                $Icon
+                $Position
+      -}}
+      {{- $hasBothIcons = false -}}
+    {{- end -}}
+
+    {{- $slot            := cond (eq "icon_expand" $For) "expand-icon" "collapse-icon" -}}
+    {{- $iconAttributes   = $iconAttributes | append (printf `slot="%s"` $slot)        -}}
+    {{- $attributeParams := dict "Attributes" $iconAttributes "IndentCount" 8          -}}
+    {{- $iconAttributes   = partial "platen/utils/getSafeAttributes" $attributeParams  -}}
+    {{- $options          = merge $options (dict $For $iconAttributes)                 -}}
+  {{- end -}}
   {{/*  Need to add .NoRotateIcon class for custom icons  */}}
   {{- with $options.class -}}
     {{- $options = merge $options (dict "class" (printf "no-rotate-icon %s" $options.class)) -}}
@@ -302,9 +330,9 @@ z{{- $Params     := .                  -}}
   {{/*  For shoelace, the summary is *always* rendered in a div with the slot defined  */}}
   {{- $summaryHtml = printf "<div %s>\n    %s\n  </div>" $summaryAttributes $summaryHtml -}}
   {{- if $hasBothIcons -}}
-    {{- $collapseHtml := printf `<sl-icon name="%s" slot="collapse-icon"></sl-icon>` $options.icon_collapse -}}
-    {{- $expandHtml   := printf `<sl-icon name="%s" slot="expand-icon"></sl-icon>`   $options.icon_expand   -}}
-    {{- $summaryHtml   = printf "%s\n  %s\n  %s" $expandHtml $collapseHtml $summaryHtml                     -}}
+    {{- $collapseHtml := printf "<sl-icon %s></sl-icon>" $options.icon_collapse         -}}
+    {{- $expandHtml   := printf "<sl-icon %s></sl-icon>" $options.icon_expand           -}}
+    {{- $summaryHtml   = printf "%s\n  %s\n  %s" $expandHtml $collapseHtml $summaryHtml -}}
   {{- end -}}
 
   {{/*  Add the summary HTML to the template context for use  */}}

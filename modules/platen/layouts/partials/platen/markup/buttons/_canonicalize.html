@@ -34,11 +34,12 @@
       returns them as a single space-delimited string, marked as safe for
       insertion into HTML attributes.
 */}}
-{{- $mungeHeadingLevel  := "platen/utils/mungeHeadingLevel"    -}}
-{{- $getLeadTrimmedText := "platen/utils/getLeadTrimmedText"   -}}
-{{- $getMergedClasses   := "platen/utils/getMergedClasses"     -}}
-{{- $getPrettyRender    := "platen/utils/getPrettyRender"      -}}
-{{- $getSafeAttributes  := "platen/utils/getSafeAttributes"    -}}
+{{- $mungeHeadingLevel  := "platen/utils/mungeHeadingLevel"                    -}}
+{{- $getLeadTrimmedText := "platen/utils/getLeadTrimmedText"                   -}}
+{{- $getMergedClasses   := "platen/utils/getMergedClasses"                     -}}
+{{- $getPrettyRender    := "platen/utils/getPrettyRender"                      -}}
+{{- $getSafeAttributes  := "platen/utils/getSafeAttributes"                    -}}
+{{- $resolveIconOptions := "platen/features/shoelace/utils/resolveIconOptions" -}}
 {{/*  Define the template folder and default template for this markup  */}}
 {{- $TemplateFolder := "platen/markup/buttons/templates/link" -}}
 {{- $template       := "default"                              -}}
@@ -255,18 +256,19 @@
   {{- end -}}
 
   {{- with $options.label_icon -}}
-    {{- $labelAttributes := slice -}}
-    {{- if reflect.IsMap $options.label_icon -}}
-      {{- range $AttributeName, $AttributeValue := $options.label_icon -}}
-        {{- $labelAttributes = $labelAttributes | append (printf `%s="%s"` $AttributeName (print $AttributeValue)) -}}
-      {{- end -}}
-    {{- else -}}
-      {{- $labelAttributes = $labelAttributes | append (printf `name="%s"` $options.label_icon) -}}
+    {{- $resolveIconParams := dict "Page" $Page "Position" $Position "Icon" $options.label_icon        -}}
+    {{- $iconAttributeMap  := partialCached $resolveIconOptions $resolveIconParams $options.label_icon -}}
+
+    {{- $iconAttributes := slice -}}
+    {{- range $Key, $Value := $iconAttributeMap -}}
+      {{- $IconAttribute   := printf `%s="%s"` $Key (print $Value)     -}}
+      {{- $iconAttributes   = $iconAttributes | append $IconAttribute  -}}
     {{- end -}}
-    {{- $attributeParams := dict "Attributes" $labelAttributes "IndentCount" 27          -}}
-    {{- $labelAttributes  = partial "platen/utils/getSafeAttributes" $attributeParams    -}}
-    {{- $Label    := printf `<sl-icon %s></sl-icon>` $labelAttributes                    -}}
-    {{- $canonical = merge $canonical (dict "Label" $Label)                              -}}
+
+    {{- $attributeParams := dict "Attributes" $iconAttributes "IndentCount" 27           -}}
+    {{- $labelAttributes := partial "platen/utils/getSafeAttributes" $attributeParams    -}}
+    {{- $Label           := printf `<sl-icon %s></sl-icon>` $labelAttributes             -}}
+    {{- $canonical        = merge $canonical (dict "Label" $Label)                       -}}
     {{- if isset $options "circle" -}}
       {{- $attributes = $attributes | append (printf `circle="%v"` $options.circle) -}}
     {{- end -}}
@@ -291,12 +293,12 @@
   {{/*  Handle the prefix  */}}
   {{- $prefixAttributes := slice -}}
   {{- with $options.prefix_icon -}}
-    {{- if reflect.IsMap $options.prefix_icon -}}
-      {{- range $AttributeName, $AttributeValue := $options.prefix_icon -}}
-        {{- $prefixAttributes = $prefixAttributes | append (printf `%s="%s"` $AttributeName (print $AttributeValue)) -}}
-      {{- end -}}
-    {{- else -}}
-      {{- $prefixAttributes = $prefixAttributes | append (printf `name="%s"` $options.prefix_icon) -}}
+    {{- $resolveIconParams  := dict "Page" $Page "Position" $Position "Icon" $options.prefix_icon        -}}
+    {{- $iconAttributeMap   := partialCached $resolveIconOptions $resolveIconParams $options.prefix_icon -}}
+
+    {{- range $Key, $Value := $iconAttributeMap -}}
+      {{- $IconAttribute   := printf `%s="%s"` $Key (print $Value)       -}}
+      {{- $prefixAttributes = $prefixAttributes | append $IconAttribute  -}}
     {{- end -}}
   {{- end -}}
   {{- with $prefixAttributes -}}
@@ -308,12 +310,12 @@
   {{/*  Handle the suffix  */}}
   {{- $suffixAttributes := slice -}}
   {{- with $options.suffix_icon -}}
-    {{- if reflect.IsMap $options.suffix_icon -}}
-      {{- range $AttributeName, $AttributeValue := $options.suffix_icon -}}
-        {{- $suffixAttributes = $suffixAttributes | append (printf `%s="%s"` $AttributeName (print $AttributeValue)) -}}
-      {{- end -}}
-    {{- else -}}
-      {{- $suffixAttributes = $suffixAttributes | append (printf `name="%s"` $options.suffix_icon) -}}
+    {{- $resolveIconParams  := dict "Page" $Page "Position" $Position "Icon" $options.suffix_icon        -}}
+    {{- $iconAttributeMap   := partialCached $resolveIconOptions $resolveIconParams $options.suffix_icon -}}
+
+    {{- range $Key, $Value := $iconAttributeMap -}}
+      {{- $IconAttribute   := printf `%s="%s"` $Key (print $Value)       -}}
+      {{- $suffixAttributes = $suffixAttributes | append $IconAttribute  -}}
     {{- end -}}
   {{- end -}}
   {{- with $suffixAttributes -}}
