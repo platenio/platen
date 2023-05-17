@@ -1,0 +1,22 @@
+{{/*  
+    Utility Partial: jsonify
+
+    This utility partial is a somewhat friendly wrapper for use when debugging
+    or displaying JSON info. It just calls jsonify on the input but always sets
+    the indent and noHTMLEscape options.
+
+    Use when debugging to turn calls like this:
+
+        {{- warnf "Result is: %s" (
+              $Result | jsonify (dict "indent" "  " "noHTMLEscape" true)
+            )
+        -}}
+
+    Into this:
+
+    {{- warnf "Result is: %s" (partial "platen/utils/jsonify" $Result) -}}
+*/}}
+{{- $Input   := .                                      -}}
+{{- $Options := dict "indent" "  " "noHTMLEscape" true -}}
+
+{{- return ($Input | jsonify $Options) -}}
