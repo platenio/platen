@@ -1,126 +1,27 @@
 {{/*
-    Docs.Partial: generate
+  Docs.Partial: generate
+
+  This partial generates and renders the table of contents for a page.
+
+  It expects input as a map with the following keys:
+
+  - `ForMobile` - A boolean value indicating whether the TOC is being rendered
+    for the mobile view or desktop. When this value is `true`, the ID for the
+    TOC has `Mobile` added to it.
+  
+  The partial calls `_canonicalize` to get the template and parameters for
+  rendering the TOC. It renders the TOC inside a nav element.
 */}}
-{{- $pageContent   := page.Content                                              -}}
-{{- $ConfigKey     := "platen.display.table_of_contents"                        -}}
-{{- $SiteConfigToC := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
-{{- $PageConfigToC := page.Params.platen.table_of_contents                      -}}
+{{- $Params    := .                 -}}
+{{- $ForMobile := $Params.ForMobile -}}
 
-{{/* Parse settings for minimum and maximum heading levels to include in ToC */}}
-{{- $MinLevel := $PageConfigToC.minimum_level | default $SiteConfigToC.minimum_level | default 2 -}}
-{{- $MaxLevel := $PageConfigToC.maximum_level | default $SiteConfigToC.maximum_level | default 4 -}}
-
-{{/* Build Regex to find includable headings. */}}
-{{- $headerFullPattern := printf "<h[%v-%v].*?>(.|\n)+?</h[%v-%v]>"
-                          $MinLevel $MaxLevel $MinLevel $MaxLevel
--}}
-{{- $headerTextPattern := printf "<h[%v-%v].*?>((.|\n)+?)</h[%v-%v]>"
-                          $MinLevel $MaxLevel $MinLevel $MaxLevel
--}}
-
-{{/* Build Regex to find heading levels. */}}
-{{- $levelPattern := printf "[%v-%v]" $MinLevel $MaxLevel -}}
-
-{{/* Parse settings to determine if the items should be in ordered or unordered lists */}}
-{{- $UseOrderedList := $PageConfigToC.ordered_list
-                       | default $SiteConfigToC.ordered_list
-                       | default false
--}}
-{{- $ListType := cond $UseOrderedList "ol" "ul" -}}
-
-{{/* Create open and closing list tags for convenience */}}
-{{- $OpenList  := printf "<%s>"  $ListType | safeHTML -}}
-{{- $CloseList := printf "</%s>" $ListType | safeHTML -}}
-
-{{/* Find all headings in the rendered content */}}
-{{- $headers     := findRE $headerFullPattern $pageContent -}}
-{{- $has_headers := ge (len $headers) 1                    -}}
-{{- if $has_headers -}}
-
-{{- $largest := 6 -}}
-{{- range $headers -}}
-  {{- $headerLevel := index (findRE $levelPattern . 1) 0 -}}
-  {{- $headerLevel := len (seq $headerLevel)             -}}
-  {{- if lt $headerLevel $largest -}}
-    {{- $largest = $headerLevel -}}
-  {{- end -}}
+{{- $id := "TableOfContents" -}}
+{{- if eq true $ForMobile -}}
+  {{- $id = printf "%sMobile" $id -}}
 {{- end -}}
 
-{{- $firstHeaderLevel := len (seq (index (findRE $levelPattern (index $headers 0) 1) 0)) -}}
+{{- $Canonical := partial "platen/toc/_canonicalize" -}}
 
-{{- $.Scratch.Set "bareul" slice -}}
-<nav id="TableOfContents">
-{{ $OpenList }}
-  {{- range seq (sub $firstHeaderLevel $largest) -}}
-    {{ $OpenList }}
-    {{- $.Scratch.Add "bareul" (sub (add $largest .) 1) -}}
-  {{- end -}}
-  {{- range $index, $header := $headers -}}
-    {{- $headerLevel := index (findRE $levelPattern . 1) 0 -}}
-    {{- $headerLevel := len (seq $headerLevel) -}}
-
-    {{/* get id="xyz" */}}
-    {{- $id := index (findRE "(id=\"(.*?)\")" $header 9) 0 -}}
-
-    {{/* strip id="" to leave xyz (no way to get regex capturing groups in hugo :( */}}
-    {{- $cleanedID := replace (replace $id "id=\"" "") "\"" "" -}}
-
-    {{/* Get header text, stripped of anchor and leading/trailing whitespace */}}
-    {{- $header := replaceRE $headerTextPattern          "$1" $header -}}
-    {{- $header := replaceRE "<a class=\"anchor\".*</a>" ""   $header -}}
-    {{- $header := replaceRE "\n"                        ""   $header -}}
-    {{- $header := trim $header " "                                   -}}
-
-    {{- if ne $index 0 -}}
-      {{- $prevHeader      := index $headers (sub $index 1)                      -}}
-      {{- $prevHeaderLevel := index (findRE $levelPattern $prevHeader 1) 0 | int -}}
-        {{/* Handle nested lists based on level */}}
-        {{- if gt $headerLevel $prevHeaderLevel -}}
-          {{- range seq $prevHeaderLevel (sub $headerLevel 1) -}}
-            {{ $OpenList }}
-            {{/* the first should not be recorded */}}
-            {{- if ne $prevHeaderLevel . -}}
-              {{- $.Scratch.Add "bareul" . -}}
-            {{- end -}}
-          {{- end -}}
-        {{- else -}}{{/* Item is at the same level as or lower than previous header */}}
-          </li>
-          {{- if lt $headerLevel $prevHeaderLevel -}}
-            {{- range seq (sub $prevHeaderLevel 1) -1 $headerLevel -}}
-              {{- if in ($.Scratch.Get "bareul") . -}}
-                {{ $CloseList }}
-                {{/* manually do pop item */}}
-                {{- $tmp := $.Scratch.Get "bareul" -}}
-                {{- $.Scratch.Delete "bareul" -}}
-                {{- $.Scratch.Set "bareul" slice}}
-                {{- range seq (sub (len $tmp) 1) -}}
-                  {{- $.Scratch.Add "bareul" (index $tmp (sub . 1)) -}}
-                {{- end -}}
-              {{- else -}}
-                {{ $CloseList }}</li>
-              {{- end -}}
-            {{- end -}}
-          {{- end -}}
-        {{- end -}}
-        <li>
-          <a href="#{{- $cleanedID  -}}">{{- $header | safeHTML -}}</a>
-    {{- else -}}
-    <li>
-      <a href="#{{- $cleanedID -}}">{{- $header | safeHTML -}}</a>
-    {{- end -}}
-  {{- end -}}
-
-  {{- $firstHeaderLevel := $largest                                           -}}
-  {{- $lastHeader       := index $headers (sub (len $headers) 1)              -}}
-  {{- $lastHeaderLevel  := int (index (findRE $levelPattern $lastHeader 1) 0) -}}
-  </li>
-  {{- range seq (sub $lastHeaderLevel $firstHeaderLevel) -}}
-    {{- if in ($.Scratch.Get "bareul") (add . $firstHeaderLevel) -}}
-      {{ $CloseList }}
-    {{- else -}}
-      {{ $CloseList }}</li>
-    {{- end -}}
-  {{- end -}}
-{{ $CloseList }}
+<nav id="{{ $id | safeHTMLAttr }}">
+  {{ partial $Canonical.Template $Canonical }}
 </nav>
-{{- end -}}

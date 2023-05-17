@@ -1,0 +1,96 @@
+{{/*
+    TOC Utility Partial: parseHeading
+
+    This partial parses a string containing an HTML heading element to return
+    a map of the element's values.
+
+    The return map for the heading always includes:
+
+    - `HTML`: The raw HTML for the heading, as passed to this partial.
+    - `Level`: An integer representing the heading's level. Always between one
+      and six, inclusive.
+    - `ID`: The `id` attribute for the heading, also known as its anchor.
+    - `Text`: An HTML string representing the inner HTML for the heading. This
+      string is munged to remove the Platen-added anchor element and to remove
+      the wrapping `<a></a>` from any nested links in the heading, since those
+      will break the TOC.
+    - `Attributes`: The map of attributes passed to the heading from markup, if
+      the heading was handled by Platen on a content page. This isn't populated
+      if the attributes were added with `markdownify` or if the heading was
+      added by a shortcode or partial that didn't call `.RenderString` on the
+      page.
+*/}}
+{{- $Heading := . -}}
+{{/*  Define partials for easier usage and renaming  */}}
+{{- $mungeHeadingInner := "platen/toc/utils/mungeHeadingInner" -}}
+{{/*
+    This is the pattern that parses the heading's HTML. Each component of the
+    pattern is explained below:
+
+    - `<h([1-6])`
+
+      This component looks for the opening of the heading and captures the
+      heading's level.
+    - `[^>]*?`
+
+      This component looks for any number of any character except the closing
+      angle bracket for the heading, with a non-greedy match, to account for
+      any attributes on the heading before the `id` attribute.
+    - `id="([^\x22]*)"`
+
+      This component looks for the `id` attribute on the heading and captures its
+      value. If the heading doesn't have an `id` attribute, it doesn't match.
+    - `[^>]*>`
+
+      This component looks for any number of any character except the closing
+      angle bracket for the heading, to account for any attributes on the
+      heading after the `id` attribute. Then it matches the closing angle
+      bracket.
+
+    - `((?:.|\s)+?)`
+
+      This component captures all of the content inside the heading element as
+      a single, non-greedy match. If the heading has no inner content, it
+      doesn't match the regex.
+    - `<\/h[1-6]>`
+
+      This component matches the closing of the heading element.
+*/}}
+{{- $Pattern := delimit (
+      slice
+      `<h([1-6])`
+      `[^>]*?`
+      `id="([^\x22]*)"`
+      `[^>]*>`
+      `((?:.|\s)+?)`
+      `<\/h[1-6]>`
+    ) "" | print
+-}}
+
+{{/*  Initialize the map of info for the parsed heading  */}}
+{{- $info := dict -}}
+
+{{/*  If the heading HTML is a match, populate the info map.  */}}
+{{- with $Matches := findRESubmatch $Pattern $Heading -}}
+  {{- $Match := index $Matches 0                                       -}}
+  {{- $HTML  := index $Match   0                                       -}}
+  {{- $Level := index $Match   1 | int                                 -}}
+  {{- $ID    := index $Match   2                                       -}}
+  {{- $Inner := index $Match   3                                       -}}
+  {{- $Text  := partialCached $mungeHeadingInner $Inner $Inner         -}}
+  {{- $info   = dict "HTML" $HTML "Level" $Level "ID" $ID "Text" $Text -}}
+
+  {{/*
+      If the partial has access to the top-level page, retrieve the heading
+      map and see if this heading's ID is set in it. If so, merge the passed
+      attributes for the heading into the info map.
+  */}}
+  {{- with page -}}
+    {{- $PageHeadingMap := page.Store.Get "_HeadingMap" | default (dict) -}}
+    {{- with $PageInfo := index $PageHeadingMap $ID -}}
+      {{- $info = merge $info (dict "Attributes" $PageInfo.Attributes) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $info -}}

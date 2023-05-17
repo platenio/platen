@@ -1,3 +1,5 @@
+{{- $Params  := .               -}}
+
 {{/*
   Determine whether to use Hugo's generator for the table of contents or Platen's. By default, use
   Platen's generator. If the site configuration specifies a value, use that setting.
@@ -11,12 +13,12 @@
        "Default" false
 ) -}}
 
-{{ partial "platen/inject/toc-before" }}
+{{ partial "platen/inject/toc-before" $Params }}
 
 {{ if $useBuiltInToC -}}
   {{ page.TableOfContents }}
 {{ else -}}
-  {{ partial "platen/toc/generate" }}
+  {{ partial "platen/toc/generate" $Params }}
 {{ end }}
 
-{{ partial "platen/inject/toc-after" }}
+{{ partial "platen/inject/toc-after" $Params }}

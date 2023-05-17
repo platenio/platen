@@ -1,29 +1,15 @@
-{{/*
-  Determine if the ToC should be rendered:
-
-  - If set in the page params, use that value.
-  - If set in the site params but not the page, use that value.
-  - If not set at all, default to true.
-*/}}
-{{- $RenderToC := partial "platen/param/resolve" (
-  dict "Config"  "platen.display.table_of_contents.render"
-       "Param"   "platen.table_of_contents.render"
-       "Context" page
-       "Default" true
-) -}}
-
-{{- partial "platen/param/classes/canonicalize" -}}
 {{- $LanguageDirection := site.Language.LanguageDirection | default "ltr" -}}
 {{- $LanguageCode      := site.LanguageCode | default site.Language.Lang  -}}
 {{- $bodyAttributes    := printf `dir="%s"` $LanguageDirection            -}}
-{{- with (page.Store.Get "PlatenBodyClassAttribute") -}}
-  {{- $bodyAttributes = printf "%s %s" $bodyAttributes . -}}
+
+{{- partial "platen/param/classes/canonicalize" -}}
+{{- with $ClassAttribute := page.Store.Get "PlatenBodyClassAttribute" -}}
+  {{- $bodyAttributes = printf "%s %s" $bodyAttributes $ClassAttribute -}}
 {{- end -}}
 
 {{/* Write the HTML */}}
 <!DOCTYPE html>
-<html lang="{{ $LanguageCode }}"
-      dir="{{ $LanguageDirection }}">
+<html lang="{{ $LanguageCode }}" dir="{{ $LanguageDirection }}">
 <head>
   {{ partial "platen/htmlHead"    }}
   {{ partial "platen/inject/head" }}
@@ -56,10 +42,11 @@
 
       <label for="menu-control" class="hidden platen-menu-overlay"></label>
     </div>
-    {{ if $RenderToC }}
+    
+    {{- if (partialCached "platen/utils/shouldRenderToC" page page) }}
     <aside class="platen-toc">
       <div class="platen-toc-content">
-        {{ template "toc" }} <!-- Table of Contents -->
+        {{ template "toc" (dict "ForMobile" false) }} <!-- Table of Contents -->
       </div>
     </aside>
     {{ end }}
@@ -74,17 +61,11 @@
 {{ end }}
 
 {{ define "header" }}
-  {{- $RenderToC := partial "platen/param/resolve" (
-        dict "Config"  "platen.display.table_of_contents.render"
-             "Param"   "platen.table_of_contents.render"
-             "Context" page
-             "Default" true
-      )
-  -}}
   {{ partial "platen/header" }}
-  {{ if $RenderToC }}
+
+  {{- if (partialCached "platen/utils/shouldRenderToC" page page) }}
   <aside class="hidden clearfix">
-    {{ template "toc" }}
+    {{ template "toc" (dict "ForMobile" true) }}
   </aside>
   {{ end }}
 {{ end }}
@@ -115,5 +96,5 @@
 {{ end }}
 
 {{ define "toc" }}
-  {{ partial "platen/toc" }}
+  {{ partial "platen/toc" . }}
 {{ end }}

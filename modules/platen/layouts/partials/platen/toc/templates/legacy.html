@@ -1,0 +1,39 @@
+{{/*
+    TOC Template: Legacy
+
+    This template renders the TOC as an ordered or unordered list with the link
+    to each heading as an entry in the list. For headings with children, it
+    creates a nested list.
+
+    The link for each heading points to the heading's ID and displays the
+    heading's HTML, but without the anchor element or nested links.
+
+    This template is deprecated and will eventually be removed.
+*/}}
+{{- $Params   := .                -}}
+{{- $Headings := $Params.Headings -}}
+{{- $List     := $Params.List     -}}
+
+{{ $List.Open }}
+  {{ range $Heading := $Headings }}
+    {{- $Entry := dict "Heading" $Heading "List" $List    }}
+    {{ partial "platen/toc/templates/legacy/entry" $Entry }}
+  {{ end }}
+{{ $List.Close }}
+
+{{- define "partials/platen/toc/templates/legacy/entry" -}}
+  {{- $Entry    := .              -}}
+  {{- $Heading  := $Entry.Heading -}}
+  {{- $List     := $Entry.List     }}
+  <li>
+    <a href="#{{ $Heading.ID }}">{{ $Heading.Text | safeHTML }}</a>
+    {{ with $Heading.Children }}
+      {{ $List.Open }}
+        {{ range $Child := $Heading.Children }}
+          {{- $Entry := dict "Heading" $Child "List" $List      }}
+          {{ partial "platen/toc/templates/legacy/entry" $Entry }}
+        {{ end }}
+      {{ $List.Close }}
+    {{ end }}
+  </li>
+{{- end -}}

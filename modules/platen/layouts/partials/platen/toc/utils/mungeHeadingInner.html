@@ -1,0 +1,65 @@
+{{/*
+    TOC Utility Partial: mungeHeadingInner
+
+    This partial munges the inner HTML for a parsed heading to remove the
+    anchor element added by Platen's default render hook and to unlink any
+    other text in the heading for the TOC.
+
+    It expects to receive an HTML string as input.
+*/}}
+
+{{- $Inner  := . -}}
+{{- $munged := . -}}
+
+{{/*
+    This pattern finds the Platen-added anchor in a heading so it can be
+    removed. The components are:
+
+    - `<a[^>]*?class="[^\x22]*anchor[^\x22]*"[^>]*>`
+
+      Looks for a link element with the anchor class.
+    - `.*?`
+
+      Matches any inner text.
+    - `<\/a>`
+
+      Matches the closing of the element.
+*/}}
+{{- $AnchorPattern := delimit (
+      slice
+      `<a[^>]*?class="[^\x22]*anchor[^\x22]*"[^>]*>`
+      `.*?`
+      `<\/a>`
+    ) "" | print
+-}}
+
+{{/*
+    This pattern finds nested links in the HTML so they can be replaced by
+    their inner HTML only, effectively removing the nested links. The
+    components are:
+
+    - `\n?<a.*?>`
+
+      Optionally matches a newline followed by a link element.
+    - `(?:\s*)?((?:.|\s)*?)(?:\s*)?`
+      
+      Optionally matches any amount of whitespace, followed by the inner HTML
+      of the link, followed by any amount of whitespace. It captures only the
+      inner HTML between the wrapping whitespace.
+    - `<\/a>\n?`
+
+      Matches the closing for the link element followed by an optional newline.
+*/}}
+{{- $NestedLinkPattern := delimit (
+      slice
+      `\n?<a.*?>`
+      `(?:\s*)?((?:.|\s)*?)(?:\s*)?`
+      `<\/a>\n?`
+    ) "" | print
+-}}
+
+{{- $munged = replaceRE $AnchorPattern     ""   $munged -}}
+{{- $munged = replaceRE $NestedLinkPattern "$1" $munged -}}
+{{- $munged = trim      $munged            " \n"        -}}
+
+{{- return $munged -}}

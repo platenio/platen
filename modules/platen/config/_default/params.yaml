@@ -42,7 +42,7 @@ platen:
         body-background: "#343a40"
         body-font-color: "#e9ecef"
         icon-filter: brightness(0) invert(1)
-      custom_css:
+      custom_css: {}
     styles:
       base:
         html:
@@ -156,7 +156,16 @@ platen:
     table_of_contents:
       minimum_level: 2
       maximum_level: 4
-      render: true
+      render:        true
+      # indentation:
+      #   size: 1rem
+      #   guide_color: green
+      #   guide_offset: 0
+      #   guide_style: solid
+      #   guide_width: 3px
+      # collapse_icon: dash-square
+      # expand_icon:   plus-square
+      use_legacy: true
     date_format: "January 2, 2006"             # BookDateFormat
     header:
       title_as_heading: false
