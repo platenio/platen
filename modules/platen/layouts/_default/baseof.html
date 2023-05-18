@@ -18,7 +18,9 @@
 </head>
 <body {{ $bodyAttributes | safeHTMLAttr }}>
   <input type="checkbox" class="hidden toggle" id="menu-control" />
-  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  {{ if (partialCached "platen/utils/shouldRenderToC" page page) -}}
+    <input type="checkbox" class="hidden toggle" id="toc-control" />
+  {{- end }}
   <main class="container flex">
     <aside class="platen-menu">
       <div class="platen-menu-content">
