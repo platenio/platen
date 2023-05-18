@@ -2,15 +2,28 @@
 table_of_contents:
   minimum_level: 1
   maximum_level: 6
+  use_legacy: false
 date_format: "January 2, 2006"
 menu:
   root_section: /
+  languages_icon:
+    use_legacy: false
   before_injection:
     entries:
       - feature: toroidal
         weight: 1
         page_path: sites/platen
         display_name: Platen Sites
+mobile:
+  menu_control:
+    use_legacy: false
+  toc_control:
+    use_legacy: false
+footer:
+  last_edited_on:
+    use_legacy: false
+  edit_this_page:
+    use_legacy: false
 logo:
   url: /images/logo.svg
 header:

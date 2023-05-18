@@ -1,3 +1,5 @@
+{{- partialCached "platen/param/validate/legacy" "Cache" "Cache" -}}
+
 {{- $LanguageDirection := site.Language.LanguageDirection | default "ltr" -}}
 {{- $LanguageCode      := site.LanguageCode | default site.Language.Lang  -}}
 {{- $bodyAttributes    := printf `dir="%s"` $LanguageDirection            -}}
