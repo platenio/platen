@@ -31,7 +31,8 @@
     they're not part of the known skip list for the element.
 */}}
 {{/*  Define partials for easier renaming/use  */}}
-{{- $getSafeAttributes := "platen/utils/getSafeAttributes" -}}
+{{- $getSafeAttributes  := "platen/utils/getSafeAttributes"                    -}}
+{{- $resolveIconOptions := "platen/features/shoelace/utils/resolveIconOptions" -}}
 {{/*  Define constants  */}}
 {{- $SkipButtonOptions  := slice "use_legacy" "classes" "label" "tooltip" -}}
 {{- $SkipTooltipOptions := slice "content" "classes" "hoist"              -}}
@@ -47,8 +48,11 @@
 
 {{/*  Canonicalize the button's attributes  */}}
 {{- with $ButtonOptions -}}
+  {{/*  Resolve the options for name/variant/library  */}}
+  {{- $Resolving := dict "Icon" $ButtonOptions                              -}}
+  {{- $Options   := partialCached $resolveIconOptions $Resolving $Resolving -}}
   {{/*  Handle the button's label  */}}
-  {{- $label = $ButtonOptions.label | default $label -}}
+  {{- $label = $Options.label | default $label -}}
   {{- if hasPrefix $label $I18nPrefix -}}
     {{- $i18n := strings.TrimPrefix $I18nPrefix $label -}}
     {{- $label = i18n $i18n                            -}}
@@ -58,15 +62,15 @@
 
   {{/*  Handle the button's classes  */}}
   {{- $classes := slice "platen-btn" -}}
-  {{- with $ButtonOptions.classes -}}
-    {{- $classes = union $classes $ButtonOptions.classes -}}
+  {{- with $Options.classes -}}
+    {{- $classes = union $classes $Options.classes -}}
   {{- end -}}
   {{- $classes          = delimit $classes " "                       -}}
   {{- $ClassAttribute  := printf `class="%s"` $classes               -}}
   {{- $buttonAttributes = $buttonAttributes | append $ClassAttribute -}}
 
   {{/*  Handle remaining button attributes  */}}
-  {{- range $Name, $Value := $ButtonOptions -}}
+  {{- range $Name, $Value := $Options -}}
     {{- if not (in $SkipButtonOptions $Name) -}}
       {{- $Attribute       := printf `%s="%s"` $Name (print $Value) -}}
       {{- $buttonAttributes = $buttonAttributes | append $Attribute -}}
