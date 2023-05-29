@@ -1,0 +1,20 @@
+{{- $Params             := .                                         -}}
+{{- $ButtonAttributes   := $Params.ButtonAttributes   | safeHTMLAttr -}}
+{{- $ButtonLabel        := $Params.ButtonLabel        | safeHTML     -}}
+{{- $XRefID             := $Params.XRefID             | safeJS       -}}
+{{- $PromptTitle        := $Params.PromptTitle        | safeHTMLAttr -}}
+
+<sl-button @click="showPrompts($data, $refs, '{{ $XRefID }}')"
+           {{- with $ButtonAttributes }}
+           {{ $ButtonAttributes -}}
+           {{- end -}}>
+  {{ $ButtonLabel }}
+</sl-button>
+{{ partial "platen/markup/rolls/templates/resultSpan" $Params }}
+<sl-dialog label="{{ $PromptTitle }}">
+  <template x-for="prompt in prompts">
+    <sl-input x-init="definePrompt($el, prompt)">
+    </sl-input>
+  </template>
+  {{ partial "platen/markup/rolls/templates/blockButton" $Params }}
+</sl-dialog>

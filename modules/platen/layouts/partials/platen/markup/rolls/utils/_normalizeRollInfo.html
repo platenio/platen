@@ -1,0 +1,66 @@
+{{- $Params   := .              -}}
+{{- $Page     := $Params.Page   -}}
+{{- $Index    := $Params.Index  -}}
+{{- $Key      := $Params.Key    -}}
+{{- $Result   := $Params.Result -}}
+{{- $Roll     := $Params.Roll   -}}
+{{- $rollInfo := dict           -}}
+
+{{- $modifier := 1 -}}
+{{- with $Roll -}}
+  {{- $Matches := findRESubmatch `^(\d+)d\d+` $Roll -}}
+  {{- with $Matches -}}
+    {{- $Match := index $Matches 0 -}}
+    {{- $modifier = index $Match 1 | int -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with $Key -}}
+  {{/*  We need to prefix with non-whitespace so >=4 doesn't render as a block quote  */}}
+  {{/*  {{- $display          := printf "foo %s" $Key | $Page.RenderString -}}
+  {{- $display           = strings.TrimPrefix "foo " $display         -}}  */}}
+  {{- $rollInfo          = dict "Display" $Key                   -}}
+  {{- $MultiRollPattern := `^(\d+)((?:-\d+)+)$`                    -}}
+  {{- $MinOrMaxPattern  := `^(<|>)(=)?(\d+)$`                    -}}
+  {{- $MinAndMaxPattern := `^(\d+)--(\d+)$`                      -}}
+  {{- $MultiRollMatches := findRESubmatch $MultiRollPattern $Key -}}
+  {{- $OrMatches        := findRESubmatch $MinOrMaxPattern  $Key -}}
+  {{- $AndMatches       := findRESubmatch $MinAndMaxPattern $Key -}}
+  {{- if $MultiRollMatches -}}
+    {{- $Values := findRE `\d+` $Key -}}
+    {{- $Value  := apply $Values "int" "." -}}
+    {{- $rollInfo = merge $rollInfo (dict "Value" $Value) -}}
+  {{- else if $OrMatches -}}
+    {{- $Match    := index $OrMatches 0                          -}}
+    {{- $operator := index $Match     1                          -}}
+    {{- $display  := cond (eq ">" $operator)  "&g"      "&l"     -}}
+    {{- $operator  = cond (eq ">" $operator) "Minimum" "Maximum" -}}
+    {{- $Number   := index (last 1 $Match) 0 | int               -}}
+    {{- if eq 3 (len $Match) -}}
+      {{- $operator = printf "Exclusive%s" $operator -}}
+      {{- $display  = printf "%st;"        $display  -}}
+    {{- else -}}
+      {{- $display = printf "%se;" $display -}}
+    {{- end -}}
+    {{- $display = printf "%s%v" $display $Number -}}
+    {{- $rollInfo = merge $rollInfo (dict $operator $Number "Display" $display) -}}
+  {{- else if $AndMatches -}}
+    {{- $Match   := index $AndMatches 0                                           -}}
+    {{- $Minimum := index $Match 1 | int                                          -}}
+    {{- $Maximum := index $Match 2 | int                                          -}}
+    {{- $Display := printf "%v&ndash;%v" $Minimum $Maximum                        -}}
+    {{- $Info    := dict "Minimum" $Minimum "Maximum" $Maximum "Display" $Display -}}
+    {{- $rollInfo = merge $rollInfo $Info                                         -}}
+  {{- else -}}
+    {{- $rollInfo = merge $rollInfo (dict "Value" (int $Key)) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if ne nil $Index -}}
+  {{- $Display  := add $modifier $Index | print           -}}
+  {{- $Value    := int $Display                           -}}
+  {{- $rollInfo  = dict "Display" $Display "Value" $Value -}}
+{{- end -}}
+
+{{- $rollInfo = dict "_roll"   $rollInfo -}}
+{{- return $rollInfo -}}

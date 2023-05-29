@@ -1,0 +1,40 @@
+{{- $Params             := .                                         -}}
+{{- $ButtonPlacement    := $Params.ButtonPlacement                   -}}
+{{- $Classes            := $Params.Classes            | safeHTMLAttr -}}
+{{- $ID                 := $Params.ID                 | safeHTMLAttr -}}
+{{- $Prompts            := $Params.Prompts                           -}}
+{{- $Roll               := $Params.Roll                              -}}
+{{- $Results            := $Params.Results                           -}}
+{{- $ResultTextTemplate := $Params.ResultTextTemplate | default ""   -}}
+{{- $Notation           := $Params.Notation           | safeJS       -}}
+{{- $Label              := $Params.Label              | safeHTML     -}}
+{{- $XRefID             := $Params.XRefID             | safeJS       -}}
+{{/*  Define templates for easier maintenance/renaming  */}}
+{{- $TemplatePrefix     := "platen/markup/rolls/templates" -}}
+{{- $ListBlockTemplate  := printf "%s/lists/block" $TemplatePrefix -}}
+{{- $ButtonTemplate     := printf "%s/blockButton" $TemplatePrefix -}}
+{{- $ResultSpanTemplate := printf "%s/resultSpan"  $TemplatePrefix -}}
+{{- $ButtonAttributes   := $Params.ButtonAttributes  | safeHTMLAttr -}}
+{{- $TooltipAttributes  := $Params.TooltipAttributes | safeHTMLAttr -}}
+
+{{/*  Build the blob for alpine to use.  */}}
+{{- $AlpineData := dict
+                   "prompts"              $Prompts
+                   "roll"                 $Roll
+                   "results"              $Results
+                   "result_text_template" $ResultTextTemplate
+                   "result_text"          "Click to roll"
+-}}
+
+<span class="{{ $Classes }}"
+     {{- with $ID }}
+     id="{{ $ID }}"
+     {{- end }}
+     x-data="{{ $AlpineData | jsonify }}"
+     x-ref="{{ $XRefID }}">
+     <sl-tooltip hoist {{ $TooltipAttributes }} :content="result_text">
+        <sl-button @click="rollInline($data, $refs, '{{ $XRefID }}')" {{ $ButtonAttributes }}>
+            {{ $Label }}
+        </sl-button>
+     </sl-tooltip>
+</span>

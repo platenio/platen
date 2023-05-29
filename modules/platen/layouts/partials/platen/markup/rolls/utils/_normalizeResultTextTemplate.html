@@ -1,0 +1,56 @@
+{{- $Params    := .                 -}}
+{{- $Canonical := $Params.Canonical -}}
+{{- $Options   := $Params.Options   -}}
+{{- $Page      := $Params.Page      -}}
+
+{{- $resultTextTemplate := "" -}}
+{{- $temp := ""}}
+{{- with $Options.result_text -}}
+  {{- if ne "true" (print $Options.result_text) -}}
+    {{- $temp = $Options.result_text | $Page.RenderString -}}
+  {{- end -}}
+{{- end -}}
+{{- with $temp -}}
+  {{/*  Nothing to do  */}}
+{{- else -}}
+  {{- $RollKey           := $Canonical.RollKey -}}
+  {{- $Keys              := $Canonical.Keys    -}}
+  {{- $temp = "Roll result is:"  -}}
+  
+  {{- if eq (len $Keys) 1 -}}
+    {{- $Key := index $Keys "0" -}}
+    {{- $temp = printf "%s {{ %s }}" $temp $Key.Value -}}
+  {{- else -}}
+    {{- $info  := slice -}}
+    {{- range $Key := $Keys -}}
+      {{- $info = $info | append (printf "%s ({{ %s }})" $Key.Display $Key.Value) -}}
+    {{- end -}}
+  
+    {{- $info               = delimit $info     ", "     ", and "      -}}
+    {{- $temp = printf "%s %s" $temp $info -}}
+  {{- end -}}
+{{- end -}}
+
+
+{{- if or (eq $Options.result_text true) (not (isset $Options "result_text")) -}}
+  {{- $RollKey           := $Canonical.RollKey -}}
+  {{- $Keys              := $Canonical.Keys    -}}
+  {{- $resultTextTemplate = "Roll result is:"  -}}
+
+  {{- if eq (len $Keys) 1 -}}
+    {{- $Key := index $Keys "0" -}}
+    {{- $resultTextTemplate = printf "%s {{ %s }}" $resultTextTemplate $Key.Value -}}
+  {{- else -}}
+    {{- $info  := slice -}}
+    {{- range $Key := $Keys -}}
+      {{- $info = $info | append (printf "%s ({{ %s }})" $Key.Display $Key.Value) -}}
+    {{- end -}}
+
+    {{- $info               = delimit $info     ", "     ", and "      -}}
+    {{- $resultTextTemplate = printf "%s %s" $resultTextTemplate $info -}}
+  {{- end -}}
+{{- else -}}
+  {{- $resultTextTemplate = $Options.result_text | $Page.RenderString -}}
+{{- end -}}
+
+{{- return $resultTextTemplate -}}

@@ -1,0 +1,31 @@
+{{- $Params := . -}}
+
+<sl-tab-group>
+    <template x-for="(tab, key) in tabs">
+        <sl-tab slot="nav" :panel="tab.name" x-text="tab.name"></sl-tab>
+    </template>
+    <template x-for="(tab, key) in tabs">
+        <sl-tab-panel :name="tab.name">
+            <table>
+                <thead>
+                    <tr>
+                        <th x-text="roll_key"></th>
+                        <template x-for="key in keys">
+                            <th x-text="key.Display"></th>
+                        </template>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template x-for="result in (sortResultsInfo(filterResults(results, tab.results)))">
+                        <tr :data-roll="JSON.stringify(result._roll)" :data-active="false">
+                            <td x-text="decodeHTML(result._roll.Display)"></td>
+                            <template x-for="key in keys">
+                                <td x-html="decodeHTML(result[key.Value])"></td>
+                            </template>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </sl-tab-panel>
+    </template>
+</sl-tab-group>

@@ -1,0 +1,15 @@
+{{- $Params  := .               -}}
+{{- $Options := $Params.Options -}}
+{{- $ids     := dict            -}}
+
+{{- $RandomHash := delimit (shuffle (split (md5 now.Unix) "" )) "" -}}
+{{- $XRefID     := printf "roll-results-%.7s" $RandomHash          -}}
+
+{{- with $Options.id -}}
+  {{- $ids    = merge $ids (dict "ID" $Options.id)   -}}
+  {{- $XRefID = printf "roll-results-%s" $Options.id -}}
+{{- end -}}
+
+{{- $ids = merge $ids (dict "XRefID" $XRefID) -}}
+
+{{- return $ids -}}

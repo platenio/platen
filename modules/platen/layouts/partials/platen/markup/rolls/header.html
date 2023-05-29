@@ -1,0 +1,22 @@
+{{- $Context          := .                                                         -}}
+{{- $IntegrityPartial := "platen/utils/getIntegrityAttributes"                     -}}
+{{- $CacheKey         := printf "PlatenRollsScript"                                -}}
+{{- $ConfigKey        := "platen.markup.rolls"                                     -}}
+{{- $Config           := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+{{- $StoreKey         := "_hasRolls"                                               -}}
+{{- $AssetPath        := "scripts/markup/rolls/rolling.js"                         -}}
+{{- $RenderPath       := "scripts/platen/rolling.js"                               -}}
+{{- $Template         := "platen/markup/rolls/templates/header"                    -}}
+{{- $LoadRolls        := $Context.Store.Get $StoreKey                              -}}
+
+{{- if $LoadRolls -}}
+  {{- $Resource  := resources.Get $AssetPath
+                    | resources.Copy $RenderPath
+                    | resources.Fingerprint
+  -}}
+  {{- $Integrity := partialCached $IntegrityPartial $Resource $CacheKey         -}}
+  {{- $Params    := dict "Source" $Resource.RelPermalink "Integrity" $Integrity -}}
+
+  {{/*  Render the template  */}}
+  {{- partialCached $Template $Params $Params -}}
+{{- end -}}

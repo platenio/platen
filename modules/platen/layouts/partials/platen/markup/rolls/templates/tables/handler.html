@@ -1,0 +1,8 @@
+{{- $Params := . -}}
+
+{{- with $Params.Prompts -}}
+  {{- partial "platen/markup/rolls/templates/prompts" $Params -}}
+{{- else -}}
+  {{- partial "platen/markup/rolls/templates/blockButton" $Params }}
+  {{  partial "platen/markup/rolls/templates/resultSpan"  $Params }}
+{{- end -}}

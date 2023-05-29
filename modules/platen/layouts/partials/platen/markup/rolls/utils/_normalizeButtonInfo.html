@@ -1,0 +1,47 @@
+{{- $Params     := .               -}}
+{{- $Options    := $Params.Options -}}
+{{- $Page       := $Params.Page    -}}
+{{- $buttonInfo := dict            -}}
+
+{{- $getSafeAttributes    := "platen/utils/getSafeAttributes"    -}}
+
+{{/*  First, render and add the label.  */}}
+{{- $buttonLabel := $Options.button.label | default "Roll"              -}}
+{{- $buttonLabel := $Page.RenderString $buttonLabel                     -}}
+{{- $buttonInfo   = merge $buttonInfo (dict "ButtonLabel" $buttonLabel) -}}
+
+{{/*  Handle the placement, defaulting to below the list/table  */}}
+{{- $buttonPlacement := $Options.button.placement | default "below"                 -}}
+{{- $buttonInfo       = merge $buttonInfo (dict "ButtonPlacement" $buttonPlacement) -}}
+
+{{/*  Handle the various attributes for the button  */}}
+{{- $buttonAttributes := slice -}}
+{{- with $Options.button.variant -}}
+  {{- $variantAttribute := printf `variant="%s"` $Options.button.variant -}}
+  {{- $buttonAttributes  = $buttonAttributes | append $variantAttribute  -}}
+{{- end -}}
+
+{{- with $Options.button.size -}}
+  {{- $sizeAttribute   := printf `size="%s"` $Options.button.size    -}}
+  {{- $buttonAttributes = $buttonAttributes | append $sizeAttribute  -}}
+{{- end -}}
+
+{{- if eq true $Options.button.outline -}}
+  {{- $buttonAttributes = $buttonAttributes | append "outline" -}}
+{{- end -}}
+
+{{- if eq true $Options.button.pill -}}
+  {{- $buttonAttributes = $buttonAttributes | append "pill" -}}
+{{- end -}}
+
+{{/*  TODO: Handle Icons  */}}
+
+{{- $attributeParams := dict
+                        "Attributes"  $buttonAttributes
+                        "IndentCount" 11
+                        "MultiLine"   true
+-}}
+{{- $buttonAttributes = partial $getSafeAttributes $attributeParams                   -}}
+{{- $buttonInfo       = merge $buttonInfo (dict "ButtonAttributes" $buttonAttributes) -}}
+
+{{- return $buttonInfo -}}

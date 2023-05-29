@@ -1,0 +1,7 @@
+button:
+  pill: true
+  variant: text
+  outline: true
+tooltip:
+  placement: top
+result_text_template: "Rolled: {{ result.sum }}. Click to roll again."

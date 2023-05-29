@@ -1,0 +1,6 @@
+{{- $Params             := .                          -}}
+{{- $ResultTextTemplate := $Params.ResultTextTemplate -}}
+
+{{- with $ResultTextTemplate -}}
+  <span class="result-text" x-html="decodeHTML(result_text)"></span>
+{{- end -}}

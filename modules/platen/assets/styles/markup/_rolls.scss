@@ -1,0 +1,65 @@
+.markdown span.inline-roll {
+  sl-button[variant="text"] {
+    &::part(label) {
+      padding-left: 0;
+      padding-right: 0;
+      font-size: inherit;
+      font-family: inherit;
+    }
+  }
+}
+
+.markdown div.platen-roll-table {
+  // targets the list itself
+  --rolled-item-color: var(--sl-color-primary-700);
+  --rolled-item-weight: bolder;
+  contain: layout;
+  table {
+    height: 100%;
+    // general list items
+    tr {
+      // rolled item
+      &[data-active="true"] {
+        color: var(--rolled-item-color);
+        font-weight: var(--rolled-item-weight);
+      }
+    }
+  }
+  span.result-text {
+    margin-inline-start: $padding-large;
+  }
+  sl-dialog {
+    &::part(base) {
+      // top: 50%;
+      // left: 50%;
+      // inset: unset;
+    }
+  }
+}
+
+.markdown div.platen-roll-list {
+  // targets the list itself
+  --rolled-item-color: var(--sl-color-primary-700);
+  --rolled-item-weight: bolder;
+  ol {
+    // general list items
+    li {
+      // rolled item
+      &[data-active="true"] {
+        color: var(--rolled-item-color);
+        font-weight: var(--rolled-item-weight);
+        ::marker {
+          color: var(--rolled-item-color);
+          font-weight: var(--rolled-item-weight);
+        }
+      }
+      // list-style: none;
+      &::marker {
+        content: attr(data-list-content);
+      }
+    }
+  }
+  span.result-text {
+    margin-inline-start: $padding-large;
+  }
+}

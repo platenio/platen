@@ -1,0 +1,48 @@
+{{- $Params             := .                                            -}}
+{{- $ButtonPlacement    := $Params.ButtonPlacement                      -}}
+{{- $Classes            := $Params.Classes            | safeHTMLAttr    -}}
+{{- $ID                 := $Params.ID                 | safeHTMLAttr    -}}
+{{- $Keys               := $Params.Keys                                 -}}
+{{- $Prompts            := $Params.Prompts                              -}}
+{{- $Roll               := $Params.Roll                                 -}}
+{{- $RollKey            := $Params.RollKey                              -}}
+{{- $Results            := $Params.Results                              -}}
+{{- $ResultTextTemplate := $Params.ResultTextTemplate | default ""      -}}
+{{- $XRefID             := $Params.XRefID             | safeHTMLAttr    -}}
+{{- $Tabs               := $Params.Tabs               | default (slice) -}}
+{{/*  Define templates for easier maintenance/renaming  */}}
+{{- $TemplatePrefix     := "platen/markup/rolls/templates/tables" -}}
+{{- $HandlerTemplate    := printf "%s/handler" $TemplatePrefix    -}}
+{{- $ContentTemplate    := printf "%s/block"   $TemplatePrefix    -}}
+{{- with $Tabs -}}
+  {{- $ContentTemplate = printf "%s/tabs" $TemplatePrefix -}}
+{{- end -}}
+
+{{/*  Build the blob for alpine to use.  */}}
+{{- $AlpineData         := dict
+                           "keys"                 $Keys
+                           "prompts"              $Prompts
+                           "roll"                 $Roll
+                           "roll_key"             $RollKey
+                           "results"              $Results
+                           "result_text_template" $ResultTextTemplate
+                           "result_text"          ""
+                           "tabs"                 $Tabs
+-}}
+
+<div class="{{ $Classes }}"
+     {{- with $ID }}
+     id="{{ $ID }}"
+     {{- end }}
+     x-data="{{ $AlpineData | jsonify }}"
+     x-ref="{{ $XRefID }}">
+  {{ if eq "above" $ButtonPlacement -}}
+  {{ partial "platen/markup/rolls/templates/tables/handler" $Params }}
+
+  {{ partial $ContentTemplate $Params }}
+  {{- else }}
+  {{ partial $ContentTemplate $Params }}
+
+  {{ partial "platen/markup/rolls/templates/tables/handler" $Params }}
+  {{- end }}
+</div>

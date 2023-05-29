@@ -1,0 +1,133 @@
+{{- $Params     := .                  -}}
+{{- $Position   := $Params.Position   -}} {{/* The markup's position in the Markdown - only for codeblocks  */}}
+{{- $Page       := $Params.Page       -}} {{/* The Page object for the Markdown document the markup is in   */}}
+{{- $Options    := $Params.Options    -}} {{/* The pre-merged options, attributes, and preset properties    */}}
+{{- $canonical  := dict               -}} {{/* The return value for the canonicalized list-specific  values */}}
+
+{{/*  Roll-specific utility partials  */}}
+{{- $normalizeButtonInfo         := "platen/markup/rolls/utils/_normalizeButtonInfo"         -}}
+{{- $normalizePromptInfo         := "platen/markup/rolls/utils/_normalizePromptInfo"         -}}
+{{- $normalizeRollInfo           := "platen/markup/rolls/utils/_normalizeRollInfo"           -}}
+{{- $normalizeResultTextTemplate := "platen/markup/rolls/utils/_normalizeResultTextTemplate" -}}
+{{- $normalizeSimpleResults      := "platen/markup/rolls/utils/_normalizeSimpleResults"      -}}
+{{- $getIDs                      := "platen/markup/rolls/utils/_getIDs"                      -}}
+{{/*  Define the template folder and default template for this markup  */}}
+{{- $TemplateFolder := "platen/markup/rolls/templates/tables" -}}
+{{- $template       := "default"                              -}}
+
+{{/*  Normalize and canonicalize the results  */}}
+{{- with $Options.results -}}
+  {{- $results := slice                                                       -}}
+  {{- $keys    := slice                                                       -}}
+  {{- $rollKey := $Options.roll_name | default $Options.roll | default "Roll" -}}
+
+  {{/*  Use with/else so we can only iterate on result keys if needed  */}}
+  {{- with $Options.headers -}}
+    {{- $keys = $Options.headers -}}
+  {{- else -}}
+    {{- range $Result := $Options.results -}}
+      {{- if reflect.IsMap $Result -}}
+        {{- range $Key, $_ := $Result -}}
+          {{- $keys = $keys | append $Key | uniq -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/*  Normalize the results.  */}}
+  {{- if gt (len $keys) 1 -}}
+    {{- range $Roll, $Result := $Options.results -}}
+      {{- $entry := dict -}}
+      {{- $normalizing := dict "Roll" $Options.roll "Page" $Page -}}
+      {{- range $key := $keys -}}
+        {{- $Value := index $Result $key | default "-" -}}
+        {{- if not $Options.no_titleize_headers -}}
+          {{- $key = humanize $key | title -}}
+        {{- end -}}
+        {{- $entry  = merge $entry (dict $key $Value)  -}}
+      {{- end -}}
+      {{- $results = $results | append $entry -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $keys          = $keys | default (slice "result")              -}}
+    {{- $ResultParams := dict "Options" $Options "Page" $Page          -}}
+    {{- $results       = partial $normalizeSimpleResults $ResultParams -}}
+  {{- end -}}
+
+  {{/*  Turn the keys into a normalized map to preserve ordering  */}}
+  {{- $keysMap := dict -}}
+  {{- if and (eq 1 (len $keys)) (ne "result" (index $keys 0)) -}}
+    {{- $Display  := index $keys 0 -}}
+    {{- $KeyEntry := dict "Value" "result" "Display" $Display -}}
+    {{- $keysMap   = merge $keysMap (dict "0" $KeyEntry) -}}
+  {{- else -}}
+    {{- range $Index, $key := $keys -}}
+      {{- $display := $key -}}
+      {{- if not $Options.no_titleize_headers -}}
+        {{- $display = humanize $key | title -}}
+      {{- end -}}
+      {{- $keysMap = merge $keysMap (dict (print $Index) (dict "Value" $key "Display" $display)) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/*  Save the canonicalized roll key, key map, and result map  */}}
+  {{- $canonical = merge $canonical (dict "RollKey" $rollKey "Keys" $keysMap "Results" $results) -}}
+{{- else -}}
+  {{- errorf "Specified a roll table at %s without any possible results. Ensure the `results` key has two or more items in it." $Position -}}
+{{- end -}}
+
+{{/*
+    Handle the result text settings.
+*/}}
+{{- $ResultTextParams   := dict "Canonical" $canonical "Options" $Options "Page" $Page -}}
+{{- $ResultTextTemplate := partial $normalizeResultTextTemplate $ResultTextParams      -}}
+{{- with $ResultTextTemplate -}}
+  {{- $canonical = merge $canonical (dict "ResultTextTemplate" $ResultTextTemplate) -}}
+{{- end -}}
+
+{{- with $Options.roll -}}
+  {{- $canonical = merge $canonical (dict "Roll" $Options.roll) -}}
+{{- else -}}
+  {{- errorf "Missing mandatory 'roll' option for roll table at %s" $Position -}}
+{{- end -}}
+
+{{- with $Options.tabs -}}
+  {{- $tabs := slice -}}
+  {{- if reflect.IsMap $Options.tabs -}}
+    {{- range $Key, $Value := $Options.tabs -}}
+      {{- $tab := dict "Key" $Key -}}
+
+      {{- if reflect.IsMap $Value -}}
+        {{- $tab = merge $tab $Value -}}
+      {{- else -}}
+        {{- $tab = merge $tab (dict "name" $Value) -}}
+      {{- end -}}
+
+      {{- with $tab.results -}}
+        {{/* Nothing to do, already specified */}}
+      {{- else -}}
+        {{- $tabResults := slice -}}
+        {{- if and (isset $Options "roll") (findRE `,` $Options.roll) -}}
+          {{- $Prefix := printf "%v-" $Key -}}
+          {{- range $Result := $canonical.Results -}}
+            {{- if hasPrefix $Result._roll.Display $Prefix -}}
+              {{- $tabResults = $tabResults | append $Result._roll.Display -}}
+            {{- end -}}
+          {{- end -}}
+        {{- else -}}
+          {{/* Figure out how to slice the table into roughly-equal chunks */}}
+        {{- end -}}
+        {{- $tab = merge $tab (dict "results" $tabResults) -}}
+      {{- end -}}
+
+      {{- $tabs = $tabs | append $tab -}}
+    {{- end -}}
+  {{- else -}}
+    {{- range $Index, $Tab := $Options.tabs -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $canonical = merge $canonical (dict "Tabs" $tabs) -}}
+{{- end -}}
+
+{{/*  Return the canonicalized values to the markup for rendering  */}}
+{{- return $canonical -}}
