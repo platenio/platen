@@ -15,7 +15,7 @@
 
 {{- $getKey               := "platen/param/getKey"                       -}}
 {{- $ConfigKey            := "platen.shortcodes"                         -}}
-{{- $registeredShortcodes := partialCached $getKey $ConfigKey $ConfigKey -}}
+{{- $registeredShortcodes := partialCached $getKey $ConfigKey $ConfigKey | default (slice) -}}
 
 {{- if $DisabledOnly -}}
   {{- $disabledShortcodes := dict -}}

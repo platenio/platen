@@ -18,3 +18,44 @@
     }
   }
 }
+
+.markdown table.sticky {
+  width: max-content;
+  height: 22rem;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  table-layout: fixed;
+  margin: auto;
+  @include outline;
+
+  thead {
+    width: 100%;
+    background: var(--body-background);
+    position: sticky;
+    inset-block-start: 0;
+
+    /* "top" */
+    tr {
+      width: 100%;
+
+      th:nth-child(odd) {
+        width: 75%;
+      }
+
+      th:nth-child(even) {
+        width: 25%;
+      }
+    }
+  }
+
+  tbody {
+    width: 100%;
+  }
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    /* Mostly for vertical scrollbars */
+    height: 10px;
+    /* Mostly for horizontal scrollbars */
+  }
+}

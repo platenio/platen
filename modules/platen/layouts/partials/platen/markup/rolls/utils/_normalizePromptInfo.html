@@ -1,0 +1,31 @@
+{{- $Params    := .                 -}}
+{{- $Options   := $Params.Options   -}}
+{{- $Canonical := $Params.Canonical -}}
+
+{{- $promptInfo := dict -}}
+
+{{- with $Options.prompts -}}
+  {{- $prompts := slice -}}
+
+  {{- range $KeyIndex, $Prompt := $Options.prompts -}}
+    {{- $entry := dict -}}
+
+    {{- if reflect.IsMap $Prompt -}}
+      {{- $type := $Prompt.type | default "number" -}}
+      {{- $name := $Prompt.name | default $KeyIndex -}}
+      {{- $label := $Prompt.label | default (title (humanize $name)) -}}
+      {{- $entry = merge $Prompt (dict "type" $type "name" $name "label" $label) -}}
+    {{- else -}}
+      {{- $label := title (humanize $Prompt) -}}
+      {{- $entry = dict "type" "number" "name" $Prompt "label" $label -}}
+    {{- end -}}
+
+    {{- $prompts = $prompts | append $entry -}}
+  {{- end -}}
+
+  {{- $promptInfo    = merge $promptInfo (dict "Prompts" $prompts)         -}}
+  {{- $PromptTitle  := $Options.prompt_title | default $Canonical.RollKey | default "Roll Inputs" -}}
+  {{- $promptInfo    = merge $promptInfo (dict "PromptTitle" $PromptTitle) -}}
+{{- end -}}
+
+{{- return $promptInfo -}}

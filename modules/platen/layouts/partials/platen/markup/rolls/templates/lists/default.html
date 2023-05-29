@@ -1,0 +1,42 @@
+{{- $Params             := .                                         -}}
+{{- $ButtonPlacement    := $Params.ButtonPlacement                   -}}
+{{- $Classes            := $Params.Classes            | safeHTMLAttr -}}
+{{- $ID                 := $Params.ID                 | safeHTMLAttr -}}
+{{- $Prompts            := $Params.Prompts                           -}}
+{{- $Roll               := $Params.Roll                              -}}
+{{- $Results            := $Params.Results                           -}}
+{{- $ResultTextTemplate := $Params.ResultTextTemplate | default ""   -}}
+{{- $XRefID             := $Params.XRefID             | safeJS       -}}
+{{/*  Define templates for easier maintenance/renaming  */}}
+{{- $TemplatePrefix     := "platen/markup/rolls/templates" -}}
+{{- $ListBlockTemplate  := printf "%s/lists/block" $TemplatePrefix -}}
+{{- $ButtonTemplate     := printf "%s/blockButton" $TemplatePrefix -}}
+{{- $ResultSpanTemplate := printf "%s/resultSpan"  $TemplatePrefix -}}
+
+{{/*  Build the blob for alpine to use.  */}}
+{{- $AlpineData := dict
+                   "prompts"              $Prompts
+                   "roll"                 $Roll
+                   "results"              $Results
+                   "result_text_template" $ResultTextTemplate
+                   "result_text"          ""
+-}}
+
+<div class="{{ $Classes }}"
+     {{- with $ID }}
+     id="{{ $ID }}"
+     {{- end }}
+     x-data="{{ $AlpineData | jsonify }}"
+     x-ref="{{ $XRefID }}">
+  {{ if eq "above" $ButtonPlacement -}}
+    {{ partial $ButtonTemplate      $Params }}
+    {{ partial $ResultSpanTemplate  $Params }}
+
+    {{ partial $ListBlockTemplate   $Params }}
+  {{- else }}
+    {{ partial $ListBlockTemplate   $Params }}
+
+    {{ partial $ButtonTemplate      $Params }}
+    {{ partial $ResultSpanTemplate  $Params }}
+  {{- end }}
+</div>

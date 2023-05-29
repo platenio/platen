@@ -1,0 +1,9 @@
+{{- $Params := . -}}
+{{- $ListAttributes := $Params.ListAttributes | safeHTMLAttr -}}
+
+<ol {{ $ListAttributes }}>
+    <template x-for="result in (sortResultsInfo(results))">
+        <li x-text="result.result" :data-roll="JSON.stringify(result._roll)"
+            :data-list-content="`${decodeHTML(result._roll.Display)}. `" data-active="false"></li>
+    </template>
+</ol>

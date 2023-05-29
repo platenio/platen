@@ -1,0 +1,44 @@
+{{/*  Delete this comment but leave the next one.  */}}
+{{/*
+    This custom template is a stub. It's here for your convenience only. If
+    you want to define your own template, copy this one to start from. The
+    inputs for your template are limited to the ones defined here, but your
+    template can do whatever you need it to.
+*/}}
+{{- $Params  := . -}}
+{{/*
+    These values are all from the example implementation of the canonicalize
+    partial. Make sure to actually implement the template to your needs.
+
+    Always pass the values meant to be insertable directly in the HTML through
+    safeHTML, safeHTMLAttr (for attributes), safeCSS, safeJS, or safeURL so
+    your values aren't munged unexpectedly.
+
+    Delete this comment or replace it with an explanation of the available
+    variables for people implementing their own custom template to use.
+*/}}
+{{- $Attributes := $Params.Attributes | safeHTMLAttr -}}
+{{- $Content    := $Params.Content    | safeHTML     -}}
+{{- $Classes    := $Params.Classes    | safeHTMLAttr -}}
+{{- $Page       := $Params.Page                      -}}
+{{- $Position   := $Params.Position                  -}}
+{{- $Config     := $Params.Config                    -}}
+{{- $options    := $Params.options                   -}}
+
+{{/*
+    Delete this comment but leave everything after it untouched except for
+    making sure the error message is useful to the user and specifies the
+    right name for the markup.
+*/}}
+{{/*
+    The default custom template raises an error because it's not
+    actually implemented. This stub is for your convenience.
+*/}}
+{{- errorf "Used custom NAME template at %s, but no template defined." $Position -}}
+
+{{/*
+    You don't need to do a return statement, you can just use
+    a custom HTML template if you want. This return is included
+    so Platen doesn't break if the custom template isn't defined.
+*/}}
+{{- return "" -}}

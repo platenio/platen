@@ -465,6 +465,14 @@ platen:
         header: platen/markup/mermaid/header
         renderers:
           codeblock: platen/markup/mermaid/codeblock
+    rolls:
+      enabled: true
+      partials:
+        renderers:
+          codeblock: platen/markup/rolls/codeblock
+          image:     platen/markup/rolls/image
+        header: platen/markup/rolls/header
+      style: rolls
     section:
       enabled: true
       partials:

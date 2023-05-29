@@ -1,0 +1,11 @@
+{{- $Params             := .                                         -}}
+{{- $ButtonAttributes   := $Params.ButtonAttributes   | safeHTMLAttr -}}
+{{- $ButtonLabel        := $Params.ButtonLabel        | safeHTML     -}}
+{{- $XRefID             := $Params.XRefID             | safeJS       -}}
+
+<sl-button @click="rollOn($data, $refs, '{{ $XRefID }}')"
+          {{- with $ButtonAttributes }}
+          {{ $ButtonAttributes -}}
+          {{- end -}}>
+  {{ $ButtonLabel }}
+</sl-button>

@@ -1,0 +1,127 @@
+{{- $Params     := .                  -}}
+{{- $Config     := $Params.Config     -}} {{/* The markup's site configuration, like platen.markup.foo     */}}
+{{- $Position   := $Params.Position   -}} {{/* The markup's position in the Markdown - only for codeblocks */}}
+{{- $Page       := $Params.Page       -}} {{/* The Page object for the Markdown document the markup is in  */}}
+{{- $ValidIDs   := $Params.ValidIDs   -}} {{/* The map or slice of valid IDs for the markup                */}}
+{{- $ID         := $Params.ID         -}} {{/* The used language ID (codeblock) or prefix (image/link)     */}}
+{{- $Definition := $Params.Definition -}} {{/* The non-yaml text of the markup - only for codeblocks       */}}
+{{- $options    := $Params.Options    -}} {{/* The pre-merged options, attributes, and preset properties   */}}
+
+{{/*  Platen utility partials  */}}
+{{- $mungeHeadingLevel    := "platen/utils/mungeHeadingLevel"    -}}
+{{- $getLeadTrimmedText   := "platen/utils/getLeadTrimmedText"   -}}
+{{- $getMergedClasses     := "platen/utils/getMergedClasses"     -}}
+{{- $getMergedMap         := "platen/utils/getMergedMap"         -}}
+{{- $getMergedStyleOption := "platen/utils/getMergedStyleOption" -}}
+{{- $getPrettyRender      := "platen/utils/getPrettyRender"      -}}
+{{- $getSafeAttributes    := "platen/utils/getSafeAttributes"    -}}
+{{/*  Roll-specific utility partials  */}}
+{{- $normalizeButtonInfo         := "platen/markup/rolls/utils/_normalizeButtonInfo"         -}}
+{{- $normalizePromptInfo         := "platen/markup/rolls/utils/_normalizePromptInfo"         -}}
+{{- $normalizeRollInfo           := "platen/markup/rolls/utils/_normalizeRollInfo"           -}}
+{{- $normalizeResultTextTemplate := "platen/markup/rolls/utils/_normalizeResultTextTemplate" -}}
+{{- $normalizeSimpleResults      := "platen/markup/rolls/utils/_normalizeSimpleResults"      -}}
+{{- $getIDs                      := "platen/markup/rolls/utils/_getIDs"                      -}}
+
+{{/*
+      Determine the kind of block. Lists are simpler than tables. Some of their
+      settings are shared, but not all. Split the ID on the dash to infer or
+      just default to table.
+*/}}
+{{- $Kind              := index (last 1 (split $ID "-")) 0 | default "table" -}}
+{{- $configOptions     := slice                                                -}}
+{{- $nonConfigDefaults := dict                                                 -}}
+
+{{- if eq $Kind "table" -}}
+  {{/*  Add table-specific options and defaults  */}}
+{{- else if (eq $Kind "list") -}}
+  {{/*  Add list-specific options and defaults  */}}
+{{- else -}}
+  {{- errorf "Unknown roll kind '%s' at %s" $Kind $Position -}}
+{{- end -}}
+
+{{- range $OptionKey := $configOptions -}}
+  {{- if isset $Config $OptionKey -}}
+    {{- $ConfigValue := index $Config  $OptionKey                        -}}
+    {{- $Value       := index $options $OptionKey | default $ConfigValue -}}
+    {{- $options      = merge $options (dict $OptionKey $Value)          -}}
+  {{- else if (in $OptionKey ".") -}}
+    {{- $key   := replace $OptionKey "." "_" -}}
+    {{- $value := $Config                    -}}
+    {{- range $Segment := split $OptionKey "." -}}
+      {{- $value = index $value $Segment -}}
+    {{- end -}}
+    {{- if ne nil $value -}}
+      {{- $value   = index $options $key | default $value -}}
+      {{- $options = merge $options (dict $key $value)    -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- range $Key, $Value := $nonConfigDefaults -}}
+  {{- if not (isset $options $Key) -}}
+    {{- $options = merge $options (dict $Key $Value) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Define the template folder and default template for this markup  */}}
+{{- $TemplateFolder := "platen/markup/rolls/templates" -}}
+{{- $template       := printf "%ss/default" $Kind      -}}
+
+{{/*  Initialize the return value for this partial  */}}
+{{- $canonical := dict -}}
+
+{{- $KindCanonicalizer := printf "platen/markup/rolls/canonicalize/_%s"   $Kind     -}}
+{{- $KindParams        := dict "Options" $options "Page" $Page "Position" $Position -}}
+{{- $KindCanonicalized := partial $KindCanonicalizer     $KindParams                -}}
+{{- $canonical          = merge   $canonical             $KindCanonicalized         -}}
+
+{{/*  Handle the id and x-ref attributes  */}}
+{{- $IDs      := partial $getIDs (dict "Options" $options) -}}
+{{- $canonical = merge $canonical $IDs                     -}}
+
+{{/*  Canonicalize container classes  */}}
+{{- $DefaultClasses := slice (printf "platen-roll-%s" $Kind)                      -}}
+{{- $MergingParams  := dict "Default" $DefaultClasses "Additional" $options.class -}}
+{{- $Classes        := partial $getMergedClasses $MergingParams                   -}}
+{{- $canonical       = merge $canonical (dict "Classes" $Classes)                 -}}
+
+{{/*  Handle prompts  */}}
+{{- $PromptParams := dict "Canonical" $canonical "Options" $options -}}
+{{- $PromptInfo   := partial $normalizePromptInfo $PromptParams     -}}
+{{- $canonical     = merge $canonical $PromptInfo                   -}}
+
+{{/*  Handle the button settings.  */}}
+{{- $ButtonParams := dict "Options" $options "Page" $Page       -}}
+{{- $ButtonInfo   := partial $normalizeButtonInfo $ButtonParams -}}
+{{- $canonical     = merge $canonical $ButtonInfo               -}}
+
+{{/*  Ensure required libraries are added  */}}
+{{- $Params.Page.Store.Set "_hasRolls"    true -}}
+{{- $Params.Page.Store.Set "_hasShoelace" true -}}
+{{- $Params.Page.Store.Set "_hasAlpine"   true -}}
+
+{{- if $options.custom -}}
+  {{- $canonical = merge $canonical (dict "Page"     $Page)     -}}
+  {{- $canonical = merge $canonical (dict "Position" $Position) -}}
+  {{- $canonical = merge $canonical (dict "Config"   $Config)   -}}
+  {{- $canonical = merge $canonical (dict "Options"  $options)  -}}
+  {{/*
+      Set the render template; this assumes that the markup provides a default
+      custom template that users can copy and override. If the user specified a
+      value other than `true`, that's assumed to be the name of the template
+      in `partials/platen/markup/NAME/templates`.
+  */}}
+  {{- if eq true $options.custom -}}
+    {{- $template = "custom" -}}
+  {{- else -}}
+    {{- $template = $options.custom -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  As the last step, add the canonicalized template to render  */}}
+{{- $template  = printf "%s/%s" $TemplateFolder $template     -}}
+{{- $canonical = merge $canonical (dict "Template" $template) -}}
+
+{{/*  Return the canonicalized values to the markup for rendering  */}}
+{{- return $canonical -}}

@@ -1,0 +1,27 @@
+{{- $Params  := .                                       -}}
+{{/*  {{- $Keys    := $Params.Keys | default (slice "result") -}}  */}}
+{{- $Options := $Params.Options                         -}}
+{{- $Page    := $Params.Page                            -}}
+
+{{- $normalizeRollInfo := "platen/markup/rolls/utils/_normalizeRollInfo" -}}
+
+{{- $normalizing := dict "Roll" $Options.roll "Page" $Page -}}
+{{- $results     := slice                                  -}}
+
+{{- if reflect.IsMap $Options.results -}}
+  {{- range $Key, $Result := $Options.results -}}
+    {{- $normalizing = merge $normalizing (dict "Key" $Key)                         -}}
+    {{- $RollInfo   := partial $normalizeRollInfo $normalizing                      -}}
+    {{- $Entry      := merge (dict "result" ($Page.RenderString $Result)) $RollInfo -}}
+    {{- $results     = $results | append $Entry                                     -}}
+  {{- end -}}
+{{- else -}}
+  {{- range $Index, $Result := $Options.results -}}
+    {{- $normalizing = merge $normalizing (dict "Index" $Index)                      -}}
+    {{- $RollInfo   := partial $normalizeRollInfo $normalizing                       -}}
+    {{- $Entry      := merge (dict  "result" ($Page.RenderString $Result)) $RollInfo -}}
+    {{- $results     = $results | append $Entry                                      -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $results -}}

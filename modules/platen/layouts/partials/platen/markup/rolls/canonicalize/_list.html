@@ -1,0 +1,54 @@
+{{- $Params     := .                  -}}
+{{- $Position   := $Params.Position   -}} {{/* The markup's position in the Markdown - only for codeblocks  */}}
+{{- $Page       := $Params.Page       -}} {{/* The Page object for the Markdown document the markup is in   */}}
+{{- $options    := $Params.Options    -}} {{/* The pre-merged options, attributes, and preset properties    */}}
+{{- $canonical  := dict               -}} {{/* The return value for the canonicalized list-specific  values */}}
+
+{{/*  Define partials for easier calling/renaming.  */}}
+{{- $getMergedMap         := "platen/utils/getMergedMap"         -}}
+{{- $getSafeAttributes    := "platen/utils/getSafeAttributes"    -}}
+
+{{/*  Rolling-specific partials  */}}
+{{- $normalizeResultTextTemplate := "platen/markup/rolls/utils/_normalizeResultTextTemplate" -}}
+{{- $normalizeSimpleResults      := "platen/markup/rolls/utils/_normalizeSimpleResults"      -}}
+
+{{- with $options.results -}}
+  {{- $ResultParams := dict "Options" $options "Page" $Page          -}}
+  {{- $Results      := partial $normalizeSimpleResults $ResultParams -}}
+  {{- $canonical     = merge $canonical (dict "Results" $Results)    -}}
+{{- else -}}
+  {{- errorf "Specified a roll list at %s without any possible results. Ensure the `results` key has two or more items in it." $Position -}}
+{{- end -}}
+
+{{- with $options.roll -}}
+  {{- $canonical = merge $canonical (dict "Roll" $options.roll) -}}
+{{- else -}}
+  {{- $Roll     := printf "1d%v" (len $canonical.Results) -}}
+  {{- $canonical = merge $canonical (dict "Roll" $Roll)   -}}
+{{- end -}}
+
+{{/*  Handle the result text settings.  */}}
+{{- $resultTextTemplate := "" -}}
+{{- if or (eq $options.result_text true) (not (isset $options "result_text")) -}}
+  {{- $resultTextTemplate = "Roll result is: {{ result }}" -}}
+{{- else -}}
+  {{- $resultTextTemplate = $options.result_text -}}
+{{- end -}}
+{{- with $resultTextTemplate -}}
+  {{- $canonical = merge $canonical (dict "ResultTextTemplate" $resultTextTemplate) -}}
+{{- end -}}
+
+{{/*  Handle the list's attributes  */}}
+{{- $listAttributes := slice -}}
+{{- $ColumnCount    := $options.column_count | default 1   -}}
+{{- if gt $ColumnCount 1 -}}
+  {{- $ListClassAttribute := printf `class="columns count-%v"` $ColumnCount    -}}
+  {{- $listAttributes = $listAttributes | append $ListClassAttribute -}}
+{{- end -}}
+{{/* Handle alternate starts, like 2+ - default to 0 (implicit numbering) */}}
+{{- $attributeParams := dict "Attributes"  $listAttributes "IndentCount" 6       -}}
+{{- $listAttributes   = partial $getSafeAttributes $attributeParams              -}}
+{{- $canonical        = merge $canonical (dict "ListAttributes" $listAttributes) -}}
+
+{{/*  Return the canonicalized values to the markup for rendering  */}}
+{{- return $canonical -}}

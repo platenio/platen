@@ -19,6 +19,7 @@
 {{- $DestinationKey      := $Params.DestinationKey      | default "destination" -}}
 {{- $Page                := $Params.Page                                        -}}
 {{- $PresetDotPathPrefix := $Params.PresetDotPathPrefix                         -}}
+{{- $PresetDefaultDotPath := $Params.PresetDefaultDotPath                       -}}
 {{- $PresetKey           := $Params.PresetKey           | default "preset"      -}}
 {{- $PresetKeysToRender  := $Params.PresetKeysToRender                          -}}
 {{- $PresetPrefix        := $Params.PresetPrefix        | default "preset:"     -}}
@@ -76,6 +77,11 @@
 {{- with index $passedOptions $PresetKey -}}
   {{- $PresetDotPath := printf "%s.%s" $PresetDotPathPrefix .                                  -}}
   {{- $presetOptions  = partialCached "platen/utils/getDataPath" $PresetDotPath $PresetDotPath -}}
+{{- else -}}
+  {{- with $PresetDefaultDotPath -}}
+    {{- $PresetDotPath := printf "%s.%s" $PresetDotPathPrefix .                                  -}}
+    {{- $presetOptions  = partialCached "platen/utils/getDataPath" $PresetDotPath $PresetDotPath -}}
+  {{- end -}}
 {{- end -}}
 
 {{/*
