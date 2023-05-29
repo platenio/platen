@@ -1,0 +1,44 @@
+{{- $deepIndex := "platen/utils/deepIndex" -}}
+{{- $resolve   := "platen/param/resolve"   -}}
+
+{{- $SettingsToCheck := slice
+      "display.table_of_contents.use_legacy"
+      "display.menu.languages_icon.use_legacy"
+      "display.mobile.menu_control.use_legacy"
+      "display.mobile.toc_control.use_legacy"
+      "display.footer.last_edited_on.use_legacy"
+      "display.footer.edit_this_page.use_legacy"
+-}}
+
+{{- $legacySettings := slice -}}
+{{- range $SettingKey := $SettingsToCheck -}}
+  {{- $Indexing := dict "Config" (printf "platen.%s" $SettingKey) -}}
+  {{- $Setting  := partial $resolve $Indexing                     -}}
+  {{- if eq true $Setting -}}
+    {{- $legacySettings = $legacySettings | append $SettingKey -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with $legacySettings -}}
+  {{- $legacySettings = delimit $legacySettings "\n\t" -}}
+  {{- $Message       := delimit (
+        slice
+        "You're using legacy settings!"
+        ""
+        "Platen has begun to migrate to fully incorporating Shoelace for"
+        "various theme components and markup options. While the legacy"
+        "options are still functional, they're deprecated. You should begin"
+        "to migrate your settings and theme to use the new functionality."
+        ""
+        "In the future, this warning will be an error. After that, the legacy"
+        "options will be removed from Platen entirely. Update the following"
+        "settings in your site configuration, setting each of these values to"
+        "false instead of true:"
+        ""
+        (printf "\t%s" $legacySettings)
+        ""
+        "For more information, see: https://platen.io/using/legacy"
+      ) "\n" | print
+  -}}
+  {{- warnf $Message -}}
+{{- end -}}

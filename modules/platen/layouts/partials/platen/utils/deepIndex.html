@@ -1,0 +1,23 @@
+{{- $Params  := .                                -}}
+{{- $value   := $Params.Data    | default (dict) -}}
+{{- $DotPath := $Params.DotPath | default ""     -}}
+
+{{- if and $value $DotPath -}}
+  {{- range $Key := split $DotPath "." -}}
+    {{- $value = index $value $Key -}}
+  {{- end -}}
+
+  {{- with $value -}}
+    {{/*  Nothing to do, the data was found  */}}
+  {{- else -}}
+    {{- warnf "Unable to index into dot-path key '%s' for input map" $DotPath -}}
+  {{- end -}}
+{{- else if $value -}}
+  {{- errorf "Missing mandatory parameter DotPath for deepIndex partial." -}}
+{{- else if $DotPath -}}
+  {{- errorf "Missing mandatory parameter Data for deepIndex partial." -}}
+{{- else -}}
+  {{- errorf "Missing mandatory parameters Data and DotPath for deepIndex partial." -}}
+{{- end -}}
+
+{{- return $value -}}

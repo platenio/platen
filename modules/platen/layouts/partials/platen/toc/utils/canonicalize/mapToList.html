@@ -1,0 +1,57 @@
+{{/*
+    TOC Canonicalize Partial: mapToList
+
+    This partial converts the dictionary of mapped headings with their children
+    into the correctly ordered slice of headings, so they can be looped over
+    when rendering the TOC.
+
+    This partial expects to receive input as a dictionary as with the following
+    keys:
+
+    - `HeadingIDs` - The list of IDs for the mapped headings.
+    - `FoundHeadings` - The slice of parsed headings in the order they were
+      found in the processed content. This order is used as the canonical
+      ordering for the headings.
+    - `MappingHeadings` - The map of headings with their children. The key for
+      the top level map is always the ID of the heading it represents. For
+      headings with the Children key, defined, the value is always a map of
+      headings with their ID as the key.
+
+    This partial iterates over the found headings in the order they appeared in
+    the content, looking for the matching ID in the mapping headings. If the
+    IDs match, that heading will be added to the slice.
+    
+    Before adding the heading to the slice, the partial checks to see if the
+    heading has any child headings. If it does, the partial recurses, using the
+    child headings as the value for MappingHeadings.
+
+    After the children for a heading are recursively resolved, the heading is
+    added to the canonical slice.
+
+    This partial returns a slice where each entry is a heading map and the
+    entries are in the order the headings appeared in the content. If the
+    heading has children, they are represented as a slice of headings in the
+    correct order. Children are recursively resolved.
+*/}}
+{{- $Params          := .                                        -}}
+{{- $HeadingIDs      := $Params.HeadingIDs                       -}}
+{{- $FoundHeadings   := $Params.FoundHeadings                    -}}
+{{- $MappingHeadings := $Params.MappingHeadings                  -}}
+{{- $canonical       := slice                                    -}}
+
+{{- $Recursing := dict "HeadingIDs" $HeadingIDs "FoundHeadings" $FoundHeadings -}}
+{{- range $Heading := $FoundHeadings -}}
+  {{- if in $HeadingIDs $Heading.ID -}}
+    {{- with $mappedHeading := index $MappingHeadings $Heading.ID -}}
+      {{- with $children := $mappedHeading.Children -}}
+        {{- $Recursing    := merge $Recursing (dict "MappingHeadings" $children) -}}
+        {{- $children      = partial "platen/toc/utils/canonicalize/mapToList" $Recursing        -}}
+        {{- $mappedHeading = merge $mappedHeading (dict "Children" $children)    -}}
+      {{- end -}}
+
+      {{- $canonical = $canonical | append $mappedHeading -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $canonical -}}

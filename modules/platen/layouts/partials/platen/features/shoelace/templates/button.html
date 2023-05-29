@@ -1,0 +1,39 @@
+{{/*
+    Shoelace Template: button
+
+    Renders an <sl-button> element on a page.
+
+    This template partial expects a dict with the following keys:
+
+    - Attributes: (Optional) The canonicalized string of the button's attributes.
+    - Label: (Mandatory) The raw text or HTML to render as the button's
+      displayed content.
+    - PrefixIcon: (Optional) A string representing the name of the icon or a
+      dictionary of options for the icon to display before the button's label.
+    - SuffixIcon: (Optional) A string representing the name of the icon or a
+      dictionary of options for the icon to display after the button's label.
+
+    This template partial renders an sl-button element with its label and
+    optional prefix/suffix icons. The icon rendering is managed by the icon
+    template.
+
+    All canonicalizing for the button's attributes and label should be handled
+    by the caller, but the icon template can handle canonicalizing the icons
+    as needed.
+*/}}
+{{/*  Define partials for easier renaming/use  */}}
+{{- $IconTemplate := "platen/features/shoelace/templates/icon" -}}
+{{/*  Handle parameters  */}}
+{{- $Params     := .                                 -}}
+{{- $Attributes := $Params.Attributes | safeHTMLAttr -}}
+{{- $Label      := $Params.Label      | safeHTML     -}}
+{{- $PrefixIcon := $Params.PrefixIcon | default ""   -}}
+{{- $SuffixIcon := $Params.SuffixIcon | default ""   -}}
+
+<sl-button {{ $Attributes }}>
+  {{- partial $IconTemplate (dict "Icon" $PrefixIcon "Slot" "prefix") -}}
+  {{ $Label }}
+  {{- partial $IconTemplate (dict "Icon" $SuffixIcon "Slot" "suffix") -}}
+</sl-button>
+
+{{- $_ := "this exists only to trim the trailing whitespace" -}}

@@ -1,0 +1,30 @@
+sl-tree {
+  &.no-rotate-icon sl-tree-item::part(expand-button) {
+    /*
+        Disable the expand/collapse rotation animation when using custom icons;
+        only the default caret should rotate.
+    */
+    rotate: none;
+  }
+
+  sl-tree-item {
+    /*
+      Disable the expand/collapse rotation animation when the tree item doesn't
+      have any children; the rotation animation causes a strange box to bubble
+      up where the icon would be.
+    */
+    &:not(:has([slot="children"]))::part(expand-button) {
+      rotate: none;
+    }
+  }
+}
+
+sl-details {
+  &.no-rotate-icon::part(summary-icon) {
+    /*
+        Disable the expand/collapse rotation animation when using custom icons;
+        only the default caret should rotate.
+    */
+    rotate: none;
+  }
+}

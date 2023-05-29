@@ -1,27 +1,42 @@
 {{/*
-  Docs.Partial: title
-*/}}
-{{- $Context := . -}}
+  Partial: post/title
 
+  This partial handles retrieving the title for a blog post's heading.
+
+  It resolves whether Platen has already rendered the heading for the blog post
+  due to the site configuration or page's front matter. If Platen hasn't 
+  already added a heading for the post, this partial handles adding the
+  heading.
+
+  This is required to prevent accidentally rendering the title as an h1 twice.
+*/}}
+
+{{/*  Define the partials for easier renaming/maintenance  */}}
+{{- $resolve           := "platen/param/resolve"           -}}
+{{- $getDisplayTitle   := "platen/utils/getDisplayTitle"   -}}
+{{- $getTitle          := "platen/utils/getTitle"          -}}
+{{- $getSafeAttributes := "platen/utils/getSafeAttributes" -}}
+{{/*  Define the lookup keys for easier renaming/maintenance  */}}
+{{- $ConfigKey      := "platen.display.header.title_as_heading" -}}
+{{- $ParamKey       := "platen.display_title.as_heading"        -}}
+{{- $LegacyParamKey := "platen.title_as_heading"                -}}
 {{/* Determine whether the page already has an h1 */}}
-{{- $HasHeading := partial "platen/param/resolve" (
-  dict "Config"  "platen.display.header.title_as_heading"
-       "Param"   "platen.title_as_heading"
-       "Context" $Context
-       "Default" false
-) -}}
+{{- $HasHeading := partial $resolve (
+      dict "Config"  $ConfigKey
+           "Param"   (slice $ParamKey $LegacyParamKey)
+           "Context" page
+           "Default" false
+    )
+-}}
 
 {{/* Continue only if the post doesn't already have a title heading */}}
 {{- if not $HasHeading -}}
-  {{- $TitleParams := dict "Context" $Context "ForHeading" true    -}}
-  {{- $TitleText   := partial "platen/utils/getTitle" $TitleParams -}}
-  {{- $Href        := $Context.RelPermalink                        -}}
-
-  {{/* Define the attribute list for the link */}}
-  {{- $attributes := slice                                                -}}
-  {{- $attributes  = $attributes | append (printf `href="%s"` $Href)      -}}
-  {{- $attributes  = partial "platen/utils/getSafeAttributes" $attributes -}}
+  {{- $titleParams := dict "Context" page "ForHeading" true  -}}
+  {{- $titleText   := partial $getTitle $titleParams         -}}
+  {{- $titleParams  = dict "Page" page "Title" $titleText    -}}
+  {{- $titleText    = partial $getDisplayTitle $titleParams  -}}
+  {{- $Href        := page.RelPermalink | safeURL            -}}
 
   {{/* Render the heading */}}
-  <h1><a {{ $attributes }}>{{ $TitleText }}</a></h1>
+  <h1><a href="{{ $Href}}">{{ $titleText }}</a></h1>
 {{- end -}}

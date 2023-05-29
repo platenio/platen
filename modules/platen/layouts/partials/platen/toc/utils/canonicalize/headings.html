@@ -1,0 +1,79 @@
+{{/*
+    TOC Canonicalize Partial: headings
+
+    This partial converts a slice of parsed headings into a canonicalized slice
+    of headings with their children defined as a slice of parsed headings. It
+    handles nested child headings.
+
+    This partial expects to receive input as a dictionary with the following
+    keys:
+
+    - `Headings` - The slice of parsed headings for a content page in the order
+      they were discovered in the content.
+
+    This partial loops over the headings, calling the mapHeading partial for
+    each heading. After a heading is processed, the partial updates the list of
+    processed headings. When the mapHeading partial is called again, the
+    parameters include the updated list of processed headings and the result
+    from the last call as the `Previous` parameter. It always passes the
+    current heading in the loop for the `Heading` parameter.
+
+    The partial records the results in a map with the heading's ID as the key
+    for itself. This ensures the partial can update a previously mapped heading
+    if the next heading is actually a child heading.
+
+    After fully mapping the headings, this partial canonicalizes the map of
+    headings into a slice in the same order the headings were discovered in,
+    but now with any child headings added under the Children key in their
+    parent heading's map.
+
+    This partial returns the canonicalized slice of heading maps.
+*/}}
+
+{{- $Params   := .                -}}
+{{- $Headings := $Params.Headings -}}
+
+{{- $mapHeading := "platen/toc/utils/canonicalize/mapHeading" -}}
+{{- $mapToList  := "platen/toc/utils/canonicalize/mapToList"  -}}
+
+
+{{- $mappingHeadings := dict  -}}
+{{- $processed       := slice -}}
+{{- $previous        := dict  -}}
+
+{{/*  Loop over the headings, calling mapHeadings for each */}}
+{{- range $Index, $H := $Headings -}}
+  {{/*  Add the first heading to the map before the mapping starts  */}}
+  {{- if eq $Index 0 -}}
+    {{- $mappingHeadings = merge $mappingHeadings (dict $H.ID $H) -}}
+  {{- end -}}
+
+  {{/*  Only recurse for headings that haven't already been processed  */}}
+  {{- if not (in $processed $H.ID) -}}
+    {{- $Mapping := dict
+          "Heading"   $H
+          "Headings"  $Headings
+          "Previous"  $previous
+          "Processed" $processed
+    -}}
+    {{- $Result         := partial $mapHeading $Mapping          -}}
+    {{- $processed       = union $processed $Result.Processed    -}}
+    {{- $previous        = $Result.Mapped                        -}}
+    {{- $MappedHeading  := dict $Result.Mapped.ID $Result.Mapped -}}
+    {{- $mappingHeadings = merge $mappingHeadings $MappedHeading -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $headingIDs := slice -}}
+{{- range $H := $Headings -}}
+  {{- $headingIDs = $headingIDs | append $H.ID -}}
+{{- end -}}
+
+{{/*  With the headings mapped, build the canonical slice in order  */}}
+{{- $Canonicalizing := dict "HeadingIDs"      $headingIDs
+                            "FoundHeadings"   $Headings
+                            "MappingHeadings" $mappingHeadings 
+-}}
+{{- $CanonicalHeadings := partial $mapToList $Canonicalizing -}}
+
+{{- return $CanonicalHeadings -}}

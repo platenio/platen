@@ -18,7 +18,7 @@
     key that is added from aliases when aliases is a slice or string instead
     of a map.
 */}}
-{{- $ConfigKey       := printf "platen.markup.%s" $MarkupName                     -}}
+{{- $ConfigKey       := printf "platen.markup.code_snippets"                      -}}
 {{- $Config          := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 {{- $Aliases         := $Config.aliases                                           -}}
 {{- $DefaultPrefixes := "code"                                                    -}}

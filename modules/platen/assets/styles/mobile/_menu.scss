@@ -10,6 +10,15 @@
     z-index: 1;
   }
 
+  label[for="menu-control"] {
+    &:has(sl-icon-button) {
+      font-size: 1.5em;
+    }
+    sl-icon-button::part(base) {
+      color: var(--body-font-color)
+    }
+  }
+
   #menu-control:focus ~ main label[for="menu-control"] {
     @include outline;
   }

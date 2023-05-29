@@ -102,6 +102,9 @@
 // because they may/will use these utils.
 {{ partial $importPartial (dict "StylesMap" $theme.styles.utils "RootFolder" "utils") }}
 
+// The basic global classes for shoelace components
+{{ partial $importPartial (dict "StylesMap" $theme.styles.shoelace "RootFolder" "shoelace") }}
+
 // The base styles for general structure on the site.
 {{ partial $importPartial (dict "StylesMap" $theme.styles.base "RootFolder" "base") }}
 

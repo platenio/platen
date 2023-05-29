@@ -1,27 +1,42 @@
-{{/* Retrieve the registered shortcodes, process the disabled ones */}}
+{{/*
+    Param Partial: checkShortcodes
+
+    This partial is used to inspect the shortcodes used on a page, raising an
+    error if any of the shortcodes are disabled. It doesn't warn or error for
+    unrecognized shortcodes.
+*/}}
+
+{{/* Retrieve the disabled registered shortcodes, process the disabled ones */}}
 {{- $Params     := dict "DisabledOnly" true                                             -}}
 {{- $Shortcodes := partialCached "platen/param/getRegisteredShortcodes" $Params "check" -}}
 
 {{- range $Shortcode, $Settings := $Shortcodes -}}
+  {{/*  Get the list of valid shortcode names for this disabled shortcode  */}}
   {{- $names := slice $Shortcode -}}
   {{- with $Settings.aliases -}}
     {{- $names = union $names $Settings.aliases -}}
   {{- end -}}
   
+  {{/*  The prefix finds the opening of a shortcode, like {{< or {{%  */}}
   {{- $Prefix  := "[^`]?{{(<|%)"                                     -}}
+  {{/*  The pattern finds any shortcodes in a block of text with this disabled shortcode's name  */}}
   {{- $Pattern := printf `%s\s+(%s)\s+` $Prefix (delimit $names "|") -}}
   {{- $Usages  := findRE $Pattern page.RawContent                    -}}
+
+  {{/*  Error if the content includes any disabled shortcodes.  */}}
   {{- if gt (len $Usages) 0 -}}
     {{- $message := slice    (printf "Found usage of the disabled '%s'"         $Shortcode)
                     | append (printf "shortcode in content for '%s'."           page.File.Path)
                     | append (printf "Set platen.shortcodes.%s.enabled to true" $Shortcode)
                     | append "in your site configuration or remove all uses of the shortcode."
     -}}
+
     {{- with $Settings.aliases -}}
       {{- $Aliases := delimit $Settings.aliases "', '" "', and '"                 -}}
       {{- $Suffix  := printf "Aliases for this shortcode include: '%s'." $Aliases -}}
       {{- $message  = $message | append $Suffix                                   -}}
     {{- end -}}
+
     {{- errorf "%s" (delimit $message " ") -}}
   {{- end -}}
 {{- end -}}

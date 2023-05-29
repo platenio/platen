@@ -1,0 +1,30 @@
+{{/*
+    Shoelace Template: relativeTime
+
+    This template renders an <sl-relative-time> element.
+
+    It expects input as either a string or a dictionary. If the input is a
+    string, it's used as the value of the element's `date` attribute. If the
+    input is a dictionary, the keys in the dictionary as used as attributes for
+    the element with their value set to their stringified defined value.
+*/}}
+{{- $Params := . -}}
+
+{{/*  Define partials for easier renaming/maintenance  */}}
+{{- $getSafeAttributes := "platen/utils/getSafeAttributes" -}}
+{{/*  Initialize attribute list  */}}
+{{- $attributes := slice -}}
+
+{{- if reflect.IsMap $Params -}}
+  {{- range $Name, $Value := $Params -}}
+    {{- $Attribute := printf `%s="%s"` $Name (print $Value) -}}
+    {{- $attributes = $attributes | append $Attribute       -}}
+  {{- end -}}
+
+  {{- $SafeParams := dict "Attributes" $attributes "IndentCount" 18 -}}
+  {{- $attributes := partial $getSafeAttributes $SafeParams         -}}
+{{- else -}}
+  {{- $attributes = printf `date="%s"` $Params | safeHTMLAttr -}}
+{{- end -}}
+
+<sl-relative-time {{ $attributes }}></sl-relative-time>

@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: iconoir.schema.yaml
+title: Iconoir
+description: Settings for the Iconoir library.
+schematize:
+  weight: 5
+  details: |
+    These options control the registration of the [Iconoir][01] library.
+
+    ```alert
+    Iconoir uses the [MIT License](https://github.com/lucaburgio/iconoir/blob/master/LICENSE).
+    ```
+
+    [01]: https://iconoir.com/
+type: object
+properties:
+  enabled:
+    title: Enable Library
+    description: Choose whether to enable the icon library
+    schematize:
+      weight: 1
+      details: |
+        Use this setting to choose whether the icon library is available.
+    type: boolean
+    default: true
+  aliases:
+    title: Library Aliases
+    description: Define any number of aliases for the icon library.
+    schematize:
+      weight: 2
+      details: |
+        Use this setting to specify alternate short names for the library. You can use these names instead
+        of the full library name when specifying the library in your markup or other settings.
+    type: array
+    items:
+      type: string
+    default: []
+  version:
+    title: Library Version
+    description: Choose the version of the library to load.
+    schematize:
+      weight: 3
+      details: |
+        Choose the version of the library to load from the CDN.You can always use a specific released version of the
+        library if you prefer.
+    type: string
+    default: latest
+  registration:
+    title: Registration Options
+    description: Settings for how the library is registered.
+    schematize:
+      weight: 99
+    type: object
+    properties:
+      script:
+        title: Registration Script
+        description: Specify the name of the registration script.
+        type: string
+        default: iconoir.js

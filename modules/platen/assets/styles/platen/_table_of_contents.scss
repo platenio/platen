@@ -18,3 +18,43 @@
     margin-top: 0;
   }
 }
+
+nav#TableOfContents, nav#TableOfContentsMobile {
+  sl-tree-item {
+    // Override the font size for the tree items for the ToC
+    &::part(label), &::part(expand-button) {
+      font-size: $font-size-small;
+      line-height: unset;
+    }
+    &::part(expand-button) {
+      height: 1em;
+    }
+
+    /*
+      Ensure non-expandable entries have their links take up the full width of
+      the line; that way, clicking anywhere on the line takes you to the
+      heading. Don't do it for entries with children, so clicking the line
+      still expands/collapses the entry rather than jumping to it.
+    */
+    &:not(:has([slot="children"]))::part(label) {
+      flex-grow: 1;
+    }
+
+    // Ensure the link always fills the available space
+    a {
+      width: 100%;
+    }
+
+    // Ignore the default selection highlighting for the TOC
+    &::part(item--selected) {
+      background-color: var(--body-background);
+    }
+
+    // Disable the border for items in the TOC
+    &::part(item), &::part(item--expanded), &::part(item--selected) {
+      border-inline-start-color: unset;
+      border-inline-start-style: unset;
+      border-inline-start-width: unset;
+    }
+  }
+}

@@ -16,6 +16,8 @@
 
 {{ partial "platen/htmlHead/siteStyleLink" page }}
 
+{{ partialCached "platen/htmlHead/siteModuleScript" "cache" "cache" }}
+
 {{ range $Feature, $Settings := $PlatenConfig.features -}}
   {{- if $Settings.enabled -}}
     {{- with $Settings.partials.header -}}
@@ -31,6 +33,8 @@
     {{- end -}}
   {{- end -}}
 {{- end -}}
+
+{{ partialCached "platen/htmlHead/tocScript" "cache" "cache" }}
 
 {{- template "_internal/google_analytics.html" page -}}
 

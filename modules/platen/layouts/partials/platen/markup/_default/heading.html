@@ -1,9 +1,74 @@
-{{- $Input  := .                        -}}
-{{- $Level  := $Input.Level             -}}
-{{- $Anchor := $Input.Anchor | safeURL  -}}
-{{- $Text   := $Input.Text   | safeHTML -}}
+{{- $IconTemplate       := "platen/features/shoelace/templates/icon"  -}}
+{{- $getEnabledFeatures := "platen/utils/features/getEnabledFeatures" -}}
+{{/*  Handle Input  */}}
+{{- $Input      := .                            -}}
+{{- $Page       := $Input.Page                  -}}
+{{- $Level      := $Input.Level                 -}}
+{{- $Anchor     := $Input.Anchor     | safeURL  -}}
+{{- $Text       := $Input.Text       | safeHTML -}}
+{{- $Attributes := $Input.Attributes            -}}
+{{/*  Build the heading info without the page  */}}
+{{- $Heading    := dict "Level"      $Level
+                        "Text"       $Text
+                        "Anchor"     $Anchor
+                        "Attributes" $Attributes
+-}}
 
-<h{{ $Level }} id="{{ $Anchor }}">
-  {{ $Text }}
+{{/*  When the page is available, update the stored headings.  */}}
+{{- with $Page -}}
+  {{- $headings := $Page.Store.Get "_HeadingMap" | default (dict)  -}}
+  {{- $headings  = merge $headings (dict (print $Anchor) $Heading) -}}
+  {{- $Page.Store.Set "_HeadingMap" $headings                      -}}
+{{- end -}}
+
+{{- $attributeList := slice (printf `id="%s"` $Anchor) -}}
+
+{{- with $Classes := $Attributes.class -}}
+  {{- $ClassAttribute := printf `class="%s"` $Classes            -}}
+  {{- $attributeList   = $attributeList | append $ClassAttribute -}}
+{{- end -}}
+
+{{/*  Determine whether the anchor should be skipped  */}}
+{{- $NoAnchor := $Attributes.no_anchor | default false -}}
+
+{{/*  Determine whther the icons should be handled  */}}
+{{- $EnabledFeatures := partialCached $getEnabledFeatures "Cache" "Cache" -}}
+{{- $ShoelaceEnabled := in $EnabledFeatures "shoelace"                    -}}
+{{- $PrefixIcon      := cond $ShoelaceEnabled $Attributes.prefix_icon ""  -}}
+{{- $SuffixIcon      := cond $ShoelaceEnabled $Attributes.suffix_icon ""  -}}
+
+{{/*  These attributes are intentionally handled, so skip adding them.  */}}
+{{- $SkipAttributes := slice
+      "class"
+      "id"
+      "no_anchor"
+      "suffix_icon"
+      "prefix_icon"
+-}}
+
+{{/*  Add any non-handled attributes to the heading element  */}}
+{{- range $Name, $Value := $Attributes -}}
+  {{- if and (not (in $SkipAttributes $Name)) (not (hasPrefix $Name "toc_")) -}}
+    {{- $Entry        := printf `%s="%s"` $Name (print $Value) -}}
+    {{- $attributeList = $attributeList | append $Entry        -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Build the attribute list, then render the heading  */}}
+{{- $attributeList = delimit $attributeList " " | safeHTMLAttr -}}
+
+<h{{ $Level }} {{ $attributeList }}>
+  {{- with $PrefixIcon }}
+    {{ partial $IconTemplate (dict "Page" $Page "Icon" $PrefixIcon) }}
+  {{ end -}}
+
+  {{ $Text | safeHTML }}
+
+  {{- with $SuffixIcon }}
+    {{ partial $IconTemplate (dict "Page" $Page "Icon" $SuffixIcon) }}
+  {{ end -}}
+
+  {{- if not $NoAnchor }}
   <a class="anchor" href="#{{ $Anchor }}">#</a>
+  {{- end }}
 </h{{ $Level }}>

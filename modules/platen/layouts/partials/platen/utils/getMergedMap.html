@@ -13,7 +13,7 @@
   {{- if reflect.IsMap $BaseValue -}}
     {{- with index $MergingMap $BaseKey -}}
       {{- $rContext := dict "MergingMap" . "BaseMap" $BaseValue "JoinArrays" $JoinArrays -}}
-      {{- $value     = partialCached "memo/utils/getMergedMap" $rContext $rContext       -}}
+      {{- $value     = partialCached "platen/utils/getMergedMap" $rContext $rContext     -}}
     {{- end -}}
   {{- else if (and (reflect.IsSlice $BaseValue) $JoinArrays) -}}
     {{- with index $MergingMap $BaseKey -}}

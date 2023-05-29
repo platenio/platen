@@ -1,0 +1,94 @@
+{{/*
+    Shoelace Utility Partial: parseIconName
+
+    This partial expects to receive the name of an icon in the format:
+
+        name&variant@library
+
+    Where name is mandatory but variant and library are optional. All of these
+    are valid strings to parse:
+
+        name
+        name&variant
+        name@library
+        name&variant@library
+
+    This partial returns a dictionary with the following values:
+
+    - Name: The canonical name of the icon without the variant.
+    - Library: The canonical name of the icon's library.
+    - LibraryStatus: Whether the library is unknown, enabled, or disabled.
+    - Variant: The canonical name of the icon's variant, if any.
+    - CombinedName: The combination of name and variant, like `name&variant`
+
+    The caller can decide what to do with the returned information. Typically,
+    the caller will want to use the CombinedName and Library to render an icon.
+*/}}
+{{/*  Define partials for easier renaming/use  */}}
+{{- $getIconLibraryConfig := "platen/features/shoelace/utils/getIconLibraryConfig" -}}
+{{/*  Handle parameters  */}}
+{{- $Name := . -}} {{/* The name of the icon to parse. */}}
+{{/*  Retrieve configuration  */}}
+{{- $Key            := "platen.features.shoelace.icons"              -}}
+{{- $IconConfig     := partialCached "platen/param/getKey" $Key $Key -}}
+{{- $DefaultLibrary := $IconConfig.default_library                   -}}
+{{/*  Initialize the icon info to return  */}}
+{{- $info := dict -}}
+
+{{- with $Name -}}
+  {{/*
+      This pattern parses the input string for the icon's name, variant, and
+      library. It returns these match groups:
+
+      - 0: The entire string.
+      - 1: The name of the icon.
+      - 2: The variant of the icon, if any.
+      - 3: The library of the icon, if any.
+  */}}
+  {{- $Pattern := `^([^&@]+)(?:&([^@]+))?(?:@(.+))?$` -}}
+  {{- $Matches := findRESubmatch $Pattern $Name       -}}
+
+  {{- with $Matches -}}
+    {{- $MatchGroup   := index $Matches    0                                -}}
+    {{- $Input        := index $MatchGroup 0                                -}}
+    {{- $IconName     := index $MatchGroup 1                                -}}
+    {{- $IconVariant  := index $MatchGroup 2                                -}}
+    {{- $iconLibrary  := index $MatchGroup 3                                -}}
+    {{- $combinedName := $IconName                                          -}}
+    {{- $info          = merge $info (dict "Input" $Input "Name" $IconName) -}}
+
+    {{- with $IconVariant -}}
+      {{- $combinedName = printf "%s&%s" $combinedName $IconVariant -}}
+      {{- $info         = merge $info (dict "Variant" $IconVariant) -}}
+    {{- end -}}
+
+    {{- with $iconLibrary -}}
+      {{/*  Just because a library name was parsed doesn't mean it was valid. Retrieve its config  */}}
+      {{- $Library       := partialCached $getIconLibraryConfig $iconLibrary $iconLibrary -}}
+      {{- $libraryStatus := "unknown"                                                     -}}
+
+      {{/*  If the library could be resolved, check if it's enabled.  */}}
+      {{- with $Library -}}
+        {{- range $LibraryName, $LibraryConfig := $Library -}}
+          {{- if eq true $LibraryConfig.enabled -}}
+            {{- $libraryStatus = "enabled" -}}
+          {{- else -}}
+            {{- $libraryStatus = "disabled" -}}
+          {{- end -}}
+
+          {{- $iconLibrary = $LibraryName -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- $info = merge $info (dict "Library" $iconLibrary "LibraryStatus" $libraryStatus) -}}
+    {{- else -}}
+      {{/*  If the library couldn't be resolved, use the default library.  */}}
+      {{- $info = merge $info (dict "Library" $DefaultLibrary "LibraryStatus" "enabled") -}}
+    {{- end -}}
+
+    {{- $info = merge $info (dict "CombinedName" $combinedName) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Return the canonicalized icon info  */}}
+{{- return $info -}}

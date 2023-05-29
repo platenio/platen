@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: default.schema.yaml
+title: Builtin Bootstrap Icons Library
+description: Settings for the builtin icons library.
+schematize:
+  weight: 1
+  details: |
+    These options control the default icon library used by Shoelace. Shoelace makes 1,500 icons from the
+    [Bootstrap Icons][01] project available.
+
+    [01]: https://icons.getbootstrap.com/
+type: object
+properties:
+  enabled:
+    title: Enable Library
+    description: Choose whether to enable the icon library
+    schematize:
+      weight: 1
+      details: |
+        Use this setting to choose whether the icon library is available.
+    type: boolean
+    default: true
+  aliases:
+    title: Library Aliases
+    description: Define any number of aliases for the icon library
+    schematize:
+      weight: 99
+      details: |
+        Use this setting to specify alternate short names for the library. You can use these names instead
+        of the full library name when specifying the library in your markup or other settings.
+    type: array
+    items:
+      type: string
+    default: []

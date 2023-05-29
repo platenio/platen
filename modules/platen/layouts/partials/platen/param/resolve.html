@@ -1,25 +1,50 @@
 {{/*
-    This partial is a convenience partial to wrap calling `_resolve` and caching the results without
-    requiring the called to use a very long call. Without this partial, caching a resolution would
-    look like line 14 everywhere it's used, making for very long lines and continually repeated
+    This partial is a convenience partial to wrap calling `_resolve` and
+    caching the results without requiring the caller to use a very long call.
+    Without this partial, caching a resolution would look like line 57
+    everywhere it's used, making for very long lines and continually repeated
     boilerplate.
 
-    `_resolve` is used to canonically resolve a configuration option by merging the configuration
-    setting from data, Hugo's configuration (files and environment), a page's front matter, and a
-    default value.
+    `_resolve` is used to canonically resolve a configuration option by merging
+    the configuration setting from data, Hugo's configuration (files and
+    environment), a page's front matter, and a default value.
 
-    When only a ConfigKey is provided, the value is a deep merge of the key's data over
-    configuration.
+    When only one key is provided for Config, the value is a deep merge of the
+    key's data over configuration. When more than one key is provided for
+    Config, the first key that resolves is used.
 
-    When only a ParamKey is provided, the value is pulled from the page's front matter. To use this
-    option, the caller must pass the page's context.
+    When only one key is provided for Param, the value is pulled from the
+    page's front matter. To use this option, the caller must pass the page's
+    context. If the page's context isn't provided, the partial will try to use
+    the current page context, if available. When more than one key is provided
+    for Param, the first key that resolves is used.
 
-    When a ConfigKey and ParamKey are provided, the value from the page's front matter is used if
-    it's available. If it isn't, the value defaults to the deep merge of the key's data over
-    configuration.
+    When keys for both Config and Param are provided, the value from the page's
+    front matter is used if it's available. If it isn't, the value defaults to
+    the deep merge of the key's data over configuration. In all cases, only the
+    first resolved value is used.
 
-    When a Default is provided, the value is set to the Default only if the value would otherwise
-    be nil.
+    When a Default is provided, the value is set to the Default only if the
+    value would otherwise be nil.
+
+    For example, consider this input:
+
+        dict "Config" (slice "display.foo.bar" "display.foo_bar")
+             "Param"  (slice "foo.bar" "foo_bar")
+             Context  page
+             Default  false
+    
+    In this case, the values resolve in the following order, returning the
+    first value from this list that does resolve to a value.
+
+    - foo.bar in the page front matter
+    - foo_bar in the page front matter
+    - display.foo.bar in the site config
+    - display.foo_bar in the site config
+    - false
+
+    The default value false is only returned if all other lookups fail to
+    resolve to a value.
 */}}
 {{- $Input       := .                       -}}
 {{- $Context     := $Input.Context          -}}

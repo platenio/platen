@@ -1,5 +1,49 @@
 {{/*
-  Partial to generate page name from Title or File name. Accepts Page as context
+  Utility Partial: getTitle
+
+  This partial generate's a page's title, handling features that might override
+  the title. It's context aware.
+
+  This partial expects to receive input that is either a page's context or a
+  dictionary with the following keys:
+
+  - Context: (Mandatory) The page context to retrieve the title for.
+  - ForHeader: (Optional) A boolean value indicating whether the title is being
+    called for use in the page's header. If it is, this value is `true`.
+  - ForHeading: (Optional) A boolean value indicating whether the title is
+    being called for use in a heading element. If it is, this value is `true`.
+  - ForHtmlHead: (Optional) A boolean value indicating whether the title is
+    being called for use in the page's HTML header's metadata. If it is, this
+    value is `true`.
+  - ForList: (Optional) A boolean value indicating whether the title is being
+    called for use in a list, like the `section` markup. If it is, this value
+    is `true`.
+  - ForMenu: (Optional) A boolean value indicating whether the title is being
+    called for use in the site menu. If it is, this value is `true`.
+
+  The `For*` parameters are all optional and default to not being set. This
+  allows anyone implementing a title partial from their feature to more
+  specifically control when they override the normal title.
+
+  This is necessary because the **first** resolved non-empty string for a title
+  is used. Platen's default handling is only used if no feature partial returns
+  a non-empty string for the title.
+
+  The default handler:
+
+  1. Uses $Context.LinkTitle over $Context.Title when ForMenu or ForList is
+     set to true. This allows an author to have their page title have a
+     different value in those contexts without any complex configuration.
+  1. If the title isn't being called for the site menu or a list, it uses
+     $Context.Title if it's defined.
+  1. If the page doesn't have $Context.Title defined, then:
+
+     1. If the page is a section, the title is the humanized/title case for the
+        folder name of the section page's Markdown source file.
+     1. If the page is a leaf, the title is the humanized/title case for the
+        file name of the leaf page's Markdown source file.
+  1. Finally, if the title isn't for the HTML Head, the title's text is
+     rendered from Markdown.
 */}}
 {{- $Params      := .                                                         -}}
 {{- $context     := .                                                         -}}
@@ -15,30 +59,34 @@
 
 {{- if reflect.IsMap $Params -}}
   {{- $context     = $Params.Context     -}}
-  {{- $forMenu     = $Params.ForMenu     -}}
   {{- $forHeader   = $Params.ForHeader   -}}
   {{- $forHeading  = $Params.ForHeading  -}}
   {{- $forHtmlHead = $Params.ForHtmlHead -}}
   {{- $forList     = $Params.ForList     -}}
+  {{- $forMenu     = $Params.ForMenu     -}}
 {{- end -}}
 
 {{- range $Feature, $Settings := $Features -}}
   {{- if and (eq "" $title) $Settings.enabled -}}
     {{- with $Settings.partials.title -}}
-      {{ $title = partial . $Params }}
+      {{ $title = partial $Settings.partials.title $Params }}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
 {{- if eq "" $title -}}
   {{- if and $context.LinkTitle (or $forMenu $forList) -}}
-    {{- $title = $context.LinkTitle | $context.RenderString -}}
+    {{- $title = $context.LinkTitle -}}
   {{- else if $context.Title -}}
     {{- $title = $context.Title -}}
   {{- else if and $context.IsSection $context.File -}}
     {{- $title = path.Base $context.File.Dir | humanize | title -}}
   {{- else if and $context.IsPage $context.File -}}
     {{- $title = $context.File.BaseFileName | humanize | title -}}
+  {{- end -}}
+
+  {{- if ne true $forHtmlHead -}}
+    {{- $title = $title | $context.RenderString -}}
   {{- end -}}
 {{- end -}}
 

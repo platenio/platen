@@ -1,0 +1,227 @@
+{{/*
+    TOC Canonicalize Partial: mapHeading
+
+    This partial processes a list of headings to build them into a map where
+    child headings are added to their parent. That way, the templates can write
+    the entries for the TOC without having to check whether they're closing the
+    prior entries.
+
+    The only mandatory parameter for this partial is `Headings`, which is 
+
+    This partial expects input as a dictionary with the following keys:
+
+    - `Headings` - the slice of parsed headings from the content before
+      mapping starts. This slice isn't referenced but not modified because it
+      represents the unmunged headings in the order they were discovered in
+      the content.
+    - `Heading` - the current heading being mapped from the caller.
+    - `Parent` - A heading with at least one known child heading. This value is
+      only set when processing a heading that is discovered to be a child of
+      the previous heading.
+    - `Previous` - The last processed heading. After processing a heading, the
+      partial updates this value.
+    - `Processed` = The list of processed heading IDs. This is used to prevent
+      double-processing the same heading. This partial updates the value in
+      place and always returns it.
+
+    The partial iterates over the unprocessed headings list to build a map of
+    headings with their children. If a later heading is discovered to be a
+    child of a previous heading, it's added to that heading in the Child key
+    for the heading's map.
+
+    It recursively calls itself as needed, mapping the parent-child
+    relationships for deeply nested headings.
+
+    This partial returns output as a dictionary with the following keys:
+
+    - `Mapped` -  The mapped Heading. This value depends on the input and
+      processing results for the file.
+
+      When the `Parent` parameter is passed, this value represents the updated
+      parent heading with any discovered children.
+
+      When the `Parent` parameter isn't passed and the processed heading is at
+      the same level as the previous heading, it returns the processed heading.
+
+      When the `Parent` parameter isn't passed and the processed heading is
+      discovered to be a child of the previous heading, it recurses with the
+      previous heading as the `Parent` parameter and then returns the previous
+      heading with its mapped children.
+    - `Processed` - The list of processed heading IDs after the partial
+      finishes the current processing pass for its input.
+*/}}
+
+{{- $Params    := .                                   -}}
+{{- $Heading   := $Params.Heading   | default (dict)  -}}
+{{- $Headings  := $Params.Headings  | default (slice) -}}
+{{- $parent    := $Params.Parent    | default (dict)  -}}
+{{- $previous  := $Params.Previous  | default (dict)  -}}
+{{- $processed := $Params.Processed | default (slice) -}}
+
+{{/*  Define Recurse for easier calling/renaming */}}
+{{- $Recurse := "platen/toc/utils/canonicalize/mapHeading" -}}
+
+{{/*  Initialize the returned information.  */}}
+{{- $info   := dict -}}
+
+{{/*
+    We need to tell the difference between when the partial was called to
+    get a parent's children and when it was discovered that a heading is
+    actually a child of the previous heading.
+
+    Similarly, to make things work smoothly, we need to pre-define an empty
+    dict for nested parents. This is only used when we are processing
+    headings for a parent and discover deeper nesting.
+*/}}
+{{- $PassedParent := ne (dict) $parent -}}
+{{- $nestedParent := dict              -}}
+
+{{- $keepProcessing := true -}}
+{{- range $H := $Headings -}}
+  {{/*  Don't re-process headings and stop processing when required.  */}}
+  {{- if and $keepProcessing (not (in $processed $H.ID)) -}}
+    {{- if $parent -}}
+      {{/*  Only called when passed a parent.  */}}
+      {{- if gt $H.Level $parent.Level -}}
+        {{- if eq $H.Level (add 1 $parent.Level) -}}
+          {{/*
+              In this case, the current heading is a direct child of the
+              parent heading. We need to add this heading the parent's map
+              of children, set this heading as the previous heading, and
+              add its ID to the list of processed IDs before continuing.
+          */}}
+          {{- $children := $parent.Children | default (dict)         -}}
+          {{- $children  = merge $children (dict $H.ID $H)           -}}
+          {{- $parent    = merge $parent (dict "Children" $children) -}}
+          {{- $previous  = $H                                        -}}
+          {{- $processed = $processed | append $H.ID | uniq          -}}
+        {{- else if eq $H.Level (add 1 $previous.Level) -}}
+          {{/*
+              In this case, the current heading is actually a child of the
+              previous heading, which makes it a nested parent. We need to
+              immediately recurse, passing the previous heading as the
+              parent heading.
+
+              When we get the result, we need to merge the updated map for
+              the nested parent heading and its children into the current
+              parent's map of children. Then we update the list of
+              processed IDs and set the previous heading to the mapped
+              heading returned from the recursive call.
+          */}}
+          {{- $nestedParent = $previous -}}
+          {{- $Recursing     := merge $Params (
+                dict
+                "Heading"   $H
+                "Parent"    $nestedParent
+                "Processed" $processed
+              )
+          -}}
+          {{- $Result         := partial $Recurse $Recursing                              -}}
+          {{- $Mapped         := $Result.Mapped                                           -}}
+          {{- $nestedChildren := $nestedParent.Children | default (dict)                  -}}
+          {{- $nestedChildren  = merge $nestedChildren  (dict $Mapped.ID $Mapped)         -}}
+          {{- $nestedParent    = merge $nestedParent    (dict "Children" $nestedChildren) -}}
+          {{- $children       := $parent.Children       | default (dict)                  -}}
+          {{- $children        = merge $children        (dict $Mapped.ID $Mapped)         -}}
+          {{- $parent          = merge $parent          (dict "Children" $children)       -}}
+          {{- $processed       = union $processed       $Result.Processed                 -}}
+          {{- $previous        = $Mapped                                                  -}}
+          {{/*  Reset the nested parent before continuing  */}}
+          {{- $nestedParent = dict -}}
+        {{- else -}}
+          {{/*
+              In this case, the current heading has skipped at least one
+              level. We raise an error here, because skipping heading
+              levels breaks accessibility for site visitors.
+          */}}
+          {{- $Message := delimit (
+                slice
+                (printf "Unable to build table of contents on '%s'."     page.File.Path)
+                (printf "The heading '%s' with the ID '%s' is level %v," $H.Text $H.ID $H.Level)
+                (printf "but the previous heading (id '%s') was level %v." $previous.ID $previous.Level)
+                "Headings must only ever increment one level at a time."
+                "Otherwise, they present accessibility problems for site visitors."
+                "For more information, see:"
+                "https://www.w3.org/WAI/tutorials/page-structure/headings/"
+              ) " " | print
+          -}}
+          {{- errorf $Message -}}
+        {{- end -}}
+      {{- else -}}
+        {{/*
+            In this case, the parent heading isn't an ancestor of the
+            current heading. We stop processing, because we've got the
+            fully mapped parent with its children. This heading isn't added
+            to the list of processed headings, so it can be processed with
+            this parent as the previous heading.
+        */}}
+        {{- $keepProcessing = false -}}
+      {{- end -}}
+    {{- else if $previous -}}
+      {{/*
+          This conditional means the current heading isn't known to have a
+          parent and isn't the first heading in the page. If this heading
+          does actually have a parent, a recursive call ensures we update
+          the map as needed.
+      */}}
+      {{- if gt $H.Level $previous.Level -}}
+        {{/*
+            In this case, the heading is actually a child of the previous
+            heading. We need to immediately recurse with the previous
+            heading as the parent.
+
+            When we get the result, we should have the "fully" mapped
+            parent heading with its children. We want to return that, not
+            the current heading. That way we can replace the entry for the
+            previous heading in the working map.
+        */}}
+        {{- $Recursing := merge $Params (
+              dict
+              "Heading"   $H
+              "Parent"    $previous
+              "Processed" $processed
+            )
+        -}}
+        {{- $Result   := partial $Recurse $Recursing                -}}
+        {{- $processed = union $processed $Result.Processed         -}}
+        {{- $previous  = $Result.Mapped                             -}}
+        {{- $info      = merge $info (dict "Mapped" $Result.Mapped) -}}
+      {{- else -}}
+        {{/*
+            In this case, the heading is a sibling of the previous heading.
+            Set it as the mapped heading and add the ID to the processed
+            list.
+        */}}
+        {{- $info      = merge $info (dict "Mapped" $H) -}}
+        {{- $processed = $processed | append $H.ID | uniq -}}
+      {{- end -}}
+      {{/*
+          For headings without a parent that have a previous heading, we
+          only process that entry. Only the first heading and headings with
+          a parent keep processing.
+      */}}
+      {{- $keepProcessing = false -}}
+    {{- else if eq $H $Heading -}}
+      {{/*
+          When processing itself, just set this heading as the previous one
+          and add it to the list of processed IDs.
+      */}}
+      {{- $previous  = $H                        -}}
+      {{- $processed = $processed | append $H.ID -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Always return the updated list of processed headings  */}}
+{{- $info = merge $info (dict "Processed" $processed) -}}
+
+{{/*
+    If called for a parent, return the parent as the mapped heading. This
+    ensures the return info when passed a parent is that heading with it's
+    children, enabling the partial to update the map appropriately.
+*/}}
+{{- if $PassedParent -}}
+  {{- $info = merge $info (dict "Mapped" $parent) -}}
+{{- end -}}
+
+{{- return $info -}}

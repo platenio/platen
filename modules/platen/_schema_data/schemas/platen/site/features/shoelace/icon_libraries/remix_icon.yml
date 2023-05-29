@@ -1,0 +1,99 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: remix_icon.schema.yaml
+title: Remix Icon
+description: Settings for the Remix Icon library.
+schematize:
+  weight: 10
+  details: |
+    These options control the registration of the [Remix Icon][01] library.
+
+    ```alert
+    Remix Icon uses the [Apache 2.0 License](https://github.com/Remix-Design/RemixIcon/blob/master/License).
+    ```
+
+    [01]: https://remixicon.com/
+type: object
+properties:
+  enabled:
+    title: Enable Library
+    description: Choose whether to enable the icon library
+    schematize:
+      weight: 1
+      details: |
+        Use this setting to choose whether the icon library is available.
+    type: boolean
+    default: true
+  aliases:
+    title: Library Aliases
+    description: Define any number of aliases for the icon library.
+    schematize:
+      weight: 2
+      details: |
+        Use this setting to specify alternate short names for the library. You can use these names instead
+        of the full library name when specifying the library in your markup or other settings.
+    type: array
+    items:
+      type: string
+    default:
+      - remix
+  version:
+    title: Library Version
+    description: Choose the version of the library to load.
+    schematize:
+      weight: 3
+      details: |
+        Choose the version of the library to load from the CDN. Platen regularly updates this version after
+        testing. You can always use a specific released version of the library if you prefer.
+    type: string
+    default: 2.5.0
+  default_category:
+    title: Default Icon Category
+    schematize:
+      weight: 4
+      details: |
+        Defines the default category to use for the icon library.
+    type: string
+    enum:
+      - buildings
+      - business
+      - communication
+      - design
+      - development
+      - device
+      - document
+      - editor
+      - finance
+      - health
+      - logos
+      - map
+      - media
+      - others
+      - system
+      - user
+      - weather
+    default: system
+  default_variant:
+    title: Library Default Variant
+    description: Choose the default icon variant to use for the library.
+    schematize:
+      weight: 5
+      details: |
+        Use this option to set the default variant for icons from this library.
+    type: string
+    enum:
+      - line
+      - fill
+    default: line
+  registration:
+    title: Registration Options
+    description: Settings for how the library is registered.
+    schematize:
+      weight: 99
+    type: object
+    properties:
+      script:
+        title: Registration Script
+        description: Specify the name of the registration script.
+        type: string
+        default: ionicons.js

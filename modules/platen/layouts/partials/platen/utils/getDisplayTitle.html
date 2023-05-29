@@ -1,0 +1,163 @@
+{{/*
+    Utility Partial: getDisplayTitle
+
+    This partial expects input as a dictionary with the following keys:
+
+    - Page: (Optional) The page the display title is for. If this value isn't
+      specified, the partial uses the current page instead.
+    - Title: (Mandatory) The canonical non-display title for the page. This is
+      used as the value between the page's `platen.title_prefix` and
+      `platen.title_suffix` options, if they're specified in the page's front
+      matter. If there's no prefix or suffix, this value is passed back as the
+      display title.
+    
+    This partial inspects the `platen.display_title` value for a page's front
+    matter for the following keys:
+
+    - markdown: A string to render as Markdown for the title. If this value
+      isn't set, the default page title is used.
+    - prefix: Either a string to render as Markdown before the title or a
+      dictionary of options. Valid options are `markdown` and `icon`. When
+      `icon` is defined, it's inserted before the prefixes `markdown`, if any.
+    - suffix: Either a string to render as Markdown after the title or a
+      dictionary of options. Valid options are `markdown` and `icon`. When
+      `icon` is defined, it's inserted after the prefixes `markdown`, if any.
+    
+    Examples:
+
+    1. Simple override:
+          title: Foo
+          platen:
+            display_title: Bar
+       Becomes:
+          "Bar"
+    2. Prefix and suffix:
+          title: Foo
+          platen:
+            display_title:
+              prefix:
+                icon: patch-exclamation-fill
+              suffix: "!"
+       Becomes:
+          <sl-icon name="patch-exclamation-fill"></sl-icon>&nbsp;Foo !
+    3. Full:
+          title: Foo
+          platen:
+            display_title:
+              markdown: _Bar_
+            prefix:
+              icon: gear
+              markdown: Foo!
+            suffix:
+              icon: hammer
+              markdown: Baz
+       Becomes:
+        <sl-icon name="gear"></sl-icon>&nbsp;Foo!&nbsp;<em>Bar</em> Baz <sl-icon name="hammer"></sl-icon>
+*/}}
+{{- $Params    := .                                                  -}}
+{{- $Page      := $Params.Page                      | default page   -}}
+{{- $PageTitle := $Params.Title                                      -}}
+{{- $Options   := $Page.Params.platen.display_title | default (dict) -}}
+{{/*  Define partials for easier reuse/maintenance  */}}
+{{- $resolveIconOptions := "platen/features/shoelace/utils/resolveIconOptions" -}}
+{{- $RenderIcon         := "platen/features/shoelace/templates/icon"           -}}
+{{/*
+    This pattern is used to look for rendering markup that must not be rendered
+    or it will break the semantics of the title.
+
+    If a markup starts with any of these items, they're separated from the rest
+    of the string before rendering and then re-added after.
+
+        1.    Ordered list.
+        1)    Ordered list.
+        -     Unordered list.
+        *     Unordered list.
+        +     Unordered list.
+        >     Block quote.
+*/}}
+{{- $LeadingMarkupPattern := `^(\d+(?:\.|\))|[-+>\*])?(.+)?` -}}
+{{/*  Initialize the display title to the canonical title.  */}}
+{{- $displayTitle := trim $PageTitle " " -}}
+
+{{- with $Options -}}
+  {{- if reflect.IsMap $Options -}}
+    {{- with $Options.markdown -}}
+      {{- with $LeadMatches := findRESubmatch $LeadingMarkupPattern $Options.markdown -}}
+        {{- $Match       := index $LeadMatches 0                                 -}}
+        {{- $Lead        := index $Match       1                                 -}}
+        {{- $Markdown    := index $Match       2                                 -}}
+        {{- $displayTitle = printf "%s%s" $Lead ($Markdown | $Page.RenderString) -}}
+      {{- else -}}
+        {{- $displayTitle = $Options.markdown | $Page.RenderString -}}
+      {{- end -}}
+      {{- $displayTitle = trim $displayTitle " "                 -}}
+    {{- end -}}
+
+    {{- with $Options.prefix -}}
+      {{- $prefix := $Options.prefix -}}
+
+      {{- if reflect.IsMap $prefix -}}
+        {{- $prefixes := slice -}}
+
+        {{- with $prefix.icon -}}
+          {{- $PrefixIcon := partialCached $RenderIcon (dict "Icon" $prefix.icon) $prefix.icon -}}
+          {{- $prefixes    = $prefixes | append $PrefixIcon                                    -}}
+        {{- end -}}
+
+        {{- with $prefix.markdown -}}
+          {{- with $LeadMatches := findRESubmatch $LeadingMarkupPattern $prefix.markdown -}}
+            {{- $Match    := index $LeadMatches 0                                 -}}
+            {{- $Lead     := index $Match       1                                 -}}
+            {{- $Markdown := index $Match       2                                 -}}
+            {{- $Rendered := printf "%s%s" $Lead ($Markdown | $Page.RenderString) -}}
+            {{- $prefixes  = $prefixes | append $Rendered                         -}}
+          {{- else -}}
+            {{- $prefixes = $prefixes | append ($prefix.markdown | $Page.RenderString) -}}
+          {{- end -}}
+        {{- end -}}
+
+        {{- $prefix = delimit $prefixes "&nbsp;" -}}
+      {{- else -}}
+        {{- $prefix = $prefix | $Page.RenderString -}}
+      {{- end -}}
+
+      {{- $displayTitle = printf "%s&nbsp;%s" $prefix $displayTitle -}}
+    {{- end -}}
+
+    {{- with $Options.suffix -}}
+      {{- $suffix := $Options.suffix -}}
+
+      {{- if reflect.IsMap $suffix -}}
+        {{- $suffixes := slice -}}
+
+        {{- with $suffix.markdown -}}
+          {{- with $LeadMatches := findRESubmatch $LeadingMarkupPattern $suffix.markdown -}}
+            {{- $Match    := index $LeadMatches 0                                 -}}
+            {{- $Lead     := index $Match       1                                 -}}
+            {{- $Markdown := index $Match       2                                 -}}
+            {{- $Rendered := printf "%s%s" $Lead ($Markdown | $Page.RenderString) -}}
+            {{- $suffixes  = $suffixes | append $Rendered                         -}}
+          {{- else -}}
+            {{- $suffixes = $suffixes | append ($suffix.markdown | $Page.RenderString) -}}
+          {{- end -}}
+        {{- end -}}
+
+        {{- with $suffix.icon -}}
+          {{- $SuffixIcon := partialCached $RenderIcon (dict "Icon" $suffix.icon) $suffix.icon -}}
+          {{- $suffixes    = $suffixes | append $SuffixIcon                                    -}}
+        {{- end -}}
+
+        {{- $suffix = delimit $suffixes "&nbsp;" -}}
+      {{- else -}}
+        {{- $suffix = $suffix | $Page.RenderString -}}
+      {{- end -}}
+
+      {{- $displayTitle = printf "%s %s" $displayTitle $suffix -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $displayTitle = $Options | $Page.RenderString -}}
+    {{- $displayTitle = trim $displayTitle " "        -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return ($displayTitle | safeHTML) -}}

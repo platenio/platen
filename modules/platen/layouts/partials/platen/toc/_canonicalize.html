@@ -1,0 +1,130 @@
+{{/*
+    TOC Partial: _canonicalize
+
+    This private partial canonicalizes the info for generating the TOC for a
+    list of headings on a page.
+
+    It expects no input and always operates on the current page.
+
+    The partial uses the merged settings for `platen.display.table_of_contents`
+    in the site configuration and `platen.table_of_contents` in the page's
+    front matter.
+
+    It searches for headings on the page that have a level in the valid range
+    (as defined by the `minimum_level` and `maximum_level` settings). It finds,
+    parses, and then canonicalizes the list of headings so that child headings
+    are associated with their parent heading.
+
+    The partial has handling for both the legacy template and the default
+    template, building the parameter map to send to it.
+
+    The partial returns a map that includes the template to call and the
+    parameters for that template.
+*/}}
+{{/*  Define partials for easier calling/renaming  */}}
+{{- $getKey               := "platen/param/getKey"                    -}}
+{{- $getMergedMap         := "platen/utils/getMergedMap"              -}}
+{{- $parseHeading         := "platen/toc/utils/parseHeading"          -}}
+{{- $canonicalizeHeadings := "platen/toc/utils/canonicalize/headings" -}}
+{{/*  Retrieve content and configuration  */}}
+{{- $PageContent   := page.Content                                              -}}
+{{- $ConfigKey     := "platen.display.table_of_contents"                        -}}
+{{- $SiteConfigToC := partialCached $getKey $ConfigKey $ConfigKey               -}}
+{{- $PageConfigToC := page.Params.platen.table_of_contents | default (dict)     -}}
+{{- $MergeParams   := dict "BaseMap" $SiteConfigToC "MergingMap" $PageConfigToC -}}
+{{- $MergedConfig  := partialCached $getMergedMap $MergeParams $MergeParams     -}}
+
+{{/*  Initialize the canonicalized map to return  */}}
+{{- $canonical := dict -}}
+
+{{/* Parse settings for minimum and maximum heading levels to include in ToC */}}
+{{- $MinLevel       := $MergedConfig.minimum_level | default 2     -}}
+{{- $MaxLevel       := $MergedConfig.maximum_level | default 4     -}}
+{{- $ExpandIcon     := $MergedConfig.expand_icon   | default ""    -}}
+{{- $CollapseIcon   := $MergedConfig.collapse_icon | default ""    -}}
+{{- $UseLegacy      := $MergedConfig.use_legacy    | default false -}}
+{{- $UseOrderedList := $MergedConfig.ordered_list  | default false -}}
+
+{{/*  Initialize the template to use  */}}
+{{- $template := "default" -}}
+
+{{/* Find all headings in the rendered content */}}
+{{- $FindHeadingsPattern := `<h[1-6].*?>(.|\n)+?</h[1-6]>`           -}}
+
+{{/* If no headings are found, leave canonical as an empty map */}}
+{{- with $FoundHeadings := findRE $FindHeadingsPattern $PageContent -}}
+  {{/*  Initialize the slice of headings  */}}
+  {{- $headings := slice -}}
+
+  {{/*
+      Loop over the found headings, adding their fully parsed info to the list
+      if they're in the valid range.
+  */}}
+  {{- range $Heading := $FoundHeadings -}}
+    {{- with $Parsed := partialCached $parseHeading $Heading $Heading -}}
+      {{- if and (ge $Parsed.Level $MinLevel) (le $Parsed.Level $MaxLevel) -}}
+        {{- $headings = $headings | append $Parsed -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/*  Get the full map of headings with their children  */}}
+  {{- $headings  = partial $canonicalizeHeadings (dict "Headings" $headings) -}}
+  {{- $canonical = merge $canonical (dict "Headings" $headings)              -}}
+
+  {{/*  Handle legacy vs shoelace  */}}
+  {{- if $UseLegacy -}}
+    {{- $template  = "legacy"                                    -}}
+    {{- $ListType  := cond   $UseOrderedList "ol" "ul"           -}}
+    {{- $ListOpen  := printf "<%s>"  $ListType | safeHTML        -}}
+    {{- $ListClose := printf "</%s>" $ListType | safeHTML        -}}
+    {{- $List      := dict   "Open" $ListOpen "Close" $ListClose -}}
+    {{- $canonical  = merge  $canonical (dict "List" $List)      -}}
+  {{- else -}}
+    {{/*  Handle icons  */}}
+    {{- if and $ExpandIcon $CollapseIcon -}}
+      {{- $Icons    := dict "Expand" $ExpandIcon "Collapse" $CollapseIcon -}}
+      {{- $canonical = merge $canonical (dict "Icons" $Icons)             -}}
+    {{- end -}}
+
+    {{/*  Handle list attributes  */}}
+    {{- $listAttributes := slice -}}
+    {{- $classes        := slice -}}
+    {{/*  Add no-rotate-icon if using custom icons  */}}
+    {{- if isset $canonical "Icons" -}}
+      {{- $classes = $classes | append "no-rotate-icon" -}}
+    {{- end -}}
+
+    {{- with $classes -}}
+      {{- $ClassAttribute := printf `class="%s"` (delimit $classes " ") -}}
+      {{- $listAttributes  = $listAttributes | append $ClassAttribute   -}}
+    {{- end -}}
+
+    {{/*  If the indentation settings are set, add them as a style to the tree  */}}
+    {{- with $MergedConfig.indentation -}}
+      {{- $indentStyles := slice -}}
+
+      {{- range $name, $value := $MergedConfig.indentation -}}
+        {{- $Variable    := printf "--indent-%s" (replace $name "_" "-") -}}
+        {{- $StyleEntry  := printf "%s: %s" $Variable (print $value)     -}}
+        {{- $indentStyles = $indentStyles | append $StyleEntry           -}}
+      {{- end -}}
+
+      {{- $StyleAttribute := printf `style="%s"` (delimit $indentStyles "; ") -}}
+      {{- $listAttributes  = $listAttributes | append $StyleAttribute         -}}
+    {{- end -}}
+
+    {{/*  If the tree has attributes, canonicalize them for insertion  */}}
+    {{- with $listAttributes -}}
+      {{- $listAttributes = delimit $listAttributes " " | safeHTMLAttr -}}
+      {{- $listAttributes = dict    "ListAttributes" $listAttributes   -}}
+      {{- $canonical      = merge   $canonical       $listAttributes   -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  As a last step, put the template in the correct folder  */}}
+{{- $template  = printf "platen/toc/templates/%s"  $template  -}}
+{{- $canonical = merge $canonical (dict "Template" $template) -}}
+
+{{- return $canonical -}}

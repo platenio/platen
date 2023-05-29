@@ -1,0 +1,61 @@
+{{/*
+    Shoelace Template: icon
+
+    Renders an <sl-icon> element on a page.
+
+    This template partial expects a dict with the following keys:
+
+    - Icon: (Mandatory) Either a string representing the name of the icon to
+      render or the options dictionary for the icon.
+    - Slot: (Optional) The slot for the icon. Useful when adding the icon to
+      another element where the slot is fixed by the caller and not the icon's
+      definition.
+
+    Params.Icon is always used to resolve the icon into a canonicalized
+    dictionary of options. If the value is a string, the return is a dictionary
+    that includes the icon's canonicalized name and library. If the value is
+    a dictionary, the return is that dictionary with the name and library keys
+    updated to their canonical value.
+
+    If Params.Slot is defined, it is merged into the canonicalized icon options
+    dictionary.
+
+    The partial then creates the attribute list for the icon from the options,
+    inserting them to the element and rendering it if the option dictionary
+    isn't empty.
+
+    If the dictionary is empty, nothing is rendered.
+*/}}
+{{/*  Define partials for easier renaming/use  */}}
+{{- $getSafeAttributes  := "platen/utils/getSafeAttributes"                    -}}
+{{- $resolveIconOptions := "platen/features/shoelace/utils/resolveIconOptions" -}}
+{{/*  Handle parameters  */}}
+{{- $Params := .            -}}
+{{- $Icon   := $Params.Icon -}}
+{{- $Slot   := $Params.Slot -}}
+
+{{- with $Params.Icon -}}
+  {{/*  Resolve the icon options from the parameters.  */}}
+  {{- $attributeMap := partialCached $resolveIconOptions $Params $Params.Icon -}}
+  {{- $attributes   := slice                                                  -}}
+
+  {{- with $attributeMap -}}
+    {{- with $Slot -}}
+      {{- $attributeMap = merge $attributeMap (dict "slot" $Slot) -}}
+    {{- end -}}
+
+    {{- range $Key, $Value := $attributeMap -}}
+      {{- if ne "variant" $Key -}}
+        {{- $Attribute := printf `%s="%s"` $Key (print $Value) -}}
+        {{- $attributes = $attributes | append $Attribute      -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $attributeParams := dict "Attributes" $attributes "IndentCount" 9 -}}
+  {{- $IconAttributes  := partial $getSafeAttributes $attributeParams   -}}
+
+  {{- with $IconAttributes -}}
+    <sl-icon {{ $IconAttributes }}></sl-icon>
+  {{- end -}}
+{{- end -}}

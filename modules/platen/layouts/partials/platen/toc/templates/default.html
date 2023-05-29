@@ -1,0 +1,111 @@
+{{/*
+    TOC Template: default
+
+    This template renders the TOC as a Shoelace tree element (`<sl-tree>`),
+    with each heading as a tree item (`<sl-tree-item>`). If a heading has any
+    children, they're added as nested tree items.
+
+    This partial expects input as a dictionary with the following keys:
+
+    - `Headings` - (Mandatory) The canonicalized slice of parsed headings with
+      any child headings mapped to them.
+    - `Icons` - (Optional) A dictionary with both keys `Collapse` and `Expand`
+      set, or an empty dictionary.
+    - `ListAttributes` - (Optional) A string representing the attribute-value
+      pairs to add to the `<sl-tree>` element.
+
+    If `Icons` is not an empty dictionary, the template calls the icons
+    sub-template, which renders a pair of `<sl-icon>` elements for the tree.
+    The icons are used for indicating whether a tree item can be expanded or
+    collapsed.
+
+    For each heading, the template calls the entry sub-template. That template
+    handles adding the `<sl-tree-item>` for the heading.
+
+    If the `toc_expand` attribute was set to `true` in the heading's markdown,
+    or it wasn't set and the heading has children, the tree item gets the
+    `expanded` attribute.
+
+    If the `toc_classes` attribute was set in the heading's markdown, the tree
+    item gets the `class` attribute with that value.
+
+    Inside the tree item, each heading gets a link to the heading on the page.
+    The link always displays the heading's HTML without the anchor element and
+    with nested links unlinked.
+
+    If the `toc_prefix_icon` and/or `toc_suffix_icon` attributes were set in
+    the heading's markdown, the template inserts the appropriate icon before or
+    after the heading's text.
+
+    If the heading has child headings, they are recursively added after the
+    link in their own `<sl-tree-item>` elements.
+*/}}
+
+{{- $Params         := .                                                  -}}
+{{- $Headings       := $Params.Headings                                   -}}
+{{- $Icons          := $Params.Icons                                      -}}
+{{- $ListAttributes := $Params.ListAttributes | default "" | safeHTMLAttr -}}
+
+
+<sl-tree {{ $ListAttributes }}>
+  {{- with $Icons }}
+    {{ partial "platen/toc/templates/default/icons" $Icons }}
+  {{ end -}}
+  {{ range $Heading := $Headings }}
+    {{ partial "platen/toc/templates/default/entry" $Heading }}
+  {{ end }}
+</sl-tree>
+
+{{- define "partials/platen/toc/templates/default/entry" -}}
+  {{- $IconTemplate  := "platen/features/shoelace/templates/icon"       -}}
+  {{- $ChildTemplate := "platen/toc/templates/default/entry"            -}}
+  {{- $Heading       := .                                               -}}
+  {{- $ID            := $Heading.ID                                     -}}
+  {{- $Attributes    := $Heading.Attributes                             -}}
+  {{- $Children      := $Heading.Children                               -}}
+  {{- $text          := $Heading.Text                                   -}}
+  {{- $SuffixIcon    := $Attributes.toc_suffix_icon                     -}}
+  {{- $PrefixIcon    := $Attributes.toc_prefix_icon                     -}}
+  {{- $Classes       := $Attributes.toc_classes     | default (slice)   -}}
+  {{- $Expand        := $Attributes.toc_expand      | default $Children -}}
+
+  {{- if $Attributes.toc_text -}}
+    {{- $text = $Attributes.toc_text -}}
+  {{- else if $Attributes.toc_md -}}
+    {{- $text = $Attributes.toc_md | page.RenderString -}}
+  {{- else if $Attributes.toc_id_as_code -}}
+    {{- $text = printf "<code>%s</code>" $ID -}}
+  {{- end -}}
+
+  <sl-tree-item
+    {{- if $Expand }} expanded {{- end -}}
+    {{- with $Classes }} class="{{ $Classes }}" {{- end -}}
+  >
+
+    <a href="#{{ $ID }}">
+      {{- with $PrefixIcon }}
+        {{ partial $IconTemplate (dict "Page" page "Icon" $PrefixIcon) }}
+      {{ end -}}
+
+      {{ $text | safeHTML }}
+
+      {{- with $SuffixIcon }}
+        {{ partial $IconTemplate (dict "Page" page "Icon" $SuffixIcon) }}
+      {{ end -}}
+    </a>
+
+    {{ range $Child := $Heading.Children }}
+      {{ partial $ChildTemplate $Child }}
+    {{ end }}
+  </sl-tree-item>
+{{- end -}}
+
+{{- define "partials/platen/toc/templates/default/icons" -}}
+  {{- $Icons        := .                                                              -}}
+  {{- $Collapsing   := dict "Page" page "Slot" "collapse-icon" "Icon" $Icons.Collapse -}}
+  {{- $Expanding    := dict "Page" page "Slot" "expand-icon"   "Icon" $Icons.Expand   -}}
+  {{- $IconTemplate := "platen/features/shoelace/templates/icon"                      -}}
+
+  {{ partial $IconTemplate $Collapsing }}
+  {{ partial $IconTemplate $Expanding  }}
+{{- end -}}

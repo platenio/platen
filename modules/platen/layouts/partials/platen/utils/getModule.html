@@ -1,9 +1,8 @@
-{{- $Context          := .                                                                  -}}
-{{- $IntegrityPartial := "platen/utils/getIntegrityAttributes"                              -}}
-{{- $ModuleSource     := "scripts/platen/module.js"                                         -}}
-{{- $ModuleDest       := "scripts/platen.js"                                                -}}
-{{- $moduleResource   :=  resources.Get $ModuleSource                                       -}}
-{{- $moduleResource    = $moduleResource | resources.ExecuteAsTemplate $ModuleDest $Context -}}
-{{- $moduleResource    = $moduleResource | resources.Fingerprint                            -}}
+{{- $IntegrityPartial := "platen/utils/getIntegrityAttributes"                          -}}
+{{- $ModuleSource     := "scripts/platen/module.js"                                     -}}
+{{- $ModuleDest       := "scripts/platen.js"                                            -}}
+{{- $moduleResource   := resources.Get $ModuleSource                                    -}}
+{{- $moduleResource    = $moduleResource | resources.ExecuteAsTemplate $ModuleDest page -}}
+{{- $moduleResource    = $moduleResource | resources.Fingerprint                        -}}
 {{/*  Return the resource  */}}
 {{- return $moduleResource -}}

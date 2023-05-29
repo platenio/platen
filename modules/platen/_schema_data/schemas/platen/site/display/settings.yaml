@@ -97,11 +97,16 @@ properties:
     $ref: ./menu/settings.yaml
     schematize:
       weight: 4
+  mobile:
+    $ref: ./mobile.yaml
+    schematize:
+      weight: 5
+      skip_schema_render: true
   section_classes:
     title: Extra CSS Classes for Sections
     description: Adds CSS classes to sections by URL prefix
     schematize:
-      weight: 5
+      weight: 6
       skip_schema_render: true
       details: |
         Defines a set of sections and the CSS classes to inject in the `body` element for every page
@@ -149,7 +154,7 @@ properties:
     title: Table of Contents
     description: Controls the rendering of the table of contents for site pages.
     schematize:
-      weight: 6
+      weight: 7
       skip_schema_render: true
       details: |
         Controls the rendering of the table of contents for site pages. You can choose whether to

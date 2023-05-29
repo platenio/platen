@@ -242,9 +242,9 @@ attribute to render the button as a circle around the icon.
 
 <br />
 
-![button:](https://flagrant.garden "gear")
+![button:](https://flagrant.garden "cog@boxicons")
 
-![button:](https://flagrant.garden "gear")
+![button:](https://flagrant.garden "cog&solid@boxicons")
 { circle=true }
 ```
 
@@ -411,11 +411,26 @@ This option isn't valid with the [legacy button](#legacy-template).
 
 ### `prefix_icon`
 
-Use this attribute to insert an icon before your label text. You can use any [sref:valid icon][sl01] from Shoelace.
+Use this attribute to insert an icon before your label text. You can specify the icon as a string using the shorthand
+syntax for icons.
 
 This option isn't valid with the [legacy button](#legacy-template).
 
 {{< memo/renderer/attribute "prefix_icon" >}}
+
+#### Shorthand Syntax { #prefix_icon-shorthand-syntax }
+
+The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`, where:
+
+- `<name>` is mandatory and represents the name of the icon.
+- `&<variant>` is optional and represents the variant of the icon. Not all icons and libraries support variants. When
+  you specify a variant in this syntax, you must specify it after the icon's name. You must separate the variant from
+  the icon name with an ampersand (`&`). When you don't specify a variant, Platen uses the library's default variant.
+- `&<library>` is optional and represents the library the icon belongs to. When you specify a library in this syntax,
+  you must specify it after the icon's name and variant. You must separate the library from the icon name or variant
+  with an at sign (`@`). When you don't specify a library, Platen uses the configured default library.
+
+You can find the [sref:list of available icons in the default library in Shoelace's documentation][sl01].
 
 ### `preset` { #attributes-preset }
 
@@ -466,11 +481,24 @@ This option isn't valid with the [legacy button](#legacy-template).
 
 ### `suffix_icon`
 
-Use this attribute to insert an icon after your label text. You can use any [sref:valid icon][sl01] from Shoelace.
+Use this attribute to insert an icon after your label text. You can specify the icon as a string using the shorthand
+syntax for icons.
 
 This option isn't valid with the [legacy button](#legacy-template).
 
 {{< memo/renderer/attribute "suffix_icon" >}}
+
+#### Shorthand Syntax { #prefix_icon-shorthand-syntax }
+
+The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`, where:
+
+- `<name>` is mandatory and represents the name of the icon.
+- `&<variant>` is optional and represents the variant of the icon. Not all icons and libraries support variants. When
+  you specify a variant in this syntax, you must specify it after the icon's name. You must separate the variant from
+  the icon name with an ampersand (`&`). When you don't specify a variant, Platen uses the library's default variant.
+- `&<library>` is optional and represents the library the icon belongs to. When you specify a library in this syntax,
+  you must specify it after the icon's name and variant. You must separate the library from the icon name or variant
+  with an at sign (`@`). When you don't specify a library, Platen uses the configured default library.
 
 ### `target`
 
@@ -663,16 +691,32 @@ This option isn't valid with the [legacy button](#legacy-template).
 Use this property to insert an icon instead of label text. When you specify this property, Platen ignores the value for
 `label_text`.
 
-If this property's value is a string, it must be the name of the icon. You can use any [sref:valid icon][sl01] from
-Shoelace. With this property, you can also define attributes to pass to the label icon.
+If this property's value is a string, it must be the shorthand syntax for an icon. With this property, you can also
+define attributes to pass to the label icon.
 
 `````````tabs { #preset-property-label_icon-values }
-``````tab { name="As String" }
-In this case, the value of `label_icon` is the name of the icon to insert.
+``````tab { name="As String (Shorthand Syntax)" }
+In this case, the value of `label_icon` must use the shorthand syntax for icons
+in Platen.
+
+The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`,
+where:
+
+- `<name>` is mandatory and represents the name of the icon.
+- `&<variant>` is optional and represents the variant of the icon. Not all
+  icons and libraries support variants. When you specify a variant in this
+  syntax, you must specify it after the icon's name. You must separate the
+  variant from the icon name with an ampersand (`&`). When you don't specify a
+  variant, Platen uses the library's default variant.
+- `&<library>` is optional and represents the library the icon belongs to. When
+  you specify a library in this syntax, you must specify it after the icon's
+  name and variant. You must separate the library from the icon name or variant
+  with an at sign (`@`). When you don't specify a library, Platen uses the
+  configured default library.
 
 ```yaml
 # data/platen/buttons/label_icon/string.yaml
-label_icon: gear
+label_icon: cog&solid@boxicons
 ```
 
 ![button:String Configuration](https://platen.io)
@@ -681,12 +725,32 @@ label_icon: gear
 
 ``````tab { name="As Object with Properties" }
 In this case, the value of `label_icon` is an object with defined properties.
+You must specify the `name` property for the icon. You can specify the
+`library` and `variant` properties as needed.
+
+You can also pass any valid [sref:global HTML attribute][01] in the options map
+for the icon, like `class` or `style`. Those attributes are passed through to
+the icon element.
+
+[01]: mdn.html.global_attribute:
+
+```alert
+Note that the `style` property in this example uses the `>-` syntax after the
+key name. The content is then indented and it defines one CSS style setting on
+each line. We strongly recommend you use this syntax---it's more readable and
+easier to maintain. Remember that inline styles must have a semi-colon (`;`)
+after each style entry.
+```
 
 ```yaml
 # data/platen/buttons/label_icon/object.yaml
 label_icon:
-  name: gear
-  style: "color: #417505;"
+  library: boxicons
+  name:    cog
+  variant: solid
+  style: >-
+    color: #417505;
+    opacity: 50%;
 ```
 
 ![button:Object Configuration](https://platen.io)
@@ -699,17 +763,29 @@ This option isn't valid with the [legacy button](#legacy-template).
 #### `name` { #preset-property-label_icon-name }
 
 If you're specifying the `label_icon` as an object, this property is required. The value must be the name of the icon.
-You can use any [sref:valid icon][sl01] from Shoelace.
+You can use any [sref:valid icon][sl01] from Shoelace's default library or the name of an icon from any other
+configured icon library.
 
 #### `label` { #preset-property-label_icon-label }
 
 Specify an alternate description to use for assistive devices. If omitted, the icon will be considered presentational
 and ignored by assistive devices.
 
+#### `library` { #preset-property-label_icon-library }
+
+Specify the library the icon belongs to. If you omit this property, Platen uses the configured default icon library.
+
 #### `src` { #preset-property-label_icon-src }
 
 Specify the URL of an SVG file to use as the icon. Be sure you trust the content you are including, as it will be
 executed as code and can result in XSS attacks.
+
+If you specify this option, Platen ignores the values for `name`, `variant`, and `library` for the icon.
+
+#### `variant` { #preset-property-label_icon-variant }
+
+Specify the variant of the icon to use. Not all icons and libraries support variants. When you don't specify a variant,
+Platen uses the library's default variant.
 
 #### Other Attributes
 
@@ -839,16 +915,32 @@ This option isn't valid with the [legacy button](#legacy-template).
 
 Use this property to insert an icon before your label text.
 
-If this property's value is a string, it must be the name of the icon. You can use any [sref:valid icon][sl01] from Shoelace.
-With this property, you can also define attributes to pass to the prefix icon.
+If this property's value is a string, it must be the shorthand syntax for an icon. With this property, you can also
+define attributes to pass to the prefix icon.
 
 `````````tabs { #preset-property-prefix_icon-values }
-``````tab { name="As String" }
-In this case, the value of `prefix_icon` is the name of the icon to insert.
+``````tab { name="As String (Shorthand Syntax)" }
+In this case, the value of `prefix_icon` must use the shorthand syntax for
+icons in Platen.
+
+The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`,
+where:
+
+- `<name>` is mandatory and represents the name of the icon.
+- `&<variant>` is optional and represents the variant of the icon. Not all
+  icons and libraries support variants. When you specify a variant in this
+  syntax, you must specify it after the icon's name. You must separate the
+  variant from the icon name with an ampersand (`&`). When you don't specify a
+  variant, Platen uses the library's default variant.
+- `&<library>` is optional and represents the library the icon belongs to. When
+  you specify a library in this syntax, you must specify it after the icon's
+  name and variant. You must separate the library from the icon name or variant
+  with an at sign (`@`). When you don't specify a library, Platen uses the
+  configured default library.
 
 ```yaml
 # data/platen/buttons/prefix/string.yaml
-prefix_icon: gear
+prefix_icon: cog&solid@boxicons
 ```
 
 ![button:String Configuration](https://platen.io)
@@ -857,12 +949,32 @@ prefix_icon: gear
 
 ``````tab { name="As Object with Properties" }
 In this case, the value of `prefix_icon` is an object with defined properties.
+You must specify the `name` property for the icon. You can specify the
+`library` and `variant` properties as needed.
+
+You can also pass any valid [sref:global HTML attribute][01] in the options map
+for the icon, like `class` or `style`. Those attributes are passed through to
+the icon element.
+
+[01]: mdn.html.global_attribute:
+
+```alert
+Note that the `style` property in this example uses the `>-` syntax after the
+key name. The content is then indented and it defines one CSS style setting on
+each line. We strongly recommend you use this syntax---it's more readable and
+easier to maintain. Remember that inline styles must have a semi-colon (`;`)
+after each style entry.
+```
 
 ```yaml
 # data/platen/buttons/prefix/object.yaml
 prefix_icon:
-  name: gear
-  style: "color: #417505;"
+  library: boxicons
+  name:    cog
+  variant: solid
+  style: >-
+    color: #417505;
+    opacity: 50%;
 ```
 
 ![button:Object Configuration](https://platen.io)
@@ -875,17 +987,29 @@ This option isn't valid with the [legacy button](#legacy-template).
 #### `name` { #preset-property-prefix_icon-name }
 
 If you're specifying the `prefix_icon` as an object, this property is required. The value must be the name of the icon.
-You can use any [sref:valid icon][sl01] from Shoelace.
+You can use any [sref:valid icon][sl01] from Shoelace's default library or the name of an icon from any other
+configured icon library.
 
 #### `label` { #preset-property-prefix_icon-label }
 
 Specify an alternate description to use for assistive devices. If omitted, the icon will be considered presentational
 and ignored by assistive devices.
 
+#### `library` { #preset-property-prefix_icon-library }
+
+Specify the library the icon belongs to. If you omit this property, Platen uses the configured default icon library.
+
 #### `src` { #preset-property-prefix_icon-src }
 
 Specify the URL of an SVG file to use as the icon. Be sure you trust the content you are including, as it will be
 executed as code and can result in XSS attacks.
+
+If you specify this option, Platen ignores the values for `name`, `variant`, and `library` for the icon.
+
+#### `variant` { #preset-property-prefix_icon-variant }
+
+Specify the variant of the icon to use. Not all icons and libraries support variants. When you don't specify a variant,
+Platen uses the library's default variant.
 
 #### Other Attributes
 
@@ -932,16 +1056,32 @@ This option isn't valid with the [legacy button](#legacy-template).
 
 Use this property to insert an icon after your label text.
 
-If this property's value is a string, it must be the name of the icon. You can use any [sref:valid icon][sl01] from
-Shoelace. With this property, you can also define attributes to pass to the suffix icon.
+If this property's value is a string, it must be the shorthand syntax for an icon. With this property, you can also
+define attributes to pass to the label icon.
 
 `````````tabs { #preset-property-suffix_icon-values }
-``````tab { name="As String" }
-In this case, the value of `suffix_icon` is the name of the icon to insert.
+``````tab { name="As String (Shorthand Syntax)" }
+In this case, the value of `suffix_icon` must use the shorthand syntax for
+icons in Platen.
+
+The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`,
+where:
+
+- `<name>` is mandatory and represents the name of the icon.
+- `&<variant>` is optional and represents the variant of the icon. Not all
+  icons and libraries support variants. When you specify a variant in this
+  syntax, you must specify it after the icon's name. You must separate the
+  variant from the icon name with an ampersand (`&`). When you don't specify a
+  variant, Platen uses the library's default variant.
+- `&<library>` is optional and represents the library the icon belongs to. When
+  you specify a library in this syntax, you must specify it after the icon's
+  name and variant. You must separate the library from the icon name or variant
+  with an at sign (`@`). When you don't specify a library, Platen uses the
+  configured default library.
 
 ```yaml
 # data/platen/buttons/suffix/string.yaml
-suffix_icon: gear
+suffix_icon: cog&solid@boxicons
 ```
 
 ![button:String Configuration](https://platen.io)
@@ -950,12 +1090,32 @@ suffix_icon: gear
 
 ``````tab { name="As Object with Properties" }
 In this case, the value of `suffix_icon` is an object with defined properties.
+You must specify the `name` property for the icon. You can specify the
+`library` and `variant` properties as needed.
+
+You can also pass any valid [sref:global HTML attribute][01] in the options map
+for the icon, like `class` or `style`. Those attributes are passed through to
+the icon element.
+
+[01]: mdn.html.global_attribute:
+
+```alert
+Note that the `style` property in this example uses the `>-` syntax after the
+key name. The content is then indented and it defines one CSS style setting on
+each line. We strongly recommend you use this syntax---it's more readable and
+easier to maintain. Remember that inline styles must have a semi-colon (`;`)
+after each style entry.
+```
 
 ```yaml
 # data/platen/buttons/suffix/object.yaml
 suffix_icon:
-  name: gear
-  style: "color: #417505;"
+  library: boxicons
+  name:    cog
+  variant: solid
+  style: >-
+    color: #417505;
+    opacity: 50%;
 ```
 
 ![button:Object Configuration](https://platen.io)
@@ -968,17 +1128,29 @@ This option isn't valid with the [legacy button](#legacy-template).
 #### `name` { #preset-property-suffix_icon-name }
 
 If you're specifying the `suffix_icon` as an object, this property is required. The value must be the name of the icon.
-You can use any [sref:valid icon][sl01] from Shoelace.
+You can use any [sref:valid icon][sl01] from Shoelace's default library or the name of an icon from any other
+configured icon library.
 
 #### `label` { #preset-property-suffix_icon-label }
 
 Specify an alternate description to use for assistive devices. If omitted, the icon will be considered presentational
 and ignored by assistive devices.
 
+#### `library` { #preset-property-suffix_icon-library }
+
+Specify the library the icon belongs to. If you omit this property, Platen uses the configured default icon library.
+
 #### `src` { #preset-property-suffix_icon-src }
 
 Specify the URL of an SVG file to use as the icon. Be sure you trust the content you are including, as it will be
 executed as code and can result in XSS attacks.
+
+If you specify this option, Platen ignores the values for `name`, `variant`, and `library` for the icon.
+
+#### `variant` { #preset-property-suffix_icon-variant }
+
+Specify the variant of the icon to use. Not all icons and libraries support variants. When you don't specify a variant,
+Platen uses the library's default variant.
 
 #### Other Attributes
 
@@ -1087,7 +1259,7 @@ it will become the default. Eventually, the legacy template will be removed enti
 
 ``````details
 ---
-summary: Details SCSS
+summary: Buttons SCSS
 heading_level: 3
 ---
 
@@ -1175,6 +1347,7 @@ the name for the style module `assets/styles/markup/_foo.scss` is `foo`.
 
 <!-- Link References -->
 [sref:`<sl-button>`]: sl.component:button
+[sref:`<sl-icon>`]: sl.component:icon
 [sref:Shoelace]: sl:
 [s01]: mdn.html.element:a
 [s02]: mdn.html.element:a#attr-href

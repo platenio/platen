@@ -1,0 +1,31 @@
+{{/*
+    Shoelace Utility Partial: updateUsedIconLibraries
+
+    This partial expects to receive a dict with the following keys:
+
+    - Library: The name of the canonicalized icon library to register as being
+      used on this page.
+    - Page: The page the icon is being rendered on. Default's to the current
+      page if not specified.
+
+    It retrieves the `_usedIconLibraries` key from the page's store and adds
+    the icon library to that list if it's not already included in it.
+
+    If the list doesn't exist, it creates it with the input library as the only
+    item in the list.
+
+    This partial doesn't return any output.
+*/}}
+{{- $Params             := .                                   -}}
+{{- $Page               := $Params.Page    | default page      -}}
+{{- $Library            := $Params.Library                     -}}
+{{- $UsedIconLibraryKey := "_usedIconLibraries"                -}}
+{{- $usedIconLibraries  := $Page.Store.Get $UsedIconLibraryKey -}}
+
+{{- with $usedIconLibraries -}}
+  {{- $usedIconLibraries = $usedIconLibraries | append $Library | uniq -}}
+{{- else -}}
+  {{- $usedIconLibraries = slice $Library -}}
+{{- end -}}
+
+{{- $Page.Store.Set $UsedIconLibraryKey $usedIconLibraries -}}

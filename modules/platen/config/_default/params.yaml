@@ -42,7 +42,7 @@ platen:
         body-background: "#343a40"
         body-font-color: "#e9ecef"
         icon-filter: brightness(0) invert(1)
-      custom_css:
+      custom_css: {}
     styles:
       base:
         html:
@@ -87,6 +87,9 @@ platen:
         languages:
           enabled: true
         responsiveness:
+          enabled: true
+      shoelace:
+        icons:
           enabled: true
       mobile:
         header:
@@ -156,11 +159,51 @@ platen:
     table_of_contents:
       minimum_level: 2
       maximum_level: 4
-      render: true
+      render:        true
+      # indentation:
+      #   size: 1rem
+      #   guide_color: green
+      #   guide_offset: 0
+      #   guide_style: solid
+      #   guide_width: 3px
+      # collapse_icon: dash-square
+      # expand_icon:   plus-square
+      use_legacy: true
     date_format: "January 2, 2006"             # BookDateFormat
     header:
       title_as_heading: false
-    menu_root_section: /                        # BookSection
+    menu:
+      root_section:   /                        # BookSection
+      languages_icon:
+          name:           translate@builtin_bootstrap
+          use_legacy:     true
+    mobile:
+      menu_control:
+        name:  list@builtin_bootstrap
+        label: i18n!menu_control
+        tooltip:
+          placement: right
+        use_legacy: true
+      toc_control:
+        use_legacy: true
+        name: list-columns@builtin_bootstrap
+        label: i18n!toc_control
+        tooltip:
+          placement: left
+    footer:
+      last_edited_on: # button
+        enabled: true
+        prefix_icon:
+          name: calendar-fill@builtin_bootstrap
+        variant: text
+        show_elapsed: true
+        use_legacy: true
+      edit_this_page: #button
+        enabled: true
+        prefix_icon:
+          name: pencil-fill@builtin_bootstrap
+        variant: text
+        use_legacy: true
   features:
     search:                                   # booksearch
       enabled: true
@@ -182,8 +225,8 @@ platen:
         header: platen/features/alpine/header
     shoelace:
       enabled:     true
-      always_load: false
-      version:     2.3.0
+      always_load: true
+      version:     2.4.0
       icons:
         default_library: builtin_bootstrap
         always_load_libraries: []
@@ -327,11 +370,11 @@ platen:
       classes: []
       variant: primary
       icons:
-        danger:  exclamation-octagon
-        default: gear
-        primary: info-circle
-        success: check2-circle
-        warning: exclamation-triangle
+        danger:  exclamation-octagon@builtin_bootstrap
+        default: gear@builtin_bootstrap
+        primary: info-circle@builtin_bootstrap
+        success: check2-circle@builtin_bootstrap
+        warning: exclamation-triangle@builtin_bootstrap
       use_default_icons: true
       partials:
         renderers:

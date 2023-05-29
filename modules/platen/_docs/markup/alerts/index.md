@@ -201,14 +201,43 @@ This example shows an alert with a custom icon defined by the
 [`icon` option](#options-icon). It also includes a header before the body of
 the alert, defined with the [`header` option](#options-header).
 
+The first example uses the shorthand syntax with the default icon library and
+only specifies the icons name. The second example uses the full shorthand
+syntax to specify the icon's name, variant, and library. The last example uses
+the option syntax, explicitly setting the name, variant, and library as
+key-value pairs. For more information, see the `icon` option's documentation.
+
 <!--- Example Start -->
 
 ```alert
 ---
-icon: hammer
+icon: cone-striped
 header: "**Under Construction!**"
 ---
 This section isn't fully finished. If you find any issues, let us know!
+```
+
+```alert
+---
+icon: traffic-cone&solid@boxicons
+header: "**Under Construction!**"
+---
+This section isn't fully finished. If you find any issues, let us know!
+
+This alert uses the full shorthand syntax for the icon.
+```
+
+```alert
+---
+icon:
+  name:    traffic-cone
+  library: boxicons
+  variant: solid
+header: "**Under Construction!**"
+---
+This section isn't fully finished. If you find any issues, let us know!
+
+This alert uses the options syntax for the icon.
 ```
 ``````
 
@@ -328,7 +357,7 @@ the alert. Platen renders the header's inline Markdown and inserts it into an [s
 ### `icon` { #options-icon }
 
 Specify an icon to add to the start of the rendered [sref:`<sl-alert>`] in an [sref:`<sl-icon>`] element. You can
-specify the name of [sref:any valid icon].
+specify the icon either as a string using the shorthand syntax or as a map of options for the icon.
 
 If your markup doesn't specify a value for `icon` with this data option or the
 [preset property](#preset-properties-icon), it uses the icon defined for the alert's variant in the
@@ -336,6 +365,33 @@ If your markup doesn't specify a value for `icon` with this data option or the
 information, see the [`use_default_icons`](#options-use_default_icons) option and [Configuration](#configuration).
 
 {{< memo/renderer/option "icon" >}}
+
+#### Shorthand Syntax { #options-icon-shorthand-syntax }
+
+The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`, where:
+
+- `<name>` is mandatory and represents the name of the icon.
+- `&<variant>` is optional and represents the variant of the icon. Not all icons and libraries support variants. When
+  you specify a variant in this syntax, you must specify it after the icon's name. You must separate the variant from
+  the icon name with an ampersand (`&`). When you don't specify a variant, Platen uses the library's default variant.
+- `&<library>` is optional and represents the library the icon belongs to. When you specify a library in this syntax,
+  you must specify it after the icon's name and variant. You must separate the library from the icon name or variant
+  with an at sign (`@`). When you don't specify a library, Platen uses the configured default library.
+
+You can always use [sref:any valid icon] in Shoelace's default icon library.
+
+#### Options Syntax { #options-icon-options-syntax }
+
+The options syntax for icons is:
+
+```yaml
+name:    icon_name    # Mandatory
+library: icon_library # Optional
+variant: icon_variant # Optional
+```
+
+You can also pass any valid [sref:global HTML attribute] in the options map for the icon, like `class` or `style`.
+Those attributes are passed through to the icon element.
 
 ### `id` { #options-id }
 
@@ -575,12 +631,39 @@ the alert. Platen renders the header's inline Markdown and inserts it into an [s
 ### `icon` { #preset-properties-icon }
 
 Specify an icon to add to the start of the rendered [sref:`<sl-alert>`] in an [sref:`<sl-icon>`] element. You can
-specify the name of [sref:any valid icon].
+specify the icon either as a string using the shorthand syntax or as a map of options for the icon.
 
-If your markup doesn't specify a value for `icon` with this preset property or the [data option](#options-icon), it
-uses the icon defined for the alert's variant in the `platen.markup.alerts.icons` setting in your site configuration if
-the value of `use_default_icons` is `true`. For more information, see the
-[`use_default_icons`](#preset-properties-use_default_icons) preset property and [Configuration](#configuration).
+If your markup doesn't specify a value for `icon` with this preset property or the
+[data option](#options-icon), it uses the icon defined for the alert's variant in the
+`platen.markup.alerts.icons` setting in your site configuration if the value of `use_default_icons` is `true`. For more
+information, see the [`use_default_icons`](#options-use_default_icons) option and [Configuration](#configuration).
+
+#### Shorthand Syntax { #preset-properties-icon-shorthand-syntax }
+
+The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`, where:
+
+- `<name>` is mandatory and represents the name of the icon.
+- `&<variant>` is optional and represents the variant of the icon. Not all icons and libraries support variants. When
+  you specify a variant in this syntax, you must specify it after the icon's name. You must separate the variant from
+  the icon name with an ampersand (`&`). When you don't specify a variant, Platen uses the library's default variant.
+- `&<library>` is optional and represents the library the icon belongs to. When you specify a library in this syntax,
+  you must specify it after the icon's name and variant. You must separate the library from the icon name or variant
+  with an at sign (`@`). When you don't specify a library, Platen uses the configured default library.
+
+You can always use [sref:any valid icon] in Shoelace's default icon library.
+
+#### Options Syntax { #preset-properties-icon-options-syntax }
+
+The options syntax for icons is:
+
+```yaml
+name:    icon_name    # Mandatory
+library: icon_library # Optional
+variant: icon_variant # Optional
+```
+
+You can also pass any valid [sref:global HTML attribute] in the options map for the icon, like `class` or `style`.
+Those attributes are passed through to the icon element.
 
 ### `id` { #preset-properties-id }
 
@@ -814,7 +897,7 @@ defaults to `assets` in your project root.
 
 ``````details
 ---
-summary: Tabs SCSS
+summary: Alerts SCSS
 heading_level: 3
 ---
 
@@ -890,13 +973,14 @@ the name for the style module `assets/styles/markup/_foo.scss` is `foo`.
 <!-- Reference Link Definitions -->
 [01]: /using
 [02]: /using
-[sref:`id`]:           mdn.html.global_attribute:id
-[sref:`class`]:        mdn.html.global_attribute:class
-[sref:`<span>`]:       mdn.html.element:span
-[sref:`<sl-alert>`]:   sl.component:tab-panel
-[sref:`<sl-icon>`]:    sl.component:icon
-[sref:any valid icon]: sl.compponent:icon?default-icons
-[sref:Shoelace]:       sl:
+[sref:global HTML attribute]: mdn.html.global_attribute:
+[sref:`id`]:                  mdn.html.global_attribute:id
+[sref:`class`]:               mdn.html.global_attribute:class
+[sref:`<span>`]:              mdn.html.element:span
+[sref:`<sl-alert>`]:          sl.component:tab-panel
+[sref:`<sl-icon>`]:           sl.component:icon
+[sref:any valid icon]:        sl.component:icon?default-icons
+[sref:Shoelace]:              sl:
 [c01]: platen.site.markup.alerts.custom
 [c02]: platen.site.markup.alerts.preset
 [c03]: platen.site.markup.alerts.classes

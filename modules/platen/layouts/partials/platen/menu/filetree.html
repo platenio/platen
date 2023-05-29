@@ -1,3 +1,21 @@
+{{/*
+    Partial: menu/filetree
+
+    This partial recursively renders nav list entries for the site menu from the
+    configured root section.
+
+    It only adds pages to the nav menu if they don't have `platen.menu.hide` 
+    set to `false in their front matter.
+
+    For section pages, it handles whether the section should be displayed in
+    the default format (children indented), as a flat section (section entry
+    bold, children not indented), or a collapsible section (click to expand or
+    collapse the section).
+
+    Every non-hidden page with content is added as a link in the nav menu. Leaf
+    pages without content are ignored. Section pages without content are added
+    but not linked.
+*/}}
 {{- $ConfigKey     := "platen.display.menu"                                     -}}
 {{- $MenuConfig    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
 {{- $PlatenSection := $MenuConfig.root_section | default "/"                    -}}
@@ -29,13 +47,21 @@
 {{ end }}
 
 {{ define "platen-page-link" }}
-  {{- $EntryPage           := .                                                       -}}
-  {{- $HasContent          := $EntryPage.Content                                      -}}
-  {{- $IsCurrentPage       := eq page $EntryPage                                      -}}
-  {{- $IsAncestorPage      := $EntryPage.IsAncestor page                              -}}
-  {{- $IsAncestorOrCurrent := or $IsCurrentPage $IsAncestorPage                       -}}
-  {{- $TitleParams         := dict "Context" $EntryPage "ForMenu" true                -}}
-  {{- $TitleText           := partial "platen/utils/getTitle" $TitleParams            -}}
+  {{- $EntryPage           := .                                 -}}
+  {{- $HasContent          := $EntryPage.Content                -}}
+  {{- $IsCurrentPage       := eq page $EntryPage                -}}
+  {{- $IsAncestorPage      := $EntryPage.IsAncestor page        -}}
+  {{- $IsAncestorOrCurrent := or $IsCurrentPage $IsAncestorPage -}}
+  {{/*  Define partials for easier reuse/maintenance  */}}
+  {{- $getSafeAttributes  := "platen/utils/getSafeAttributes" -}}
+  {{- $getTitle           := "platen/utils/getTitle"          -}}
+  {{- $getDisplayTitle    := "platen/utils/getDisplayTitle"   -}}
+  {{/*  Get the title text  */}}
+  {{- $titleParams := dict "Context" $EntryPage "ForMenu" true  -}}
+  {{- $titleText   := partial $getTitle $titleParams            -}}
+  {{- $titleParams  = dict "Page" $EntryPage "Title" $titleText -}}
+  {{- $titleText    = partial $getDisplayTitle $titleParams     -}}
+  {{/*  Determine whether the link is for the active page active  */}}
   {{- $LinkClassAttribute  := cond $IsCurrentPage `class="active"` "" | safeHTMLAttr -}}
 
   {{ if $EntryPage.Params.platen.menu.collapse_section }}
@@ -50,14 +76,14 @@
           {{- else -}}
             role="button"
           {{- end }}>
-        {{- $TitleText -}}
+        {{- $titleText -}}
       </a>
     </label>
   {{ else if $HasContent }}
     <a {{ $LinkClassAttribute }} href="{{ $EntryPage.Permalink }}">
-      {{- $TitleText -}}
+      {{- $titleText -}}
     </a>
   {{ else }}
-    <span>{{- $TitleText -}}</span>
+    <span>{{- $titleText -}}</span>
   {{ end }}
 {{ end }}

@@ -45,6 +45,10 @@ properties:
         $ref: ./features/search.yaml
         schematize:
           weight: 4
+      shoelace:
+        $ref: ./features/shoelace/options.yaml
+        schematize:
+          weight: 5
     patternProperties:
       ".":
         $ref: ./features/defining.yaml

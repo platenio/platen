@@ -1,0 +1,277 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: footer.schema.yaml
+title: Site Footer Display Settings
+description: Controls the rendering of the header element for site pages
+schematize:
+  weight: 2
+  skip_schema_render: true
+  details: |
+    Controls the rendering of the footer element for site pages. By default, every page is rendered with a footer
+    element that includes information about when the page was last updated and links to the last update and where a
+    reader can submit edits for the page.
+type: object
+properties:
+  edit_this_page:
+    title: Edit This Page Button Link
+    description: Controls the button linking to where a user can submit edits for the current page.
+    schematize:
+      weight: 1
+      details: |
+        These settings control the "edit this page" button Platen adds to the footer of every page. The button links
+        to the source control web page for editing the current page. You can disable this link by setting `enabled` to
+        `false`.
+    type: object
+    properties:
+      enabled:
+        title: Enable Button Link
+        description: Choose whether to enable the button link.
+        schematize:
+          weight: 1
+          details: |
+            Use this setting to choose whether the button link should display in the page's footer. When you set this
+            value to `true`, the button link is added to the footer. When you set this value to `false`, the button
+            link is ignored during the page render.
+        type: boolean
+        default: true
+      prefix_icon:
+        title: Prefix Icon
+        description: Controls the prefix icon for the button link.
+        schematize:
+          weight: 2
+          details: |
+            Use these options to control the icon used for the button link. By default, Platen displays a pencil icon
+            for the edit this page button link.
+        type: object
+        required:
+          - name
+        properties:
+          name:
+            title: Icon Name
+            description: Specify the name of the icon to use.
+            schematize: 
+              weight: 1
+              details: |
+                Specify the name of the icon to use for the button link. You can use the shorthand syntax for this
+                value instead of specifying values for the `library` and `variant` options.
+
+                The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`, where:
+
+                - `<name>` is mandatory and represents the name of the icon.
+                - `&<variant>` is optional and represents the variant of the icon. Not all icons and libraries support
+                  variants. When you specify a variant in this syntax, you must specify it after the icon's name. You
+                  must separate the variant from the icon name with an ampersand (`&`). When you don't specify a
+                  variant, Platen uses the library's default variant.
+                - `&<library>` is optional and represents the library the icon belongs to. When you specify a library
+                  in this syntax, you must specify it after the icon's name and variant. You must separate the library
+                  from the icon name or variant with an at sign (`@`). When you don't specify a library, Platen uses
+                  the configured default library.
+            type: string
+            default: calendar-fill@builtin_bootstrap
+          library:
+            title: Icon Library
+            description: The library the icon is in.
+            schematize:
+              weight: 2
+              details: |
+                This setting specifies the library to load the icon from. You can use any of the registered icon
+                libraries. If you don't specify a value for this setting, Platen uses the
+                `features.shoelace.icons.default_library` setting's value as the library.
+
+                Don't specify this setting if you're including the library in the `name` setting with the shorthand
+                syntax.
+            oneOf:
+              - enum:
+                - builtin_bootstrap
+                - boxicons
+                - font_awesome
+                - heroicons
+                - iconoir
+                - ionicons
+                - jam_icons
+                - lucide
+                - material_icons
+                - remix_icon
+                - tabler_icons
+                - unicons
+              - type: string
+          variant:
+            title: Icon Variant
+            description: The icon variant.
+            schematize:
+              weight: 3
+              details: |
+                This setting specifies the icon's variant. Not all icons and libraries have variants. If this value
+                isn't set, the icon uses its default variant.
+
+                Don't specify this setting if you're including the variant in the `name` setting with the shorthand
+                syntax.
+            type: string
+      variant:
+        title: Button Variant
+        description: Choose the variant for the button link.
+        schematize:
+          weight: 3
+          details: |
+            Choose the variant for the button link. This controls how the button looks on the site.
+        type: string
+        enum:
+          - default
+          - primary
+          - success
+          - neutral
+          - warning
+          - danger
+          - text
+        default: text
+      show_elapsed:
+        title: Show Elapsed Time
+        description: Choose whether to display the elapsed time since or date of last change to the page.
+        schematize:
+          weight: 4
+          details: |
+            Blah.
+        type: boolean
+        default: true
+      use_legacy:
+        title: Use Legacy Link
+        description: Choose whether to use the legacy link or the configurable Shoelace button link.
+        schematize:
+          weight: 99
+          details: |
+            Use this setting to choose whether to use the legacy implementation for the "edit this page" footer link.
+            The current default value is `true`, which renders the old SVG icon and fixed link text, and ignores all
+            other settings for the control.
+            
+            In the future, the default value will change to `false`. Later, this setting will be removed and only the
+            new implementation will be available. We strongly recommend you update this setting to `false` and adjust
+            your site's theme as needed.
+        type: boolean
+        default: true
+  last_edited_on:
+    title: Last Edited On Button Link
+    description: Controls the button linking to the last change for the current page.
+    schematize:
+      weight: 1
+      details: |
+        These settings control the "last edited on" button Platen adds to the footer of every page. The button links to
+        the source control web page for the last commit to the current page. You can disable this link by setting
+        `enabled` to `false`.
+    type: object
+    properties:
+      enabled:
+        title: Enable Button Link
+        description: Choose whether to enable the button link.
+        schematize:
+          weight: 1
+          details: |
+            Use this setting to choose whether the button link should display in the page's footer. When you set this
+            value to `true`, the button link is added to the footer. When you set this value to `false`, the button
+            link is ignored during the page render.
+        type: boolean
+        default: true
+      prefix_icon:
+        title: Prefix Icon
+        description: Controls the prefix icon for the button link.
+        schematize:
+          weight: 2
+          details: |
+            Use these options to control the icon used for the button link. By default, Platen displays a calendar icon
+            for the last edited on button link.
+        type: object
+        required:
+          - name
+        properties:
+          name:
+            title: Icon Name
+            description: Specify the name of the icon to use.
+            schematize: 
+              weight: 1
+              details: |
+                Specify the name of the icon to use for the button link. You can use the shorthand syntax for this
+                value instead of specifying values for the `library` and `variant` options.
+
+                The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`, where:
+
+                - `<name>` is mandatory and represents the name of the icon.
+                - `&<variant>` is optional and represents the variant of the icon. Not all icons and libraries support
+                  variants. When you specify a variant in this syntax, you must specify it after the icon's name. You
+                  must separate the variant from the icon name with an ampersand (`&`). When you don't specify a
+                  variant, Platen uses the library's default variant.
+                - `&<library>` is optional and represents the library the icon belongs to. When you specify a library
+                  in this syntax, you must specify it after the icon's name and variant. You must separate the library
+                  from the icon name or variant with an at sign (`@`). When you don't specify a library, Platen uses
+                  the configured default library.
+            type: string
+            default: calendar-fill@builtin_bootstrap
+          library:
+            title: Icon Library
+            description: The library the icon is in.
+            schematize:
+              weight: 2
+              details: |
+                This setting specifies the library to load the icon from. You can use any of the registered icon
+                libraries. If you don't specify a value for this setting, Platen uses the
+                `features.shoelace.icons.default_library` setting's value as the library.
+
+                Don't specify this setting if you're including the library in the `name` setting with the shorthand
+                syntax.
+            oneOf:
+              - enum:
+                - builtin_bootstrap
+                - boxicons
+                - font_awesome
+                - heroicons
+                - iconoir
+                - ionicons
+                - jam_icons
+                - lucide
+                - material_icons
+                - remix_icon
+                - tabler_icons
+                - unicons
+              - type: string
+          variant:
+            title: Icon Variant
+            description: The icon variant.
+            schematize:
+              weight: 3
+              details: |
+                This setting specifies the icon's variant. Not all icons and libraries have variants. If this value
+                isn't set, the icon uses its default variant.
+
+                Don't specify this setting if you're including the variant in the `name` setting with the shorthand
+                syntax.
+            type: string
+      variant:
+        title: Button Variant
+        description: Choose the variant for the button link.
+        schematize:
+          weight: 3
+          details: |
+            Choose the variant for the button link. This controls how the button looks on the site.
+        type: string
+        enum:
+          - default
+          - primary
+          - success
+          - neutral
+          - warning
+          - danger
+          - text
+        default: text
+      use_legacy:
+        title: Use Legacy Link
+        description: Choose whether to use the legacy link.
+        schematize:
+          weight: 99
+          details: |
+            Use this setting to choose whether to use the legacy implementation for the "last edited on" footer link.
+            The current default value is `true`, which renders the old SVG icon and fixed link text, and ignores all
+            other settings for the control.
+            
+            In the future, the default value will change to `false`. Later, this setting will be removed and only the
+            new implementation will be available. We strongly recommend you update this setting to `false` and adjust
+            your site's theme as needed.
+        type: boolean
+        default: true

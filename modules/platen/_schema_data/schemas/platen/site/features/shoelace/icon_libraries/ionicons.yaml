@@ -1,0 +1,99 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: ionicons.schema.yaml
+title: Ionicons
+description: Settings for the Ionicons library.
+schematize:
+  weight: 6
+  details: |
+    These options control the registration of the [Ionicons][01] library.
+
+    ```alert
+    Ionicons uses the [MIT License](https://github.com/ionic-team/ionicons/blob/master/LICENSE).
+    ```
+
+    [01]: https://ionicons.com/
+type: object
+properties:
+  enabled:
+    title: Enable Library
+    description: Choose whether to enable the icon library
+    schematize:
+      weight: 1
+      details: |
+        Use this setting to choose whether the icon library is available.
+    type: boolean
+    default: true
+  aliases:
+    title: Library Aliases
+    description: Define any number of aliases for the icon library.
+    schematize:
+      weight: 2
+      details: |
+        Use this setting to specify alternate short names for the library. You can use these names instead
+        of the full library name when specifying the library in your markup or other settings.
+    type: array
+    items:
+      type: string
+    default:
+      - ion
+  version:
+    title: Library Version
+    description: Choose the version of the library to load.
+    schematize:
+      weight: 3
+      details: |
+        Choose the version of the library to load from the CDN. Platen regularly updates this version after
+        testing. You can always use a specific released version of the library if you prefer.
+    type: string
+    default: 5.1.2
+  default_variant:
+    title: Library Default Variant
+    description: Choose the default icon variant to use for the library.
+    schematize:
+      weight: 4
+      details: |
+        Use this option to set the default variant for icons from this library.
+    type: string
+    enum:
+      - outline
+      - filled
+      - sharp
+    default: outline
+  variants:
+    title: Library Variants Map
+    description: Maps a friendly variant name to the icon's prefix.
+    schematize:
+      weight: 5
+      details: |
+        Use this option to create a map of friendly names for icon variants to generate their final icon
+        name to retrieve from the library.
+    type: object
+    properties:
+      outline:
+        title: Outline Variant
+        description: Maps the variant name `outline` for Ionicons.
+        type: string
+        default: ''
+      filled:
+        title: Filled Variant
+        description: Maps the variant name `filled` for Ionicons.
+        type: string
+        default: -filled
+      sharp:
+        title: Sharp Variant
+        description: Maps the variant name `sharp` for Ionicons.
+        type: string
+        default: -sharp
+  registration:
+    title: Registration Options
+    description: Settings for how the library is registered.
+    schematize:
+      weight: 99
+    type: object
+    properties:
+      script:
+        title: Registration Script
+        description: Specify the name of the registration script.
+        type: string
+        default: ionicons.js

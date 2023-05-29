@@ -1,0 +1,450 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: mobile.schema.yaml
+title: Site Mobile Display Settings
+description: Optional settings controlling how a Platen mobile view displays.
+schematize:
+  details: |
+    The Platen display options control how the site displays on smaller screens.
+type: object
+properties:
+  menu_control:
+    title: Menu Control Button
+    description: Controls the display for the button that shows the site menu on mobile.
+    schematize:
+      weight: 1
+      details: |
+        Use these settings to control the display for the button that shows the site menu on mobile. The button appears
+        in the top left corner of each page beside the page's title. When a visitor clicks it, the site menu pops out
+        from the left side of the screen.
+
+        At this time, the `use_legacy` setting for this control defaults to `true`, which makes Platen render your site
+        with the old control. The old control is not configurable. In the future, the default value for this control
+        will be updated to `false`. Later, the option to use the legacy control will be removed entirely.
+
+        We strongly recommend that you set `use_legacy` to `false` and update your site's theme as needed.
+    type: object
+    properties:
+      name:
+        title: Icon Name
+        description: The name of the icon.
+        schematize:
+          weight: 1
+          details: |
+            This setting specifies the name of the icon to display. You can specify the icon with Platen's shorthand
+            syntax for icons.
+
+            The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`, where:
+
+            - `<name>` is mandatory and represents the name of the icon.
+            - `&<variant>` is optional and represents the variant of the icon. Not all icons and libraries support
+              variants. When you specify a variant in this syntax, you must specify it after the icon's name. You must
+              separate the variant from the icon name with an ampersand (`&`). When you don't specify a variant, Platen
+              uses the library's default variant.
+            - `&<library>` is optional and represents the library the icon belongs to. When you specify a library in
+              this syntax, you must specify it after the icon's name and variant. You must separate the library from
+              the icon name or variant with an at sign (`@`). When you don't specify a library, Platen uses the
+              configured default library.
+
+            You can always use [sref:any valid icon] in Shoelace's default icon library.
+
+            If you specify the icon's variant or library with the shorthand syntax, don't specify the [sref:`variant`]
+            or [sref:`library`] settings for this icon.
+
+            The default icon for this setting is: ![icon:list][default]
+
+            [sref:any valid icon]: sl.component:icon?default-icons
+            [default]: builtin_bootstrap "The 'list' icon from the builtin bootstrap icon library from Shoelace."
+        type: string
+        default: list@builtin_bootstrap
+      label:
+        title: Icon Button Label
+        description: Defines the accessible label for the icon button.
+        schematize:
+          weight: 2
+          details: |
+            This setting defines the accessible label for the icon button. A label helps users understand what a button
+            without text does.
+
+            Specify a short plaintext message explaining what the button does. If you specify this value with the
+            prefix `i18n!`, like `i18n!foo_bar`, Platen looks up the value as a key in your site's internationalization
+            settings to translate the value for the current language. This can help make your buttons more accessible
+            for multilingual sites.
+        type: string
+        default: i18n!menu_control
+      library:
+        title: Icon Library
+        description: The library the icon is in.
+        schematize:
+          weight: 3
+          details: |
+            This setting specifies the library to load the icon from. You can use any of the registered icon libraries.
+            If you don't specify a value for this setting, Platen uses the `features.shoelace.icons.default_library`
+            setting's value as the library.
+
+            Don't specify this setting if you're including the library in the `name` setting with the shorthand syntax.
+        oneOf:
+          - enum:
+            - builtin_bootstrap
+            - boxicons
+            - font_awesome
+            - heroicons
+            - iconoir
+            - ionicons
+            - jam_icons
+            - lucide
+            - material_icons
+            - remix_icon
+            - tabler_icons
+            - unicons
+          - type: string
+      variant:
+        title: Icon Variant
+        description: The icon variant.
+        schematize:
+          weight: 3
+          details: |
+            This setting specifies the icon's variant. Not all icons and libraries have variants. If this value isn't
+            set, the icon uses its default variant.
+
+            Don't specify this setting if you're including the variant in the `name` setting with the shorthand syntax.
+        type: string
+      src:
+        title: Icon SVG Source
+        description: The source for a custom icon.
+        schematize:
+          weight: 4
+          details: |
+            This setting specifies the URL to an SVG file to use as a custom icon. If you specify this value, Platen
+            ignores the settings for the `name`, `library`, and `variant` settings.
+        type: string
+      classes:
+        title: Icon Button Classes
+        description: One or more CSS classes to add to the button.
+        schematize:
+          weight: 6
+          details: |
+            Use this setting to add CSS classes to the icon button. These classes can control how the icon is styled on
+            the site separately from the configuration options.
+        type: array
+        items:
+          type: string
+      tooltip:
+        title: Tooltip Options
+        description: Set options for the icon button's tooltip.
+        schematize:
+          weight: 7
+          details: |
+            Use these settings to control how the icon button's tooltip displays. Icon buttons always have a tooltip to
+            help make their usage more obvious to readers.
+        type: object
+        properties:
+          classes:
+            title: Tooltip Classes
+            description: One or more CSS classes to add to the tooltip.
+            schematize:
+              weight: 1
+              details: |
+                Use this setting to add CSS classes to the tooltip. These classes can control how the tooltip is styled
+                on the site separately from the configuration options.
+            type: array
+            items:
+              type: string
+          content:
+            title: Tooltip Content
+            description: The text to display for the tooltip.
+            schematize:
+              weight: 2
+              details: |
+                Use this setting to define a custom message to display for the tooltip. If this value isn't defined,
+                the tooltip displays the label text for the icon button.
+
+                If you specify this value with the prefix `i18n!`, like `i18n!foo_bar`, Platen looks up the value as a
+                key in your site's internationalization settings to translate the value for the current language. This
+                can help make your tooltips more accessible for multilingual sites.
+            type: string
+          placement:
+            title: Tooltip Placement
+            description: Where the tooltip renders in relation to the icon button.
+            schematize:
+              weight: 3
+              details: |
+                Use this setting to define where the tooltip pops up in relation to the icon button.
+                
+                The `top`, `right`, `bottom`, and `left` placements indicate whether the tooltip should appear directly
+                above, to the right of, beneath, or to the left of the button respectively. The `-start` and `-end`
+                suffixes shift the placement away from the centerline.
+
+                For example, the `top` placement is directly above the inside content and centered on it, but `top-end`
+                appears from the top right corner of the inside content for left-to-right languages like English.
+            enum:
+              - top
+              - top-start
+              - top-end
+              - right
+              - right-start
+              - right-end
+              - bottom
+              - bottom-start
+              - bottom-end
+              - left
+              - left-start
+              - left-end
+            default: right
+          distance:
+            title: Tooltip Distance
+            description: Sets how many pixels away from the icon button the tooltip renders.
+            schematize:
+              weight: 4
+              details: |
+                Use this setting to determine how many pixels away from the icon button the tooltip renders when
+                active.
+
+                The default value in Shoelace is `8` pixels.
+            type: integer
+            minimum: 0
+          skidding:
+            title: Tooltip Skidding
+            description: Sets how many pixels to offset the tooltip from its defined placement along the icon button.
+            schematize:
+              weight: 5
+              details: |
+                Use this setting to determine how many pixels from the defined placement the tooltip renders along the
+                icon. This shifts the tooltip along the cross-axis from the `distance` setting.
+
+                The default value in Shoelace is `0` pixels.
+            type: integer
+      use_legacy:
+        title: Use Legacy Menu Control
+        description: Choose whether to use the legacy SVG icon control or the configurable shoelace icon button.
+        schematize:
+          weight: 99
+          details: |
+            Use this setting to choose whether to use the legacy implementation for the mobile menu control. The current
+            default value is `true`, which renders the old SVG icon and ignores all other settings for the control.
+            
+            In the future, the default value will change to `false`. Later, this setting will be removed and only the
+            new implementation will be available. We strongly recommend you update this setting to `false` and adjust
+            your site's theme as needed.
+        type: boolean
+        default: true
+  toc_control:
+    title: Table of Contents Control Button
+    description: Controls the display for the button that shows the TOC on mobile.
+    schematize:
+      weight: 1
+      details: |
+        Use these settings to control the display for the button that shows the table of contents on mobile. The button
+        appears in the top right corner of each page beside the page's title. When a visitor clicks it, the table of
+        contents pops out from the right side of the screen.
+
+        At this time, the `use_legacy` setting for this control defaults to `true`, which makes Platen render your site
+        with the old control. The old control is not configurable. In the future, the default value for this control
+        will be updated to `false`. Later, the option to use the legacy control will be removed entirely.
+
+        We strongly recommend that you set `use_legacy` to `false` and update your site's theme as needed.
+    type: object
+    properties:
+      name:
+        title: Icon Name
+        description: The name of the icon.
+        schematize:
+          weight: 1
+          details: |
+            This setting specifies the name of the icon to display. You can specify the icon with Platen's shorthand
+            syntax for icons.
+
+            The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`, where:
+
+            - `<name>` is mandatory and represents the name of the icon.
+            - `&<variant>` is optional and represents the variant of the icon. Not all icons and libraries support
+              variants. When you specify a variant in this syntax, you must specify it after the icon's name. You must
+              separate the variant from the icon name with an ampersand (`&`). When you don't specify a variant, Platen
+              uses the library's default variant.
+            - `&<library>` is optional and represents the library the icon belongs to. When you specify a library in
+              this syntax, you must specify it after the icon's name and variant. You must separate the library from
+              the icon name or variant with an at sign (`@`). When you don't specify a library, Platen uses the
+              configured default library.
+
+            You can always use [sref:any valid icon] in Shoelace's default icon library.
+
+            If you specify the icon's variant or library with the shorthand syntax, don't specify the [sref:`variant`]
+            or [sref:`library`] settings for this icon.
+
+            The default icon for this setting is: ![icon:list-columns][default]
+
+            [sref:any valid icon]: sl.component:icon?default-icons
+            [default]: builtin_bootstrap "The 'list-columns' icon from the builtin bootstrap icon library from Shoelace."
+        type: string
+        default: list-columns@builtin_bootstrap
+      label:
+        title: Icon Button Label
+        description: Defines the accessible label for the icon button.
+        schematize:
+          weight: 2
+          details: |
+            This setting defines the accessible label for the icon button. A label helps users understand what a button
+            without text does.
+
+            Specify a short plaintext message explaining what the button does. If you specify this value with the
+            prefix `i18n!`, like `i18n!foo_bar`, Platen looks up the value as a key in your site's internationalization
+            settings to translate the value for the current language. This can help make your buttons more accessible
+            for multilingual sites.
+        type: string
+        default: i18n!toc_control
+      library:
+        title: Icon Library
+        description: The library the icon is in.
+        schematize:
+          weight: 3
+          details: |
+            This setting specifies the library to load the icon from. You can use any of the registered icon libraries.
+            If you don't specify a value for this setting, Platen uses the `features.shoelace.icons.default_library`
+            setting's value as the library.
+
+            Don't specify this setting if you're including the library in the `name` setting with the shorthand syntax.
+        oneOf:
+          - enum:
+            - builtin_bootstrap
+            - boxicons
+            - font_awesome
+            - heroicons
+            - iconoir
+            - ionicons
+            - jam_icons
+            - lucide
+            - material_icons
+            - remix_icon
+            - tabler_icons
+            - unicons
+          - type: string
+      variant:
+        title: Icon Variant
+        description: The icon variant.
+        schematize:
+          weight: 3
+          details: |
+            This setting specifies the icon's variant. Not all icons and libraries have variants. If this value isn't
+            set, the icon uses its default variant.
+
+            Don't specify this setting if you're including the variant in the `name` setting with the shorthand syntax.
+        type: string
+      src:
+        title: Icon SVG Source
+        description: The source for a custom icon.
+        schematize:
+          weight: 4
+          details: |
+            This setting specifies the URL to an SVG file to use as a custom icon. If you specify this value, Platen
+            ignores the settings for the `name`, `library`, and `variant` settings.
+        type: string
+      classes:
+        title: Icon Button Classes
+        description: One or more CSS classes to add to the button.
+        schematize:
+          weight: 6
+          details: |
+            Use this setting to add CSS classes to the icon button. These classes can control how the icon is styled on
+            the site separately from the configuration options.
+        type: array
+        items:
+          type: string
+      tooltip:
+        title: Tooltip Options
+        description: Set options for the icon button's tooltip.
+        schematize:
+          weight: 7
+          details: |
+            Use these settings to control how the icon button's tooltip displays. Icon buttons always have a tooltip to
+            help make their usage more obvious to readers.
+        type: object
+        properties:
+          classes:
+            title: Tooltip Classes
+            description: One or more CSS classes to add to the tooltip.
+            schematize:
+              weight: 1
+              details: |
+                Use this setting to add CSS classes to the tooltip. These classes can control how the tooltip is styled
+                on the site separately from the configuration options.
+            type: array
+            items:
+              type: string
+          content:
+            title: Tooltip Content
+            description: The text to display for the tooltip.
+            schematize:
+              weight: 2
+              details: |
+                Use this setting to define a custom message to display for the tooltip. If this value isn't defined,
+                the tooltip displays the label text for the icon button.
+
+                If you specify this value with the prefix `i18n!`, like `i18n!foo_bar`, Platen looks up the value as a
+                key in your site's internationalization settings to translate the value for the current language. This
+                can help make your tooltips more accessible for multilingual sites.
+            type: string
+          placement:
+            title: Tooltip Placement
+            description: Where the tooltip renders in relation to the icon button.
+            schematize:
+              weight: 3
+              details: |
+                Use this setting to define where the tooltip pops up in relation to the icon button.
+                
+                The `top`, `right`, `bottom`, and `left` placements indicate whether the tooltip should appear directly
+                above, to the right of, beneath, or to the left of the button respectively. The `-start` and `-end`
+                suffixes shift the placement away from the centerline.
+
+                For example, the `top` placement is directly above the inside content and centered on it, but `top-end`
+                appears from the top right corner of the inside content for left-to-right languages like English.
+            enum:
+              - top
+              - top-start
+              - top-end
+              - right
+              - right-start
+              - right-end
+              - bottom
+              - bottom-start
+              - bottom-end
+              - left
+              - left-start
+              - left-end
+            default: left
+          distance:
+            title: Tooltip Distance
+            description: Sets how many pixels away from the icon button the tooltip renders.
+            schematize:
+              weight: 4
+              details: |
+                Use this setting to determine how many pixels away from the icon button the tooltip renders when
+                active.
+
+                The default value in Shoelace is `8` pixels.
+            type: integer
+            minimum: 0
+          skidding:
+            title: Tooltip Skidding
+            description: Sets how many pixels to offset the tooltip from its defined placement along the icon button.
+            schematize:
+              weight: 5
+              details: |
+                Use this setting to determine how many pixels from the defined placement the tooltip renders along the
+                icon. This shifts the tooltip along the cross-axis from the `distance` setting.
+
+                The default value in Shoelace is `0` pixels.
+            type: integer
+      use_legacy:
+        title: Use Legacy Table of Contents Control
+        description: Choose whether to use the legacy SVG icon control or the configurable shoelace icon button.
+        schematize:
+          weight: 99
+          details: |
+            Use this setting to choose whether to use the legacy implementation for the mobile menu control. The current
+            default value is `true`, which renders the old SVG icon and ignores all other settings for the control.
+            
+            In the future, the default value will change to `false`. Later, this setting will be removed and only the
+            new implementation will be available. We strongly recommend you update this setting to `false` and adjust
+            your site's theme as needed.
+        type: boolean
+        default: true

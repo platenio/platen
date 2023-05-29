@@ -95,7 +95,7 @@ You can use any valid Markdown, including:
 ```
 ``````
 
-``````memo-example-renderer { title="Attribute Parameter Example" }
+``````memo-example-renderer { title="Attributes Example" }
 This example adds the `info` class to the details element and sets a specific
 summary.
 
@@ -109,11 +109,23 @@ Another _Markdown_ example.
 ```
 ``````
 
-`````````memo-example-renderer { title="YAML Options Parameter Example" }
+`````````memo-example-renderer { title="YAML Options Example" }
 This example ensures the block is loaded in its collapsed state instead of open
 and sets the `heading_level` option to `4`. That ensures Platen writes the
 summary inside an `<h4>` element, meaning the details block can show up in the
 table of contents.
+
+The example also sets the [`open` option](#option-open) to `false`, so the
+details element is loaded in the collapsed state.
+
+The example sets both the [`icon_collapse`](#option-icon_collapse) and
+[`icon_expand`](#option-icon_expand) options. When these are both set, the
+details are rendered with the specified icons to show that the block can be
+collapsed or expanded.
+
+The `icon_collapse` option shows the shorthand definition for an icon in
+Platen. The `icon_expand` option shows the extended definition for an icon.
+For more information, see the documentation for these options.
 
 Note that this example also uses more backticks (`` ` ``) for the codeblock.
 That lets you include nested codeblocks inside the details. Here it's used to
@@ -125,8 +137,10 @@ add a [mermaid diagram](mermaid.md).
 summary:       Heading Summary with Nested Codeblock
 heading_level: 4
 open:          false
-icon_collapse: dash-square
-icon_expand:   plus-square
+icon_collapse: minus-square@lucide
+icon_expand:
+  name: plus-square
+  library: lucide
 ---
 
 Check out this neat diagram:
@@ -230,9 +244,11 @@ When this value is greater than `6`, it's treated as `6`.
 
 ### `icon_collapse` { #option-icon_collapse }
 
-Specify a [sref:valid icon][06] to use to when the details element is open, indicating that the element can be
-collapsed. By default, Platen uses a rotating caret instead of an icon. If you specify a value for this option, you
-must also specify a value for [`icon_expand`](#option-icon_expand).
+Specify an icon to use to when the details element is expanded, indicating that the element can be collapsed. By
+default, Platen uses a rotating caret instead of an icon. If you specify a value for this option, you must also specify
+a value for [`icon_expand`](#option-icon_expand).
+
+You can specify the icon either as a string using the shorthand syntax or as a map of options for the icon.
 
 You can also define the default icons for your details elements with the `platen.markup.details.icons` settings for
 your site configuration. Values from your site configuration are overridden by this option in your markup. For more
@@ -242,11 +258,40 @@ This option isn't valid with the [legacy details](#legacy-template).
 
 {{< memo/renderer/option "icon_collapse" >}}
 
+#### Shorthand Syntax { #option-icon_collapse-shorthand-syntax }
+
+The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`, where:
+
+- `<name>` is mandatory and represents the name of the icon.
+- `&<variant>` is optional and represents the variant of the icon. Not all icons and libraries support variants. When
+  you specify a variant in this syntax, you must specify it after the icon's name. You must separate the variant from
+  the icon name with an ampersand (`&`). When you don't specify a variant, Platen uses the library's default variant.
+- `&<library>` is optional and represents the library the icon belongs to. When you specify a library in this syntax,
+  you must specify it after the icon's name and variant. You must separate the library from the icon name or variant
+  with an at sign (`@`). When you don't specify a library, Platen uses the configured default library.
+
+You can find the [sref:list of available icons in the default library in Shoelace's documentation][06]
+
+#### Options Syntax { #option-icon_collapse-options-syntax }
+
+The options syntax for icons is:
+
+```yaml
+name:    icon_name    # Mandatory
+library: icon_library # Optional
+variant: icon_variant # Optional
+```
+
+You can also pass any valid [sref:global HTML attribute][07] in the options map for the icon, like `class` or `style`.
+Those attributes are passed through to the icon element.
+
 ### `icon_expand` { #option-icon_expand }
 
-Specify a [sref:valid icon][06] to use to when the details element is closed, indicating that the element can be
-expanded. By default, Platen uses a rotating caret instead of an icon. If you specify a value for this option, you must
-also specify a value for [`icon_collapse`](#option-icon_collapse).
+Specify an icon to use to when the details element is closed, indicating that the element can be expanded. By default,
+Platen uses a rotating caret instead of an icon. If you specify a value for this option, you must also specify a value
+for [`icon_collapse`](#option-icon_collapse).
+
+You can specify the icon either as a string using the shorthand syntax or as a map of options for the icon.
 
 You can also define the default icons for your details elements with the `platen.markup.details.icons` settings for
 your site configuration. Values from your site configuration are overridden by this option in your markup. For more
@@ -255,6 +300,33 @@ information, see [Configuration](#configuration).
 This option isn't valid with the [legacy details](#legacy-template).
 
 {{< memo/renderer/option "icon_expand" >}}
+
+#### Shorthand Syntax { #option-icon_expand-shorthand-syntax }
+
+The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`, where:
+
+- `<name>` is mandatory and represents the name of the icon.
+- `&<variant>` is optional and represents the variant of the icon. Not all icons and libraries support variants. When
+  you specify a variant in this syntax, you must specify it after the icon's name. You must separate the variant from
+  the icon name with an ampersand (`&`). When you don't specify a variant, Platen uses the library's default variant.
+- `&<library>` is optional and represents the library the icon belongs to. When you specify a library in this syntax,
+  you must specify it after the icon's name and variant. You must separate the library from the icon name or variant
+  with an at sign (`@`). When you don't specify a library, Platen uses the configured default library.
+
+You can find the [sref:list of available icons in the default library in Shoelace's documentation][06]
+
+#### Options Syntax { #option-icon_expand-options-syntax }
+
+The options syntax for icons is:
+
+```yaml
+name:    icon_name    # Mandatory
+library: icon_library # Optional
+variant: icon_variant # Optional
+```
+
+You can also pass any valid [sref:global HTML attribute][07] in the options map for the icon, like `class` or `style`.
+Those attributes are passed through to the icon element.
 
 ### `id` { #option-id }
 
@@ -572,6 +644,7 @@ the name for the style module `assets/styles/markup/_foo.scss` is `foo`.
 [04]: mdn.html.global_attribute:class
 [05]: mdn.html.element:Heading_Elements
 [06]: sl.component:icon?id=default-icons
+[07]: mdn.html.global_attribute:
 [sref:`<sl-details>`]: sl.component:details
 [sref:`<sl-icon>`]: sl.component:icon
 [sref:Shoelace]: sl:
