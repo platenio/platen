@@ -54,13 +54,16 @@ section.schematize {
         div.schematize-metadata-definition-group.inline {
           display: flex;
           flex-direction: row;
+          flex-wrap: wrap;
           justify-content: flex-start;
           dd:has(code.schematize-enum) {
             width: max-content;
-            &::before {
-              content: ", ";
+            padding-inline-start: 1em;
+            padding-inline-end: 1em;
+            &::after {
+              content: "";
             }
-            &:first-of-type::before{
+            &:last-of-type::after{
               content: "";
             }
           }

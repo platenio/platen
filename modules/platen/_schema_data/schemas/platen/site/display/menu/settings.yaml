@@ -61,12 +61,116 @@ properties:
         [sref:section]: platen.content.section.menu.hide
     type: string
     default: /
+  languages_icon:
+    title: Languages Icon
+    description: Defines the options for the languages icon for selecting translations in a multilingual site.
+    schematize:
+      weight: 2
+      details: |
+        This setting defines the options for the languages icon that displays on multilingual sites. The icon displays
+        beside the language of the current page in the dropdown entry. When you select the component in the menu,
+        Platen displays the list of translations for the current page.
+    type: object
+    properties:
+      name:
+        title: Icon Name
+        description: The name of the icon.
+        schematize:
+          weight: 1
+          details: |
+            This setting specifies the name of the icon to display. You can specify the icon with Platen's shorthand
+            syntax for icons.
+
+            The shorthand syntax for icons in Platen is `<name>[&<variant>][@<library>]`, where:
+
+            - `<name>` is mandatory and represents the name of the icon.
+            - `&<variant>` is optional and represents the variant of the icon. Not all icons and libraries support
+              variants. When you specify a variant in this syntax, you must specify it after the icon's name. You must
+              separate the variant from the icon name with an ampersand (`&`). When you don't specify a variant, Platen
+              uses the library's default variant.
+            - `&<library>` is optional and represents the library the icon belongs to. When you specify a library in
+              this syntax, you must specify it after the icon's name and variant. You must separate the library from
+              the icon name or variant with an at sign (`@`). When you don't specify a library, Platen uses the
+              configured default library.
+
+            You can always use [sref:any valid icon] in Shoelace's default icon library.
+
+            If you specify the icon's variant or library with the shorthand syntax, don't specify the [sref:`variant`]
+            or [sref:`library`] settings for this icon.
+
+            The default icon for this setting is: ![icon:translate][default]
+
+            [sref:any valid icon]: sl.component:icon?default-icons
+            [default]: builtin_bootstrap "The 'translate' icon from the builtin bootstrap icon library from Shoelace."
+        type: string
+        default: translate@builtin_bootstrap
+      library:
+        title: Icon Library
+        description: The library the icon is in.
+        schematize:
+          weight: 2
+          details: |
+            This setting specifies the library to load the icon from. You can use any of the registered icon libraries.
+            If you don't specify a value for this setting, Platen uses the `features.shoelace.icons.default_library`
+            setting's value as the library.
+
+            Don't specify this setting if you're including the library in the `name` setting with the shorthand syntax.
+        oneOf:
+          - enum:
+            - builtin_bootstrap
+            - boxicons
+            - font_awesome
+            - heroicons
+            - iconoir
+            - ionicons
+            - jam_icons
+            - lucide
+            - material_icons
+            - remix_icon
+            - tabler_icons
+            - unicons
+          - type: string
+      variant:
+        title: Icon Variant
+        description: The icon variant.
+        schematize:
+          weight: 3
+          details: |
+            This setting specifies the icon's variant. Not all icons and libraries have variants. If this value isn't
+            set, the icon uses its default variant.
+
+            Don't specify this setting if you're including the variant in the `name` setting with the shorthand syntax.
+        type: string
+      src:
+        title: Icon SVG Source
+        description: The source for a custom icon.
+        schematize:
+          weight: 4
+          details: |
+            This setting specifies the URL to an SVG file to use as a custom icon. If you specify this value, Platen
+            ignores the settings for the `name`, `library`, and `variant` settings.
+        type: string
+      use_legacy:
+        title: Use Legacy Languages Icon
+        description: Choose whether to use the legacy SVG icon or the configurable shoelace icon.
+        schematize:
+          weight: 99
+          details: |
+            Use this setting to choose whether to use the legacy implementation for the languages icon. The current
+            default value is `true`, which renders the default icon and ignores all other settings for the language
+            icon.
+            
+            In the future, the default value will change to `false`. Later, this setting will be removed and only the
+            new implementation will be available. We strongly recommend you update this setting to `false` and adjust
+            your site's theme as needed.
+        type: boolean
+        default: true
   before_injection:
     title: Feature Entries Before Menu Injection 
     description: Define entries at the beginning of the site menu.
     type: object
     schematize:
-      weight: 2
+      weight: 90
       skip_schema_render: true
       details: |
         This setting allows you to add menu entries for the feature at the very top of the site
@@ -114,7 +218,7 @@ properties:
     description: Define feature menu entries after injection and before configured entries.
     type: object
     schematize:
-      weight: 3
+      weight: 91
       skip_schema_render: true
       details: |
         This setting allows you to add menu entries for the feature after any from the injection
@@ -163,7 +267,7 @@ properties:
     description: Define feature menu entries after configured entries and before automatic ones.
     type: object
     schematize:
-      weight: 4
+      weight: 92
       skip_schema_render: true
       details: |
         This setting allows you to add menu entries for the feature after the entries from the
@@ -212,7 +316,7 @@ properties:
     description: Define feature menu entries after automatic entries and before configured ones.
     type: object
     schematize:
-      weight: 5
+      weight: 93
       skip_schema_render: true
       details: |
         This setting allows you to add menu entries for the feature after the content added from
@@ -261,7 +365,7 @@ properties:
     description: Define feature menu entries after configured entries and before injection.
     type: object
     schematize:
-      weight: 6
+      weight: 94
       skip_schema_render: true
       details: |
         This setting allows you to add menu entries for the feature after the entries from the
@@ -309,7 +413,7 @@ properties:
     description: Define feature menu entries at the end of the site menu.
     type: object
     schematize:
-      weight: 7
+      weight: 95
       skip_schema_render: true
       details: |
         This setting allows you to add menu entries for the feature at the very bottom of the

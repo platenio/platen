@@ -979,7 +979,7 @@ the name for the style module `assets/styles/markup/_foo.scss` is `foo`.
 [sref:`<span>`]:              mdn.html.element:span
 [sref:`<sl-alert>`]:          sl.component:tab-panel
 [sref:`<sl-icon>`]:           sl.component:icon
-[sref:any valid icon]:        sl.compponent:icon?default-icons
+[sref:any valid icon]:        sl.component:icon?default-icons
 [sref:Shoelace]:              sl:
 [c01]: platen.site.markup.alerts.custom
 [c02]: platen.site.markup.alerts.preset

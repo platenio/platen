@@ -185,7 +185,7 @@ properties:
             [05]: sl.component:icon?id=default-icons
           weight: 1
         type: string
-        default: exclamation-octagon
+        default: exclamation-octagon@builtin_bootstrap
       default:
         title: Default 'default' Alert Variant Icon
         description: Specify the name of the default icon for default variant alerts.
@@ -208,7 +208,7 @@ properties:
             [05]: sl.component:icon?id=default-icons
           weight: 2
         type: string
-        default: gear
+        default: gear@builtin_bootstrap
       primary:
         title: Default 'primary' Alert Variant Icon
         description: Specify the name of the default icon for primary variant alerts.
@@ -231,7 +231,7 @@ properties:
             [05]: sl.component:icon?id=default-icons
           weight: 3
         type: string
-        default: info-circle
+        default: info-circle@builtin_bootstrap
       success:
         title: Default 'success' Alert Variant Icon
         description: Specify the name of the default icon for success variant alerts.
@@ -254,7 +254,7 @@ properties:
             [05]: sl.component:icon?id=default-icons
           weight: 4
         type: string
-        default: check2-circle
+        default: check2-circle@builtin_bootstrap
       warning:
         title: Default 'warning' Alert Variant Icon
         description: Specify the name of the default icon for warning variant alerts.
@@ -277,7 +277,7 @@ properties:
             [05]: sl.component:icon?id=default-icons
           weight: 5
         type: string
-        default: exclamation-triangle
+        default: exclamation-triangle@builtin_bootstrap
   use_default_icons:
     title: Use Default Icons
     description: Set whether rendered alerts use configured icons by default

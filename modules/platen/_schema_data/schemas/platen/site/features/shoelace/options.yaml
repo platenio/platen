@@ -1,0 +1,184 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: options.schema.yaml
+title: Shoelace Feature Options
+description: Settings that control the site's integration with Shoelace.
+schematize:
+  details: |
+    Platen is in the process of more closely integrating the excellent set of web components from [Shoelace][01] into
+    the site theme. This gives you a set of very configurable and customizable components to use on your site and in
+    your markup.
+
+    [01]: https://shoelace.style
+type: object
+properties:
+  enabled:
+    title: Enable Shoelace
+    description: Choose whether Platen integrates with Shoelace.
+    schematize:
+      weight: 1
+      details: |
+        Choose whether the site can use Shoelace web components. The default is `true`.
+
+        If you disable the Shoelace web components, you may need to radically update the markup and layout for Platen.
+    type: boolean
+    default: true
+  always_load:
+    title: Always Load Shoelace
+    description: Choose whether the link to the Shoelace library is always added to every page.
+    schematize:
+      weight: 2
+      details: |
+        Use this setting to choose whether the link to the Shoelace library should be added to every page. Platen uses
+        Shoelace's autoloading feature, which means that it only retrieves code from Shoelace on an as-needed basis.
+
+        We strongly recommend leaving this option set to `true` to minimize complexity. This allows you to use any
+        Shoelace components in your own markdown or special markup without needing to add handlers to cherry pick the
+        components yourself.
+    type: boolean
+    default: true
+  version:
+    title: Shoelace Version
+    description: Choose the version of Shoelace to load.
+    schematize:
+      weight: 3
+      details: |
+        Use this setting to choose the version of Shoelace to load for your site. Platen regularly updates this version
+        after testing. You can override it to specify an earlier version or set this value to `latest` to always
+        retrieve the latest released version.
+    type: string
+    default: 2.4.0
+  icons:
+    title: Shoelace Icon Options
+    description: Settings for Shoelace's icons.
+    schematize:
+      weight: 4
+      details: |
+        Platen supports automatic registration and easier use of icons through Shoelace. It has built-in support for a
+        dozen different icon libraries.
+    type: object
+    properties:
+      default_library:
+        title: Default Icon Library
+        description: Sets the default icon library for your site.
+        schematize:
+          weight: 1
+          details: |
+            You can use this setting to use a different icon library by default. As long as this setting maps to the
+            name or alias of a registered library, Platen will use that library by default for its markup and any icons
+            you specify for theme components.
+        default: builtin_bootstrap
+        oneOf:
+          - type: string
+            enum:
+              - builtin_bootstrap
+              - boxicons
+              - font_awesome
+              - heroicons
+              - iconoir
+              - ionicons
+              - jam_icons
+              - lucide
+              - material_icons
+              - remix_icon
+              - tabler_icons
+              - unicons
+          - type: string
+      always_load_libraries:
+        title: Always Load Libraries List
+        description: Define any number of libraries to always register and load for a page.
+        schematize:
+          weight: 2
+          details: |
+            Use this setting to create a list of icon libraries that Platen should always load, even when the icons
+            aren't used in Platen's markup or a theme component. This is mostly useful if you're using inline Shoelace
+            components or adding your own markup outside of Platen's configuration.
+
+            By default, Platen checks any specified icon in your markup or theme components and maintains a list of
+            icon libraries to register for each page on your behalf. You can freely use the configured libraries without
+            having to ensure they register.
+        type: array
+        default: []
+        items:
+          oneOf:
+            - type: string
+              enum:
+                - builtin_bootstrap
+                - boxicons
+                - font_awesome
+                - heroicons
+                - iconoir
+                - ionicons
+                - jam_icons
+                - lucide
+                - material_icons
+                - remix_icon
+                - tabler_icons
+                - unicons
+            - type: string
+      libraries:
+        title: Icon Library Settings
+        description: Controls the settings for various known icon libraries.
+        schematize:
+          weight: 3
+          details: |
+            These settings control the registration and behavior for icon libraries to use in Shoelace web components
+            for Platen. Platen provides default configuration and registration for a dozen different icon libraries.
+
+            You can also define your own icon libraries to register with Platen. For now, see the implementations for
+            the existing libraries. You can reach out to the maintainers if you have questions or want another library
+            added to the built-in supported libraries.
+        type: object
+        properties:
+          builtin_bootstrap:
+            $ref: ./icon_libraries/default.yaml
+          boxicons:
+            $ref: ./icon_libraries/boxicons.yaml
+          font_awesome:
+            $ref: ./icon_libraries/font_awesome.yaml
+          heroicons:
+            $ref: ./icon_libraries/heroicons.yaml
+          iconoir:
+            $ref: ./icon_libraries/iconoir.yaml
+          ionicons:
+            $ref: ./icon_libraries/ionicons.yaml
+          jam_icons:
+            $ref: ./icon_libraries/jam_icons.yaml
+          lucide:
+            $ref: ./icon_libraries/lucide.yaml
+          material_icons:
+            $ref: ./icon_libraries/material_icons.yaml
+          remix_icon:
+            $ref: ./icon_libraries/remix_icon.yaml
+          tabler_icons:
+            $ref: ./icon_libraries/tabler_icons.yaml
+          unicons:
+            $ref: ./icon_libraries/unicons.yaml
+  partials:
+    title: Feature Partials
+    description: Define a map of partials for Platen to inject as needed.
+    schematize:
+      details: |
+        Define a map of partials for Platen to inject as needed. These partials are only
+        injected when [sref:`enabled`] is set to `true`.
+
+        <!-- Reference Links -->
+        [sref:`enabled`]: platen.site.features.pwa.enabled
+      weight: 99
+      skip_schema_render: true
+    type: object
+    properties:
+      header:
+        title: Header Partial
+        description: Injects a partial into the HTML header.
+        schematize:
+          details: |
+            If specified, this partial is processed in the HTML header with the current page's context. The default
+            value is `platen/features/shoelace/header`. You can overwrite this value, replacing it with another partial
+            entirely, or you can add the same file to your own theme or site, effectively replacing it.
+
+            The default partial loads Shoelace from the CDN for use. It also adds a helper script, called `modeSwap.js`
+            from `assets/scripts/shoelace/modeSwap.js`, which helps support automatic theming between light and dark
+            modes. Finally, it sets up registration for Shoelace's icon libraries.
+        type: string
+        default: platen/features/shoelace/header

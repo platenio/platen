@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: unicons.schema.yaml
+title: Unicons
+description: Settings for the Unicons icon library.
+schematize:
+  weight: 12
+  details: |
+    These options control the registration of the [Unicons][01] library.
+
+    ```alert
+    Unicons uses the [Apache 2.0 License](https://github.com/Iconscout/unicons/blob/master/LICENSE).
+
+    Icons that require a specific license aren't included in the default registration.
+    ```
+
+    [01]: https://iconscout.com/unicons
+type: object
+properties:
+  enabled:
+    title: Enable Library
+    description: Choose whether to enable the icon library
+    schematize:
+      weight: 1
+      details: |
+        Use this setting to choose whether the icon library is available.
+    type: boolean
+    default: true
+  aliases:
+    title: Library Aliases
+    description: Define any number of aliases for the icon library.
+    schematize:
+      weight: 2
+      details: |
+        Use this setting to specify alternate short names for the library. You can use these names instead
+        of the full library name when specifying the library in your markup or other settings.
+    type: array
+    items:
+      type: string
+    default:
+      - ion
+  version:
+    title: Library Version
+    description: Choose the version of the library to load.
+    schematize:
+      weight: 3
+      details: |
+        Choose the version of the library to load from the CDN. Platen regularly updates this version after
+        testing. You can always use a specific released version of the library if you prefer.
+    type: string
+    default: 3.0.3
+  default_variant:
+    title: Library Default Variant
+    description: Choose the default icon variant to use for the library.
+    schematize:
+      weight: 4
+      details: |
+        Use this option to set the default variant for icons from this library.
+    type: string
+    enum:
+      - line
+      - solid
+    default: line
+  variants:
+    title: Library Variants Map
+    description: Maps a friendly variant name to the icon's prefix.
+    schematize:
+      weight: 5
+      details: |
+        Use this option to create a map of friendly names for icon variants to generate their final icon
+        name to retrieve from the library.
+    type: object
+    properties:
+      line:
+        title: Line Variant
+        description: Maps the variant name `line` for Unicons.
+        type: string
+        default: ''
+      solid:
+        title: Solid Variant
+        description: Maps the variant name `solid` for Unicons.
+        type: string
+        default: s
+  registration:
+    title: Registration Options
+    description: Settings for how the library is registered.
+    schematize:
+      weight: 99
+    type: object
+    properties:
+      script:
+        title: Registration Script
+        description: Specify the name of the registration script.
+        type: string
+        default: unicons.js

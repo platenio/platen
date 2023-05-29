@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: tabler_icons.schema.yaml
+title: Tabler Icons
+description: Settings for the Tabler Icons library.
+schematize:
+  weight: 11
+  details: |
+    These options control the registration of the [Tabler Icons][01] library.
+
+    ```alert
+    Tabler Icons uses the [MIT License](https://github.com/tabler/tabler-icons/blob/master/LICENSE).
+    ```
+
+    [01]: https://tabler-icons.io/
+type: object
+properties:
+  enabled:
+    title: Enable Library
+    description: Choose whether to enable the icon library
+    schematize:
+      weight: 1
+      details: |
+        Use this setting to choose whether the icon library is available.
+    type: boolean
+    default: true
+  aliases:
+    title: Library Aliases
+    description: Define any number of aliases for the icon library.
+    schematize:
+      weight: 2
+      details: |
+        Use this setting to specify alternate short names for the library. You can use these names instead
+        of the full library name when specifying the library in your markup or other settings.
+    type: array
+    items:
+      type: string
+    default:
+      - tabler
+  version:
+    title: Library Version
+    description: Choose the version of the library to load.
+    schematize:
+      weight: 3
+      details: |
+        Choose the version of the library to load from the CDN. Platen regularly updates this version after
+        testing. You can always use a specific released version of the library if you prefer.
+    type: string
+    default: 1.68.0
+  registration:
+    title: Registration Options
+    description: Settings for how the library is registered.
+    schematize:
+      weight: 99
+    type: object
+    properties:
+      script:
+        title: Registration Script
+        description: Specify the name of the registration script.
+        type: string
+        default: tabler_icons.js
