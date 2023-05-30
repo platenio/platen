@@ -13,13 +13,14 @@
     Finally, if ValidKeys are specified, it throws away any keys that aren't
     valid before returning the merged map.
 */}}
-{{- $Params              := .                                              -}}
-{{- $Position            := $Params.Position                               -}}
-{{- $Attributes          := $Params.Attributes          | default (dict)   -}}
-{{- $YamlOptions         := $Params.YamlOptions         | default (dict)   -}}
-{{- $ValidKeys           := $Params.ValidKeys           | default (slice)  -}}
-{{- $PresetKey           := $Params.PresetKey           | default "preset" -}}
-{{- $PresetDotPathPrefix := $Params.PresetDotPathPrefix                    -}}
+{{- $Params               := .                                              -}}
+{{- $Position             := $Params.Position                               -}}
+{{- $Attributes           := $Params.Attributes          | default (dict)   -}}
+{{- $YamlOptions          := $Params.YamlOptions         | default (dict)   -}}
+{{- $ValidKeys            := $Params.ValidKeys           | default (slice)  -}}
+{{- $PresetKey            := $Params.PresetKey           | default "preset" -}}
+{{- $PresetDotPathPrefix  := $Params.PresetDotPathPrefix                    -}}
+{{- $PresetDefaultDotPath := $Params.PresetDefaultDotPath                   -}}
 
 {{/*  Merge the attributes over the options from YAML  */}}
 {{- $passedOptions := $Attributes -}}
@@ -37,6 +38,11 @@
 {{- with index $passedOptions $PresetKey -}}
   {{- $PresetDotPath := printf "%s.%s" $PresetDotPathPrefix .                                  -}}
   {{- $presetOptions  = partialCached "platen/utils/getDataPath" $PresetDotPath $PresetDotPath -}}
+{{- else -}}
+  {{- with $PresetDefaultDotPath -}}
+    {{- $PresetDotPath := printf "%s.%s" $PresetDotPathPrefix .                                  -}}
+    {{- $presetOptions  = partialCached "platen/utils/getDataPath" $PresetDotPath $PresetDotPath -}}
+  {{- end -}}
 {{- end -}}
 
 {{/*
