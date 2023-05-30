@@ -20,3 +20,13 @@
     display: none;
   }
 }
+
+.platen-header {
+  @supports (-moz-appearance:none) {
+    h1 {
+      @at-root label {
+        display: none;
+      }
+    }
+  }
+}
