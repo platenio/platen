@@ -4,6 +4,7 @@
 {{- $Options    := $Params.Options    -}} {{/* The pre-merged options, attributes, and preset properties    */}}
 {{- $canonical  := dict               -}} {{/* The return value for the canonicalized list-specific  values */}}
 
+{{- warnf "Roll table Options: %s" ($Options | jsonify (dict "indent" "  " "noHTMLEscape" true )) -}}
 {{/*  Roll-specific utility partials  */}}
 {{- $normalizeButtonInfo         := "platen/markup/rolls/utils/_normalizeButtonInfo"         -}}
 {{- $normalizePromptInfo         := "platen/markup/rolls/utils/_normalizePromptInfo"         -}}

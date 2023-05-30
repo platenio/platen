@@ -1,5 +1,3 @@
 button:
-  pill: true
-  variant: primary
   placement: below
   label: Roll on the table

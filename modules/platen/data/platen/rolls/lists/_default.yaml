@@ -1,6 +1,4 @@
 columns: 1
 button:
-  pill: true
-  variant: primary
   placement: below
   label: Roll on the list

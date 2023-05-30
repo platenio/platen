@@ -81,14 +81,17 @@
     Attributes and Position always need to be passed.
 */}}
 {{- $PresetDotPathPrefix := printf "platen.%s.%ss" $MarkupName $kind -}}
+{{- $PresetDefaultDotPath := "_default"                    -}}
 {{- $PresetKey           := "preset"                       -}}
 {{- $ValidKeys           := slice                          -}}
-{{- $mergeParameters     := dict "Attributes"          $Attributes
-                                 "Position"            $Position
-                                 "PresetDotPathPrefix" $PresetDotPathPrefix
-                                 "PresetKey"           $PresetKey
-                                 "ValidKeys"           $ValidKeys
+{{- $mergeParameters     := dict "Attributes"           $Attributes
+                                 "Position"             $Position
+                                 "PresetDefaultDotPath" $PresetDefaultDotPath
+                                 "PresetDotPathPrefix"  $PresetDotPathPrefix
+                                 "PresetKey"            $PresetKey
+                                 "ValidKeys"            $ValidKeys
 -}}
+{{- warnf "%s.%s" $PresetDotPathPrefix $PresetDefaultDotPath -}}
 
 {{/*
     Define options for trimming the rendered output. Set TrimLeadingWhitespace
