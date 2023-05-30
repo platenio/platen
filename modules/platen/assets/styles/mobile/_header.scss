@@ -8,4 +8,13 @@
       display: block !important;
     }
   }
+  .platen-header {
+    @supports (-moz-appearance:none) {
+      h1 {
+        @at-root .platen-header label {
+          display: block !important;
+        }
+      }
+    }
+  }
 }
