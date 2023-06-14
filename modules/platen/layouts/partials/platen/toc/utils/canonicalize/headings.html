@@ -41,26 +41,31 @@
 {{- $processed       := slice -}}
 {{- $previous        := dict  -}}
 
-{{/*  Loop over the headings, calling mapHeadings for each */}}
-{{- range $Index, $H := $Headings -}}
-  {{/*  Add the first heading to the map before the mapping starts  */}}
-  {{- if eq $Index 0 -}}
-    {{- $mappingHeadings = merge $mappingHeadings (dict $H.ID $H) -}}
-  {{- end -}}
+{{- if eq (len $Headings) 1 -}}
+  {{- $H              := index $Headings 0 -}}
+  {{- $mappingHeadings = merge $mappingHeadings (dict $H.ID $H) -}}
+{{- else -}}
+  {{/*  Loop over the headings, calling mapHeadings for each */}}
+  {{- range $Index, $H := $Headings -}}
+    {{/*  Add the first heading to the map before the mapping starts  */}}
+    {{- if eq $Index 0 -}}
+      {{- $mappingHeadings = merge $mappingHeadings (dict $H.ID $H) -}}
+    {{- end -}}
 
-  {{/*  Only recurse for headings that haven't already been processed  */}}
-  {{- if not (in $processed $H.ID) -}}
-    {{- $Mapping := dict
-          "Heading"   $H
-          "Headings"  $Headings
-          "Previous"  $previous
-          "Processed" $processed
-    -}}
-    {{- $Result         := partial $mapHeading $Mapping          -}}
-    {{- $processed       = union $processed $Result.Processed    -}}
-    {{- $previous        = $Result.Mapped                        -}}
-    {{- $MappedHeading  := dict $Result.Mapped.ID $Result.Mapped -}}
-    {{- $mappingHeadings = merge $mappingHeadings $MappedHeading -}}
+    {{/*  Only recurse for headings that haven't already been processed  */}}
+    {{- if not (in $processed $H.ID) -}}
+      {{- $Mapping := dict
+            "Heading"   $H
+            "Headings"  $Headings
+            "Previous"  $previous
+            "Processed" $processed
+      -}}
+      {{- $Result         := partial $mapHeading $Mapping          -}}
+      {{- $processed       = union $processed $Result.Processed    -}}
+      {{- $previous        = $Result.Mapped                        -}}
+      {{- $MappedHeading  := dict $Result.Mapped.ID $Result.Mapped -}}
+      {{- $mappingHeadings = merge $mappingHeadings $MappedHeading -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 
