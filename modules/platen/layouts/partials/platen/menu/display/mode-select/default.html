@@ -1,0 +1,26 @@
+{{- $SelectorAttributes := delimit (
+      slice
+        `id="platen-display-mode-selector"`
+        `class="hidden-label"`
+        `clearable`
+        `filled`
+        `size="small"`
+        `placeholder="Set site display mode"`
+    ) " " | safeHTMLAttr
+-}}
+
+<sl-select {{ $SelectorAttributes }}>
+  <span slot="label" >Display Mode</span>
+  <sl-option value="light">
+    Light Mode
+    <sl-icon name="sun" slot="suffix"></sl-icon>
+  </sl-option>
+  <sl-option value="dark">
+    Dark Mode
+    <sl-icon name="moon" slot="suffix"></sl-icon>
+  </sl-option>
+  <sl-option value="auto">
+    System (Auto)
+    <sl-icon name="gear" slot="suffix"></sl-icon>
+  </sl-option>
+</sl-select>

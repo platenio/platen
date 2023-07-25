@@ -75,7 +75,21 @@
 
 // Modes determine whether the site uses light mode, dark mode, or automatically
 // shows the same mode as the site user's system preferences.
-@import "modes/{{ default "auto" $theme.mode }}";
+html.platen-theme-mode-light {
+  @include theme-light;
+}
+
+html.platen-theme-mode-dark {
+  @include theme-dark;
+}
+
+html.platen-theme-mode-auto {
+  @include theme-light;
+
+  @media (prefers-color-scheme: dark) {
+    @include theme-dark;
+  }
+}
 
 // Ensure theme mode variables propagate to shoelace
 {{ if and $shoelace.Enabled (in (slice "light" "auto") $theme.mode) }}

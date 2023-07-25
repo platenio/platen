@@ -91,6 +91,8 @@ platen:
       shoelace:
         icons:
           enabled: true
+        utils:
+          enabled: true
       mobile:
         header:
           enabled: true
@@ -175,8 +177,13 @@ platen:
     menu:
       root_section:   /                        # BookSection
       languages_icon:
-          name:           translate@builtin_bootstrap
-          use_legacy:     true
+        name:           translate@builtin_bootstrap
+        use_legacy:     true
+      theme_options:
+        enabled: false
+        mode_selection:
+          enabled:  false
+          template: default
     mobile:
       menu_control:
         name:  list@builtin_bootstrap
