@@ -20,7 +20,17 @@
 {{/* Add the description tag */}}
 {{- $descriptionAttributes := slice                                                       -}}
 {{- $descriptionAttributes  = $descriptionAttributes | append `name="description"`        -}}
-{{- $descriptionContent    := page.Description       | default page.Summary               -}}
+{{- $descriptionContent    := page.Description | default page.Params.summary -}}
+{{- with $descriptionContent -}}
+{{- else -}}
+  {{/*
+      Need to call this in if/else because the default func always evaluates, and page.Summary
+      waits for the page's content to render - making this extremely slow for pages that are
+      process-intensive, like schema docs.
+  */}}
+  {{- $descriptionContent = page.Summary -}}
+{{- end -}}
+{{- $descriptionContent     = $descriptionContent | page.RenderString | plainify          -}}
 {{- $descriptionContent     = printf `content="%s"` $descriptionContent                   -}}
 {{- $descriptionAttributes  = $descriptionAttributes | append $descriptionContent         -}}
 {{- $metaTags               = merge $metaTags (dict "description" $descriptionAttributes) -}}

@@ -37,7 +37,7 @@
           {{ template "platen-page-link"        $ChildPage }}
           {{ template "platen-section-children" $ChildPage }}
         </li>
-      {{ else if and $ChildPage.IsPage $ChildPage.Content }}
+      {{ else if $ChildPage.IsPage }}
         <li>
           {{ template "platen-page-link" $ChildPage }}
         </li>
@@ -47,11 +47,14 @@
 {{ end }}
 
 {{ define "platen-page-link" }}
-  {{- $EntryPage           := .                                 -}}
-  {{- $HasContent          := $EntryPage.Content                -}}
-  {{- $IsCurrentPage       := eq page $EntryPage                -}}
-  {{- $IsAncestorPage      := $EntryPage.IsAncestor page        -}}
-  {{- $IsAncestorOrCurrent := or $IsCurrentPage $IsAncestorPage -}}
+  {{- $EntryPage           := .                                                -}}
+  {{- $RawContent          := trim $EntryPage.RawContent "\n\r\t "             -}}
+  {{- $FrontMatterOnly     := eq 1 (len (findRE `(?s)^---.+---$` $RawContent)) -}}
+  {{- $EmptyContent        := eq (len $RawContent) 0                           -}}
+  {{- $HasContent          := not (or $FrontMatterOnly $EmptyContent)          -}}
+  {{- $IsCurrentPage       := eq page $EntryPage                               -}}
+  {{- $IsAncestorPage      := $EntryPage.IsAncestor page                       -}}
+  {{- $IsAncestorOrCurrent := or $IsCurrentPage $IsAncestorPage                -}}
   {{/*  Define partials for easier reuse/maintenance  */}}
   {{- $getSafeAttributes  := "platen/utils/getSafeAttributes" -}}
   {{- $getTitle           := "platen/utils/getTitle"          -}}
