@@ -14,8 +14,8 @@
     }
   });
 
-  const input = document.querySelector('#platen-search-input');
-  const results = document.querySelector('#platen-search-results');
+  const input = document.getElementById('platen-search-input');
+  const results = document.getElementById('platen-search-results');
 
   if (!input) {
     return
@@ -23,6 +23,10 @@
 
   input.addEventListener('focus', init);
   input.addEventListener('keyup', search);
+
+  if (input.tagName === 'SL-INPUT') {
+    input.addEventListener('sl-clear', search);
+  }
 
   document.addEventListener('keypress', focusSearchFieldOnKeyPress);
 

@@ -213,7 +213,8 @@ platen:
         use_legacy: true
   features:
     search:                                   # booksearch
-      enabled: true
+      enabled:    true
+      use_legacy: true
       partials:
         header: platen/features/search/header
     comments:                                 # bookcomments
