@@ -1,0 +1,13 @@
+{{- $SearchLabel     := i18n "Search" -}}
+{{- $InputAttributes := delimit (
+      slice
+        `type="text"`
+        `id="platen-search-input"`
+        (printf `placeholder="%s"` $SearchLabel)
+        `maxlength="64"`
+        `data-hotkeys="s/"`
+    ) " " | safeHTMLAttr
+-}}
+<input aria-label="{{ $SearchLabel }}" {{ $InputAttributes }} />
+<div class="platen-search-spinner hidden"></div>
+<ul id="platen-search-results"></ul>

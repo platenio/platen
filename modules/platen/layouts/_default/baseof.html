@@ -9,9 +9,21 @@
   {{- $bodyAttributes = printf "%s %s" $bodyAttributes $ClassAttribute -}}
 {{- end -}}
 
+{{- $ModeKey        := "platen.theme.mode" -}}
+{{- $Mode           := partialCached "platen/param/getKey" $ModeKey $ModeKey | default "auto" -}}
+{{- $HtmlClasses    := slice (printf "platen-theme-mode-%s" $Mode) -}}
+{{- $HtmlAttributes := delimit (
+      slice
+        (printf `lang="%s"` $LanguageCode)
+        (printf `dir="%s"` $LanguageDirection)
+        (printf `data-default-theme-mode="%s"` $Mode)
+        (printf `class="%s"` (delimit $HtmlClasses " "))
+    ) " " | safeHTMLAttr
+-}}
+
 {{/* Write the HTML */}}
 <!DOCTYPE html>
-<html lang="{{ $LanguageCode }}" dir="{{ $LanguageDirection }}">
+<html {{ $HtmlAttributes }}>
 <head>
   {{ partial "platen/htmlHead"    }}
   {{ partial "platen/inject/head" }}

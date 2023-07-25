@@ -1,0 +1,10 @@
+{{- $ConfigKey := "platen.display.menu.theme_options"                       -}}
+{{- $Config    := partialCached "platen/param/getKey" $ConfigKey $ConfigKey -}}
+
+{{- if $Config.enabled -}}
+<div class="platen-display-options">
+  {{- if $Config.mode_selection.enabled }}
+    {{- partial "platen/menu/display/mode-select/default" -}}
+  {{ end -}}
+</div>
+{{- end -}}

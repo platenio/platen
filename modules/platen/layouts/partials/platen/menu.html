@@ -7,6 +7,8 @@
     {{ partial "platen/menu/languages" page }}
   {{ end }}
 
+  {{ partial "platen/menu/display" }}
+
   {{ partial "platen/menu/feature" (dict "Context" page "Position" "before_injection") }}
 
   {{ partial "platen/inject/menu-before" page }}

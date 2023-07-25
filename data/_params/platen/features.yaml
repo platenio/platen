@@ -1,2 +1,4 @@
 shoelace:
   always_load: true
+search:
+  use_legacy: false

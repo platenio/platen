@@ -1,0 +1,18 @@
+{{- $SearchLabel     := i18n "Search" -}}
+{{- $InputAttributes := delimit (
+      slice
+        `type="search"`
+        `id="platen-search-input"`
+        (printf `placeholder="%s"` $SearchLabel)
+        (printf `label="%s"` $SearchLabel)
+        `maxlength="64"`
+        `data-hotkeys="s/"`
+        `clearable`
+        `size="small"`
+        `filled`
+        `class="hidden-label"`
+    ) " " | safeHTMLAttr
+-}}
+<sl-input {{ $InputAttributes }}></sl-input>
+<div class="platen-search-spinner hidden"></div>
+<ul id="platen-search-results"></ul>

@@ -8,6 +8,10 @@ menu:
   root_section: /
   languages_icon:
     use_legacy: false
+  theme_options:
+    enabled: true
+    mode_selection:
+      enabled: true
   before_injection:
     entries:
       - feature: toroidal

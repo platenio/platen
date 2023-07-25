@@ -23,8 +23,8 @@
 
 {{/*  If no feature set the title, use the default behavior for Platen  */}}
 {{- if eq "" $title -}}
-  {{- $titleText   := partial "platen/utils/getTitle" $TitleParams -}}
-  {{- $title        = printf "%s | %s" $titleText site.Title       -}}
+  {{- $titleText := partial "platen/utils/getTitle" $TitleParams | plainify -}}
+  {{- $title      = printf "%s | %s" $titleText site.Title                  -}}
 {{- end }}
 
 {{- return $title -}}

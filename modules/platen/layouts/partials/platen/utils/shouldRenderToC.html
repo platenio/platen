@@ -24,28 +24,33 @@
     That ensures the call is cached for the current page, since it gets called
     at least twice in the baseof template.
 */}}
-{{- $PageContent   := page.Content                                                        -}}
 {{- $ConfigKey     := "platen.display.table_of_contents"                                  -}}
 {{- $SiteConfigToC := partialCached "platen/param/getKey" $ConfigKey $ConfigKey           -}}
 {{- $PageConfigToC := page.Params.platen.table_of_contents                                -}}
 {{- $MergeParams   := dict "BaseMap" $SiteConfigToC "MergingMap" $PageConfigToC           -}}
 {{- $MergedConfig  := partialCached "platen/utils/getMergedMap" $MergeParams $MergeParams -}}
-{{- $RenderSetting := $MergedConfig.render | default true                                 -}}
+{{- $RenderSetting := $MergedConfig.render        | default true                          -}}
 {{- $MinLevel      := $MergedConfig.minimum_level | default 2                             -}}
 {{- $MaxLevel      := $MergedConfig.maximum_level | default 4                             -}}
 
-{{/* Build Regex to find includable headings. */}}
-{{- $Pattern := delimit (
-      slice
-      (printf "<h[%v-%v].*?>" $MinLevel $MaxLevel)
-      "(.|\n)+?"
-      (printf "</h[%v-%v]>"   $MinLevel $MaxLevel)
-    ) "" | print
--}}
+{{- $shouldRender := false -}}
+{{- if eq $RenderSetting "always" -}}
+    {{- $shouldRender = true -}}
+{{- else if in (slice true "default") $RenderSetting -}}
+    {{- $PageContent   := page.Content -}}
+    {{/* Build Regex to find includable headings. */}}
+    {{- $Pattern := delimit (
+            slice
+            (printf "<h[%v-%v].*?>" $MinLevel $MaxLevel)
+            "(.|\n)+?"
+            (printf "</h[%v-%v]>"   $MinLevel $MaxLevel)
+        ) "" | print
+    -}}
 
-{{/* Find all headings in the rendered content */}}
-{{- $Headers      := findRE $Pattern $PageContent   -}}
-{{- $HasHeaders   := ge (len $Headers) 1            -}}
-{{- $ShouldRender := and $RenderSetting $HasHeaders -}}
+    {{/* Find all headings in the rendered content */}}
+    {{- $Headers     := findRE $Pattern $PageContent   -}}
+    {{- $HasHeaders  := ge (len $Headers) 1            -}}
+    {{- $shouldRender = and $RenderSetting $HasHeaders -}}
+{{- end -}}
 
-{{- return $ShouldRender -}}
+{{- return $shouldRender -}}

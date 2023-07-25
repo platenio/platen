@@ -9,7 +9,7 @@
 
 {{ define "platen-menu-hugo" }}
 {{- $HugoMenuConfigEntries := . -}}
-<ul>
+<ul class="platen-section-flat">
   {{ range $Entry := $HugoMenuConfigEntries }}
   <li>
     <a href="{{ $Entry.URL }}" {{ if not $Entry.Page }}target="_blank" rel="noopener"{{ end }}>
