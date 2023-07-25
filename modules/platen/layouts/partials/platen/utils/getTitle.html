@@ -85,9 +85,7 @@
     {{- $title = $context.File.BaseFileName | humanize | title -}}
   {{- end -}}
 
-  {{- if ne true $forHtmlHead -}}
-    {{- $title = $title | $context.RenderString -}}
-  {{- end -}}
+  {{- $title = $title | $context.RenderString -}}
 {{- end -}}
 
 {{- return $title -}}
