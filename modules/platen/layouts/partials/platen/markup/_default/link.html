@@ -10,5 +10,7 @@
 {{- end -}}
 
 <a href="{{ $href }}" {{- with $Title }} title="{{ $Title }}" {{- end }}>
-  {{ $Text }}
+  {{- trim $Text " \n" | safeHTML -}}
 </a>
+
+{{- $_ := "just to trim whitespace" -}}
