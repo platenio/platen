@@ -21,6 +21,9 @@
   {{- $shoelace        = merge $shoelace (dict "DarkThemeUrl" $DarkThemeUrl)       -}}
 {{- end -}}
 
+// Add the Base URL prefix - this makes it easier to reference static elements.
+$BaseURLPrefix: "{{ "" | relURL }}";
+
 // Adds the basic SCSS variables. These can be strings or maps. Values in this
 // group must not reference other values, only primitives.
 {{- range $name, $value := $theme.variables.basic_scss -}}
