@@ -9,5 +9,14 @@ tools and other interactive web books. Platen shortens the distance between crea
 versions of their texts that are accessible, interactive, responsive, and---above all---delightful
 to author and maintain.
 
+``````columns { #buttons .flex .justify-center .align-center}
+```column{ .flex .justify-center .align-center }
 ![button:Get Started with Platen](/getting-started/happy-path-setup)
-{ variant="success" size="large" suffix-icon="stars" }
+{
+  variant="success"
+  size="large"
+  suffix_icon="stars"
+  prefix_icon="stars"
+}
+```
+``````
