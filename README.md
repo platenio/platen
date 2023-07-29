@@ -27,6 +27,9 @@
     <a href="https://platen.io"><strong>Explore the docs »</strong></a>
     <br />
     <br />
+    <a href="https://platen.io/getting-started/happy-path-setup/"><strong>Get Started with Platen »</strong></a>
+    <br />
+    <br />
     <a href="https://flagrant.garden">View Demo</a>
     ·
     <a href="https://github.com/platenio/platen/issues">Report Bug</a>
