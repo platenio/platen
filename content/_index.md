@@ -10,5 +10,5 @@ versions of their texts that are accessible, interactive, responsive, and---abov
 to author and maintain.
 <br />
 <br />
-![button:Get Started with Platen](https://platen.io/getting-started/happy-path-setup/)
+![button:Get Started with Platen](/getting-started/happy-path-setup)
 { variant="success" size="large" suffix-icon="stars" }
