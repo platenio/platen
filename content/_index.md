@@ -8,6 +8,6 @@ This is the landing page for Platen, a project for providing scaffolding of digi
 tools and other interactive web books. Platen shortens the distance between creators and digital
 versions of their texts that are accessible, interactive, responsive, and---above all---delightful
 to author and maintain.
-<br />
+
 ![button:Get Started with Platen](/getting-started/happy-path-setup)
 { variant="success" size="large" suffix-icon="stars" }
