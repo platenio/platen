@@ -1,0 +1,24 @@
+definition: |
+  ```hex { name="The First Tab" }
+  This is the first tab.
+  ```
+
+  ```hex { name="The Second Tab"}
+  This is the second tab.
+  ```
+
+  ```hex { name="The Third Tab" }
+  This is the third tab.
+  ```
+
+  ```hex { name="The Fourth Tab" }
+  This is the fourth tab.
+  ```
+
+  ```hex { name="The Fifth Tab" }
+  This is the fifth tab.
+  ```
+
+  ```hex { name="The Sixth Tab" }
+  This is the sixth tab.
+  ```

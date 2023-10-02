@@ -1,0 +1,21 @@
+{{- $Params       := .                                   -}}
+{{- $Attributes   := $Params.Attributes   | safeHTMLAttr -}}
+{{- $RenderedTabs := $Params.RenderedTabs | safeHTML     -}}
+
+<ul class="hex-grid__list">
+  {{ $RenderedTabs }}
+</ul>
+<div id="hexmap-box"></div>
+
+<script>
+const changeText = document.querySelector("#hexmap-box");
+let btns = document.querySelectorAll('.hex-grid__content');
+
+for (i of btns) {
+  i.addEventListener('click', function() {
+    const input = this.nextElementSibling;
+    const desiredText = input.innerHTML
+    changeText.innerHTML = desiredText;
+  });
+}
+</script>
