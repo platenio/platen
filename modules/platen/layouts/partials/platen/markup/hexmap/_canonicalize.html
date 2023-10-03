@@ -45,12 +45,19 @@
 {{- $getMergedStyleOption             := "platen/utils/getMergedStyleOption"             -}}
 {{- $getPrettyRender                  := "platen/utils/getPrettyRender"                  -}}
 {{- $getSafeAttributes                := "platen/utils/getSafeAttributes"                -}}
+{{- $parseIconName                    := "platen/features/shoelace/utils/parseIconName"           -}}
+{{- $updateUsedIconLibraries          := "platen/features/shoelace/utils/updateUsedIconLibraries" -}}
+{{- $resolveIconOptions               := "platen/features/shoelace/utils/resolveIconOptions"      -}}
+
 {{/*  Define the template folder and default template for this markup  */}}
 {{- $TemplateFolder := "platen/markup/hexmap/templates" -}}
 {{- $template       := "default"                      -}}
 {{/*  Determine whether this canonicalize call is for the group or an entry  */}}
 {{- $IsGroup := in $ValidIDs.group $ID -}}
 {{- $IsEntry := in $ValidIDs.entry $ID -}}
+
+{{- $Page.Store.Set "_hasShoelace" true -}}
+
 {{/*
     Define the list of valid config options that can be used as defaults for
     the markup when not supplied directly or by a preset. Delete this section
@@ -66,9 +73,6 @@
   {{- $ConfigOptions = slice
                        "activation"
                        "classes"
-                       "no_scroll_controls"
-                       "placement"
-                       "standardize_height"
                        "use_legacy"
   -}}
 {{- end -}}
@@ -249,50 +253,6 @@
     {{- $attributes = $attributes | append (printf `id="%s"` $options.id) -}}
   {{- end -}}
 
-  {{- if not $options.legacy -}}
-    {{/*  Handle the non-legacy options  */}}
-    {{- with $options.placement -}}
-      {{- $ValidPlacements := slice "top" "bottom" "start" "end" -}}
-      {{- $DefaultPlacement := $Config.placement | default "top" -}}
-
-      {{- if not (in $ValidPlacements $options.placement) -}}
-        {{- $message := slice
-            (printf "Specified placement '%s' in tabs markup at %s is invalid." $options.placement $Position)
-            (printf "Must be one of: '%s'." (delimit $ValidPlacements "', '" "', or'"))
-            (printf "Defaulting to '%s'." $DefaultPlacement)
-        -}}
-        {{- warnf (delimit $message " ") -}}
-        {{- $options = merge $options (dict "placement" $DefaultPlacement) -}}
-      {{- end -}}
-
-      {{- $attributes = $attributes | append (printf `placement="%s"` $options.placement) -}}
-    {{- end -}}
-
-    {{- with $options.activation -}}
-      {{- $ValidActivations  := slice "auto" "manual"               -}}
-      {{- $DefaultActivation := $Config.activation | default "auto" -}}
-
-      {{- if not (in $ValidActivations $options.activation) -}}
-        {{- $message := slice
-            (printf "Specified activation '%s' in tabs markup at %s is invalid." $options.activation $Position)
-            (printf "Must be one of: '%s'." (delimit $ValidActivations "', '" "', or'"))
-            (printf "Defaulting to '%s'." $DefaultActivation)
-        -}}
-        {{- warnf (delimit $message " ") -}}
-        {{- $options = merge $options (dict "activation" $DefaultActivation) -}}
-      {{- end -}}
-
-      {{- $attributes = $attributes | append (printf `activation="%s"` $options.activation) -}}
-    {{- end -}}
-
-    {{- with $options.standardize_height -}}
-      {{- $attributes = $attributes | append `data-standardize-height="true"` -}}
-    {{- end -}}
-
-    {{- if isset $options "no_scroll_controls" -}}
-      {{- $attributes = $attributes | append (printf `noScrollControls="%v"` $options.no_scroll_controls) -}}
-    {{- end -}}
-  {{- end -}}
   {{/*  Canonicalize the attributes for the tabs container  */}}
   {{- $AttributeIndent := cond $options.legacy 5 14                                    -}}
   {{- $AttributeParams := dict "Attributes" $attributes "IndentCount" $AttributeIndent -}}
@@ -339,6 +299,16 @@
     {{- $RenderedContent :=  $RenderedContent | markdownify                                -}}
     {{- $canonical        = merge $canonical (dict "RenderedContent" $RenderedContent)             -}}
   {{- else -}}
+    {{- with $options.class -}}
+      {{- $ClassKey := printf "LabelClasses"                                                     -}}
+      {{- $Classes  := partial $getMergedClasses (dict "Additional" $options.class) -}}
+      {{- $canonical = merge $canonical (dict $ClassKey $Classes)                                       -}}
+    {{- end -}}
+    
+    {{- $iconAttributes := slice -}}
+    {{- with $options.icon -}}
+        {{- $canonical        = merge $canonical (dict "Icon" $iconAttributes) -}}
+    {{- end -}}
       {{/*  If name is specified, render it as the content and use the plaintext as the name */}}
       {{- with $options.name -}}
         {{- $TabContent := $Page.RenderString $options.name                 -}}

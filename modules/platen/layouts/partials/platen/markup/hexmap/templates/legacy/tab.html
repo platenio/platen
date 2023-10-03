@@ -7,6 +7,8 @@
 {{- $LabelContent    := $Params.LabelContent    | safeHTML      -}}
 {{- $GroupID         := $Params.GroupID         | safeHTMLAttr  -}}
 {{- $RenderedContent := $Params.RenderedContent | safeHTML      -}}
+{{- $Icon            := $Params.Icon  | safeHTMLAttr  -}}
+
 
 <li class="hex-grid__item">
   <input type="button"
@@ -18,11 +20,14 @@
         {{- end -}}
         />
   <label for="{{ $ID }}"
-  class="hex-grid__content">
+        class="hex-grid__content {{ $LabelClasses }}"
+         >
+    <sl-icon name="{{ $Icon }}"></sl-icon>
     {{ $LabelContent }}
   </label>
-  <div class = "platen-tabs-content markdown-inner">
-    {{ $RenderedContent | markdownify }}
+  <div class="platen-tabs-content markdown-inner">
+    <h2>{{ $LabelContent }}</h2>
+    {{ $RenderedContent }}
   </div>
 </li>
 
