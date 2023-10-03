@@ -7,10 +7,12 @@
 {{- $LabelContent    := $Params.LabelContent    | safeHTML      -}}
 {{- $GroupID         := $Params.GroupID         | safeHTMLAttr  -}}
 {{- $RenderedContent := $Params.RenderedContent | safeHTML      -}}
-{{- $Icon            := $Params.Icon  | safeHTMLAttr  -}}
+{{- $ItemClass       := $Params.ItemClass       | safeHTMLAttr  -}}
+{{- $ContentClass    := $Params.ContentClass    | safeHTMLAttr  -}}
+{{- $Icon            := $Params.Icon            | safeHTMLAttr  -}}
 
 
-<li class="hex-grid__item">
+<li class="{{ $ItemClass }}">
   <input type="button"
         class="{{ $InputClasses }}"
         name="{{ $GroupID }}"
@@ -20,7 +22,7 @@
         {{- end -}}
         />
   <label for="{{ $ID }}"
-        class="hex-grid__content {{ $LabelClasses }}"
+        class="{{ $ContentClass }} {{ $LabelClasses }}"
          >
     <sl-icon name="{{ $Icon }}"></sl-icon>
     {{ $LabelContent }}

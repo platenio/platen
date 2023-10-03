@@ -2,16 +2,19 @@
 {{- $Attributes   := $Params.Attributes   | safeHTMLAttr -}}
 {{- $RenderedTabs := $Params.RenderedTabs | safeHTML     -}}
 {{- $ID           := $Params.ID           | safeHTMLAttr  -}}
+{{- $ListClass    := $Params.ListClass    | safeHTMLAttr  -}}
+{{- $ContentClass := $Params.ContentClass | safeHTMLAttr  -}}
 
 
-<ul class="hex-grid__list" style="padding-inline-start: 0rem;">
+
+<ul class="{{ $ListClass }}" style="padding-inline-start: 0rem;">
   {{ $RenderedTabs }}
 </ul>
 <div id="hexmap-box"></div>
 
 <script>
   const changeText = document.querySelector("#hexmap-box");
-  let btns = document.querySelectorAll('.hex-grid__content');
+  let btns = document.querySelectorAll('.{{ $ContentClass }}');
   
   for (i of btns) {
     i.addEventListener('click', function() {

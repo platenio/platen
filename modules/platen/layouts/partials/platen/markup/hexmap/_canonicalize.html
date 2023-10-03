@@ -51,7 +51,7 @@
 
 {{/*  Define the template folder and default template for this markup  */}}
 {{- $TemplateFolder := "platen/markup/hexmap/templates" -}}
-{{- $template       := "default"                      -}}
+{{- $template       := "legacy"                      -}}
 {{/*  Determine whether this canonicalize call is for the group or an entry  */}}
 {{- $IsGroup := in $ValidIDs.group $ID -}}
 {{- $IsEntry := in $ValidIDs.entry $ID -}}
@@ -76,6 +76,15 @@
                        "use_legacy"
   -}}
 {{- end -}}
+{{- if $IsEntry -}}
+  {{- $ConfigOptions = slice
+                       "icon"
+  -}}
+{{- end -}}
+{{/*  Only tab groups get setting defaults from config EXCEPT ALT GRID STYLE,
+  need to move classes over here too  */}}
+{{- $ConfigOptions = $ConfigOptions | append "alt_grid_style"
+-}}
 {{/*
     Define the list of default values for the options that aren't pulled from
     the site configuration. Delete this section if you don't need it.
@@ -86,7 +95,7 @@
 
         "legacy" false
 */}}
-{{- $nonConfigDefaults := dict "legacy" false -}}
+{{- $nonConfigDefaults := dict "legacy" true -}}
 {{- if and $options.legacy $IsEntry -}}
   {{- $nonConfigDefaults = merge $nonConfigDefaults (dict "checked" false) -}}
 {{- end -}}
@@ -132,6 +141,12 @@
     {{- else if (eq "use_legacy" $OptionKey) -}}
       {{- $key   = "legacy"                         -}}
       {{- $value = $options.legacy | default $value -}}
+    {{- else if (eq "alt_grid_style" $OptionKey) -}}
+      {{- $key   = "grid"                         -}}
+      {{- $value = $options.grid | default $value -}}
+    {{- else if (eq "icon" $OptionKey) -}}
+      {{- $key   = "icon"                         -}}
+      {{- $value = $options.icon | default $value -}}
     {{- else -}}
       {{- $value = index $options $OptionKey | default $value -}}
     {{- end -}}
@@ -244,6 +259,27 @@
   {{/*  Ensure the right template is called  */}}
   {{- $template = printf "%s/group" $template -}}
 
+  {{/*  Canonicalize the shape/layout of the grid whether it goes 
+                                            _/‾\ (true) or /‾\_ (false) */}}
+  {{- if $options.grid -}}
+      {{- $DefaultClasses   := dict "List"    (slice "alt-hex-grid__list")
+                                    "Content" (slice "alt-hex-grid__content")
+      -}}
+      {{- range $Element, $Defaults := $DefaultClasses -}}
+        {{- $ClassKey := printf "%sClass" $Element                                                      -}}
+        {{- $Classes  := partial $getMergedClasses (dict "Default" $Defaults) -}}
+        {{- $canonical = merge $canonical (dict $ClassKey $Classes)                                                   -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $DefaultClasses   := dict "List"    (slice "hex-grid__list")
+                                    "Content" (slice "hex-grid__content")  -}}
+      {{- range $Element, $Defaults := $DefaultClasses -}}
+        {{- $ClassKey := printf "%sClass" $Element                                                      -}}
+        {{- $Classes  := partial $getMergedClasses (dict "Default" $Defaults) -}}
+        {{- $canonical = merge $canonical (dict $ClassKey $Classes)                                                  -}}
+      {{- end -}}
+  {{- end -}}
+
   {{/*  Canonicalize the shared attributes: class and id  */}}
   {{- $Classes := partial $getMergedClasses (dict "Default" "platen-tabs" "Additional" $options.class) -}}
   {{- with $Classes -}}
@@ -261,6 +297,27 @@
 {{- else -}}
   {{/*  Ensure the right template is called  */}}
   {{- $template = printf "%s/tab" $template -}}
+  {{/*  Canonicalize the shape/layout of the grid whether it goes 
+                                        _/‾\ (true) or /‾\_ (false) */}}
+  {{- if $options.grid -}}
+    {{- $DefaultClasses   := dict "Content" (slice "alt-hex-grid__content")
+                                  "Item"    (slice "alt-hex-grid__item")
+    -}}
+    {{- range $Element, $Defaults := $DefaultClasses -}}
+      {{- $ClassKey := printf "%sClass" $Element                                                      -}}
+      {{- $Classes  := partial $getMergedClasses (dict "Default" $Defaults) -}}
+      {{- $canonical = merge $canonical (dict $ClassKey $Classes)                                              -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $DefaultClasses   := dict "Content" (slice "hex-grid__content")
+                                  "Item"    (slice "hex-grid__item")
+    -}}
+    {{- range $Element, $Defaults := $DefaultClasses -}}
+      {{- $ClassKey := printf "%sClass" $Element                                                      -}}
+      {{- $Classes  := partial $getMergedClasses (dict "Default" $Defaults) -}}
+      {{- $canonical = merge $canonical (dict $ClassKey $Classes)                                       -}}
+    {{- end -}}
+  {{- end -}}
   {{/*  Handle legacy specifically  */}}
   {{- if $options.legacy -}}
     {{/*  Add automatic name/id if needed  */}}
@@ -304,10 +361,8 @@
       {{- $Classes  := partial $getMergedClasses (dict "Additional" $options.class) -}}
       {{- $canonical = merge $canonical (dict $ClassKey $Classes)                                       -}}
     {{- end -}}
-    
-    {{- $iconAttributes := slice -}}
-    {{- with $options.icon -}}
-        {{- $canonical        = merge $canonical (dict "Icon" $iconAttributes) -}}
+        {{- with $options.icon -}}
+        {{- $canonical        = merge $canonical (dict "Icon" ($Page.RenderString $options.icon)) -}}
     {{- end -}}
       {{/*  If name is specified, render it as the content and use the plaintext as the name */}}
       {{- with $options.name -}}
