@@ -1,0 +1,22 @@
+
+.tab-group__body {
+  overflow: unset;
+}
+
+.platen-tabs-content {
+  order: 999; //Move content blocks to the end
+  display: none;
+}
+
+#mapzone-text {
+  width: 100%;
+  margin: auto;
+  margin-top: 3%;
+  border-top: $padding-minimal solid var(--gray-100);
+  padding: $padding-large;
+}
+
+.map {
+    display: block;
+    margin: auto;
+}
