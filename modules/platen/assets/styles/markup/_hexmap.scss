@@ -1,10 +1,11 @@
 $block: '.hex-grid';
+$alt-block: '.alt-hex-grid';
 
 @mixin grid-item($amount) {
     @for $i from 1 through $amount {
         &:nth-of-type(#{$amount}n + #{$i}) {
             grid-column: #{$i + $i - 1} / span 3;
-            @if $i % 2 == 0 {
+            @if $i % 2 != 0 {
                 grid-row: calc(var(--counter) + var(--counter) - 1) / span 2;
             }
         }
@@ -17,7 +18,24 @@ $block: '.hex-grid';
     }
 }
 
-#{$block} {
+@mixin alt-grid-item($amount) {
+  @for $i from 1 through $amount {
+      &:nth-of-type(#{$amount}n + #{$i}) {
+          grid-column: #{$i + $i - 1} / span 3;
+          @if $i % 2 == 0 {
+              grid-row: calc(var(--counter) + var(--counter) - 1) / span 2;
+          }
+      }
+  }
+
+  @for $i from 1 through 20 {
+      &:nth-of-type(n + #{$i * $amount + 1}) {
+          --counter: #{$i + 1};
+      }
+  }
+}
+
+#{$block}, #{$alt-block} {
     display: flex;
 	  justify-content: center;
 
@@ -74,6 +92,16 @@ $block: '.hex-grid';
 			@include grid-item(5);
 		}
 	}
+  #{$alt-block} {
+		&__list {
+      --amount: 5;
+      --counter: 1;
+		}
+
+		&__item {
+			@include alt-grid-item(5);
+		}
+	}
 }
 
 @media screen and (min-width: 1120px) and (max-width: 1439px) {
@@ -85,6 +113,17 @@ $block: '.hex-grid';
 
 		&__item {
 			@include grid-item(5);
+		}
+	}
+  
+  #{$alt-block} {
+		&__list {
+      --amount: 5;
+      --counter: 1;
+		}
+
+		&__item {
+			@include alt-grid-item(5);
 		}
 	}
 }
@@ -101,6 +140,17 @@ $block: '.hex-grid';
 			@include grid-item(5);
 		}
 	}
+
+  #{$alt-block} {
+		&__list {
+      --amount: 5;
+      --counter: 1;
+		}
+
+		&__item {
+			@include alt-grid-item(5);
+		}
+	}
 }
 
 @media screen and (min-width: 480px) and (max-width: 839px) {
@@ -113,6 +163,17 @@ $block: '.hex-grid';
 
 		&__item {
 			@include grid-item(5);
+		}
+	}
+
+  #{$alt-block} {
+		&__list {
+      --amount: 5;
+      --counter: 1;
+		}
+
+		&__item {
+			@include alt-grid-item(5);
 		}
 	}
 }
@@ -129,6 +190,17 @@ $block: '.hex-grid';
 			@include grid-item(5);
 		}
 	}
+
+  #{$alt-block} {
+		&__list {
+      --amount: 5;
+      --counter: 1;
+		}
+
+		&__item {
+			@include alt-grid-item(5);
+		}
+	}
 }
 
 .tab-group__body {
@@ -138,7 +210,6 @@ $block: '.hex-grid';
 .platen-tabs-content {
   order: 999; //Move content blocks to the end
   display: none;
-
 }
 
 
