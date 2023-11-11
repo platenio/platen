@@ -1,0 +1,10 @@
+{{- $Params := . -}}
+{{- $Name   := $Params.Name  | safeHTML     -}}
+{{- $Class  := $Params.Class | safeHTMLAttr -}}
+{{- $ID     := $Params.ID    | safeHTMLAttr -}}
+
+<li {{- with $Class}} class="{{$Class}}" {{- end -}} {{- with $ID}} id="{{ $ID }}" {{- end -}}>
+  <button @click="$refs.tabGroup.show('{{ $Name }}')">{{ $Name }}</button>
+</li>
+
+{{- /* Trim trailing whitespace for template */ -}}
