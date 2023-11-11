@@ -1,0 +1,17 @@
+{{- $IntegrityPartial := "platen/utils/getIntegrityAttributes"                      -}}
+{{- $ClosableTabsKey  := "_hasClosableTabs"                                         -}}
+{{- $ConfigKey        := "platen.markup.hexmap"                                       -}}
+{{- $Config           := partialCached "platen/param/getKey" $ConfigKey $ConfigKey  -}}
+{{- $HasClosableTabs  := page.Store.Get $ClosableTabsKey                            -}}
+
+{{- if $HasClosableTabs -}}
+  {{- $CacheKey     := "closable-tabs-script"                              -}}
+  {{- $ResourcePath := "scripts/markup/hexmap/handler.js"                    -}}
+  {{- $Template     := "platen/markup/hexmap/templates/header"               -}}
+  {{- $Script       := resources.Get $ResourcePath | resources.Fingerprint -}}
+  {{- $Integrity    := partialCached $IntegrityPartial $Script $CacheKey   -}}
+  {{- $Source       := $Script.RelPermalink                                -}}
+  {{- $Params       := dict "Source" $Source "Integrity" $Integrity        -}}
+  {{/*  Add the script to the header  */}}
+  {{- partialCached $Template $Params $CacheKey -}}
+{{- end -}}

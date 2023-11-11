@@ -1,0 +1,379 @@
+{{- $Params     := .                  -}}
+{{- $Config     := $Params.Config     -}} {{- /* The markup's site configuration, like platen.markup.foo     */ -}}
+{{- $Position   := $Params.Position   -}} {{- /* The markup's position in the Markdown - only for codeblocks */ -}}
+{{- $Page       := $Params.Page       -}} {{- /* The Page object for the Markdown document the markup is in  */ -}}
+{{- $ValidIDs   := $Params.ValidIDs   -}} {{- /* The map or slice of valid IDs for the markup                */ -}}
+{{- $ID         := $Params.ID         -}} {{- /* The used language ID (codeblock) or prefix (image/link)     */ -}}
+{{- $Kind       := $Params.Kind       -}} {{- /* The kind of markup: codeblock, image, link, etc             */ -}}
+{{- $definition := $Params.Definition -}} {{- /* The non-yaml text of the markup - only for codeblocks       */ -}}
+{{- $options    := $Params.Options    -}} {{- /* The pre-merged options, attributes, and preset properties   */ -}}
+{{- /* Partial definitions for referencing */ -}}
+{{- $getCodeblockFromInfo             := "platen/utils/getCodeblockFromInfo"             -}}
+{{- $getCodeblockInfo                 := "platen/utils/getCodeblockInfo"                 -}}
+{{- $getIndentedContent               := "platen/utils/getIndentedContent"               -}}
+{{- $getMergedClasses                 := "platen/utils/getMergedClasses"                 -}}
+{{- /*  Define the template folder and default template for this markup  */ -}}
+{{- $TemplateFolder := "platen/markup/hexmapp/templates" -}}
+{{- $template       := "default"                         -}}
+{{- /*  Initialize the return value for this partial  */ -}}
+{{- $canonical := dict -}}
+{{- /*  Determine whether this canonicalize call is for the group or an entry  */ -}}
+{{- $IsGroup := in $ValidIDs.group $ID -}}
+{{- $IsEntry := in $ValidIDs.entry $ID -}}
+{{- /*
+    Define the list of valid config options that can be used as defaults for
+    the markup when not supplied directly or by a preset. Delete this section
+    if the markup doesn't use defaults from the site config.
+*/ -}}
+{{- $ConfigOptions := slice -}}
+{{- if $IsGroup -}} {{- /*  Only the outer map markup gets setting defaults from config  */ -}}
+  {{- $ConfigOptions = slice
+        "activation"
+        "classes"
+        "no_scroll_controls"
+        "placement"
+        "standardize_height"
+        "height"
+        "width"
+  -}}
+{{- end -}}
+{{- /*
+    Canonicalize options with config defaults, using the value from the config
+    unless specified by the markup options (already merged with preset).
+*/ -}}
+{{- range $OptionKey := $ConfigOptions -}}
+  {{- if isset $Config $OptionKey -}}
+    {{- $key   := $OptionKey               -}}
+    {{- $value := index $Config $OptionKey -}}
+    {{- if eq "classes" $OptionKey -}}
+      {{- $key   = "class"                                       -}}
+      {{- $value = $options.class | default (delimit $value " ") -}}
+    {{- else if (eq "use_legacy" $OptionKey) -}}
+      {{- $key   = "legacy"                         -}}
+      {{- $value = $options.legacy | default $value -}}
+    {{- else -}}
+      {{- $value = index $options $OptionKey | default $value -}}
+    {{- end -}}
+    {{- $options = merge $options (dict $key $value) -}} {{- /*  Merge the munged value in  */ -}}
+  {{- end -}}
+{{- end -}}
+{{- /**************  END MERGING OPTIONS AND CONFIG, BEGIN PROCESSING  **************/ -}}
+{{- /*  Handle the definition, which might be passed directly or through a preset  */ -}}
+{{- with $definition -}}           {{- /*  Has an input definition, nothing to do  */ -}}
+{{- else -}}
+  {{- with $options.definition -}} {{- /*  Use the definition from a preset  */ -}}
+    {{- $definition = $options.definition -}}
+  {{- else -}}
+    {{- errorf
+        "Missing definition for '%s' markup at %s. Specify a definition in the markup or with a preset."
+                                $ID            $Position
+    }}
+  {{- end -}}
+{{- end -}}
+{{- /*  Ensure that shoelace and alpine both load  */ -}}
+{{- $Page.Store.Set "_hasAlpine"   true -}}
+{{- $Page.Store.Set "_hasShoelace" true -}}
+
+{{- /*  Initialize the attributes slice  */ -}}
+{{- $attributes    := slice -}}
+
+{{- if $IsGroup -}}
+  {{- /*  Ensure the right template is called  */ -}}
+  {{- $template = printf "%s/map" $template -}}
+  {{- /*  Canonicalize the shared attributes: class and id  */ -}}
+  {{- $Classes := partial $getMergedClasses (dict "Default" "platen-hexmap" "Additional" $options.class) -}}
+  {{- with $Classes -}}
+    {{- $canonical  = merge $canonical (dict "Classes" $Classes) -}}
+    {{- $attributes = $attributes | append (printf `class="%s"` $Classes) -}}
+  {{- end -}}
+  {{- with $options.id -}}
+    {{- $attributes = $attributes | append (printf `id="%s"` $options.id) -}}
+  {{- end -}}
+  {{- /*  Pass the map height and width as CSS variables  */ -}}
+  {{- $Height := $options.height | default 3 -}} {{- /* 3 is the default height for a hex map */ -}}
+  {{- $Width  := $options.width  | default 3 -}} {{- /* 3 is the default width for a hex map  */ -}}
+  {{- $styles := slice
+      (printf "--map-height: %d" $Height)
+      (printf "--map-width: %d" $Width)
+  -}}
+  {{- $styles   := delimit $styles "; "                    -}}
+  {{- $canonical = merge $canonical (dict "Style" $styles) -}}
+  {{- /* Construct the opening of the tab group containing hex descriptions */}}
+  {{- $tabGroupOptions := dict "use_legacy" false -}}
+  {{- with $options.class -}} {{- /* Pass through the hexmap classes */ -}}
+    {{- $tabGroupOptions = merge $tabGroupOptions (dict "class" $options.class) -}}
+  {{- end -}}
+  {{- with $options.placement -}} {{- /* Process and pass through the tab placement option */ -}}
+    {{- $ValidPlacements  := slice "top" "bottom" "start" "end" -}}
+    {{- $DefaultPlacement := $Config.placement | default "top"  -}}
+    {{- if not (in $ValidPlacements $options.placement) -}}
+      {{- $message := delimit (slice
+            (printf "Specified tab placement '%s' in hexmap markup at %s is invalid." $options.placement $Position)
+            (printf "Must be one of: '%s'." (delimit $ValidPlacements "', '" "', or'"))
+            (printf "Defaulting to '%s'." $DefaultPlacement)
+          ) " " | string
+      -}} {{- warnf $message -}}
+      {{- $options = merge $options (dict "placement" $DefaultPlacement) -}}
+    {{- end -}}
+    {{- $tabGroupOptions = merge $tabGroupOptions (dict "placement" $options.placement) -}}
+  {{- end -}}
+  {{- with $options.activation -}} {{- /* Proccess and pass through the tab activation option */ -}}
+    {{- $ValidActivations  := slice "auto" "manual"               -}}
+    {{- $DefaultActivation := $Config.activation | default "auto" -}}
+    {{- if not (in $ValidActivations $options.activation) -}}
+      {{- $message := delimit (slice
+            (printf "Specified tab activation '%s' in hexmap markup at %s is invalid." $options.activation $Position)
+            (printf "Must be one of: '%s'." (delimit $ValidActivations "', '" "', or'"))
+            (printf "Defaulting to '%s'." $DefaultActivation)
+          ) " " | string
+      -}} {{- warnf (delimit $message " ") -}}
+      {{- $options = merge $options (dict "activation" $DefaultActivation) -}}
+    {{- end -}}
+    {{- $tabGroupOptions = merge $tabGroupOptions (dict "activation" $DefaultActivation) -}}
+  {{- end -}}
+  {{- with $options.standardize_height -}} {{- /* Pass through the standardize height option */ -}}
+    {{- $tabGroupOptions = merge $tabGroupOptions (dict "standardize_height" $options.standardize_height) -}}
+  {{- end -}}
+  {{- if isset $options "no_scroll_controls" -}} {{- /* Pass through the no scroll controls option */ -}}
+    {{- $tabGroupOptions = merge $tabGroupOptions (dict "no_scroll_controls" $options.no_scroll_controls) -}}
+  {{- end -}}
+  {{- /* Assemble the tab group block opening - will add tabs and close after processing inner definitions */ -}}
+  {{- $tabGroupBlock := slice
+        (printf "%stabs" (strings.Repeat 36 "`"))
+        "---"
+        (strings.TrimSuffix "\n" ($tabGroupOptions | transform.Remarshal "yaml"))
+        "---"
+  -}}
+  {{- /********** END OF GROUP-LEVEL PROCESSING, BEGIN ENTRY-LEVEL PROCESSING **********/ -}}
+  {{- /*  Get the nested codeblocks, so we can build the full map in coordinate order  */ -}}
+  {{- $NestedParams     := dict
+        "Definition" $definition
+        "ValidIDs"   $ValidIDs.entry
+        "Position"   $Position
+  -}}
+  {{- $NestedCodeBlocks  := partial "platen/utils/getNestedCodeblocks" $NestedParams -}}
+  {{- $definedHexes      := slice                                                    -}}
+  {{- $InfoParams        := dict "SupportsData" true "SupportsMarkdown" true         -}}
+  {{- range $HexCodeBlock := $NestedCodeBlocks -}} {{- /* Loop over the codeblocks, getting the info coordinates */ -}}
+    {{- $hexDefinition := replaceRE `^\x60{3,}.+`  "" $HexCodeBlock         -}} {{- /* Strip opening code fence  */ -}}
+    {{- $hexDefinition  = replaceRE `\x60{3,}$`    "" $hexDefinition        -}} {{- /* Strip closing code fence  */ -}}
+    {{- $hexDefinition  = trim      $hexDefinition "\n"                     -}} {{- /* Trim trailing newlines    */ -}}
+    {{- $infoParams := merge $InfoParams (dict "Definition" $hexDefinition) -}} {{- /* Retrieve codeblock info   */ -}}
+    {{- $hexInfo    := partial "platen/utils/getCodeblockInfo" $infoParams  -}}
+    {{- with $hexData := $hexInfo.Data -}} {{- /* Need to extract X/Y coordinates from the data to auto-define.  */ -}}
+      {{- $hexCoordinates := dict -}}      {{- /* If coordinates are set, use them. Fill in empty hexes next.    */ -}}
+      {{- with $coordinates := $hexData.coordinates -}} 
+        {{- $hexCoordinates = dict "x" (index $coordinates 0) "y" (index $coordinates 1) -}}
+      {{- end -}}
+      {{- $definedHexes = $definedHexes | append (dict "Coordinates" $hexCoordinates "Info" $hexInfo) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $CoordinatesX    := seq $Width                  -}} {{- /* Need to be able to loop over X axis   */ -}}
+  {{- $CoordinatesY    := seq $Height                 -}} {{- /* and over the Y axis too.              */ -}}
+  {{- $lastCoordinates := dict                        -}} {{- /* Keep track of the last coordinates    */ -}}
+  {{- $mappedHexes     := slice                       -}} {{- /* Initialize the mapped hexes slice     */ -}}
+  {{- range $index, $definedHex := $definedHexes -}}      {{- /* Loop over the defined hexes, filling in the gaps */ -}}
+    {{- with $coordinates := $definedHex.Coordinates -}}  {{- /* If the coordinates are set, use them             */ -}}
+      {{- $lastCoordinates = $coordinates -}}
+    {{- else -}}                                         {{- /* Hex without explicitly defined coordinates    */ -}}
+      {{- with $lastCoordinates -}}                      {{- /* Bump coordinates by 1, shifting row as needed */ -}}
+        {{- if gt (add $lastCoordinates.x 1) $Width -}}  {{- /* Bump row, set to first column */ -}}
+          {{- $lastCoordinates = dict "x" 1 "y" (add $lastCoordinates.y 1) -}}
+        {{- else -}}                                     {{- /* Bump column, same row */ -}}
+          {{- $lastCoordinates = dict "x" (add $lastCoordinates.x 1) "y" $lastCoordinates.y -}}
+        {{- end -}}
+      {{- else -}}                                       {{- /* First hex, set to 1,1 */ -}}
+        {{- $lastCoordinates = dict "x" 1 "y" 1 -}}
+      {{- end -}}
+      {{- $hexCoordinates := slice $lastCoordinates.x $lastCoordinates.y                -}}
+      {{- $hexInfo        := $definedHex.Info                                           -}} {{- /* Munge the info and  */ -}}
+      {{- $hexData        := merge $hexInfo.Data (dict "coordinates" $hexCoordinates)   -}} {{- /* data for the mapped */ -}}
+      {{- $hexInfo         = merge $hexInfo (dict "Data" $hexData)                      -}} {{- /* hexes. Then we can  */ -}}
+      {{- $definedHex      = merge $definedHex (dict "Coordinates" $lastCoordinates)    -}} {{- /* find any hexes that */ -}}
+      {{- $definedHex      = merge $definedHex (dict "Info" $hexInfo)                   -}} {{- /* weren't defined.    */ -}}
+    {{- end -}}
+    {{- $mappedHexes = $mappedHexes | append $definedHex -}}
+  {{- end -}}
+
+  {{- $hexesToRender := slice -}}     {{- /* Add empty hexes, looping over row */ -}}
+  {{- range $Y := $CoordinatesY -}}   {{- /* and column to find mapped hexes   */ -}}
+    {{- range $X := $CoordinatesX -}} {{- /* and insert empty ones as needed.  */ -}}
+      {{- $Coordinates := dict "x" $X "y" $Y -}}
+      {{- $hex         := dict               -}}
+      {{- range $MappedHex := $mappedHexes -}} {{- /* Find the mapped hex, for the coordinates, if any */ -}}
+        {{- $SameX           := eq $X $MappedHex.Coordinates.x -}}
+        {{- $SameY           := eq $Y $MappedHex.Coordinates.y -}}
+        {{- $SameCoordinates := and $SameX $SameY              -}}
+        {{- if $SameCoordinates -}}{{- $hex = $MappedHex -}}{{- end -}}
+      {{- end -}}
+      {{- with $hex -}} {{- /* Do nothing, hex found and usable    */ -}}
+      {{- else -}}      {{- /* Create an empty hex to fill the gap */ -}}
+        {{- $hexData := dict "coordinates" (slice $X $Y) "empty" true   -}}
+        {{- $hexInfo := dict "Data" $hexData "Markdown" "Empty."        -}} {{- /* Replace with translation string */ -}}
+        {{- $hex      = dict "Coordinates" $Coordinates "Info" $hexInfo -}}
+      {{- end -}}
+      {{- $hexesToRender = $hexesToRender | append $hex -}}
+    {{- end -}}
+  {{- end -}}
+  {{- /*  Now we have a list of hexes to render, in order. First, render hexes. */ -}}
+  {{- $renderedHexes := slice                 -}}
+  {{- $CodeFence     := strings.Repeat 21 "`" -}}
+  {{- range $HexToRender := $hexesToRender -}} {{- /* Build munged codeblock, render, trim, and add to list */ -}}
+    {{- $hexCodeBlock := partial $getCodeblockFromInfo $HexToRender.Info               -}}
+    {{- $hexCodeBlock  = printf "%shexx\n%s\n%s\n" $CodeFence $hexCodeBlock $CodeFence -}}
+    {{- $hexCodeBlock  = $hexCodeBlock | $Page.RenderString (dict "display" "block")   -}}
+    {{- $hexCodeBlock  = trim $hexCodeBlock "\n"                                       -}}
+    {{- $renderedHexes = $renderedHexes | append $hexCodeBlock                         -}}
+  {{- end -}}
+  {{- $renderedHexes    = delimit $renderedHexes "\n"                            -}}
+  {{- $IndentHexParams := dict "IndentCount" 2 "Content" $renderedHexes          -}}
+  {{- $renderedHexes    = partial $getIndentedContent $IndentHexParams           -}}
+  {{- $canonical        = merge $canonical (dict "RenderedHexes" $renderedHexes) -}}
+  {{/*  Now, finish building the hexmap tabs by generating `hex-tab` blocks reusing the definition.  */}}
+  {{- $renderedHexTabs := slice -}}
+  {{- range $HexToRender := $hexesToRender -}}  {{- /* Build munged codeblock, render, trim, and add to list */ -}}
+    {{- $hexTabBlock     := partial $getCodeblockFromInfo $HexToRender.Info                 -}}
+    {{- $hexTabBlock      = printf "%shex-tab\n%s\n%s\n" $CodeFence $hexTabBlock $CodeFence -}}
+    {{- $hexTabBlock     := $hexTabBlock | $Page.RenderString (dict "display" "block")      -}}
+    {{- $hexTabBlock      = trim $hexTabBlock "\n"                                          -}}
+    {{- $renderedHexTabs  = $renderedHexTabs | append $hexTabBlock                          -}}
+  {{- end -}}
+  {{- $renderedHexTabs  = delimit $renderedHexTabs "\n"                   -}}
+  {{- $tabGroupBlock    = $tabGroupBlock | append $renderedHexTabs        -}}
+  {{- $tabGroupBlock    = $tabGroupBlock | append (strings.Repeat 36 "`") -}}
+  {{- $tabGroupBlock    = delimit $tabGroupBlock "\n"                     -}}
+  {{/*  Render the generated tab group and canonicalize */}}
+  {{- $renderedHexTabs := $Page.RenderString $tabGroupBlock                                              -}}
+  {{- $renderedHexTabs  =  replaceRE `<sl-tab-group` `<sl-tab-group x-ref="tabGroup"` $renderedHexTabs 1 -}}
+  {{- $IndentTabParams := dict "IndentCount" 2 "Content" $renderedHexTabs                                -}}
+  {{- $renderedHexTabs  = partial $getIndentedContent $IndentTabParams                                   -}}
+  {{- $canonical        = merge $canonical (dict "RenderedHexTabs" $renderedHexTabs)                     -}}
+{{- else if (hasSuffix $ID "tab") -}}
+  {{- /*  Ensure the right template is called and block/options initialized  */ -}}
+  {{- $template    = printf "%s/tab" $template -}}
+  {{- $tabBlock   := slice                     -}}
+  {{- $tabOptions := dict                      -}}
+  {{/*  Check if name, ID, or coordinates are set  */}}
+  {{- with $options.name -}}
+    {{- $tabOptions = merge $tabOptions (dict "name" $options.name) -}}
+  {{- else -}}
+    {{- with $options.id -}}                            {{- /*  do nothing, just checking that one's set  */ -}}
+    {{- else -}}
+      {{- with $Coordinates := $options.coordinates -}} {{- /* If coordinates are set, use as name */ -}}
+        {{- $name     := printf "%d,%d" (index $Coordinates 0) (index $Coordinates 1) -}}
+        {{- $tabOptions = merge $tabOptions (dict "name" $name)                       -}}
+      {{- else -}}                                     {{- /* If missing name, ID, and coordinates, error out */ -}}
+        {{- errorf "Missing name, ID, and coordinates for hex at '%s'. Must specify at least one." $Position -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- with $options.class -}} {{- /* Pass through the hex classes */ -}}
+    {{- $tabOptions = merge $tabOptions (dict "class" $options.class) -}}
+  {{- end -}}
+  {{- with $options.id -}} {{- /* Pass through the hex ID - we add to tab, not hex button */ -}}
+    {{- $tabOptions = merge $tabOptions (dict "id" $options.id) -}}
+  {{- end -}}
+  {{- if $options.closable -}} {{- /* Pass through the closable option */ -}}
+    {{- $tabOptions = merge $tabOptions (dict "closable" $options.closable) -}}
+  {{- end -}}
+  {{- /*  Build the tab block with the defined options and reused definition  */ -}}
+  {{- $TabFence := strings.Repeat 27 "`" -}}
+  {{- $tabBlock = delimit (
+      slice
+        (printf "%stab" $TabFence)
+        "---"
+        (strings.TrimSuffix "\n" ($tabOptions | transform.Remarshal "yaml"))
+        "---"
+        (strings.TrimPrefix "\n" $definition)
+        $TabFence
+      ) "\n"
+  -}}
+  {{- $canonical = merge $canonical (dict "TabBlock" $tabBlock) -}} {{- /*  Canonicalize tab panel content  */ -}}
+{{- else -}}
+   {{- /*  Ensure the right template is called and canonicalize the options */ -}}
+  {{- $template = printf "%s/hex" $template -}}
+  {{- with $options.class -}} {{- /* Pass through the hex classes */ -}}
+    {{- $canonical = merge $canonical (dict "Class" $options.class) -}}
+  {{- end -}}
+  {{- with $options.name -}} {{- /* If name is set, use it*/ -}}
+    {{- $canonical = merge $canonical (dict "Name" $options.name) -}}
+  {{- else -}}
+    {{- with $options.id -}} {{- /* If ID is set, convert it to the name - ID goes to tab, not button */ -}}
+      {{- $name     := replaceRE `(-|_)` " " $options.id | title -}}
+      {{- $canonical = merge $canonical (dict "Name" $name)      -}}
+    {{- else -}}
+      {{- with $Coordinates := $options.coordinates -}} {{- /* If coordinates are set, use as name */ -}}
+        {{- $name     := printf "%d,%d" (index $Coordinates 0) (index $Coordinates 1) -}}
+        {{- $canonical = merge $canonical (dict "Name" $name)                         -}}
+      {{- else -}} {{- /* If missing name, ID, and coordinates, error out */ -}}
+        {{- errorf "Missing name, ID, and coordinates for hex at '%s'. Must specify at least one." $Position -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- /* Handle injecting the coordinates as CSS variables to the button */ -}}
+  {{- $styles := slice -}}
+  {{- with $Coordinates := $options.coordinates -}}
+    {{- if ne (len $Coordinates) 2 -}}
+      {{- $Message := delimit (
+            slice
+              (printf "Invalid coordinates for hex at '%s'." $Position)
+              "Must specify exactly two values - the X coordinate (column) and Y coordinate (row)."
+              (printf "Received: %v." $Coordinates)
+          ) | string
+      -}}
+      {{- errorf $Message -}}
+    {{- end -}}
+    {{- $styles = $styles | append (printf "--hex-column: %d" (index $Coordinates 0)) -}}
+    {{- $styles = $styles | append (printf "--hex-row: %d"    (index $Coordinates 1)) -}}
+  {{- else -}}
+    {{- $Message := delimit (
+          slice
+            (printf "Missing coordinates for hex at '%s'." $Position)
+            "Must specify exactly two values - the X coordinate (column) and Y coordinate (row)."
+        ) " " | string
+    -}}
+    {{- errorf $Message -}}
+  {{- end -}}
+  {{- $styles   := delimit $styles "; "                    -}}
+  {{- $canonical = merge $canonical (dict "Style" $styles) -}}
+{{- end -}}
+
+{{- /*
+    This section provides a pattern for handling custom templates. You can
+    delete the conditional if you only use one template, or rework it to
+    match your needs if selecting from multiple templates.
+*/ -}}
+{{- if $options.custom -}}
+  {{- /*
+      Define context to pass; it's best to pass as much useful info as you can
+      for a custom template, since you don't know what they'll find useful. In
+      this case, we add the page, position, configuration, and munged options
+      to the canonical map.
+
+      Do what makes sense to you.
+  */ -}}
+  {{- $canonical = merge $canonical (dict "Page"       $Page)       -}}
+  {{- $canonical = merge $canonical (dict "Position"   $Position)   -}}
+  {{- $canonical = merge $canonical (dict "Config"     $Config)     -}}
+  {{- $canonical = merge $canonical (dict "Options"    $options)    -}}
+  {{- $canonical = merge $canonical (dict "Definition" $definition) -}}
+  {{- /*
+      Set the render template; this assumes that the markup provides a default
+      custom template that users can copy and override. If the user specified a
+      value other than `true`, that's assumed to be the name of the template
+      in `partials/platen/markup/NAME/templates`.
+  */ -}}
+  {{- if eq true $options.custom -}}
+    {{- $template = "custom" -}}
+  {{- else -}}
+    {{- $template = $options.custom -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /*  As the last step, add the canonicalized template to render  */ -}}
+{{- $template  = printf "%s/%s" $TemplateFolder $template     -}}
+{{- $canonical = merge $canonical (dict "Template" $template) -}}
+
+{{- /*  Return the canonicalized values to the markup for rendering  */ -}}
+{{- return $canonical -}}

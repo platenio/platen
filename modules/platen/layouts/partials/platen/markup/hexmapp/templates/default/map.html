@@ -1,0 +1,24 @@
+{{- $Params  := . -}}
+{{/*  {{- warnf "Map params: %s" ($Params | jsonify (dict "indent" "    " "noHTMLEsacpe" true)) -}}  */}}
+{{/*
+    These values are all from the example implementation of the canonicalize
+    partial. Make sure to actually implement the template to your needs.
+
+    Always pass the values through safeHTML, safeHTMLAttr (for attributes),
+    safeCSS, safeJS, or safeURL so your values aren't munged unexpectedly.
+*/}}
+{{/*  {{- $Attributes := $Params.Attributes | safeHTMLAttr -}}  */}}
+{{/*  {{- $Content    := $Params.Content    | safeHTML     -}}  */}}
+{{- $Classes    := $Params.Classes         | safeHTMLAttr -}}
+{{- $Style      := $Params.Style           | safeCSS      -}}
+{{- $HexItems   := $Params.RenderedHexes   | safeHTML     -}}
+{{- $HexTabs    := $Params.RenderedHexTabs | safeHTML     -}}
+
+<div class="{{ $Classes }}" style="{{ $Style }}" x-data="{}">
+  <div class="platen-hexmap-grid">
+    {{ $HexItems }}
+  </div>
+  {{ $HexTabs }}
+</div>
+
+{{- /* Trim trailing whitespace for template */ -}}

@@ -1,0 +1,12 @@
+{{- $Params := . -}}
+{{- $Name   := $Params.Name  | safeHTML     -}}
+{{- $Class  := $Params.Class | safeHTMLAttr -}}
+{{- $Style  := $Params.Style | safeCSS      -}}
+
+<button @click="$refs.tabGroup.show('{{ $Name }}')"
+        {{- with $Class }} class="{{ $Class }}" {{- end -}}
+        {{- with $Style }} style="{{ $Style }}" {{- end -}}>
+  {{ $Name }}
+</button>
+
+{{- /* Trim trailing whitespace for template */ -}}

@@ -481,6 +481,22 @@ platen:
         renderers:
           codeblock: platen/markup/hexmap/codeblock
       style: hexmap
+    hexmapp:
+      enabled: true
+      custom: false
+      classes: []
+      height: 3
+      width:  3
+      activation: auto
+      no_scroll_controls: false
+      placement: top
+      standardize_height: false
+      # preset: null
+      partials:
+        header: platen/markup/hexmapp/header
+        renderers:
+          codeblock: platen/markup/hexmapp/codeblock
+      style: hexmapp
     mermaid:
       enabled: true
       version: 10.0.2
