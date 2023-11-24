@@ -1,7 +1,7 @@
 module:
   hugoVersion:
     extended: true
-    min: 0.111.3
+    min: 0.120.4
 
 markup:
   goldmark:

@@ -22,4 +22,5 @@
 {{ end }}
 
 {{/*  Return the SCSS to render  */}}
-{{- delimit $renderStrings "\n  " "\n" | safeHTML -}}
+{{- $renderStrings = delimit $renderStrings "\n  " "\n" | safeCSS -}}
+{{- return $renderStrings -}}
