@@ -1,0 +1,62 @@
+{{/*
+    This custom template is a stub. It's here for your convenience only. If
+    you want to define your own template, copy this one to start from. The
+    inputs for your template are limited to the ones defined here, but your
+    template can do whatever you need it to.
+*/}}
+{{- $Params  := . -}}
+{{/*
+    The available parameters for a custom tab group template are:
+    
+    Name - the plain-text name of the tab, suitable for insertion as an HTML
+    attribute for scripting.
+
+    TabAttributes - The list of attributes for the navigation element,
+    pre-canonicalized. Includes class, id, closable, and disabled, if set in
+    the markup.
+
+    TabContent - the rendered name of the tab, insertable into a containing
+    element as desired.
+
+    PanelAttributes - The list of attributes for the tab content element,
+    pre-canonicalized. Includes class only.
+
+    PanelContent - The rendered content for the tab, insertable into a
+    containing element as desired.
+
+    Page - the Hugo page object for the source of the markup in your site
+    content.
+
+    Position - the location in the page the markup was used in your Markdown.
+
+    Config - the merged `platen.markup.tabs` configuration settings from site
+    configuration and data.
+
+    Definition - the inner value of the markup's codeblock as it was passed.
+
+    Options - the canonicalized options for the markup.
+*/}}
+{{- $Name            := $Params.Name            | safeHTMLAttr -}}
+{{- $TabAttributes   := $Params.TabAttributes   | safeHTMLAttr -}}
+{{- $TabContent      := $Params.TabContent      | safeHTML     -}}
+{{- $PanelAttributes := $Params.PanelAttributes | safeHTMLAttr -}}
+{{- $PanelContent    := $Params.PanelContent    | safeHTML     -}}
+{{- $Page         := $Params.Page       -}}
+{{- $Position     := $Params.Position   -}}
+{{- $Config       := $Params.Config     -}}
+{{- $Definition   := $Params.Definition -}}
+{{- $Options      := $Params.Options    -}}
+
+
+{{/*
+    The default custom template raises an error because it's not
+    actually implemented. This stub is for your convenience.
+*/}}
+{{- errorf "Used custom tabs template at %s, but no template defined." $Position -}}
+
+{{/*
+    You don't need to do a return statement, you can just use
+    a custom HTML template if you want. This return is included
+    so Platen doesn't break if the custom template isn't defined.
+*/}}
+{{- return "" -}}

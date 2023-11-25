@@ -1,0 +1,8 @@
+{{- $Params    := .                 -}}
+{{- $Source    := $Params.Source    -}}
+{{- $Integrity := $Params.Integrity -}}
+
+<script defer
+        type="module"
+        src="{{ $Source }}"
+        {{ $Integrity }}></script>

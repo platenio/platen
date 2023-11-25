@@ -1,0 +1,15 @@
+placement: start
+definition: |
+  ``````hexmap { name="Single Class" }
+  ```yaml
+  class: sepia
+  ```
+  ``````
+
+  ``````hexmap { name="Multiple Classes" }
+  ```yaml
+  class:
+    - big
+    - shadowed
+  ```
+  ``````
