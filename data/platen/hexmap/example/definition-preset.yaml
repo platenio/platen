@@ -1,0 +1,22 @@
+placement: start
+definition: |
+  ```hex
+  ---
+  name: Normal
+  ---
+  This is a normal tab.
+  ```
+  ```hex
+  ---
+  name: Closable
+  closable: true
+  ---
+  This is a normal tab.
+  ```
+  ```hex
+  ---
+  name: Disabled
+  disabled: true
+  ---
+  This is a normal tab.
+  ```

@@ -1,0 +1,4 @@
+placement:  start
+legacy:     false
+activation: manual
+closable:   true

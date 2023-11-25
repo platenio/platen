@@ -6,3 +6,5 @@ github.com/platenio/hugo-platen v0.1.1-0.20220605204438-ce0e3d8875e8 h1:hdhWmdKU
 github.com/platenio/hugo-platen v0.1.1-0.20220605204438-ce0e3d8875e8/go.mod h1:oKKoHERB/TNznzstUQiRFuVaqMyk/l8jtUTXR1M+6bk=
 github.com/platenio/hugo-platen v0.1.1-0.20221012132313-790b7197b6a4 h1:h4ZGpSQQ4/7tLSZoTmHLKrTM1/PImcOHzfR20p1y6VQ=
 github.com/platenio/hugo-platen v0.1.1-0.20221012132313-790b7197b6a4/go.mod h1:oKKoHERB/TNznzstUQiRFuVaqMyk/l8jtUTXR1M+6bk=
+github.com/platenio/platen/modules/platen v0.0.0-20230729184903-3451ed7a46af h1:lJl3fQ9BgxG0G0KqW8dcg0u9oDwt4NUfi2PTYYuHS1w=
+github.com/platenio/platen/modules/platen v0.0.0-20230729184903-3451ed7a46af/go.mod h1:7pfizXCKb4vonp6Og/3zkoy09YYsHip9/hXiT/pc3IM=

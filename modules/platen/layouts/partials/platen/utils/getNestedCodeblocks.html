@@ -1,0 +1,377 @@
+{{/*
+    getNestedCodeblocks utility partial
+
+    This utility partial is intended for use in markup that *requires* nested
+    codeblocks and needs to process them. It finds the nested codeblocks in the
+    input definition that have a valid language ID and returns them as a slice
+    of definitions.
+
+    This partial raises an error when:
+
+    1. The Definition is empty and "ErrorOnEmptyDefinition" is true.
+    1. ValidIDs is undefined or is an empty slice or string.
+
+    This partial expects a map input and recognizes the following keys:
+
+    - `Definition` - The codeblock definition to search for and munge nested
+      codeblocks inside of. If this can sometimes be empty, make sure to set
+      ErrorOnEmptyDefinition to false.
+    - `ErrorOnEmptyDefinition` - Indicates whether the partial should raise an
+      error when the input Definition is empty. By default, the partial does
+      raise this error. Pass this option as `false` to disable it.
+    - `Position` - Specifies where in the Markdown file this codeblock was
+      written to make debugging errors easier.
+    - `ValidIDs` - Specifies one or more language IDs to use when searching for
+      the nested codeblocks.
+*/}}
+{{- $Params                 := .                                              -}}
+{{- $Definition             := $Params.Definition                             -}}
+{{- $ErrorOnEmptyDefinition := $Params.ErrorOnEmptyDefinition | default true  -}}
+{{- $Position               := $Params.Position                               -}}
+{{- $validIDs               := $Params.ValidIDs               | default slice -}}
+
+{{/*
+    Validate Definition, erroring if empty and ErrorOnEmptyDefinition is true.
+*/}}
+{{- with $Definition -}}
+{{- else -}}
+  {{- if $ErrorOnEmptyDefinition -}}
+    {{- $Message := delimit (
+          slice
+          "No Definition or empty Definition passed to getNestedCodeblocks utility partial."
+          "Definition must be a non-empty string containing one or more nested codeblocks."
+        ) " " | print
+    -}}
+    {{- errorf $Message -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+    Validate ValidIDs, turning it into a slice if it's a string and erroring if
+    it's empty or undefined
+*/}}
+{{- with $validIDs -}}
+  {{- if not (reflect.IsSlice $validIDs) -}}
+      {{- $validIDs = slice $validIDs -}}
+  {{- end -}}
+{{- else }}
+  {{- $Message := delimit (
+        slice
+        "ValidIDs wasn't passed or was passed as an empty slice to getNestedCodeblocks utility partial."
+        "ValidIDs must be a non-empty slice containing one or more language IDs to search for nested codeblocks."
+      ) " " | print
+  -}}
+  {{- errorf $Message -}}
+{{- end -}}
+
+{{/*  Define the partial templates for easier calling/renaming  */}}
+{{- $getCodeblockInfo     := "platen/utils/getCodeblockInfo"     -}}
+{{- $getCodeblockFromInfo := "platen/utils/getCodeblockFromInfo" -}}
+
+{{/*
+    Define reusable pattern pieces for the regular expressions:
+
+    MultiLineFlag:
+        (?m)
+            Makes the regex multiline, so ^ matches the start of a line instead
+            of the entire string.
+    MatchBacktick:
+        \x60
+            Matches a literal backtick (`) character. Used for patterns that
+            need to be literals, which are wrapped in backticks.
+    MatchValidID:
+        (foo|bar|baz)
+            Matches any of the valid language IDs this partial is targeting for
+            munging. The group is an any-of. If you have the three valid
+            language IDs `foo`, `bar`, and `baz`, this pattern will match any
+            of them but not any other string.
+    MatchAttributes:
+        \s+
+            Requires a leading space before the rest of the pattern.
+        {.+?}
+            Matches any characters inside curly braces, as few as possible.
+        (\s+{.+?})?
+            Makes the match optional, because codeblocks might not have any
+            attributes on them.
+    MatchOptions:
+        \n---\n
+            Requires a leading newline, then three dashes, then another newline.
+            This is how a YAML option block always opens.
+        (.|\n)*?
+            Matches zero or more characters including newlines, as few as
+            possible. We don't care about the contents of YAML option blocks.
+        \n---
+            Matches another newline followed by three dashes to close the YAML
+            option block.
+        (\n---\n(.|\n)*?\n---)?
+            Makes the match optional, because codeblocks might not have a YAML
+            options block defined.
+    MatchArbitrary:
+        (.|\n)*?
+            Matches zero or more characters, including newlines, as few as
+            possible. This is used when we don't care about the contents before
+            the next pattern segment.
+    MatchAnyID:
+        (\w|-|_)+
+            Matches one or more word characters (numbers and case-insensitive
+            letters), dashes, and underscores, as many as possible. This is
+            for retrieving valid codeblock language IDs when we don't care what
+            the specific ID is.
+*/}}
+{{- $MultiLineFlag   := "(?m)" -}}
+{{- $MatchBacktick   := `\x60` -}}
+{{- $MatchValidID    := printf "(%s)" (delimit $validIDs "|") -}}
+{{- $MatchAttributes := `(\s+{.+?})?`             -}}
+{{- $MatchOptions    := `(\n---\n(.|\n)*?\n---)?` -}}
+{{- $MatchArbitrary  := `(.|\n)*?`                -}}
+{{- $MatchAnyID      := `(\w|-|_)+`               -}}
+
+{{/*
+    Define the shared params for retrieving info from codeblocks. We pretend the
+    codeblocks always support both data and markdown so we can better retrieve
+    the information from them. If the target codeblocks don't support data, you
+    wouldn't use this partial. If the target codeblocks don't support Markdown,
+    we aren't munging it anyway.
+
+    But this also lets us find and inspect all codeblocks that our target
+    codeblocks might be contained within, so we can ignore those deeply nested
+    codeblocks.
+*/}}
+{{- $SharedInfoParams := dict
+                         "SupportsData"     true
+                         "SupportsMarkdown" true
+-}}
+
+{{/*
+    Define the initial pattern for finding the child codeblocks in the
+    Definition. This can also find deeply nested codeblocks, which this partial
+    should *not* return, so we need to ensure we're only returning the top-level
+    codeblocks.
+
+    This pattern's components are:
+
+    $MultiLineFlag Makes the regex multiline, so ^ matches the start of a line
+                   instead of the entire string.
+    ^(\x60{3,})    Matches a code fence of 3 or more backticks at the start of a
+                   line. The won't find codefences in quote blocks or other
+                   markup, but those aren't the target of this partial.
+    $MatchValidID  An any-of match for the valid language IDs of the codeblocks
+                   we're targeting. For more information, see line 130.
+*/}}
+{{- $InitialPattern := delimit (
+      slice
+      $MultiLineFlag
+      `^(\x60{3,})`
+      $MatchValidID
+    ) "" | print
+-}}
+{{- $InitialMatches := findRESubmatch $InitialPattern $Definition -}}
+
+{{/*
+    Here we need to iterate over the initial matches, using the submatch to
+    create three patterns for every unique codeblock opening:
+
+    1. The Block pattern, which can find the entirety of the codeblock. It's
+       used to build the Find and Container patterns and reused for the exact
+       container patterns later.
+    2. The Find pattern, which should grab the entirety of the codeblock with
+       that opening, including the attributes, data block, and definition. It
+       ends with the closing fence for the codeblock.
+    3. The container pattern, which should find any instances of the codeblock
+       where it seems to be inside another codeblock.
+
+    We use the 0 group from the capture to get the opening line, which we use
+    in the Block and Find patterns to make sure we're grabbing the codeblock
+    we think we are, if it's got a unique opening. The 1 group in the capture
+    is just the code fence, which we can use to calculate where the block
+    closes and how many backticks are needed for this block to be contained in
+    another codeblock.
+*/}}
+{{- $patternSet := slice -}}
+{{- range $InitialMatch := $InitialMatches -}}
+  {{- $BlockOpen      := index  $InitialMatch 0 -}} {{/* Entire match   */}}
+  {{- $BlockFence     := index  $InitialMatch 1 -}} {{/* Codefence only */}}
+  {{/*
+      The container fence is always used in a multiline regex to match a code
+      fence longer than the target codeblock's fence.
+  */}}
+  {{- $ContainerFence := printf `^(%s\x60+)` $BlockFence -}}
+  {{/*
+      The Block Pattern is defined separately because it's used by both the
+      Find pattern and the Container pattern.
+
+      This pattern's components are:
+
+      $BlockOpen            The full match from the initial pattern, including
+                            the code fence and language ID.
+      $MatchAttributes      An optional match for the attribute block, which is
+                            always separated from the language ID by at least
+                            one space and is wrapped in curly braces. For more
+                            info, see line 136.
+      $MatchOptions         An optional match for the data block, which is
+                            always after a new line following the codeblock's
+                            opening line. It always starts and ends with a set
+                            of triple-dashes on their own line. Between those
+                            triple dashes, the contents can be anything. For
+                            more information, see line 144.
+      $MatchArbitrary       A match for zero or more characters including
+                            newlines because we don't care about the definition.
+      \n                    A literal newline, needed before closing the fence.
+      $BlockFence           The closing code fence, which must be the same
+                            number of backticks as the opening of the block.
+  */}}
+  {{- $BlockPattern    := delimit (
+        slice
+          $BlockOpen
+          $MatchAttributes
+          $MatchOptions
+          $MatchArbitrary
+          "\n"
+          $BlockFence
+      ) "" | print
+  -}}
+  {{/*
+      The Find pattern is just the Block pattern with the multiline flag and
+      required to have the codefence at the beginning of a line.
+  */}}
+  {{- $FindPattern := printf `%s^%s` $MultiLineFlag $BlockPattern -}}
+  {{/*
+      The Container pattern is used to search for codeblocks that might contain
+      the found codeblocks from the Find pattern.
+
+      This pattern's componenets are:
+
+      $MultiLineFlag  Makes the regex multiline, so ^ matches the start of a
+                      line instead of the entire string.
+      $ContainerFence This only matches a codefence that has more backticks
+                      than the discovered block, which is required for it to be
+                      contained in another codeblock.
+                      Because it's wrapped in parentheses, it's captured as a
+                      group. Because it's the first group, it will be Group 1.
+      $MatchAnyID     Matches any language ID for a codeblock, not just the
+                      targeted ones. For more info, see line 162
+      $MatchArbitrary Matches any number of characters and lines because we
+                      don't care about what's after the opening and before the
+                      target block. For more info, see line 157.
+      $BlockPattern   Ensures that the containing codeblock *must* include any
+                      codeblock we'll return with the Find pattern.
+      $MatchArbitrary Matches any number of characters and lines because we
+                      don't care about what's after the target block and before
+                      the closing for the container.
+      $ContainerFence This only matches a codefence that has more backticks
+                      than the discovered block, which is required for it to be
+                      contained in another codeblock.
+      (.|\n)+?%s\x60+ After the codeblock, allow any number of lines and
+                      characters until reaching a codefence longer than the
+                      actual codeblock. This doesn't perfectly ensure that we
+                      are capturing a proper parent, but it's close enough -
+                      we definitely know our target codeblock is contained in
+                      a larger codeblock.
+  */}}
+  {{- $ContainerPattern := delimit (
+        slice
+        $MultiLineFlag
+        $ContainerFence
+        $MatchAnyID
+        $MatchArbitrary
+        $BlockPattern
+        $MatchArbitrary
+        $ContainerFence
+      ) "" | print
+  -}}
+  {{/*
+      Add the Block, Find, and Container patterns to the pattern set if not
+      already included
+  */}}
+  {{- $Patterns   := slice (
+        dict
+        "Block"     $BlockPattern
+        "Container" $ContainerPattern
+        "Find"      $FindPattern
+      )
+  -}}
+  {{- $patternSet  = $patternSet | append $Patterns | uniq -}}
+{{- end -}}
+
+{{/*  Initialize the lists of valid blocks, found blocks, and containers  */}}
+{{- $targetBlocks := slice -}}
+{{- $foundBlocks  := slice -}}
+{{- $containers   := slice -}}
+
+{{/*
+    Loop over the pattern sets to find the full list of codeblocks with a valid
+    ID and any codeblocks that contain them.
+*/}}
+{{- range $Patterns := $patternSet -}}
+  {{- $FoundMatches     := findRE         $Patterns.Find      $Definition -}}
+  {{- $ContainerMatches := findRESubmatch $Patterns.Container $Definition -}}
+  {{/*  Always append the discovered blocks if not already in their list  */}}
+  {{- range $FoundMatch := $FoundMatches -}}
+    {{- $foundBlocks = $foundBlocks | append $FoundMatch | uniq -}}
+  {{- end -}}
+  {{- range $ContainerMatch := $ContainerMatches -}}
+      {{/*
+          Now that we have a matching parent container, we have the definite
+          code fence for it. What we can do now is rebuild the container pattern
+          with the correct open/close fence to ensure we grab a full container
+          block. Grabbing a partial breaks things badly for AsSlice.
+      */}}
+      {{- $ContainerFence   := index $ContainerMatch 1 -}}
+      {{- $Pattern := delimit (
+            slice
+            $MultiLineFlag
+            `^`
+            $ContainerFence
+            $MatchAnyID
+            $MatchArbitrary
+            $Patterns.Block
+            $MatchArbitrary
+            $ContainerFence
+          ) "" | print
+      -}}
+      {{- $FullContainers := findRE $Pattern $Definition -}}
+      {{- range $Container := $FullContainers -}}
+        {{- $containers = $containers | append $Container | uniq -}}
+      {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+    Retrieve the definitions inside the discovered containers. We don't care
+    about the container codeblocks opening/closing lines when comparing things,
+    we just want to be sure that our target codeblocks aren't in the definition
+    of another codeblock. Add the block of lines between the opening/closing
+    fences to the list of container definitions.
+*/}}
+{{- $containerDefinitions := slice -}}
+{{- range $Container := $containers -}}
+  {{- $lines               := split $Container "\n"             -}}
+  {{- $lines                = first (sub (len $lines) 1) $lines -}}
+  {{- $lines                = last  (sub (len $lines) 1) $lines -}}
+  {{- $ContainerDefinition := delimit $lines "\n"               -}}
+  {{- $containerDefinitions = $containerDefinitions
+                              | append $ContainerDefinition
+                              | uniq
+  -}}
+{{- end -}}
+
+{{/*
+    Loop over the found blocks and check them against the definitions of all
+    known containers. If any container's definition includes the found block,
+    it's a nested codeblock and should be discarded. If the found block isn't
+    in any container definition, it's at the top level and should be returned.
+*/}}
+{{- range $Block := $foundBlocks -}}
+  {{- $isNested := false -}}
+  {{- range $ContainerDefinition := $containerDefinitions -}}
+    {{- if in $ContainerDefinition $Block -}}
+      {{- $isNested = true -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if not $isNested -}}
+    {{- $targetBlocks = $targetBlocks | append $Block | uniq -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*  Return the target blocks  */}}
+{{- return $targetBlocks -}}

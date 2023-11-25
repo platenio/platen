@@ -1,0 +1,19 @@
+$FlatTopHex: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+
+div.platen-hexmap {
+  div.platen-hexmap-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--map-width), 1fr, 2fr) 1fr;
+    grid-template-rows: repeat(var(--map-height), 1fr, 2fr) 1fr;
+    --hex-size: 5em;
+    button {
+      clip-path: $FlatTopHex;
+      height: var(--hex-size);
+      width: var(--hex-size);
+      margin: 0;
+      padding: 0;
+      grid-column: var(--hex-column) / var(--hex-column);
+      grid-row: var(--hex-row) / var(--hex-row);
+    }
+  }
+}
