@@ -1,0 +1,35 @@
+{{- $Params          := .                                       -}}
+{{- $Checked         := $Params.Checked                         -}}
+{{- $DivClasses      := $Params.DivClasses      | safeHTMLAttr  -}}
+{{- $ID              := $Params.ID              | safeHTMLAttr  -}}
+{{- $InputClasses    := $Params.InputClasses    | safeHTMLAttr  -}}
+{{- $LabelClasses    := $Params.LabelClasses    | safeHTMLAttr  -}}
+{{- $LabelContent    := $Params.LabelContent    | safeHTML      -}}
+{{- $GroupID         := $Params.GroupID         | safeHTMLAttr  -}}
+{{- $RenderedContent := $Params.RenderedContent | safeHTML      -}}
+{{- $Icon            := $Params.Icon  | safeHTMLAttr  -}}
+
+
+<li class="hex-grid__item">
+  <input type="button"
+        class="{{ $InputClasses }}"
+        name="{{ $GroupID }}"
+        id="{{ $ID }}"
+        {{- if $Checked }}
+        checked="checked"
+        {{- end -}}
+        />
+  <label for="{{ $ID }}"
+        class="hex-grid__content {{ $LabelClasses }}"
+         >
+    <sl-icon name="{{ $Icon }}"></sl-icon>
+    {{ $LabelContent }}
+  </label>
+  <div class="platen-tabs-content markdown-inner">
+    <h2>{{ $LabelContent }}</h2>
+    {{ $RenderedContent }}
+  </div>
+</li>
+
+
+

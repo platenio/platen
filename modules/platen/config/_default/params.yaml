@@ -433,6 +433,23 @@ platen:
         renderers:
           codeblock: platen/markup/details/codeblock
       style: details
+    hexmap:
+      enabled: true
+      custom: false
+      classes: []
+      activation: auto
+      no_scroll_controls: false
+      placement: top
+      standardize_height: false
+      # preset: null
+      use_legacy: true
+      warn_on_legacy: false
+      alt_grid_style: false
+      partials:
+        header: platen/markup/hexmap/header
+        renderers:
+          codeblock: platen/markup/hexmap/codeblock
+      style: hexmap
     icons:
       enabled: true
       custom: false
@@ -465,6 +482,21 @@ platen:
         renderers:
           image: platen/markup/key_combos/image
       style: key_combos
+    mapzone:
+      enabled: true
+      custom: false
+      classes: []
+      activation: auto
+      no_scroll_controls: false
+      placement: top
+      standardize_height: false
+      # preset: null
+      use_legacy: true
+      warn_on_legacy: false
+      partials:
+        renderers:
+          codeblock: platen/markup/mapzone/codeblock
+      style: mapzone
     mermaid:
       enabled: true
       version: 10.0.2

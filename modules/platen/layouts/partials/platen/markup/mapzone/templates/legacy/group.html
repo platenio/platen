@@ -1,0 +1,28 @@
+{{- $Params       := .                                   -}}
+{{- $Attributes   := $Params.Attributes   | safeHTMLAttr -}}
+{{- $RenderedTabs := $Params.RenderedTabs | safeHTML     -}}
+{{- $ID           := $Params.ID           | safeHTMLAttr  -}}
+{{- $ImageUrl     := $Params.ImageUrl     | safeHTML  -}}
+
+<div id="{{ $ID }}-box">
+  <img class="map" src="{{ $ImageUrl }}"
+  usemap="#{{ $ID }}-map">
+  <map name="{{ $ID }}-map">
+    {{ $RenderedTabs }}
+  </map>
+</div>
+<div id="mapzone-text"></div>
+
+<script>
+  const changeText = document.querySelector("#mapzone-text");
+  let btns = document.querySelectorAll('area');
+  
+  for (i of btns) {
+    i.addEventListener('click', function() {
+      const input = this.nextElementSibling;
+      const desiredText = input.innerHTML
+      changeText.innerHTML = desiredText;
+      changeText.scrollIntoView({behavior: 'smooth'});
+    });
+  }
+</script>

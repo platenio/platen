@@ -1,0 +1,10 @@
+{{- $Params          := .                                       -}}
+{{- $ID              := $Params.ID              | safeHTMLAttr  -}}
+{{- $GroupID         := $Params.GroupID         | safeHTMLAttr  -}}
+{{- $RenderedContent := $Params.RenderedContent | safeHTML      -}}
+{{- $Coords          := $Params.Coords          | safeHTMLAttr  -}}
+
+<area alt="{{ $GroupID }}" title="{{ $ID }}" coords="{{ $Coords }}" shape="poly">
+<div class="hidden" id="{{ $ID }}">
+{{ $RenderedContent }}
+</div>
